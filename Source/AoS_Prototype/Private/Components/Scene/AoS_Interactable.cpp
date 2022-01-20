@@ -10,12 +10,10 @@
 UAoS_Interactable::UAoS_Interactable()
 {
 	OverlapBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OverlapBox"));
+	OverlapBox->SetupAttachment(GetAttachmentRoot());
 	InteractionTypeIcon = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionTypeIcon"));
-	if (GetOwner())
-	{
-		OverlapBox->SetupAttachment(GetOwner()->GetRootComponent());
-		InteractionTypeIcon->SetupAttachment(GetOwner()->GetRootComponent());
-	}
+	InteractionTypeIcon->SetupAttachment(GetAttachmentRoot());
+	
 	// off to improve performance if you don't need them.
 	InteractionTypeIcon->SetVisibility(false);
 	PrimaryComponentTick.bCanEverTick = true;
@@ -28,7 +26,7 @@ UAoS_Interactable::UAoS_Interactable()
 void UAoS_Interactable::BeginPlay()
 {
 	Super::BeginPlay();
-		
+	
 	if (OverlapBox)
 	{
 		OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &UAoS_Interactable::OnComponentBeginOverlap);

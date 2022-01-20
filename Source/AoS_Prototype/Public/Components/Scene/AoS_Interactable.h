@@ -24,9 +24,9 @@ public:
 	class UBoxComponent* OverlapBox;
 	UPROPERTY(EditAnywhere)
 	class UWidgetComponent* InteractionTypeIcon;
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable, Category = "Overlap")
 	FOnPlayerBeginOverlap OnPlayerBeginOverlap;
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable, Category = "Overlap")
 	FOnPlayerEndOverlap OnPlayerEndOverlap;
 	
 
@@ -34,7 +34,9 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
 	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+	UFUNCTION()
 	void OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 public:	
