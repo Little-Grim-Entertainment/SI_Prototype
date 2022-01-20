@@ -34,3 +34,19 @@ AAoS_Nick::AAoS_Nick()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 }
+
+void AAoS_Nick::AddToInteractableActors(AActor* ActorToAdd)
+{
+	if (ActorToAdd)
+	{
+		InteractableActors.Add(ActorToAdd);
+	}
+}
+
+void AAoS_Nick::RemoveFromInteractableActors(AActor* ActorToRemove)
+{
+	if (ActorToRemove)
+	{
+		InteractableActors.Remove(ActorToRemove);
+	}
+}

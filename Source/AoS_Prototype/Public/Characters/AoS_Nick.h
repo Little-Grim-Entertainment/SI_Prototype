@@ -26,6 +26,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	UPROPERTY()
+	TArray<AActor*> InteractableActors;
 	
 	// ================== FUNCTIONS ==================
 public:
@@ -35,4 +37,6 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	void AddToInteractableActors(AActor* ActorToAdd);
+	void RemoveFromInteractableActors(AActor* ActorToRemove);
 };
