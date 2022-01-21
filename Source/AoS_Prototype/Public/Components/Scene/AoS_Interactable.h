@@ -15,7 +15,8 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class AOS_PROTOTYPE_API UAoS_Interactable : public USceneComponent
 {
 	GENERATED_BODY()
-
+	
+	
 public:	
 	// Sets default values for this component's properties
 	UAoS_Interactable();
@@ -28,7 +29,7 @@ public:
 	FOnPlayerBeginOverlap OnPlayerBeginOverlap;
 	UPROPERTY(BlueprintAssignable, Category = "Overlap")
 	FOnPlayerEndOverlap OnPlayerEndOverlap;
-	
+
 
 protected:
 	// Called when the game starts

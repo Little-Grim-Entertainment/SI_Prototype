@@ -2,10 +2,12 @@
 
 
 #include "Characters/AoS_Nick.h"
+#include "Components/Actor/AoS_LineTraces.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AAoS_Nick::AAoS_Nick()
 {
@@ -35,18 +37,9 @@ AAoS_Nick::AAoS_Nick()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 }
 
-void AAoS_Nick::AddToInteractableActors(AActor* ActorToAdd)
+void AAoS_Nick::BeginPlay()
 {
-	if (ActorToAdd)
-	{
-		InteractableActors.Add(ActorToAdd);
-	}
+	Super::BeginPlay();
+
 }
 
-void AAoS_Nick::RemoveFromInteractableActors(AActor* ActorToRemove)
-{
-	if (ActorToRemove)
-	{
-		InteractableActors.Remove(ActorToRemove);
-	}
-}

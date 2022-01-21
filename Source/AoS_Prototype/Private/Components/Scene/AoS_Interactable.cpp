@@ -5,6 +5,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/BoxComponent.h"
 #include "Characters/AoS_Nick.h"
+#include "Controllers/AoS_PlayerController.h"
 
 // Sets default values for this component's properties
 UAoS_Interactable::UAoS_Interactable()
@@ -38,22 +39,22 @@ void UAoS_Interactable::BeginPlay()
 void UAoS_Interactable::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AAoS_Nick* PlayerCharacter = Cast<AAoS_Nick>(OtherActor);
-	AActor* AttachedActor = GetOwner();
-	if (PlayerCharacter)
+	AAoS_PlayerController* PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	if (PlayerCharacter && PlayerController)
 	{
 		OnPlayerBeginOverlap.Broadcast(PlayerCharacter);
-		PlayerCharacter->AddToInteractableActors(AttachedActor);
+		PlayerController->AddToInteractableActors(OtherActor);
 	}
 }
 
 void UAoS_Interactable::OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	AAoS_Nick* PlayerCharacter = Cast<AAoS_Nick>(OtherActor);
-	AActor* AttachedActor = GetOwner();
+	AAoS_PlayerController* PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());	AActor* AttachedActor = GetOwner();
 	if (PlayerCharacter)
 	{
 		OnPlayerEndOverlap.Broadcast(PlayerCharacter);
-		PlayerCharacter->RemoveFromInteractableActors(AttachedActor);
+		PlayerController->AddToInteractableActors(OtherActor);
 	}
 }
 

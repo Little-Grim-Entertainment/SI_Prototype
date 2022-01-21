@@ -4,22 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/Actor/AoS_LineTraces.h"
 #include "AoS_PlayerController.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
+
+
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+
+	UPROPERTY()
+	AActor* FocusedActor;
 	
 public:
 	
 	AAoS_PlayerController();
-
+		
 	// ================== VARIABLES ==================
-public:
 
 	// Player Input Variables
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -28,8 +32,29 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+	UPROPERTY(EditDefaultsOnly, Category = LineTracing)
+	UAoS_LineTraces* LineTraceComponent;
+
+	FOnInteractableActorAdded OnInteractableActorAdded;
+
+	UPROPERTY()
+	TArray<AActor*> InteractableActors;
 
 	// ================== FUNCTIONS ==================
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInteractPressed(AActor* ActorToInteractWith);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInteractableActorFound(AActor* ActorFound);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInteractableActorLost(AActor* ActorLost);
+	UFUNCTION(BlueprintImplementableEvent)	
+	bool CreateLineTrace(ETraceType DrawDebugType, FVector Start, FVector End, FLinearColor TraceColor, FLinearColor TraceHitColor, FHitResult& HitResults);
+	
+	void SetFocusedActor(AActor* ActorToSet);
+	void AddToInteractableActors(AActor* ActorToAdd);
+	void RemoveFromInteractableActors(AActor* ActorToRemove);
+	
 protected:
 
 	// Player Input Functions

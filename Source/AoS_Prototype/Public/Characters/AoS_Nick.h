@@ -25,10 +25,7 @@ private:
 	class USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-
-	UPROPERTY()
-	TArray<AActor*> InteractableActors;
-	
+		
 	// ================== FUNCTIONS ==================
 public:
 
@@ -36,7 +33,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
+protected:
 
-	void AddToInteractableActors(AActor* ActorToAdd);
-	void RemoveFromInteractableActors(AActor* ActorToRemove);
+	virtual void BeginPlay() override;
 };

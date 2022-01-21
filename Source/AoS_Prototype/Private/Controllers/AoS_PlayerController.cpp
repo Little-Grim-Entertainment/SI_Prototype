@@ -5,9 +5,25 @@
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
+	LineTraceComponent = CreateDefaultSubobject<UAoS_LineTraces>(TEXT("LineTraceComponent"));
+	
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
+}
+
+void AAoS_PlayerController::SetFocusedActor(AActor* ActorToSet)
+{
+	if (ActorToSet)
+	{
+		FocusedActor = ActorToSet;
+		OnInteractableActorFound(FocusedActor);
+	}
+	else
+	{
+		OnInteractableActorLost(FocusedActor);
+		FocusedActor = nullptr;
+	}
 }
 
 void AAoS_PlayerController::SetupInputComponent()
@@ -61,4 +77,19 @@ void AAoS_PlayerController::RequestLookUp(float AxisValue)
 void AAoS_PlayerController::RequestTurnRight(float AxisValue)
 {
 	AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
+{
+	InteractableActors.AddUnique(ActorToAdd);
+	OnInteractableActorAdded.Broadcast(InteractableActors);
+}
+
+void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
+{
+	InteractableActors.Remove(ActorToRemove);
+	if (InteractableActors.Num() == 0)
+	{
+		//LineTraceComponent->DisableInteractableSearch();
+	}
 }
