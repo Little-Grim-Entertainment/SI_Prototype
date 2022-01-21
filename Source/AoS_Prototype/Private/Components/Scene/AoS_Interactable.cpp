@@ -43,7 +43,7 @@ void UAoS_Interactable::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedC
 	if (PlayerCharacter && PlayerController)
 	{
 		OnPlayerBeginOverlap.Broadcast(PlayerCharacter);
-		PlayerController->AddToInteractableActors(OtherActor);
+		PlayerController->AddToInteractableActors(GetOwner());
 	}
 }
 
@@ -54,7 +54,7 @@ void UAoS_Interactable::OnComponentEndOverlap(UPrimitiveComponent* OverlappedCom
 	if (PlayerCharacter)
 	{
 		OnPlayerEndOverlap.Broadcast(PlayerCharacter);
-		PlayerController->AddToInteractableActors(OtherActor);
+		PlayerController->RemoveFromInteractableActors(GetOwner());
 	}
 }
 

@@ -12,26 +12,14 @@ AAoS_PlayerController::AAoS_PlayerController()
 	BaseLookUpRate = 45.f;
 }
 
-void AAoS_PlayerController::SetFocusedActor(AActor* ActorToSet)
-{
-	if (ActorToSet)
-	{
-		FocusedActor = ActorToSet;
-		OnInteractableActorFound(FocusedActor);
-	}
-	else
-	{
-		OnInteractableActorLost(FocusedActor);
-		FocusedActor = nullptr;
-	}
-}
-
 void AAoS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
 	// Set up gameplay key bindings
 	check(InputComponent);
+
+	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
 	
 	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
@@ -74,6 +62,12 @@ void AAoS_PlayerController::RequestLookUp(float AxisValue)
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
+void AAoS_PlayerController::RequestInteract()
+{
+	if (!FocusedActor) {return;}
+	OnInteractPressed(FocusedActor);
+}
+
 void AAoS_PlayerController::RequestTurnRight(float AxisValue)
 {
 	AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
@@ -90,6 +84,20 @@ void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
 	InteractableActors.Remove(ActorToRemove);
 	if (InteractableActors.Num() == 0)
 	{
-		//LineTraceComponent->DisableInteractableSearch();
+		OnInteractableActorRemoved.Broadcast();
+	}
+}
+
+void AAoS_PlayerController::SetFocusedActor(AActor* ActorToSet)
+{
+	if (ActorToSet)
+	{
+		FocusedActor = ActorToSet;
+		OnInteractableActorFound(FocusedActor);
+	}
+	else
+	{
+		OnInteractableActorLost(FocusedActor);
+		FocusedActor = nullptr;
 	}
 }

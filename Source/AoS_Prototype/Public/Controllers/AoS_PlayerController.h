@@ -8,6 +8,7 @@
 #include "AoS_PlayerController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 
 
 UCLASS()
@@ -36,6 +37,7 @@ public:
 	UAoS_LineTraces* LineTraceComponent;
 
 	FOnInteractableActorAdded OnInteractableActorAdded;
+	FOnInteractableActorRemoved OnInteractableActorRemoved;
 
 	UPROPERTY()
 	TArray<AActor*> InteractableActors;
@@ -63,5 +65,6 @@ protected:
 	void RequestMoveRight(float Value);
 	void RequestTurnRight(float AxisValue);
 	void RequestLookUp(float AxisValue);
+	void RequestInteract();
 	
 };

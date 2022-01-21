@@ -26,6 +26,7 @@ void UAoS_LineTraces::BeginPlay()
 	if (PlayerController)
 	{
 		PlayerController->OnInteractableActorAdded.AddDynamic(this, &UAoS_LineTraces::UAoS_LineTraces::EnableInteractableSearch);
+		PlayerController->OnInteractableActorRemoved.AddDynamic(this, &UAoS_LineTraces::UAoS_LineTraces::DisableInteractableSearch);
 	}
 }
 
@@ -42,7 +43,6 @@ void UAoS_LineTraces::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		{
 			PlayerController->SetFocusedActor(InteractableActor);
 			bInteractableFound = true;
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Searching for Actor"));   
 		}
 		if (!InteractableActor && bInteractableFound)
 		{
@@ -94,14 +94,13 @@ void UAoS_LineTraces::DisableInteractableSearch()
 void UAoS_LineTraces::SetTraceVectors(FVector& StartVector, FVector& EndVector, const float StartZOffset, const float EndZOffset, const float SearchDistance)
 {
 	if (!PlayerController) {return;}
-	const ACharacter* PlayerCharacter = PlayerController->GetCharacter();
-	if (!PlayerCharacter) {return;}
-	const FVector Loc = PlayerCharacter->GetActorLocation();
-	const FRotator Rot = PlayerCharacter->GetActorRotation();
+	FVector Loc;
+	FRotator Rot;
+	PlayerController->GetPlayerViewPoint(Loc, Rot);
+	const FVector PlayerLocation = PlayerController->GetCharacter()->GetActorLocation();
 		
-	StartVector = FVector(Loc.X, Loc.Y, Loc.Z + StartZOffset);
+	StartVector = FVector(PlayerLocation.X, PlayerLocation.Y, PlayerLocation.Z + StartZOffset);
 	const FVector NoOffsetEndVector = StartVector + (Rot.Vector() * SearchDistance);
 	EndVector = FVector(NoOffsetEndVector.X, NoOffsetEndVector.Y, NoOffsetEndVector.Z + EndZOffset);
-	
 }
 
