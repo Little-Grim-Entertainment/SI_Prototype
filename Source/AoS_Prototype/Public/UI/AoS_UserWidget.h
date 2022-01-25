@@ -20,12 +20,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ProjectDefaults")
 	class UAoS_Defaults* ProjectDefaults;
 
+protected:
 
+	virtual void NativePreConstruct() override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	bool SetDefaults();
+	
 	// Getters
 	UFUNCTION(BlueprintPure)
 	FColorDefaults GetAllColors();
 	UFUNCTION(BlueprintPure)
 	FFontStyles GetAllFonts();
 	UFUNCTION(BlueprintPure)
-	FSlateFontInfo GetFontStyle(EFontStyle FontStyle);
+	FSlateFontInfo GetFontStyle(EFontStyle FontStyle, int FontSize);
 };

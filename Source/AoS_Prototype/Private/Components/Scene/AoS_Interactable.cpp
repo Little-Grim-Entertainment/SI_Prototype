@@ -16,7 +16,6 @@ UAoS_Interactable::UAoS_Interactable()
 	InteractionTypeIcon->SetupAttachment(GetAttachmentRoot());
 	
 	// off to improve performance if you don't need them.
-	InteractionTypeIcon->SetVisibility(false);
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...

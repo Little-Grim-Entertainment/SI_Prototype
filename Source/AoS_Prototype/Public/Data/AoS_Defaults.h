@@ -40,9 +40,9 @@ UENUM(BlueprintType)
 enum EFontStyle
 {
 	FS_Header     UMETA(DisplayName = "Header"),
-	FS_HeaderHover      UMETA(DisplayName = "HeaderHover"),
+	FS_HeaderHover      UMETA(DisplayName = "Header Hover"),
 	FS_Secondary   UMETA(DisplayName = "Secondary"),
-	FS_SecondaryHover   UMETA(DisplayName = "SecondaryHover"),
+	FS_SecondaryHover   UMETA(DisplayName = "Secondary Hover"),
 	FS_Paragraph   UMETA(DisplayName = "Paragraph"),
 };
 
