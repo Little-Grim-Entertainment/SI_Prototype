@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/AoS_HUD.h"
 
 AAoS_Nick::AAoS_Nick()
 {
@@ -35,11 +36,27 @@ AAoS_Nick::AAoS_Nick()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
 }
+
 
 void AAoS_Nick::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUDClass, "PlayerHUD");
+	
 }
+void AAoS_Nick::ShowHUD()
+{
+	if (!PlayerHUD) {return;}
+	PlayerHUD->AddToViewport();
+}
+
+void AAoS_Nick::HideHUD()
+{
+	if (!PlayerHUD) {return;}
+	PlayerHUD->RemoveFromViewport();
+}
+
 
