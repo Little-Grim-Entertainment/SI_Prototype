@@ -2,6 +2,7 @@
 
 
 #include "Controllers/AoS_PlayerController.h"
+#include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
@@ -26,6 +27,13 @@ void AAoS_PlayerController::SetupInputComponent()
 
 	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
 	InputComponent->BindAxis("LookUpRate", this, &AAoS_PlayerController::RequestLookUp);
+}
+
+void AAoS_PlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUDClass, "PlayerHUD");
 }
 
 void AAoS_PlayerController::RequestMoveForward(float Value)
@@ -65,7 +73,7 @@ void AAoS_PlayerController::RequestLookUp(float AxisValue)
 void AAoS_PlayerController::RequestInteract()
 {
 	if (!FocusedActor) {return;}
-	OnInteractPressed(FocusedActor);
+	OnInteractPressed(FocusedActor, this);
 }
 
 void AAoS_PlayerController::RequestTurnRight(float AxisValue)
@@ -86,6 +94,30 @@ void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
 	{
 		OnInteractableActorRemoved.Broadcast();
 	}
+}
+
+UAoS_HUD* AAoS_PlayerController::GetPlayerHUD()
+{
+	if (!PlayerHUD) {return nullptr;}
+	return PlayerHUD;
+}
+
+void AAoS_PlayerController::ShowHUD()
+{
+	if (!PlayerHUD) {return;}
+	PlayerHUD->AddToViewport();
+}
+
+void AAoS_PlayerController::HideHUD()
+{
+	if (!PlayerHUD) {return;}
+	PlayerHUD->RemoveFromViewport();
+}
+
+void AAoS_PlayerController::RefreshHUD()
+{
+	HideHUD();
+	ShowHUD();
 }
 
 void AAoS_PlayerController::SetFocusedActor(AActor* ActorToSet)

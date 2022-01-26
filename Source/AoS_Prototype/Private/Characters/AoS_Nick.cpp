@@ -43,20 +43,6 @@ AAoS_Nick::AAoS_Nick()
 void AAoS_Nick::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUDClass, "PlayerHUD");
-	
-}
-void AAoS_Nick::ShowHUD()
-{
-	if (!PlayerHUD) {return;}
-	PlayerHUD->AddToViewport();
-}
-
-void AAoS_Nick::HideHUD()
-{
-	if (!PlayerHUD) {return;}
-	PlayerHUD->RemoveFromViewport();
 }
 
 

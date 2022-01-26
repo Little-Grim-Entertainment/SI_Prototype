@@ -10,6 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 
+class UAoS_HUD;
 
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
@@ -19,6 +20,13 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 
 	UPROPERTY()
 	AActor* FocusedActor;
+	UPROPERTY()
+	UAoS_HUD* PlayerHUD;
+
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUD")
+	TSubclassOf<UAoS_HUD> PlayerHUDClass;
 	
 public:
 	
@@ -45,22 +53,34 @@ public:
 	// ================== FUNCTIONS ==================
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnInteractPressed(AActor* ActorToInteractWith);
+	void OnInteractPressed(AActor* ActorToInteractWith, AActor* Caller);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInteractableActorFound(AActor* ActorFound);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInteractableActorLost(AActor* ActorLost);
 	UFUNCTION(BlueprintImplementableEvent)	
 	bool CreateLineTrace(ETraceType DrawDebugType, FVector Start, FVector End, FLinearColor TraceColor, FLinearColor TraceHitColor, FHitResult& HitResults);
+	UFUNCTION(BlueprintCallable)
+	void ShowHUD();
+	UFUNCTION(BlueprintCallable)
+	void HideHUD();
+	UFUNCTION(BlueprintCallable)
+	void RefreshHUD();
 	
 	void SetFocusedActor(AActor* ActorToSet);
 	void AddToInteractableActors(AActor* ActorToAdd);
 	void RemoveFromInteractableActors(AActor* ActorToRemove);
 	
+	// Getters
+	UFUNCTION(BlueprintPure)
+	UAoS_HUD* GetPlayerHUD();
+	
+	
 protected:
 
 	// Player Input Functions
 	virtual void SetupInputComponent() override;
+	virtual void BeginPlay() override;
 	void RequestMoveForward(float Value);
 	void RequestMoveRight(float Value);
 	void RequestTurnRight(float AxisValue);
