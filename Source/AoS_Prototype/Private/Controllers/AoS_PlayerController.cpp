@@ -31,9 +31,9 @@ void AAoS_PlayerController::SetupInputComponent()
 
 void AAoS_PlayerController::BeginPlay()
 {
-	Super::BeginPlay();
-
 	PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUDClass, "PlayerHUD");
+
+	Super::BeginPlay();
 }
 
 void AAoS_PlayerController::RequestMoveForward(float Value)

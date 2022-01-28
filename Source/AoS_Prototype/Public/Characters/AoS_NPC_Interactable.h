@@ -13,5 +13,13 @@ UCLASS()
 class AOS_PROTOTYPE_API AAoS_NPC_Interactable : public AAoS_NPC
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	AAoS_NPC_Interactable();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
+	class UAoS_InteractableComponent* InteractableComponent;
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	class UBoxComponent* OverlapBox;
 };
