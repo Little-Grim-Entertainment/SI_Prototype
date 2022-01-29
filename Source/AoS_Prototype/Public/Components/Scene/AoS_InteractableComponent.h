@@ -13,6 +13,9 @@ UCLASS()
 class AOS_PROTOTYPE_API UAoS_InteractableComponent : public UBoxComponent
 {
 	GENERATED_BODY()
+
+	UPROPERTY()
+	bool bIsInteractable = true;
 	
 public:	
 	// Sets default values for this component's properties
@@ -45,4 +48,10 @@ public:
 	// Getters
 	UFUNCTION(BlueprintPure)
 	FText GetInteractionText() {return InteractionText;}
+	UFUNCTION(BlueprintPure)
+	bool GetIsInteractable() {return bIsInteractable;}
+
+	// Setters
+	UFUNCTION(BlueprintCallable)
+	void SetIsInteractable(bool bInteractable){bIsInteractable = bInteractable;}
 };
