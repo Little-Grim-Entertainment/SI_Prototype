@@ -15,10 +15,14 @@ class AOS_PROTOTYPE_API UAoS_UserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
+	class AAoS_PlayerController* AOS_PlayerController;
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ProjectDefaults")
-	class UAoS_Defaults* ProjectDefaults;
+	UAoS_Defaults* ProjectDefaults;
+	
 
 protected:
 

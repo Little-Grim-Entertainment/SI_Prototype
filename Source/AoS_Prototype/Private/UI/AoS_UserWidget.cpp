@@ -2,6 +2,7 @@
 
 
 #include "UI/AoS_UserWidget.h"
+#include "Controllers/AoS_PlayerController.h"
 
 void UAoS_UserWidget::NativePreConstruct()
 {
