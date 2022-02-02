@@ -64,7 +64,7 @@ void UAoS_DialogueComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UAoS_DialogueComponent::StartConversation()
 {
-
+	if(!ConversationData || !InterrogationData) {return;}
 	if (ConversationCount < ConversationData->GetRowNames().Num())
 	{
 		//If ConversationCount == 0 then get first line
@@ -81,7 +81,6 @@ void UAoS_DialogueComponent::StartConversation()
 
 void UAoS_DialogueComponent::PlayConversation()
 {
-
 	if (ConversationData)
 	{
 		FString Local_Dialogue;
@@ -173,6 +172,7 @@ void UAoS_DialogueComponent::PlayConversation()
 
 void UAoS_DialogueComponent::StartInterrogation()
 {
+	if(!ConversationData || !InterrogationData) {return;}
 	if (InterrogationCount < InterrogationData->GetRowNames().Num())
 	{
 		//If InterrogationCount == 0 then get first line
@@ -601,7 +601,7 @@ void UAoS_DialogueComponent::EndConversation()
 	{
 		ConversationCount = 0;
 		bRunConversation = false;
-
+		OnConversationEnd.Broadcast();
 		GEngine->ClearOnScreenDebugMessages();
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Conversation Ended")), false, FVector2D(3.f, 3.f));
 		return;
@@ -819,7 +819,7 @@ void UAoS_DialogueComponent::EndInterrogation()
 	{
 		ConversationCount = 0;
 		bRunConversation = false;
-
+		OnInterrogationEnd.Broadcast();
 		GEngine->ClearOnScreenDebugMessages();
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended")), false, FVector2D(3.f, 3.f));
 		return;

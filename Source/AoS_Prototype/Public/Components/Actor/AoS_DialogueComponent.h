@@ -7,6 +7,9 @@
 #include "Engine/DataTable.h"
 #include "AoS_DialogueComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnConversationEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInterrogationEnd);
+
 USTRUCT(BlueprintType)
 struct FAOS_ConversationData : public FTableRowBase
 {
@@ -128,14 +131,19 @@ class AOS_PROTOTYPE_API UAoS_DialogueComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere, Category = "Data")
-		class UDataTable* ConversationData;
 	UPROPERTY(EditAnywhere, Category = "Data")
-		class UDataTable* InterrogationData;
+	class UDataTable* ConversationData;
+	UPROPERTY(EditAnywhere, Category = "Data")
+	class UDataTable* InterrogationData;
 
 public:
 	// Sets default values for this component's properties
 	UAoS_DialogueComponent();
+
+	UPROPERTY(BlueprintAssignable, Category = "Overlap")
+	FOnConversationEnd OnConversationEnd;
+	UPROPERTY(BlueprintAssignable, Category = "Overlap")
+	FOnInterrogationEnd OnInterrogationEnd;
 
 protected:
 
@@ -164,7 +172,7 @@ protected:
 
 	//This is Temp for Debug
 	UPROPERTY(EditAnywhere)
-		TArray<FAOS_TempEvidenceStruct> TempEvidence;
+	TArray<FAOS_TempEvidenceStruct> TempEvidence;
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -175,13 +183,13 @@ public:
 
 	//Bind to key when player overlaps actor
 	UFUNCTION(BlueprintCallable)
-		void StartConversation();
+	void StartConversation();
 	UFUNCTION(BlueprintCallable)
-		void PlayConversation();
+	void PlayConversation();
 	UFUNCTION(BlueprintCallable)
-		void StartInterrogation();
+	void StartInterrogation();
 	UFUNCTION(BlueprintCallable)
-		void PlayInterrogation();
+	void PlayInterrogation();
 
 	void DebugSimpleConversationLines(FAOS_ConversationData* Conversation_Row, FString LocalDialog);
 
@@ -222,9 +230,9 @@ public:
 	void DecodePlayerEvidenceAnswer(FString PlayerChoice);
 
 	UFUNCTION(BlueprintCallable)
-		void SetPlayerAnswer(FString Answer);
+	void SetPlayerAnswer(FString Answer);
 	UFUNCTION(BlueprintCallable)
-		void SetInterrogation(bool Start);
+	void SetInterrogation(bool Start);
 
 
 };
