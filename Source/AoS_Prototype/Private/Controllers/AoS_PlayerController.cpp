@@ -31,13 +31,18 @@ void AAoS_PlayerController::SetupInputComponent()
 
 void AAoS_PlayerController::BeginPlay()
 {
-	PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUDClass, "PlayerHUD");
+	if (PlayerHUD_Class)
+	{
+		PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUD_Class, "PlayerHUD");
+		ShowHUD();
+	}
 
 	Super::BeginPlay();
 }
 
 void AAoS_PlayerController::RequestMoveForward(float Value)
 {
+	if  (!bPlayerCanMove) return;
 	if ((Value != 0.0f))
 	{
 		// find out which way is forward
@@ -52,6 +57,7 @@ void AAoS_PlayerController::RequestMoveForward(float Value)
 
 void AAoS_PlayerController::RequestMoveRight(float Value)
 {
+	if  (!bPlayerCanMove) return;
 	if ((Value != 0.0f))
 	{
 		// find out which way is right
@@ -67,18 +73,20 @@ void AAoS_PlayerController::RequestMoveRight(float Value)
 
 void AAoS_PlayerController::RequestLookUp(float AxisValue)
 {
+	if  (!bPlayerCanTurn) return;
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AAoS_PlayerController::RequestTurnRight(float AxisValue)
+{
+	if  (!bPlayerCanTurn) return;
+	AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AAoS_PlayerController::RequestInteract()
 {
 	if (!FocusedActor) {return;}
 	OnInteractPressed(FocusedActor, this);
-}
-
-void AAoS_PlayerController::RequestTurnRight(float AxisValue)
-{
-	AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
@@ -118,6 +126,12 @@ void AAoS_PlayerController::RefreshHUD()
 {
 	HideHUD();
 	ShowHUD();
+}
+
+void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
+{
+	bPlayerCanMove = !bLockMovement;
+	bPlayerCanTurn = !bLockTurning;
 }
 
 void AAoS_PlayerController::SetFocusedActor(AActor* ActorToSet)

@@ -18,6 +18,8 @@ public:
 
 	AAoS_NPC_Interactable();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	FText CharacterName;	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UAoS_InteractableComponent* InteractableComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")

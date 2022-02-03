@@ -17,16 +17,18 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-
 	UPROPERTY()
 	AActor* FocusedActor;
 	UPROPERTY()
 	UAoS_HUD* PlayerHUD;
 
+	bool bPlayerCanMove = true;
+	bool bPlayerCanTurn = true;
+
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUD")
-	TSubclassOf<UAoS_HUD> PlayerHUDClass;
+	TSubclassOf<UAoS_HUD> PlayerHUD_Class;
 	
 public:
 	
@@ -66,6 +68,8 @@ public:
 	void HideHUD();
 	UFUNCTION(BlueprintCallable)
 	void RefreshHUD();
+	UFUNCTION(BlueprintCallable)
+	void LockPlayerMovement(bool bCanMove, bool bCanTurn);
 	
 	void SetFocusedActor(AActor* ActorToSet);
 	void AddToInteractableActors(AActor* ActorToAdd);
