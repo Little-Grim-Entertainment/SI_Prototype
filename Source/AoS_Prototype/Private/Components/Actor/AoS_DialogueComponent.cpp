@@ -38,20 +38,20 @@ void UAoS_DialogueComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	//THIS CONDITIONA TEMP UNTIL INTERACT KEY IS READY
-	if (GetOwner() && GetOwner()->IsOverlappingActor(UGameplayStatics::GetPlayerCharacter(this, 0)))
-	{
-		if (InterrogationData && bStartInterrogation)
-		{
-			StartInterrogation();
-		}
 
-		else if (ConversationData && bRunConversation)
-		{
-			if (!bRunConversation)
-				bRunConversation = true;
-			StartConversation();
-		}
+	if (InterrogationData && bStartInterrogation)
+	{
+		StartInterrogation();
 	}
+
+	else if (ConversationData && bRunConversation)
+	{
+		if (!bRunConversation)
+			bRunConversation = true;
+		StartConversation();
+
+	}
+
 
 	//if (GetOwner() && !GetOwner()->EndOver))
 	//{
@@ -64,7 +64,7 @@ void UAoS_DialogueComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UAoS_DialogueComponent::StartConversation()
 {
-	if(!ConversationData || !InterrogationData) {return;}
+	if (!ConversationData || !InterrogationData) { return; }
 	if (ConversationCount < ConversationData->GetRowNames().Num())
 	{
 		//If ConversationCount == 0 then get first line
@@ -92,10 +92,18 @@ void UAoS_DialogueComponent::PlayConversation()
 		static const FString ContextString(TEXT("ConversationDataContext"));
 		FAOS_ConversationData* ConversationRow = ConversationData->FindRow<FAOS_ConversationData>(RowNameToSearch, ContextString, true);
 
+		//Broadcast Current Character Speaking
+		OnCharacterSpeakingChange.Broadcast(ConversationRow->Character);
+
+
 		if (ConversationRow && ConversationRow->Character != "NickMulti")
 		{
+
 			//Setting Dialog Text
 			Local_Dialogue = ConversationRow->Dialogue;
+
+			//Broadcast Dialog for Display
+			OnDialogDisplayed.Broadcast(Local_Dialogue);
 
 			//Displaying Text (Debug)
 			DebugSimpleConversationLines(ConversationRow, Local_Dialogue);
@@ -120,12 +128,16 @@ void UAoS_DialogueComponent::PlayConversation()
 
 				SetConversationMultipleAnswerTags(ConversationRow, &Local_TagAnswerA, &Local_TagAnswerB, &Local_TagAnswerC, &Local_TagAnswerD);
 
+				//Broadcast Dialog for Display AND Multichoice
+				OnDialogDisplayed.Broadcast(Local_Dialogue);
+				OnMultiChoiceDisplayed.Broadcast(Local_TagAnswerA, Local_TagAnswerB, Local_TagAnswerC, Local_TagAnswerD);
+
 				//Displaying Answer Option to Player
 				DebugMultiConversationLines(Local_Dialogue, Local_TagAnswerA, Local_TagAnswerB, Local_TagAnswerC, Local_TagAnswerD);
 
 				//bNPC_Talking to keep conversation flowing
 				FTimerDelegate TimerDelegate;
-				TimerDelegate.BindLambda([&]{ bNPC_Talking = false; });
+				TimerDelegate.BindLambda([&] { bNPC_Talking = false; });
 				FTimerHandle TimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);
 
@@ -146,9 +158,9 @@ void UAoS_DialogueComponent::PlayConversation()
 				//Add Count
 				ConversationCount++;
 
-				
+
 				FTimerDelegate TimerDelegate;
-				TimerDelegate.BindLambda([&]{ bNPC_Talking = true;});
+				TimerDelegate.BindLambda([&] { bNPC_Talking = true;});
 				FTimerHandle TimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);
 
@@ -172,7 +184,7 @@ void UAoS_DialogueComponent::PlayConversation()
 
 void UAoS_DialogueComponent::StartInterrogation()
 {
-	if(!ConversationData || !InterrogationData) {return;}
+	if (!ConversationData || !InterrogationData) { return; }
 	if (InterrogationCount < InterrogationData->GetRowNames().Num())
 	{
 		//If InterrogationCount == 0 then get first line
@@ -198,44 +210,125 @@ void UAoS_DialogueComponent::PlayInterrogation()
 		static const FString ContextString(TEXT("InterrogationDataContext"));
 		FAOS_InterrogationData* InterrogationRow = InterrogationData->FindRow<FAOS_InterrogationData>(RowNameToSearch, ContextString, true);
 
-		if (InterrogationRow && !InterrogationRow->Allow_Evidence)
-		{
-			//Setting Dialog Text
-			Local_Dialogue = InterrogationRow->Dialogue;
+		//Broadcast Current Character Speaking
+		OnCharacterSpeakingChange.Broadcast(InterrogationRow->Character);
 
-			//Displaying Text (Debug)
-			DebugInterrogationLinesNoEvidence(InterrogationRow, Local_Dialogue);
-
-			//Wait for Player Input
-			SetComponentTickEnabled(false);
-
-			//Check if pissed off 
-			AddInterrogationIrritation(InterrogationRow);
-
-			//Get Next Line:
-			GetNewInterrogationLine(InterrogationRow);
-
-			//Adds progression
-			AddInterrogationProgression(InterrogationRow);
-
-			//Add Counter 
-			InterrogationCount++;
-
-		}
-
-		else if (InterrogationRow && InterrogationRow->Allow_Evidence)
+		if (InterrogationRow && !InterrogationRow->Allow_Evidence && !InterrogationRow->Allow_Scrutiny && InterrogationRow->Line_Order < 1)
 		{
 			if (!bHasSelectedEvidence)
 			{
 				//Setting Dialog Text
 				Local_Dialogue = InterrogationRow->Dialogue;
 
+				//Broadcast Dialog for Display
+				OnDialogDisplayed.Broadcast(Local_Dialogue);
+
+				//Displaying Text (Debug)
+				DebugInterrogationLinesNoEvidence(InterrogationRow, Local_Dialogue);
+
+				//bSelectedEvidence to keep conversation flowing
+				FTimerDelegate TimerDelegate;
+				TimerDelegate.BindLambda([&] {bHasSelectedEvidence = true;});
+				FTimerHandle TimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);
+
+				//Wait for Player Input
+				SetComponentTickEnabled(false);
+			}
+			else
+			{
+				//Get Next Line:
+				GetNewInterrogationLine(InterrogationRow);
+
+				//Check if pissed off 
+				AddInterrogationIrritation(InterrogationRow);
+
+				//Adds progression
+				AddInterrogationProgression(InterrogationRow);
+
+				//Add Counter 
+				InterrogationCount++;
+
+				//Keep Flow
+				bHasSelectedEvidence = false;
+			}	
+
+		}
+		else if (InterrogationRow && !InterrogationRow->Allow_Evidence && !InterrogationRow->Allow_Scrutiny && InterrogationRow->Line_Order > 0)
+		{
+
+
+			if (!bHasSelectedEvidence)
+			{
+				//Check if it belong to main tree and register it
+				UpdateInterrogationRegister(InterrogationRow);
+
+				//Setting Dialog Text
+				Local_Dialogue = InterrogationRow->Dialogue;
+
+				//Broadcast Dialog for Display
+				OnDialogDisplayed.Broadcast(Local_Dialogue);
+
+				//Displaying Text (Debug)
+				DebugInterrogationLinesNoEvidence(InterrogationRow, Local_Dialogue);
+
+				//bSelectedEvidence to keep conversation flowing
+				FTimerDelegate TimerDelegate;
+				TimerDelegate.BindLambda([&] {bHasSelectedEvidence = true;});
+				FTimerHandle TimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);
+
+				//Wait for Player Input
+				SetComponentTickEnabled(false);
+			}
+			else
+			{
+				//Check for new line
+				GetNewInterrogationLine(InterrogationRow);
+	
+				//Check if pissed off or Adds progression
+				AddInterrogationIrritation(InterrogationRow);
+
+				AddInterrogationProgression(InterrogationRow);
+
+				//Add Counter
+				InterrogationCount++;
+					
+				//bSelectedEvidence to keep conversation flowing
+				bHasSelectedEvidence = false;
+
+				/*
+				* THIS CREATES A DELAY THAT DOES NOT WORK
+				* LEFT HERE FOR REFERENCE
+				FTimerDelegate TimerDelegate;
+				TimerDelegate.BindLambda([&] {bHasSelectedEvidence = false;});
+				FTimerHandle TimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);*/
+			}
+
+
+			
+		}
+
+		else if (InterrogationRow && InterrogationRow->Allow_Evidence && !InterrogationRow->Allow_Scrutiny)
+		{
+			if (!bHasSelectedEvidence)
+			{
+				//update if main tree
+				UpdateInterrogationRegister(InterrogationRow);
+
+				//Setting Dialog Text
+				Local_Dialogue = InterrogationRow->Dialogue;
+
+				//Broadcast Dialog for Display
+				OnDialogDisplayed.Broadcast(Local_Dialogue);
+
 				//Displaying Text (Debug)
 				DebugInterrogationLinesWithEvidence(InterrogationRow, Local_Dialogue);
 
 				//bSelectedEvidence to keep conversation flowing
 				FTimerDelegate TimerDelegate;
-				TimerDelegate.BindLambda([&]{bHasSelectedEvidence = true;});
+				TimerDelegate.BindLambda([&] {bHasSelectedEvidence = true;});
 				FTimerHandle TimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);
 
@@ -250,9 +343,9 @@ void UAoS_DialogueComponent::PlayInterrogation()
 
 				//if selects a proper evidence
 				//Checks if the array has a slot for selected player input
-				if (TempEvidence.IsValidIndex(FCString::Atoi(*PlayerAnswerChoice) - 1))
+				if (TempEvidence.IsValidIndex(FCString::Atoi(*PlayerAnswerChoice) - 1) || PlayerAnswerChoice == "0")
 				{
-					GetInterrogationLineWithEvidence(ContextString);
+					GetInterrogationLineWithEvidence(InterrogationRow);
 				}
 				//Else or if presses 0 then do usual
 				else
@@ -270,11 +363,53 @@ void UAoS_DialogueComponent::PlayInterrogation()
 				//Add Counter
 				InterrogationCount++;
 
+				//Reset Conversation Flow
+				bHasSelectedEvidence = false;
+
+			}
+		}
+		else if (InterrogationRow && !InterrogationRow->Allow_Evidence && InterrogationRow->Allow_Scrutiny)
+		{
+
+			if (!bHasSelectedEvidence)
+			{
+
+				//Check if it belong to main tree and register it
+				UpdateInterrogationRegister(InterrogationRow);
+
+				//Setting Dialog Text
+				Local_Dialogue = InterrogationRow->Dialogue;
+
+				//Broadcast Dialog for Display
+				OnDialogDisplayed.Broadcast(Local_Dialogue);
+
+				//Displaying Text (Debug)
+				DebugInterrogationLinesNoEvidence(InterrogationRow, Local_Dialogue);
+
 				//bSelectedEvidence to keep conversation flowing
 				FTimerDelegate TimerDelegate;
-				TimerDelegate.BindLambda([&] {bHasSelectedEvidence = false;});
+				TimerDelegate.BindLambda([&] {bHasSelectedEvidence = true;});
 				FTimerHandle TimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);
+
+				//Pause Program
+				SetComponentTickEnabled(false);
+
+			}
+			else
+			{
+				//Get Next line, it includes Scruitny 
+				GetNewInterrogationLine(InterrogationRow);
+
+				//Check if pissed off or Adds progression
+				AddInterrogationIrritation(InterrogationRow);
+
+				AddInterrogationProgression(InterrogationRow);
+
+				//Add Counter
+				InterrogationCount++;
+
+				bHasSelectedEvidence = false;
 
 			}
 		}
@@ -285,6 +420,9 @@ void UAoS_DialogueComponent::PlayInterrogation()
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Line Not Found")));
 			}
 		}
+
+
+
 
 	}
 }
@@ -385,7 +523,7 @@ void UAoS_DialogueComponent::DebugMultiConversationPlayerAnswers(FAOS_Conversati
 	}
 }
 
-void UAoS_DialogueComponent::SetConversationMultipleAnswerTags(FAOS_ConversationData* Conversation_Row, FString*LocalTagA, FString *LocalTagB, FString *LocalTagC, FString *LocalTagD)
+void UAoS_DialogueComponent::SetConversationMultipleAnswerTags(FAOS_ConversationData* Conversation_Row, FString* LocalTagA, FString* LocalTagB, FString* LocalTagC, FString* LocalTagD)
 {
 	if (Conversation_Row->TagFor_A != "")
 	{
@@ -414,46 +552,49 @@ void UAoS_DialogueComponent::SetConversationMultipleAnswerTags(FAOS_Conversation
 
 void UAoS_DialogueComponent::GetNewSimpleConversationLine(FAOS_ConversationData* Conversation_Row)
 {
-	if (Conversation_Row->TransitionOverride)
-	{
-		RowNameToSearch = FName(*Conversation_Row->IF_Dialog);
-	}
 
-	else
-	{
-		//Automatically based on this Line Number (Ex: Line01)
-		FString NewRowName = RowNameToSearch.ToString();
-		FString StringToInt = NewRowName;
-
-		int32 n1 = FCString::Atoi(*StringToInt.RightChop(StringToInt.Len() - 1));
-		StringToInt.RemoveAt(StringToInt.Len() - 1);
-		int32 n2 = FCString::Atoi(*(StringToInt.RightChop(StringToInt.Len() - 1)));
-
-		if (n1 < 9)
+		if (Conversation_Row->TransitionOverride)
 		{
-			n1++;
-		}
-		else if (n1 >= 9)
-		{
-			n1 = 0;
-			n2++;
+			RowNameToSearch = FName(*Conversation_Row->IF_Dialog);
 		}
 
-		//If this line is bigger than Array End Conversation
-		int32 ControlNumber = n2 * 10 + n1;
-		if (ControlNumber > ConversationData->GetRowNames().Num())
+		else
 		{
-			RowNameToSearch = FName("End");
-			return;
+			//Automatically based on this Line Number (Ex: Line01)
+			FString NewRowName = RowNameToSearch.ToString();
+			FString StringToInt = NewRowName;
+
+			int32 n1 = FCString::Atoi(*StringToInt.RightChop(StringToInt.Len() - 1));
+			StringToInt.RemoveAt(StringToInt.Len() - 1);
+			int32 n2 = FCString::Atoi(*(StringToInt.RightChop(StringToInt.Len() - 1)));
+
+			if (n1 < 9)
+			{
+				n1++;
+			}
+			else if (n1 >= 9)
+			{
+				n1 = 0;
+				n2++;
+			}
+
+			//If this line is bigger than Array End Conversation
+			int32 ControlNumber = n2 * 10 + n1;
+			if (ControlNumber > ConversationData->GetRowNames().Num())
+			{
+				RowNameToSearch = FName("End");
+				return;
+			}
+
+			NewRowName.RemoveAt(NewRowName.Len() - 1);
+			NewRowName.RemoveAt(NewRowName.Len() - 1);
+			NewRowName.AppendInt(n2);
+			NewRowName.AppendInt(n1);
+			RowNameToSearch = FName(*NewRowName);
+
 		}
+	
 
-		NewRowName.RemoveAt(NewRowName.Len() - 1);
-		NewRowName.RemoveAt(NewRowName.Len() - 1);
-		NewRowName.AppendInt(n2);
-		NewRowName.AppendInt(n1);
-		RowNameToSearch = FName(*NewRowName);
-
-	}
 }
 
 void UAoS_DialogueComponent::GetNewMultiConversationLine(FAOS_ConversationData* Conversation_Row)
@@ -645,72 +786,175 @@ void UAoS_DialogueComponent::DebugInterrogationLinesWithEvidence(FAOS_Interrogat
 
 void UAoS_DialogueComponent::AddInterrogationProgression(FAOS_InterrogationData* Interrogation_Row)
 {
-	if (Interrogation_Row->AddProgression && Interrogation_Row->Interrogation_Progression != InterrogationProgression)
+	if (Interrogation_Row->AddProgression)
 	{
 		int32 LocalPorgression = FCString::Atoi(*InterrogationProgression) + 1;
 		InterrogationProgression = FString::FromInt(LocalPorgression);
+
+		if (!Interrogation_Row->Override_Text_In.IsEmpty())
+		{
+			//Override TempInterrogationRow Dialog with InterrogationRow Dialog
+			//This is a bit aggresive but may work. Needs test since it override the text from the Data Table
+			static const FString TempContextString(TEXT("InterrogationDataContext"));
+			FAOS_InterrogationData* TempInterrogationRow = InterrogationData->FindRow<FAOS_InterrogationData>(FName(Interrogation_Row->Override_Text_In), TempContextString, true);
+
+			TempInterrogationRow->Dialogue = Interrogation_Row->Dialogue;
+			TempInterrogationRow->Allow_Scrutiny = false;
+		}
 	}
-}
 
-void UAoS_DialogueComponent::GetInterrogationLineWithEvidence(const FString Context_String)
-{
-
+	//Check if player has finished all clues
 	TArray<FAOS_InterrogationData*> TempArr;
-	InterrogationData->GetAllRows(Context_String, TempArr);
+	static const FString TempContextString(TEXT("InterrogationDataContext"));
+	InterrogationData->GetAllRows(TempContextString, TempArr);
 
 	for (int i = 0; i < TempArr.Num(); i++)
 	{
-		//Check if evidence ID matches Row
-		//if so get the proper line
-		if (TempArr.IsValidIndex(i) && TempArr[i]->Evidence_ID == TempEvidence[FCString::Atoi(*PlayerAnswerChoice) - 1].EvidenceID)
+		if (TempArr.IsValidIndex(i) && TempArr[i]->Allow_Scrutiny)
 		{
-			//IF Any ID has a OnlyShowInProgression you NEED to put it before the option that does not in Excel
-			//Hopefully find an automated solution
-			if (TempArr[i]->OnlyShowInProgression != "" && TempArr[i]->OnlyShowInProgression == InterrogationProgression)
-			{
-				if (i < 9)
-				{
-					//add one because i is i-1 in Array
-					FString NameToSearch = "Line0" + FString::FromInt(i + 1);
-					RowNameToSearch = *NameToSearch;
-				}
-				else
-				{
-					FString NameToSearch = "Line" + FString::FromInt(i + 1);
-					RowNameToSearch = *NameToSearch;
-				}
-				break;
-			}
-			else if (TempArr[i]->OnlyShowInProgression == "")
-			{
-				if (i < 9)
-				{
-					//add one because i is i-1 in Array
-					FString NameToSearch = "Line0" + FString::FromInt(i + 1);
-					RowNameToSearch = *NameToSearch;
-				}
-				else
-				{
-					FString NameToSearch = "Line" + FString::FromInt(i + 1);
-					RowNameToSearch = *NameToSearch;
-				}
-				break;
-			}
+			return;
+			break;
 		}
+
+	}
+	//if no allow scrutiny left player has finished
+	RowNameToSearch = "EndWithSucess";
+
+
+}
+
+void UAoS_DialogueComponent::GetInterrogationLineWithEvidence(FAOS_InterrogationData* Interrogation_Row)
+{
+
+	if (TempEvidence.IsValidIndex(FCString::Atoi(*PlayerAnswerChoice) - 1))
+	{
+		if (TempEvidence[FCString::Atoi(*PlayerAnswerChoice) - 1].EvidenceID == Interrogation_Row->Evidence_ID)
+		{
+			RowNameToSearch = FName(Interrogation_Row->If_Correct_To);
+		}
+		else
+		{
+			RowNameToSearch = FName(Interrogation_Row->If_Incorrect_To);
+		}
+	}
+	else if (PlayerAnswerChoice == "0")
+	{
+		RowNameToSearch = FName(Interrogation_Row->If_Incorrect_To);
 	}
 }
 
 void UAoS_DialogueComponent::GetNewInterrogationLine(FAOS_InterrogationData* Interrogation_Row)
 {
-	if (Interrogation_Row->TransitionOverride)
+
+	if (Interrogation_Row->Line_Order > 0 && PlayerAnswerChoice == "Backward")
 	{
+		//Check if the previous line actually exists
+		//Location 2 would be in Arr[1] so that's why we substract -2
+		if (InterrogationRegister.IsValidIndex(InterrogationMainTreeLocation - 2))
+		{
+			TArray<FAOS_InterrogationData*> TempArr;
+			static const FString TempContextString(TEXT("InterrogationDataContext"));
+			InterrogationData->GetAllRows(TempContextString, TempArr);
 
-		RowNameToSearch = FName(*Interrogation_Row->OverrideTo);
+			for (int i = 0; i < TempArr.Num(); i++)
+			{
+				if (TempArr.IsValidIndex(i) && TempArr[i]->Line_Order == InterrogationMainTreeLocation - 1)
+				{
+					if (i < 9)
+					{
+						//Need to add +1 since index is -1
+						FString NameToSearch = "Line0" + FString::FromInt(i + 1);
+						RowNameToSearch = *NameToSearch;
+					}
+					else
+					{
+						FString NameToSearch = "Line" + FString::FromInt(i + 1);
+						RowNameToSearch = *NameToSearch;
+					}
+					break;
+				}
+			}
 
+			return;
+		}
+		else
+		{
+			//Check if the previous line actually exists
+//Location 2 would be in Arr[1] so that's why we substract -2
+			if (InterrogationRegister.IsValidIndex(InterrogationMainTreeLocation - 2))
+			{
+				TArray<FAOS_InterrogationData*> TempArr;
+				static const FString TempContextString(TEXT("InterrogationDataContext"));
+				InterrogationData->GetAllRows(TempContextString, TempArr);
+
+				for (int i = 0; i < TempArr.Num(); i++)
+				{
+					if (TempArr.IsValidIndex(i) && TempArr[i]->Line_Order == InterrogationMainTreeLocation - 1)
+					{
+						if (i < 9)
+						{
+							//Need to add +1 since index is -1
+							FString NameToSearch = "Line0" + FString::FromInt(i + 1);
+							RowNameToSearch = *NameToSearch;
+						}
+						else
+						{
+							FString NameToSearch = "Line" + FString::FromInt(i + 1);
+							RowNameToSearch = *NameToSearch;
+						}
+						break;
+					}
+				}
+
+				return;
+			}
+			//If not valid then stay in the same line
+			else
+			{
+				TArray<FAOS_InterrogationData*> TempArr;
+				static const FString TempContextString(TEXT("InterrogationDataContext"));
+				InterrogationData->GetAllRows(TempContextString, TempArr);
+
+				for (int i = 0; i < TempArr.Num(); i++)
+				{
+					if (TempArr.IsValidIndex(i) && TempArr[i]->Line_Order == InterrogationMainTreeLocation)
+					{
+						if (i < 9)
+						{
+							//Need to add +1 since index is -1
+							FString NameToSearch = "Line0" + FString::FromInt(i + 1);
+							RowNameToSearch = *NameToSearch;
+						}
+						else
+						{
+							FString NameToSearch = "Line" + FString::FromInt(i + 1);
+							RowNameToSearch = *NameToSearch;
+						}
+						break;
+					}
+				}
+
+				return;
+			}
+		}
+	}
+
+	if (Interrogation_Row->Allow_Scrutiny && PlayerAnswerChoice == "Scrutiny")
+	{
+		RowNameToSearch = FName(*Interrogation_Row->If_Scrutiny_To);
+		return;
 
 	}
 
-	else
+	else if (PlayerAnswerChoice == "Forward" && Interrogation_Row->TransitionOverride)
+	{
+
+		RowNameToSearch = FName(*Interrogation_Row->OverrideTo);
+		return;
+
+	}
+
+	else if (PlayerAnswerChoice == "Forward" && !Interrogation_Row->TransitionOverride)
 	{
 		//Automatically based on this Line Number (Ex: Line01)
 		FString NewRowName = RowNameToSearch.ToString();
@@ -745,6 +989,7 @@ void UAoS_DialogueComponent::GetNewInterrogationLine(FAOS_InterrogationData* Int
 		RowNameToSearch = FName(*NewRowName);
 
 	}
+	
 }
 
 void UAoS_DialogueComponent::GetFirstInterrogationLine()
@@ -758,7 +1003,7 @@ void UAoS_DialogueComponent::GetFirstInterrogationLine()
 
 		for (int i = 0; i < TempArr.Num(); i++)
 		{
-			if (TempArr.IsValidIndex(i) && TempArr[i]->Interrogation_Progression == InterrogationProgression)
+			if (TempArr.IsValidIndex(i))
 			{
 				if (i < 9)
 				{
@@ -795,7 +1040,7 @@ void UAoS_DialogueComponent::StartInterrogationNewLoop()
 		for (int i = 0; i < TempArr.Num(); i++)
 		{
 
-			if (TempArr.IsValidIndex(i) && TempArr[i]->Interrogation_Progression == InterrogationProgression)
+			if (TempArr.IsValidIndex(i))
 			{
 				if (i < 9)
 				{
@@ -817,30 +1062,72 @@ void UAoS_DialogueComponent::EndInterrogation()
 {
 	if (RowNameToSearch == "End")
 	{
+
 		ConversationCount = 0;
 		bRunConversation = false;
+		bStartInterrogation = false;
 		OnInterrogationEnd.Broadcast();
 		GEngine->ClearOnScreenDebugMessages();
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended")), false, FVector2D(3.f, 3.f));
 		return;
 	}
+	else if (RowNameToSearch == "EndWithSucess")
+	{
+		ConversationCount = 0;
+		bRunConversation = false;
+		bStartInterrogation = false;
+		OnInterrogationEnd.Broadcast();
+		GEngine->ClearOnScreenDebugMessages();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended Sucessfully")), false, FVector2D(3.f, 3.f));
+		return;
+	}
+	else if (RowNameToSearch == "EndFatal")
+	{
+		ConversationCount = 0;
+		bRunConversation = false;
+		bStartInterrogation = false;
+		OnInterrogationEnd.Broadcast();
+		GEngine->ClearOnScreenDebugMessages();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended Fatally")), false, FVector2D(3.f, 3.f));
+		return;
+	}
+
 }
 
 void UAoS_DialogueComponent::AddInterrogationIrritation(FAOS_InterrogationData* Interrogation_Row)
 {
 	if (Interrogation_Row->PissedOf)
 	{
-		PissedOfMeter++;
+		AnnoyanceMeter = AnnoyanceMeter + AnnoyanceAmountPerMiss;
 
-		if (PissedOfMeter >= 3)
+		if (AnnoyanceMeter >= MaxAmountAnnoyanceAllowed)
 		{
 			InterrogationProgression = "-1";
+			RowNameToSearch = "EndFatal";
 		}
 	}
+}
+void UAoS_DialogueComponent::UpdateInterrogationRegister(FAOS_InterrogationData* Interrogation_Row)
+{
+	if (!InterrogationRegister.IsValidIndex(Interrogation_Row->Line_Order - 1))
+	{
+		InterrogationRegister.Add(Interrogation_Row);
+	}
+	else
+	{
+		InterrogationRegister[Interrogation_Row->Line_Order - 1] = Interrogation_Row;
+	}
+
+	//Logs location in the main tree
+	InterrogationMainTreeLocation = Interrogation_Row->Line_Order;
+
+	//UE_LOG(LogTemp, Warning, TEXT("Inter Location: %s"), *FString::FromInt(InterrogationMainTreeLocation));
+	
 }
 
 void UAoS_DialogueComponent::DecodePlayerEvidenceAnswer(FString PlayerChoice)
 {
+
 	if (PlayerChoice == "A")
 	{
 		PlayerAnswerChoice = "1";
@@ -857,14 +1144,6 @@ void UAoS_DialogueComponent::DecodePlayerEvidenceAnswer(FString PlayerChoice)
 	{
 		PlayerAnswerChoice = "4";
 	}
-	else if (PlayerChoice == "E")
-	{
-		PlayerAnswerChoice = "5";
-	}
-	else if (PlayerChoice == "F")
-	{
-		PlayerAnswerChoice = "6";
-	}
 	else
 	{
 		PlayerAnswerChoice = "0";
@@ -874,6 +1153,7 @@ void UAoS_DialogueComponent::DecodePlayerEvidenceAnswer(FString PlayerChoice)
 void UAoS_DialogueComponent::SetPlayerAnswer(FString Answer)
 {
 	PlayerAnswerChoice = Answer;
+
 	SetComponentTickEnabled(true);
 }
 
