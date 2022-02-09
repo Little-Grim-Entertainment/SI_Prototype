@@ -3,6 +3,7 @@
 
 #include "Actors/AoS_InteractableActor.h"
 #include "Components/Scene/AoS_InteractableComponent.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 AAoS_InteractableActor::AAoS_InteractableActor()
@@ -14,6 +15,10 @@ AAoS_InteractableActor::AAoS_InteractableActor()
 	Mesh->SetupAttachment(RootComponent);
 	InteractableComponent = CreateDefaultSubobject<UAoS_InteractableComponent>(TEXT("InteractableComponent"));
 	InteractableComponent->SetupAttachment(RootComponent);
+	InteractionIcon = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionIcon"));
+	InteractionIcon->SetupAttachment(RootComponent);
+	InteractionPrompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionPrompt"));
+	InteractionPrompt->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
