@@ -15,10 +15,13 @@ public:
 	// Sets default values for this actor's properties
 	AAoS_InteractableActor();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
+	UStaticMeshComponent* Mesh;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UAoS_InteractableComponent* InteractableComponent;
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	class UBoxComponent* OverlapBox;
+	
 
 protected:
 	// Called when the game starts or when spawned
