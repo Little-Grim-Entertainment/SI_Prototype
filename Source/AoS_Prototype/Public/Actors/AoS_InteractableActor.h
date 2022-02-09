@@ -21,9 +21,9 @@ public:
 	class UAoS_InteractableComponent* InteractableComponent;
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	class UBoxComponent* OverlapBox;
-	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UWidgetComponent* InteractionIcon;
-	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UWidgetComponent* InteractionPrompt;
 	
 
