@@ -54,4 +54,6 @@ public:
 	// Setters
 	UFUNCTION(BlueprintCallable)
 	void SetIsInteractable(bool bInteractable){bIsInteractable = bInteractable;}
+	UFUNCTION(BlueprintCallable)
+	void SetInteractionText(FText TextToSet) { InteractionText = TextToSet;}
 };
