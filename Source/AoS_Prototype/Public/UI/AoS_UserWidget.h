@@ -28,7 +28,7 @@ protected:
 
 	virtual void NativePreConstruct() override;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	bool SetDefaults();
 	
 	// Getters
