@@ -42,7 +42,7 @@ void AAoS_PlayerController::BeginPlay()
 
 void AAoS_PlayerController::RequestMoveForward(float Value)
 {
-	if  (!bPlayerCanMove) return;
+	if  (!bPlayerCanMove || !GetPawn()) return;
 	if ((Value != 0.0f))
 	{
 		// find out which way is forward
@@ -57,7 +57,7 @@ void AAoS_PlayerController::RequestMoveForward(float Value)
 
 void AAoS_PlayerController::RequestMoveRight(float Value)
 {
-	if  (!bPlayerCanMove) return;
+	if  (!bPlayerCanMove || !GetPawn()) return;
 	if ((Value != 0.0f))
 	{
 		// find out which way is right
@@ -73,35 +73,38 @@ void AAoS_PlayerController::RequestMoveRight(float Value)
 
 void AAoS_PlayerController::RequestLookUp(float AxisValue)
 {
-	if  (!bPlayerCanTurn) return;
+	if  (!bPlayerCanTurn || !GetPawn()) return;
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AAoS_PlayerController::RequestTurnRight(float AxisValue)
 {
-	if  (!bPlayerCanTurn) return;
+	if  (!bPlayerCanTurn || !GetPawn()) return;
 	AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AAoS_PlayerController::RequestInteract()
 {
-	if (!FocusedActor) {return;}
+	if (!FocusedActor || !GetPawn()) {return;}
 	OnInteractPressed(FocusedActor, this);
 }
 
 void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
 {
+	if (!ActorToAdd || !this) {return;}
+	
 	InteractableActors.AddUnique(ActorToAdd);
 	OnInteractableActorAdded.Broadcast(InteractableActors);
 }
 
 void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
 {
-	InteractableActors.Remove(ActorToRemove);
+	if (!ActorToRemove || !this) {return;}
+	
 	if (InteractableActors.Num() == 0)
-	{
-		OnInteractableActorRemoved.Broadcast();
-	}
+		{
+			OnInteractableActorRemoved.Broadcast();
+		}
 }
 
 UAoS_HUD* AAoS_PlayerController::GetPlayerHUD()
