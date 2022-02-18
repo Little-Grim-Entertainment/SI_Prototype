@@ -24,6 +24,7 @@ void UAoS_InteractableComponent::BeginPlay()
 
 void UAoS_InteractableComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor == GetOwner()) {return;}
 	PlayerCharacter = Cast<AAoS_Nick>(OtherActor);
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerCharacter && PlayerController && bIsInteractable)
@@ -35,7 +36,7 @@ void UAoS_InteractableComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedC
 
 void UAoS_InteractableComponent::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (PlayerCharacter && bIsInteractable)
+	if (PlayerCharacter)
 	{
 		OnPlayerEndOverlap.Broadcast(PlayerCharacter);
 		PlayerController->RemoveFromInteractableActors(GetOwner());
