@@ -100,7 +100,8 @@ void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
 void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
 {
 	if (!ActorToRemove || !this) {return;}
-	
+
+	InteractableActors.Remove(ActorToRemove);
 	if (InteractableActors.Num() == 0)
 		{
 			OnInteractableActorRemoved.Broadcast();

@@ -16,6 +16,10 @@ class AOS_PROTOTYPE_API UAoS_InteractableComponent : public UBoxComponent
 
 	UPROPERTY()
 	bool bIsInteractable = true;
+	UPROPERTY()
+	AAoS_Nick* PlayerCharacter;
+	UPROPERTY()
+	class AAoS_PlayerController* PlayerController;
 	
 public:	
 	// Sets default values for this component's properties
@@ -53,7 +57,7 @@ public:
 
 	// Setters
 	UFUNCTION(BlueprintCallable)
-	void SetIsInteractable(bool bInteractable){bIsInteractable = bInteractable;}
+	void SetIsInteractable(bool bInteractable);
 	UFUNCTION(BlueprintCallable)
 	void SetInteractionText(FText TextToSet) { InteractionText = TextToSet;}
 };
