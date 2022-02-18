@@ -50,6 +50,11 @@ void UAoS_LineTraces::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			bInteractableFound = false;
 		}
 	}
+	else if (bInteractableFound)
+	{
+		PlayerController->SetFocusedActor(nullptr);
+		bInteractableFound = false;
+	}
 }
 
 // Interactable Actor Search
