@@ -21,8 +21,6 @@ void AAoS_PlayerController::SetupInputComponent()
 	check(InputComponent);
 
 	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
-	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
-
 	
 	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
