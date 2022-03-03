@@ -13,7 +13,12 @@ UCLASS()
 class AOS_PROTOTYPE_API AAoS_NPC_Interactable : public AAoS_NPC
 {
 	GENERATED_BODY()
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* NPC_Cam;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* NickCam;
+	
 public:
 
 	AAoS_NPC_Interactable();
@@ -30,4 +35,5 @@ public:
 	class UWidgetComponent* InteractionIcon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UWidgetComponent* InteractionPrompt;
+	
 };

@@ -39,7 +39,7 @@ void UAoS_DialogueComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	//THIS CONDITIONA TEMP UNTIL INTERACT KEY IS READY
 
-	if (InterrogationData && bStartInterrogation)
+	/*if (InterrogationData && bStartInterrogation)
 	{
 		StartInterrogation();
 	}
@@ -50,7 +50,7 @@ void UAoS_DialogueComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			bRunConversation = true;
 		StartConversation();
 
-	}
+	}*/
 
 
 	//if (GetOwner() && !GetOwner()->EndOver))
@@ -106,7 +106,7 @@ void UAoS_DialogueComponent::PlayConversation()
 			OnDialogDisplayed.Broadcast(Local_Dialogue);
 
 			//Displaying Text (Debug)
-			DebugSimpleConversationLines(ConversationRow, Local_Dialogue);
+			//DebugSimpleConversationLines(ConversationRow, Local_Dialogue);
 
 			//Wait for Player Input
 			SetComponentTickEnabled(false);
@@ -133,7 +133,7 @@ void UAoS_DialogueComponent::PlayConversation()
 				OnMultiChoiceDisplayed.Broadcast(Local_TagAnswerA, Local_TagAnswerB, Local_TagAnswerC, Local_TagAnswerD);
 
 				//Displaying Answer Option to Player
-				DebugMultiConversationLines(Local_Dialogue, Local_TagAnswerA, Local_TagAnswerB, Local_TagAnswerC, Local_TagAnswerD);
+				//DebugMultiConversationLines(Local_Dialogue, Local_TagAnswerA, Local_TagAnswerB, Local_TagAnswerC, Local_TagAnswerD);
 
 				//bNPC_Talking to keep conversation flowing
 				FTimerDelegate TimerDelegate;
@@ -150,7 +150,7 @@ void UAoS_DialogueComponent::PlayConversation()
 				GetMultiConversationPlayerInput();
 
 				//Display Player's Answer
-				DebugMultiConversationPlayerAnswers(ConversationRow);
+				//DebugMultiConversationPlayerAnswers(ConversationRow);
 
 				//Selecting New Dialog
 				GetNewMultiConversationLine(ConversationRow);
@@ -324,7 +324,7 @@ void UAoS_DialogueComponent::PlayInterrogation()
 				OnDialogDisplayed.Broadcast(Local_Dialogue);
 
 				//Displaying Text (Debug)
-				DebugInterrogationLinesWithEvidence(InterrogationRow, Local_Dialogue);
+				//DebugInterrogationLinesWithEvidence(InterrogationRow, Local_Dialogue);
 
 				//bSelectedEvidence to keep conversation flowing
 				FTimerDelegate TimerDelegate;
@@ -384,7 +384,7 @@ void UAoS_DialogueComponent::PlayInterrogation()
 				OnDialogDisplayed.Broadcast(Local_Dialogue);
 
 				//Displaying Text (Debug)
-				DebugInterrogationLinesNoEvidence(InterrogationRow, Local_Dialogue);
+				//DebugInterrogationLinesNoEvidence(InterrogationRow, Local_Dialogue);
 
 				//bSelectedEvidence to keep conversation flowing
 				FTimerDelegate TimerDelegate;
@@ -743,8 +743,8 @@ void UAoS_DialogueComponent::EndConversation()
 		ConversationCount = 0;
 		bRunConversation = false;
 		OnConversationEnd.Broadcast();
-		GEngine->ClearOnScreenDebugMessages();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Conversation Ended")), false, FVector2D(3.f, 3.f));
+		//GEngine->ClearOnScreenDebugMessages();
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Conversation Ended")), false, FVector2D(3.f, 3.f));
 		return;
 	}
 }
@@ -1067,8 +1067,8 @@ void UAoS_DialogueComponent::EndInterrogation()
 		bRunConversation = false;
 		bStartInterrogation = false;
 		OnInterrogationEnd.Broadcast();
-		GEngine->ClearOnScreenDebugMessages();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended")), false, FVector2D(3.f, 3.f));
+		//GEngine->ClearOnScreenDebugMessages();
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended")), false, FVector2D(3.f, 3.f));
 		return;
 	}
 	else if (RowNameToSearch == "EndWithSucess")
@@ -1077,8 +1077,8 @@ void UAoS_DialogueComponent::EndInterrogation()
 		bRunConversation = false;
 		bStartInterrogation = false;
 		OnInterrogationEnd.Broadcast();
-		GEngine->ClearOnScreenDebugMessages();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended Sucessfully")), false, FVector2D(3.f, 3.f));
+		//GEngine->ClearOnScreenDebugMessages();
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended Sucessfully")), false, FVector2D(3.f, 3.f));
 		return;
 	}
 	else if (RowNameToSearch == "EndFatal")
@@ -1087,8 +1087,8 @@ void UAoS_DialogueComponent::EndInterrogation()
 		bRunConversation = false;
 		bStartInterrogation = false;
 		OnInterrogationEnd.Broadcast();
-		GEngine->ClearOnScreenDebugMessages();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended Fatally")), false, FVector2D(3.f, 3.f));
+		//GEngine->ClearOnScreenDebugMessages();
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Interrogation Ended Fatally")), false, FVector2D(3.f, 3.f));
 		return;
 	}
 

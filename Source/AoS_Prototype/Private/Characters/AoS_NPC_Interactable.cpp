@@ -5,6 +5,8 @@
 #include "Components/Actor/AoS_DialogueComponent.h"
 #include "Components/Scene/AoS_InteractableComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Camera/CameraComponent.h"
+
 
 
 AAoS_NPC_Interactable::AAoS_NPC_Interactable()
@@ -16,4 +18,8 @@ AAoS_NPC_Interactable::AAoS_NPC_Interactable()
 	InteractionIcon->SetupAttachment(RootComponent);
 	InteractionPrompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionPrompt"));
 	InteractionPrompt->SetupAttachment(RootComponent);
+	NPC_Cam = CreateDefaultSubobject<UCameraComponent>(TEXT("NPC Cam"));
+	NPC_Cam->SetupAttachment(RootComponent);
+	NickCam = CreateDefaultSubobject<UCameraComponent>(TEXT("Nick Cam"));
+	NickCam->SetupAttachment(RootComponent);
 }

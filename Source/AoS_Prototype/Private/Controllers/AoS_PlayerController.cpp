@@ -36,6 +36,8 @@ void AAoS_PlayerController::BeginPlay()
 		ShowHUD();
 	}
 
+	
+	
 	Super::BeginPlay();
 }
 
