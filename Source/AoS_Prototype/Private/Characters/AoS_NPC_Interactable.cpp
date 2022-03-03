@@ -2,8 +2,9 @@
 
 
 #include "Characters/AoS_NPC_Interactable.h"
-#include "Components/Actor/AoS_DialogueComponent.h"
 #include "Components/Scene/AoS_InteractableComponent.h"
+#include "Controllers/AoS_NPCController_Interactable.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "Components/WidgetComponent.h"
 #include "Camera/CameraComponent.h"
 
@@ -21,4 +22,32 @@ AAoS_NPC_Interactable::AAoS_NPC_Interactable()
 	NPC_Cam->SetupAttachment(RootComponent);
 	NickCam = CreateDefaultSubobject<UCameraComponent>(TEXT("Nick Cam"));
 	NickCam->SetupAttachment(RootComponent);
+}
+
+
+void AAoS_NPC_Interactable::BeginPlay()
+{
+	Super::BeginPlay();
+
+	SetAIDialogueTree();
+}
+
+void AAoS_NPC_Interactable::SetAIDialogueTree()
+{
+	AIController = Cast<AAoS_NPCController_Interactable>(GetController());
+	if (AIController)
+	{
+		if (DialogueTree)
+		{
+			AIController->SetDialogueTree(DialogueTree);
+		}
+	}
+}
+
+void AAoS_NPC_Interactable::StartDialogue()
+{
+	if (AIController)
+	{
+		AIController->StartDialogue();
+	}
 }
