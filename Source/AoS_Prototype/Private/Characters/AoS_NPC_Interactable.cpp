@@ -11,7 +11,6 @@
 
 AAoS_NPC_Interactable::AAoS_NPC_Interactable()
 {
-	DialogueComponent = CreateDefaultSubobject<UAoS_DialogueComponent>(TEXT("DialogueComponent"));
 	InteractableComponent = CreateDefaultSubobject<UAoS_InteractableComponent>(TEXT("InteractableComponent"));
 	InteractableComponent->SetupAttachment(RootComponent);
 	InteractionIcon = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionIcon"));
