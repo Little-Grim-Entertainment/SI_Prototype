@@ -17,7 +17,7 @@ class AOS_PROTOTYPE_API AAoS_NPC_Interactable : public AAoS_NPC
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* NPC_Cam;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* NickCam;
+	UCameraComponent* NickCam;
 	UPROPERTY()
 	class AAoS_NPCController_Interactable* AIController;
 

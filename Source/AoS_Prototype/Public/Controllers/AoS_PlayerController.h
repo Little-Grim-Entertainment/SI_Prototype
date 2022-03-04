@@ -69,7 +69,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RefreshHUD();
 	UFUNCTION(BlueprintCallable)
-	void LockPlayerMovement(bool bCanMove, bool bCanTurn);
+	void LockPlayerMovement(bool bLockMovement, bool bLockTurning);
 	
 	void SetFocusedActor(AActor* ActorToSet);
 	void AddToInteractableActors(AActor* ActorToAdd);
