@@ -18,6 +18,8 @@ public:
 
 	UFUNCTION()
 	void StartDialogue();
+	UFUNCTION()
+	void EndDialogue();
 	
 	UFUNCTION()
 	void SetDialogueTree(UBehaviorTree* DialogueTreeToSet) {DialogueTree = DialogueTreeToSet;}

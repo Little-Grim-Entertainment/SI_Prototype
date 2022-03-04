@@ -12,3 +12,11 @@ void AAoS_NPCController_Interactable::StartDialogue()
 		RunBehaviorTree(DialogueTree);
 	}
 }
+
+void AAoS_NPCController_Interactable::EndDialogue()
+{
+	if (DialogueTree)
+	{
+		BrainComponent->StopLogic("Conversation Ended");
+	}
+}

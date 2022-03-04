@@ -41,6 +41,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StartDialogue();
+    UFUNCTION(BlueprintCallable)
+    void EndtDialogue();
 
 protected:
 

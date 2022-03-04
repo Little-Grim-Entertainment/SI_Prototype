@@ -51,3 +51,11 @@ void AAoS_NPC_Interactable::StartDialogue()
 		AIController->StartDialogue();
 	}
 }
+
+void AAoS_NPC_Interactable::EndtDialogue()
+{
+	if (AIController)
+	{
+		AIController->EndDialogue();
+	}
+}
