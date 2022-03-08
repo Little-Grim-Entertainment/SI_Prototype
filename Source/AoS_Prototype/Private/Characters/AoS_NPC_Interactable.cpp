@@ -22,6 +22,9 @@ AAoS_NPC_Interactable::AAoS_NPC_Interactable()
 	NPC_Cam->SetupAttachment(RootComponent);
 	NickCam = CreateDefaultSubobject<UCameraComponent>(TEXT("Nick Cam"));
 	NickCam->SetupAttachment(RootComponent);
+	NickPosition = CreateDefaultSubobject<USceneComponent>(TEXT("NickPosition"));
+	NickPosition->SetupAttachment(RootComponent);
+	
 }
 
 
@@ -52,7 +55,7 @@ void AAoS_NPC_Interactable::StartDialogue()
 	}
 }
 
-void AAoS_NPC_Interactable::EndtDialogue()
+void AAoS_NPC_Interactable::EndDialogue()
 {
 	if (AIController)
 	{

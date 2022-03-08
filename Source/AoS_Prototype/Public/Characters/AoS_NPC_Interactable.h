@@ -20,12 +20,13 @@ class AOS_PROTOTYPE_API AAoS_NPC_Interactable : public AAoS_NPC
 	UCameraComponent* NickCam;
 	UPROPERTY()
 	class AAoS_NPCController_Interactable* AIController;
-
 	
 public:
-
+		
 	AAoS_NPC_Interactable();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	USceneComponent* NickPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
 	FText CharacterName;	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
@@ -42,8 +43,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartDialogue();
     UFUNCTION(BlueprintCallable)
-    void EndtDialogue();
-
+    void EndDialogue();
+	
 protected:
 
 	virtual void BeginPlay() override;

@@ -6,9 +6,18 @@
 #include "Engine/GameInstance.h"
 #include "AoS_GameInstance.generated.h"
 
-/**
- * 
- */
+
+
+
+USTRUCT(BlueprintType)
+struct FCharacterData
+{
+	GENERATED_BODY()
+
+	
+
+};
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
 {
