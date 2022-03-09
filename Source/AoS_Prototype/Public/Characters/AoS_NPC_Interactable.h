@@ -32,22 +32,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UAoS_InteractableComponent* InteractableComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	class UBehaviorTree* DialogueTree;
+	class UDlgDialogue* DialogueTree;
+	UPROPERTY(BlueprintReadWrite, Category = "Dialogue")
+	class UDlgContext* ActiveContext;
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	class UBoxComponent* OverlapBox;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,  Category = "Interaction")
 	class UWidgetComponent* InteractionIcon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UWidgetComponent* InteractionPrompt;
-
-	UFUNCTION(BlueprintCallable)
-	void StartDialogue();
-    UFUNCTION(BlueprintCallable)
-    void EndDialogue();
 	
 protected:
 
 	virtual void BeginPlay() override;
-	void SetAIDialogueTree();
 	
 };

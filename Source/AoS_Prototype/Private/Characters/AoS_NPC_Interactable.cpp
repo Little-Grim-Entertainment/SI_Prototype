@@ -7,7 +7,8 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "Components/WidgetComponent.h"
 #include "Camera/CameraComponent.h"
-
+#include "..//..//Plugins/Marketplace/DlgSystem/Source/DlgSystem/Public/DlgDialogue.h"
+#include "..//..//Plugins/Marketplace/DlgSystem/Source/DlgSystem/Public/DlgManager.h"
 
 
 AAoS_NPC_Interactable::AAoS_NPC_Interactable()
@@ -32,33 +33,5 @@ void AAoS_NPC_Interactable::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetAIDialogueTree();
 }
 
-void AAoS_NPC_Interactable::SetAIDialogueTree()
-{
-	AIController = Cast<AAoS_NPCController_Interactable>(GetController());
-	if (AIController)
-	{
-		if (DialogueTree)
-		{
-			AIController->SetDialogueTree(DialogueTree);
-		}
-	}
-}
-
-void AAoS_NPC_Interactable::StartDialogue()
-{
-	if (AIController)
-	{
-		AIController->StartDialogue();
-	}
-}
-
-void AAoS_NPC_Interactable::EndDialogue()
-{
-	if (AIController)
-	{
-		AIController->EndDialogue();
-	}
-}
