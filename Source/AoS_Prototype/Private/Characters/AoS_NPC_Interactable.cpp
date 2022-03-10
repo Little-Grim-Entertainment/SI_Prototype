@@ -3,12 +3,11 @@
 
 #include "Characters/AoS_NPC_Interactable.h"
 #include "Components/Scene/AoS_InteractableComponent.h"
-#include "Controllers/AoS_NPCController_Interactable.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "Components/WidgetComponent.h"
 #include "Camera/CameraComponent.h"
-#include "..//..//Plugins/Marketplace/DlgSystem/Source/DlgSystem/Public/DlgDialogue.h"
-#include "..//..//Plugins/Marketplace/DlgSystem/Source/DlgSystem/Public/DlgManager.h"
+#include "DlgDialogue.h"
+#include "DlgManager.h"
 
 
 AAoS_NPC_Interactable::AAoS_NPC_Interactable()
