@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
 
 class UAoS_HUD;
 
@@ -45,7 +46,10 @@ public:
 	float BaseLookUpRate;
 	UPROPERTY(EditDefaultsOnly, Category = LineTracing)
 	UAoS_LineTraces* LineTraceComponent;
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractPressed OnInteractPressed;
 
+	
 	FOnInteractableActorAdded OnInteractableActorAdded;
 	FOnInteractableActorRemoved OnInteractableActorRemoved;
 
@@ -54,8 +58,6 @@ public:
 
 	// ================== FUNCTIONS ==================
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnInteractPressed(AActor* ActorToInteractWith, AActor* Caller);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInteractableActorFound(AActor* ActorFound);
 	UFUNCTION(BlueprintImplementableEvent)

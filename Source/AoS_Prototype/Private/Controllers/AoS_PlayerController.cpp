@@ -86,8 +86,15 @@ void AAoS_PlayerController::RequestTurnRight(float AxisValue)
 
 void AAoS_PlayerController::RequestInteract()
 {
-	if (!FocusedActor || !GetPawn()) {return;}
-	OnInteractPressed(FocusedActor, this);
+	if (!GetPawn()) {return;}
+	if (!FocusedActor)
+	{
+		OnInteractPressed.Broadcast(nullptr, this);
+	}
+	else
+	{
+		OnInteractPressed.Broadcast(FocusedActor, this);
+	}
 }
 
 void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
