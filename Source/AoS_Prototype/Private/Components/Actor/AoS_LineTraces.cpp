@@ -71,7 +71,7 @@ AActor* UAoS_LineTraces::SearchForInteractableActor()
 	{
 		for (int i = 0; i < InteractableActors.Num(); i++)
 		{
-			if (HitResults.Actor == InteractableActors[i])
+			if (HitResults.GetActor() == InteractableActors[i])
 			{
 				return InteractableActors[i];
 			}
