@@ -10,7 +10,7 @@
 	"DocsURL": "https://bit.ly/DlgWikiEditor",
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/6d0255a60be340dfa1c556503cc57eb3",
 	"SupportURL": "https://bit.ly/DlgSourceEditor",
-	"EngineVersion": "4.27.0",
+	"EngineVersion": "5.00.0",
 	"CanContainContent": true,
 	"Installed": true,
 	"Modules": [
