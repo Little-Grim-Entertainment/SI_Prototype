@@ -3,3 +3,21 @@
 
 #include "Cases/AoS_Objective.h"
 
+UAoS_Objective::UAoS_Objective()
+{
+	bIsComplete = false;
+	bIsActive = false;
+}
+
+void UAoS_Objective::SetObjectiveComplete(bool bObjectiveCompleted)
+{
+	bIsComplete = bObjectiveCompleted;
+	bIsActive = !bObjectiveCompleted;
+}
+
+void UAoS_Objective::SetObjectiveIsActive(bool bObjectiveIsActive)
+{
+	bIsActive = bObjectiveIsActive;
+}
+
+

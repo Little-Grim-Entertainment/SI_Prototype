@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AoS_Objective.h"
 #include "Engine/DataAsset.h"
 #include "AoS_Case.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnObjectiveComplete)
+
+class UAoS_Part;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_Case : public UDataAsset
@@ -17,13 +19,31 @@ public:
 
 	UAoS_Case();
 
-	UFUNCTION(BlueprintCallable)
-	void CompleteObjective();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
+	FText CaseName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
+	TArray<UAoS_Part*> Parts;
 
-	FOnObjectiveComplete OnObjectiveComplete;
-
+	UFUNCTION(BlueprintPure)
+	bool GetCaseIsComplete() const {return bIsComplete;}
+	UFUNCTION(BlueprintPure)
+	UAoS_Part* GetActivePart() const {return ActivePart;}
+	UFUNCTION(BlueprintPure)
+	TArray<UAoS_Part*> GetAllParts() const {return Parts;}
+	
+	void SetCaseComplete(bool bCaseCompleted);
+	void SetCaseIsActive(bool bCaseIsActive);
+	void ActivatePart();
+	void DeactivatePart();
+	
 private:
 
+	bool bIsActive;
 	bool bIsComplete;
+	UPROPERTY()
+	UAoS_Part* ActivePart;
+	
+
+
 	
 };

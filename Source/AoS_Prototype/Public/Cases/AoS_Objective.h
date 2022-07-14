@@ -13,5 +13,26 @@ UCLASS()
 class AOS_PROTOTYPE_API UAoS_Objective : public UDataAsset
 {
 	GENERATED_BODY()
+
+public:
+	
+	UAoS_Objective();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ObjectiveDetails")
+	FText ObjectiveDescription;
+	
+	UFUNCTION(BlueprintPure)
+	bool GetObjectiveComplete() const {return bIsComplete;}
+	UFUNCTION(BlueprintPure)
+	bool GetObjectiveIsActive() const {return bIsActive;}
+
+	
+	void SetObjectiveComplete(bool bObjectiveCompleted);
+	void SetObjectiveIsActive(bool bObjectiveIsActive);
+
+private:
+
+	bool bIsActive;
+	bool bIsComplete;
 	
 };
