@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Characters/AoS_Character.h"
 #include "Engine/DataAsset.h"
 #include "AoS_Part.generated.h"
 
+class AAoS_Character;
 class UAoS_Objective;
 
 UCLASS()

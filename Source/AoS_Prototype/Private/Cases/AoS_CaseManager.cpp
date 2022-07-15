@@ -13,15 +13,22 @@ UAoS_CaseManager::UAoS_CaseManager()
 
 void UAoS_CaseManager::AcceptCase(UAoS_Case* CaseToAccept)
 {
-	if (CaseToAccept)
+	if (!CaseToAccept)
 	{
-		AcceptedCases.AddUnique(CaseToAccept);
-		OnCaseAccepted.Broadcast(CaseToAccept);	
+		return;
 	}
+	
+	AcceptedCases.AddUnique(CaseToAccept);
+	OnCaseAccepted.Broadcast(CaseToAccept);	
 }
 
 void UAoS_CaseManager::SetActiveCase(UAoS_Case* CaseToSet)
 {
+	if (!CaseToSet)
+	{
+		return;
+	}
+	
 	if (ActiveCase)
 	{
 		ActiveCase->SetCaseIsActive(false);
@@ -33,6 +40,11 @@ void UAoS_CaseManager::SetActiveCase(UAoS_Case* CaseToSet)
 
 void UAoS_CaseManager::CompleteObjective(UAoS_Objective* ObjectiveToComplete)
 {
+	if (!ObjectiveToComplete)
+	{
+		return;
+	}
+	
 	for (const UAoS_Objective* CurrentObjective : ActiveCase->GetActivePart()->GetActiveObjectives())
 	{
 		if (ObjectiveToComplete == CurrentObjective && CurrentObjective->GetObjectiveIsActive())
@@ -65,22 +77,40 @@ TArray<UAoS_Objective*> UAoS_CaseManager::GetActiveObjectives() const
 
 void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)
 {
+	if (!CompletedObjective)
+	{
+		return;
+	}
+	
 	if (ActiveCase->GetActivePart()->GetActiveObjectives().Num() > 0)
 	{
 		ActiveCase->GetActivePart()->GetActiveObjectives().RemoveSingle(CompletedObjective);
 	}
-	CheckForCompletedPart();
-	OnObjectiveComplete.Broadcast(CompletedObjective);
+	if(!CheckForCompletedPart())
+	{
+		OnObjectiveComplete.Broadcast(CompletedObjective);
+	}
 }
 
 void UAoS_CaseManager::PartCompleted(UAoS_Part* CompletedPart)
 {
-	CheckForCompletedCase();
-	OnPartComplete.Broadcast(CompletedPart);
+	if (!CompletedPart)
+	{
+		return;
+	}
+	
+	if(!CheckForCompletedCase())
+	{
+		OnPartComplete.Broadcast(CompletedPart);
+	}
 }
 
 void UAoS_CaseManager::CaseCompleted(UAoS_Case* CompletedCase)
 {
+	if (!CompletedCase)
+	{
+		return;
+	}
 	
 	OnCaseComplete.Broadcast(CompletedCase);
 }

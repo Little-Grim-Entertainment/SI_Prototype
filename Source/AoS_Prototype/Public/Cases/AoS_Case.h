@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AoS_Objective.h"
 #include "Engine/DataAsset.h"
 #include "AoS_Case.generated.h"
 
 
 class UAoS_Part;
+class AAoS_Character;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_Case : public UDataAsset
@@ -23,6 +23,8 @@ public:
 	FText CaseName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
 	TArray<UAoS_Part*> Parts;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
+	TArray<TSubclassOf<AAoS_Character>> PeopleOfInterest;
 
 	UFUNCTION(BlueprintPure)
 	bool GetCaseIsComplete() const {return bIsComplete;}
