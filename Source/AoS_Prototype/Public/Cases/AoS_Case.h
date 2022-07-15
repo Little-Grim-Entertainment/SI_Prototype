@@ -10,7 +10,7 @@
 class UAoS_Part;
 class AAoS_Character;
 
-UCLASS()
+UCLASS(BlueprintType)
 class AOS_PROTOTYPE_API UAoS_Case : public UDataAsset
 {
 	GENERATED_BODY()

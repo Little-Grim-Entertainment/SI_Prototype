@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class AOS_PROTOTYPE_API UAoS_Objective : public UDataAsset
 {
 	GENERATED_BODY()
