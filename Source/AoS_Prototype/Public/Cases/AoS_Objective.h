@@ -26,7 +26,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetObjectiveIsActive() const {return bIsActive;}
 
-	
+	void ResetObjective();
 	void SetObjectiveComplete(bool bObjectiveCompleted);
 	void SetObjectiveIsActive(bool bObjectiveIsActive);
 

@@ -18,7 +18,7 @@ public:
 	
 	UAoS_Part();
 
-	UPROPERTY(EditAnywhere, Category = "PartDetails")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PartDetails")
 	FText PartName;
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
 	TArray<UAoS_Objective*> Objectives;
@@ -34,6 +34,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_Objective*> GetAllObjectives() const {return Objectives;}
 
+	void ResetPart();
 	void SetPartComplete(bool bPartCompleted);
 	void SetPartIsActive(bool bPartIsActive);
 	void ActivateObjectives();

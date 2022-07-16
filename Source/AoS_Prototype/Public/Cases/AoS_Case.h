@@ -32,7 +32,8 @@ public:
 	UAoS_Part* GetActivePart() const {return ActivePart;}
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_Part*> GetAllParts() const {return Parts;}
-	
+
+	void ResetCase();	
 	void SetCaseComplete(bool bCaseCompleted);
 	void SetCaseIsActive(bool bCaseIsActive);
 	void ActivatePart();
@@ -44,8 +45,5 @@ private:
 	bool bIsComplete;
 	UPROPERTY()
 	UAoS_Part* ActivePart;
-	
-
-
 	
 };

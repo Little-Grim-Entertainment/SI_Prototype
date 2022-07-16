@@ -9,10 +9,20 @@ UAoS_Case::UAoS_Case()
 	bIsComplete = false;
 }
 
+void UAoS_Case::ResetCase()
+{
+	bIsActive = false;
+	bIsComplete = false;
+	ActivePart = nullptr;
+	for (UAoS_Part* CurrentPart : GetAllParts())
+	{
+		CurrentPart->ResetPart();
+	}
+}
+
 void UAoS_Case::SetCaseComplete(bool bCaseCompleted)
 {
 	bIsComplete = bCaseCompleted;
-	bIsActive = !bCaseCompleted;
 }
 
 void UAoS_Case::SetCaseIsActive(bool bCaseIsActive)

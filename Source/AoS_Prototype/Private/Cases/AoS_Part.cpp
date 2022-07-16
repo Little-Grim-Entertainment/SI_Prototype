@@ -9,10 +9,20 @@ UAoS_Part::UAoS_Part()
 	bIsComplete = false;
 }
 
+void UAoS_Part::ResetPart()
+{
+	bIsActive = false;
+	bIsComplete = false;
+	ActiveObjectives.Empty();
+	for (UAoS_Objective* CurrentObjective : GetAllObjectives())
+	{
+		CurrentObjective->ResetObjective();
+	}
+}
+
 void UAoS_Part::SetPartComplete(bool bPartCompleted)
 {
 	bIsComplete = bPartCompleted;
-	bIsActive = !bPartCompleted;
 }
 
 void UAoS_Part::SetPartIsActive(bool bPartIsActive)

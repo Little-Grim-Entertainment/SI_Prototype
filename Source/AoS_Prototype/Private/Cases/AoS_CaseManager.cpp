@@ -17,6 +17,11 @@ void UAoS_CaseManager::AcceptCase(UAoS_Case* CaseToAccept)
 	{
 		return;
 	}
+
+	if (!ActiveCase)
+	{
+		SetActiveCase(CaseToAccept);
+	}
 	
 	AcceptedCases.AddUnique(CaseToAccept);
 	OnCaseAccepted.Broadcast(CaseToAccept);	
@@ -36,6 +41,7 @@ void UAoS_CaseManager::SetActiveCase(UAoS_Case* CaseToSet)
 	
 	CaseToSet->SetCaseIsActive(true);
 	ActiveCase = CaseToSet;
+	OnCaseActivated.Broadcast(CaseToSet);
 }
 
 void UAoS_CaseManager::CompleteObjective(UAoS_Objective* ObjectiveToComplete)
@@ -55,6 +61,16 @@ void UAoS_CaseManager::CompleteObjective(UAoS_Objective* ObjectiveToComplete)
 	}
 }
 
+void UAoS_CaseManager::ResetCases()
+{
+	for (UAoS_Case* AcceptedCase : AcceptedCases)
+	{
+		AcceptedCase->ResetCase();
+	}
+	AcceptedCases.Empty();
+	CompletedCases.Empty();
+}
+
 UAoS_Case* UAoS_CaseManager::GetActiveCase() const
 {
 	return ActiveCase;
@@ -63,6 +79,11 @@ UAoS_Case* UAoS_CaseManager::GetActiveCase() const
 TArray<UAoS_Case*> UAoS_CaseManager::GetAcceptedCases() const
 {
 	return AcceptedCases;
+}
+
+TArray<UAoS_Case*> UAoS_CaseManager::GetCompletedCases() const
+{
+	return CompletedCases;
 }
 
 UAoS_Part* UAoS_CaseManager::GetActivePart() const
@@ -111,7 +132,8 @@ void UAoS_CaseManager::CaseCompleted(UAoS_Case* CompletedCase)
 	{
 		return;
 	}
-	
+
+	CompletedCases.AddUnique(CompletedCase);
 	OnCaseComplete.Broadcast(CompletedCase);
 }
 
