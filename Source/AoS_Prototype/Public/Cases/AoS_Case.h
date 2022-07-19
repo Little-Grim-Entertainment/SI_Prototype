@@ -29,7 +29,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetCaseIsComplete() const {return bIsComplete;}
 	UFUNCTION(BlueprintPure)
-	UAoS_Part* GetActivePart() const {return ActivePart;}
+	UAoS_Part* GetActivePart() const;
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_Part*> GetAllParts() const {return Parts;}
 
@@ -43,7 +43,5 @@ private:
 
 	bool bIsActive;
 	bool bIsComplete;
-	UPROPERTY()
-	UAoS_Part* ActivePart;
 	
 };

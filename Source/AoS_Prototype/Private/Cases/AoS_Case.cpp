@@ -9,11 +9,22 @@ UAoS_Case::UAoS_Case()
 	bIsComplete = false;
 }
 
+UAoS_Part* UAoS_Case::GetActivePart() const
+{
+	for (UAoS_Part* CurrentPart : Parts)
+	{
+		if (CurrentPart->GetPartIsActive())
+		{
+			return CurrentPart;
+		}
+	}
+	return nullptr;
+}
+
 void UAoS_Case::ResetCase()
 {
 	bIsActive = false;
 	bIsComplete = false;
-	ActivePart = nullptr;
 	for (UAoS_Part* CurrentPart : GetAllParts())
 	{
 		CurrentPart->ResetPart();
@@ -45,7 +56,6 @@ void UAoS_Case::ActivatePart()
 		if (CurrentPart && !CurrentPart->GetPartIsComplete())
 		{
 			CurrentPart->SetPartIsActive(true);
-			ActivePart = CurrentPart;
 			return;
 		}
 	}

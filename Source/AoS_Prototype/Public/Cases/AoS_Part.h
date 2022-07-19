@@ -30,7 +30,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetPartIsComplete() const {return bIsComplete;}
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_Objective*> GetActiveObjectives() const {return ActiveObjectives;}
+	bool GetPartIsActive() const {return bIsActive;}
+	UFUNCTION(BlueprintPure)
+	TArray<UAoS_Objective*> GetActiveObjectives() const;
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_Objective*> GetAllObjectives() const {return Objectives;}
 
@@ -41,10 +43,7 @@ public:
 	void DeactivateObjectives();
 	
 private:
-
-	UPROPERTY()
-	TArray<UAoS_Objective*> ActiveObjectives;
-
+	
 	bool bIsActive;
 	bool bIsComplete;
 	

@@ -76,6 +76,12 @@ private:
 	TArray<UAoS_Case*> AcceptedCases;
 	UPROPERTY()
 	TArray<UAoS_Case*> CompletedCases;
+	
+	UPROPERTY()
+	UAoS_Part* ActivePart;
+
+	UPROPERTY()
+	TArray<UAoS_Objective*> ActiveObjectives;
 
 	void ObjectiveCompleted(UAoS_Objective* CompletedObjective);
 	void PartCompleted(UAoS_Part* CompletedPart);

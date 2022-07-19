@@ -88,12 +88,12 @@ TArray<UAoS_Case*> UAoS_CaseManager::GetCompletedCases() const
 
 UAoS_Part* UAoS_CaseManager::GetActivePart() const
 {
-	return ActiveCase->GetActivePart();
+	return ActivePart;
 }
 
 TArray<UAoS_Objective*> UAoS_CaseManager::GetActiveObjectives() const
 {
-	return ActiveCase->GetActivePart()->GetActiveObjectives();
+	return ActiveObjectives;
 }
 
 void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)
@@ -103,11 +103,14 @@ void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)
 		return;
 	}
 	
-	if (ActiveCase->GetActivePart()->GetActiveObjectives().Num() > 0)
+	if(CheckForCompletedPart())
 	{
-		ActiveCase->GetActivePart()->GetActiveObjectives().RemoveSingle(CompletedObjective);
+		if (CheckForCompletedCase())
+		{
+			
+		}
 	}
-	if(!CheckForCompletedPart())
+	else
 	{
 		OnObjectiveComplete.Broadcast(CompletedObjective);
 	}
@@ -150,7 +153,7 @@ bool UAoS_CaseManager::CheckForCompletedPart()
 	if (CompletedObjectives == ActiveCase->GetActivePart()->GetAllObjectives().Num())
 	{
 		ActiveCase->GetActivePart()->SetPartComplete(true);
-		PartCompleted(ActiveCase->GetActivePart());
+		PartCompleted(ActivePart);
 		return true;
 	}
 	

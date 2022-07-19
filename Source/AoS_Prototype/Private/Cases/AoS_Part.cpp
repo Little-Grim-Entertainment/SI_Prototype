@@ -9,11 +9,23 @@ UAoS_Part::UAoS_Part()
 	bIsComplete = false;
 }
 
+TArray<UAoS_Objective*> UAoS_Part::GetActiveObjectives() const
+{
+	TArray<UAoS_Objective*> ActiveObjectives;
+	for (UAoS_Objective* CurrentObjective : Objectives)
+	{
+		if (CurrentObjective->GetObjectiveIsActive())
+		{
+			ActiveObjectives.AddUnique(CurrentObjective);
+		}
+	}
+	return ActiveObjectives;
+}
+
 void UAoS_Part::ResetPart()
 {
 	bIsActive = false;
 	bIsComplete = false;
-	ActiveObjectives.Empty();
 	for (UAoS_Objective* CurrentObjective : GetAllObjectives())
 	{
 		CurrentObjective->ResetObjective();
@@ -40,17 +52,11 @@ void UAoS_Part::SetPartIsActive(bool bPartIsActive)
 
 void UAoS_Part::ActivateObjectives()
 {
-	if (ActiveObjectives.Num() > 0)
-	{
-		ActiveObjectives.Empty();
-	}
-	
 	for (UAoS_Objective* CurrentObjective : Objectives)
 	{
 		if (CurrentObjective && !CurrentObjective->GetObjectiveComplete())
 		{
 			CurrentObjective->SetObjectiveIsActive(true);
-			ActiveObjectives.AddUnique(CurrentObjective);
 			if (bCompleteObjectivesInOrder)
 			{
 				return;
