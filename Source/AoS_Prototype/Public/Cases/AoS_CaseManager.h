@@ -53,7 +53,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CompleteObjective(UAoS_Objective* ObjectiveToComplete);
 	UFUNCTION(BlueprintCallable)
-	void ResetCases();
+	void ResetAllCases();
+	UFUNCTION(BlueprintCallable)
+	void ResetCase(FString CaseToResetName);
 	
 
 	UFUNCTION(BlueprintPure)

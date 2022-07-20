@@ -28,7 +28,7 @@ public:
 	UAoS_GameInstance();
 
 	UFUNCTION(Exec, Category = Cases)
-	void ResetCases();
+	void ResetCase(FString CaseToResetName);
 	
 private:
 

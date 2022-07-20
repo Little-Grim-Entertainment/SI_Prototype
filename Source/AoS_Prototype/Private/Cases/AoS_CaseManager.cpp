@@ -56,7 +56,7 @@ void UAoS_CaseManager::CompleteObjective(UAoS_Objective* ObjectiveToComplete)
 	
 	for (const UAoS_Objective* CurrentObjective : ActivePart->GetActiveObjectives())
 	{
-		if (ObjectiveToComplete == CurrentObjective && CurrentObjective->GetObjectiveIsActive())
+		if (ObjectiveToComplete == CurrentObjective && CurrentObjective->GetObjectiveIsActive() && !CurrentObjective->GetObjectiveComplete())
 		{
 			ObjectiveToComplete->SetObjectiveComplete(true);
 			ObjectiveCompleted(ObjectiveToComplete);
@@ -64,14 +64,43 @@ void UAoS_CaseManager::CompleteObjective(UAoS_Objective* ObjectiveToComplete)
 	}
 }
 
-void UAoS_CaseManager::ResetCases()
+void UAoS_CaseManager::ResetAllCases()
 {
 	for (UAoS_Case* AcceptedCase : AcceptedCases)
 	{
 		AcceptedCase->ResetCase();
 	}
+	ActiveCase = nullptr;
+	ActivePart = nullptr;
+	ActiveObjectives.Empty();
 	AcceptedCases.Empty();
 	CompletedCases.Empty();
+}
+
+void UAoS_CaseManager::ResetCase(FString CaseToResetName)
+{
+	UAoS_Case* CaseToReset = nullptr;
+	for (UAoS_Case* AcceptedCase : AcceptedCases)
+	{
+		if (AcceptedCase->CaseName.ToString() == CaseToResetName)
+		{
+			CaseToReset = AcceptedCase;
+		}
+	}
+
+	if (CaseToReset)
+	{
+		if (CaseToReset == ActiveCase)
+		{
+			ActiveCase = nullptr;
+			ActivePart = nullptr;
+			ActiveObjectives.Empty();
+		}
+
+		AcceptedCases.RemoveSingle(CaseToReset);
+		CompletedCases.RemoveSingle(CaseToReset);
+		CaseToReset->ResetCase();
+	}
 }
 
 UAoS_Case* UAoS_CaseManager::GetActiveCase() const
@@ -148,7 +177,8 @@ void UAoS_CaseManager::CaseCompleted(UAoS_Case* CompletedCase)
 	{
 		return;
 	}
-	
+
+	OnCaseComplete.Broadcast(CompletedCase);
 	CompletedCases.AddUnique(CompletedCase);
 	ActiveCase = nullptr;
 }

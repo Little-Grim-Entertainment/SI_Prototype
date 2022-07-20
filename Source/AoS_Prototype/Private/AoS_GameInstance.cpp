@@ -10,11 +10,18 @@ UAoS_GameInstance::UAoS_GameInstance()
 	
 }
 
-void UAoS_GameInstance::ResetCases()
+void UAoS_GameInstance::ResetCase(FString CaseToResetName)
 {
 	if (CaseManager)
 	{
-		CaseManager->ResetCases();
+		if (CaseToResetName == "All")
+		{
+			CaseManager->ResetAllCases();
+		}
+		else
+		{
+			CaseManager->ResetCase(CaseToResetName);
+		}
 	}
 }
 
