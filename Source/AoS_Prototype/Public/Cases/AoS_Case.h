@@ -7,6 +7,7 @@
 #include "AoS_Case.generated.h"
 
 
+class UAoS_CaseManager;
 class UAoS_Part;
 class AAoS_Character;
 
@@ -29,15 +30,17 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetCaseIsComplete() const {return bIsComplete;}
 	UFUNCTION(BlueprintPure)
+	bool GetCaseIsActive() const {return bIsActive;}
+	UFUNCTION(BlueprintPure)
 	UAoS_Part* GetActivePart() const;
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_Part*> GetAllParts() const {return Parts;}
-
+	
 	void ResetCase();	
 	void SetCaseComplete(bool bCaseCompleted);
-	void SetCaseIsActive(bool bCaseIsActive);
-	void ActivatePart();
-	void DeactivatePart();
+	void SetCaseIsActive(bool bCaseIsActive, UAoS_CaseManager* CaseManagerRef);
+	void ActivatePart(UAoS_CaseManager* CaseManagerRef);
+	void DeactivatePart(UAoS_CaseManager* CaseManagerRef);
 	
 private:
 

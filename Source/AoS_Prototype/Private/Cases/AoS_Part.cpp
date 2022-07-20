@@ -3,6 +3,7 @@
 
 #include "Cases/AoS_Part.h"
 #include "Cases/AoS_Objective.h"
+#include "Cases/AoS_CaseManager.h"
 
 UAoS_Part::UAoS_Part()
 {
@@ -12,11 +13,14 @@ UAoS_Part::UAoS_Part()
 TArray<UAoS_Objective*> UAoS_Part::GetActiveObjectives() const
 {
 	TArray<UAoS_Objective*> ActiveObjectives;
-	for (UAoS_Objective* CurrentObjective : Objectives)
+	if (Objectives.Num() > 0)
 	{
-		if (CurrentObjective->GetObjectiveIsActive())
+		for (UAoS_Objective* CurrentObjective : Objectives)
 		{
-			ActiveObjectives.AddUnique(CurrentObjective);
+			if (CurrentObjective && CurrentObjective->GetObjectiveIsActive())
+			{
+				ActiveObjectives.AddUnique(CurrentObjective);
+			}
 		}
 	}
 	return ActiveObjectives;
@@ -37,12 +41,13 @@ void UAoS_Part::SetPartComplete(bool bPartCompleted)
 	bIsComplete = bPartCompleted;
 }
 
-void UAoS_Part::SetPartIsActive(bool bPartIsActive)
+void UAoS_Part::SetPartIsActive(bool bPartIsActive, UAoS_CaseManager* CaseManagerRef)
 {
 	bIsActive = bPartIsActive;
 	if (bIsActive)
 	{
-		ActivateObjectives();
+		CaseManagerRef->SetActivePart(this);
+		ActivateObjectives(CaseManagerRef);
 	}
 	else
 	{
@@ -50,16 +55,31 @@ void UAoS_Part::SetPartIsActive(bool bPartIsActive)
 	}
 }
 
-void UAoS_Part::ActivateObjectives()
+void UAoS_Part::ActivateObjectives(UAoS_CaseManager* CaseManagerRef)
 {
+	TArray<UAoS_Objective*> ActiveObjectives;
+	
 	for (UAoS_Objective* CurrentObjective : Objectives)
 	{
-		if (CurrentObjective && !CurrentObjective->GetObjectiveComplete())
+		if (CurrentObjective)
 		{
-			CurrentObjective->SetObjectiveIsActive(true);
 			if (bCompleteObjectivesInOrder)
 			{
-				return;
+				if (!CurrentObjective->GetObjectiveComplete())
+				{
+					CurrentObjective->SetObjectiveIsActive(true);
+					CaseManagerRef->OnObjectiveActivated.Broadcast(CurrentObjective);
+					ActiveObjectives.AddUnique(CurrentObjective);
+					CaseManagerRef->SetActiveObjectives(ActiveObjectives);
+					return;	
+				}
+			}
+			else
+			{
+				ActiveObjectives.AddUnique(CurrentObjective);
+				CaseManagerRef->SetActiveObjectives(ActiveObjectives);
+				CurrentObjective->SetObjectiveIsActive(true);
+				CaseManagerRef->OnObjectiveActivated.Broadcast(CurrentObjective);
 			}
 		}
 	}

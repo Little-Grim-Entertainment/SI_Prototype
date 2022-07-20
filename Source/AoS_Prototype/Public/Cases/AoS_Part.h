@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "AoS_Part.generated.h"
 
+class UAoS_CaseManager;
 class AAoS_Character;
 class UAoS_Objective;
 
@@ -35,11 +36,11 @@ public:
 	TArray<UAoS_Objective*> GetActiveObjectives() const;
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_Objective*> GetAllObjectives() const {return Objectives;}
-
+	
 	void ResetPart();
 	void SetPartComplete(bool bPartCompleted);
-	void SetPartIsActive(bool bPartIsActive);
-	void ActivateObjectives();
+	void SetPartIsActive(bool bPartIsActive, UAoS_CaseManager* CaseManagerRef);
+	void ActivateObjectives(UAoS_CaseManager* CaseManagerRef);
 	void DeactivateObjectives();
 	
 private:

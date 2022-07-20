@@ -3,6 +3,7 @@
 
 #include "Cases/AoS_Case.h"
 #include "Cases/AoS_Part.h"
+#include "Cases/AoS_CaseManager.h"
 
 UAoS_Case::UAoS_Case()
 {
@@ -36,38 +37,40 @@ void UAoS_Case::SetCaseComplete(bool bCaseCompleted)
 	bIsComplete = bCaseCompleted;
 }
 
-void UAoS_Case::SetCaseIsActive(bool bCaseIsActive)
+void UAoS_Case::SetCaseIsActive(bool bCaseIsActive, UAoS_CaseManager* CaseManagerRef)
 {
 	bIsActive = bCaseIsActive;
 	if (bIsActive)
 	{
-		ActivatePart();
+		ActivatePart(CaseManagerRef);
 	}
 	else
 	{
-		DeactivatePart();
+		DeactivatePart(CaseManagerRef);
 	}
 }
 
-void UAoS_Case::ActivatePart()
+void UAoS_Case::ActivatePart(UAoS_CaseManager* CaseManagerRef)
 {
 	for (UAoS_Part* CurrentPart : Parts)
 	{
 		if (CurrentPart && !CurrentPart->GetPartIsComplete())
 		{
-			CurrentPart->SetPartIsActive(true);
+			CurrentPart->SetPartIsActive(true, CaseManagerRef);
+			CaseManagerRef->OnPartActivated.Broadcast(CurrentPart);
 			return;
 		}
 	}
 }
 
-void UAoS_Case::DeactivatePart()
+void UAoS_Case::DeactivatePart(UAoS_CaseManager* CaseManagerRef)
 {
 	for (UAoS_Part* CurrentPart : Parts)
 	{
-		if (CurrentPart && !CurrentPart->GetPartIsComplete())
+		if (CurrentPart && CurrentPart->GetPartIsActive())
 		{
-			CurrentPart->SetPartIsActive(false);
+			CurrentPart->SetPartIsActive(false, CaseManagerRef);
+			return;
 		}
 	}
 }

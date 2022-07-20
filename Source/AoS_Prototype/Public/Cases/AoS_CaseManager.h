@@ -67,6 +67,9 @@ public:
 	UAoS_Part* GetActivePart() const;
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_Objective*> GetActiveObjectives() const;
+
+	void SetActivePart(UAoS_Part* PartToSet);
+	void SetActiveObjectives(TArray<UAoS_Objective*> ObjectivesToSet);
 	
 private:
 
@@ -86,6 +89,7 @@ private:
 	void ObjectiveCompleted(UAoS_Objective* CompletedObjective);
 	void PartCompleted(UAoS_Part* CompletedPart);
 	void CaseCompleted(UAoS_Case* CompletedCase);
+
 	
 	bool CheckForCompletedPart();
 	bool CheckForCompletedCase();

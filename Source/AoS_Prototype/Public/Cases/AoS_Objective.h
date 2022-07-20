@@ -6,9 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "AoS_Objective.generated.h"
 
-/**
- * 
- */
+
 UCLASS(BlueprintType)
 class AOS_PROTOTYPE_API UAoS_Objective : public UDataAsset
 {
@@ -25,7 +23,7 @@ public:
 	bool GetObjectiveComplete() const {return bIsComplete;}
 	UFUNCTION(BlueprintPure)
 	bool GetObjectiveIsActive() const {return bIsActive;}
-
+	
 	void ResetObjective();
 	void SetObjectiveComplete(bool bObjectiveCompleted);
 	void SetObjectiveIsActive(bool bObjectiveIsActive);
