@@ -7,7 +7,7 @@
 #include "AoS_Part.generated.h"
 
 class UAoS_CaseManager;
-class AAoS_Character;
+class UAoS_CharacterData;
 class UAoS_Objective;
 
 UCLASS(BlueprintType)
@@ -26,7 +26,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
 	bool bCompleteObjectivesInOrder;
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
-	TArray<TSubclassOf<AAoS_Character>> ActiveCharacters;
+	TArray<UAoS_CharacterData*> ActiveCharacters;
 	
 	UFUNCTION(BlueprintPure)
 	bool GetPartIsComplete() const {return bIsComplete;}

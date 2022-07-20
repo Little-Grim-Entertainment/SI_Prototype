@@ -9,7 +9,7 @@
 
 class UAoS_CaseManager;
 class UAoS_Part;
-class AAoS_Character;
+class UAoS_CharacterData;
 
 UCLASS(BlueprintType)
 class AOS_PROTOTYPE_API UAoS_Case : public UDataAsset
@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
 	TArray<UAoS_Part*> Parts;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
-	TArray<TSubclassOf<AAoS_Character>> PeopleOfInterest;
+	TArray<UAoS_CharacterData*> PeopleOfInterest;
 
 	UFUNCTION(BlueprintPure)
 	bool GetCaseIsComplete() const {return bIsComplete;}

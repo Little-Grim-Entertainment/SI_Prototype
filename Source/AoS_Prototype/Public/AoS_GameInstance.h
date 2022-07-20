@@ -9,14 +9,15 @@
 class UAoS_CaseManager;
 
 
-USTRUCT(BlueprintType)
-struct FCharacterData
+UENUM(BlueprintType)
+enum EPlayerMode
 {
-	GENERATED_BODY()
-
-	
-
-};
+	PM_ExplorationMode     UMETA(DisplayName = "ExplorationMode"),
+	PM_DialogueMode      UMETA(DisplayName = "DialogueMode"),
+	PM_ObservationMode   UMETA(DisplayName = "ObservationMode"),
+	PM_GameMenuMode   UMETA(DisplayName = "GameMenuMode"),
+	PM_VendorMode   UMETA(DisplayName = "VendorMode"),
+  };
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
