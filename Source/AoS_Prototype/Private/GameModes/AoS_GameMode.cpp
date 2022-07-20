@@ -3,3 +3,7 @@
 
 #include "GameModes/AoS_GameMode.h"
 
+AAoS_GameMode::AAoS_GameMode()
+{
+	
+}

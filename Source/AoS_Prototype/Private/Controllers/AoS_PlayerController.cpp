@@ -30,14 +30,12 @@ void AAoS_PlayerController::SetupInputComponent()
 
 void AAoS_PlayerController::BeginPlay()
 {
-	if (PlayerHUD_Class)
+	if (PlayerHUD_Class && !PlayerHUD)
 	{
 		PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUD_Class, "PlayerHUD");
 		ShowHUD();
 	}
-
-	
-	
+		
 	Super::BeginPlay();
 }
 

@@ -6,12 +6,15 @@
 #include "GameFramework/GameMode.h"
 #include "AoS_GameMode.generated.h"
 
-/**
- * 
- */
+class UAoS_HUD;
+
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_GameMode : public AGameMode
 {
 	GENERATED_BODY()
+
+public:
+
+	AAoS_GameMode();
 	
 };
