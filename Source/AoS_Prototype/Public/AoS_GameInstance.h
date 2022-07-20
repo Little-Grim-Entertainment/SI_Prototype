@@ -6,7 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "AoS_GameInstance.generated.h"
 
-
+class UAoS_CaseManager;
 
 
 USTRUCT(BlueprintType)
@@ -23,6 +23,18 @@ class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+public:
 	
+	UAoS_GameInstance();
+
+	UFUNCTION(Exec, Category = Cases)
+	void ResetCases();
+	
+private:
+
+	UPROPERTY()
+	UAoS_CaseManager* CaseManager;
+
+	virtual void Init() override;
 	
 };

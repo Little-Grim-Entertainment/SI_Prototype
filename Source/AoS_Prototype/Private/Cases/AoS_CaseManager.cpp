@@ -111,11 +111,8 @@ void UAoS_CaseManager::SetActiveObjectives(TArray<UAoS_Objective*> ObjectivesToS
 
 void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, TEXT("Objective Completed Called!"));	
-
 	if (!CompletedObjective)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, TEXT("Objective Pointer Null!"));	
 		return;
 	}
 	
@@ -127,7 +124,6 @@ void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)
 			ActivePart->ActivateObjectives(this);
 		}
 		OnObjectiveComplete.Broadcast(CompletedObjective);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, TEXT("Objective Completed!"));	
 	}
 }
 
@@ -169,8 +165,6 @@ bool UAoS_CaseManager::CheckForCompletedPart()
 	}
 	if (CompletedObjectives == ActivePart->GetAllObjectives().Num())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Current Part: %s"), *ActivePart->GetName()));
-
 		ActivePart->SetPartComplete(true);
 		PartCompleted(ActivePart);
 		return true;

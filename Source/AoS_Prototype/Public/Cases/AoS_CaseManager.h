@@ -56,7 +56,6 @@ public:
 	void ResetCases();
 	
 
-
 	UFUNCTION(BlueprintPure)
 	UAoS_Case* GetActiveCase() const;
 	UFUNCTION(BlueprintPure)
@@ -85,7 +84,7 @@ private:
 
 	UPROPERTY()
 	TArray<UAoS_Objective*> ActiveObjectives;
-
+	
 	void ObjectiveCompleted(UAoS_Objective* CompletedObjective);
 	void PartCompleted(UAoS_Part* CompletedPart);
 	void CaseCompleted(UAoS_Case* CompletedCase);

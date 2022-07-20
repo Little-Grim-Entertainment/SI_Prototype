@@ -8,6 +8,7 @@
 UAoS_Case::UAoS_Case()
 {
 	bIsComplete = false;
+	bIsActive = false;
 }
 
 UAoS_Part* UAoS_Case::GetActivePart() const
@@ -30,6 +31,7 @@ void UAoS_Case::ResetCase()
 	{
 		CurrentPart->ResetPart();
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Case %s reset."), *GetName()));
 }
 
 void UAoS_Case::SetCaseComplete(bool bCaseCompleted)
