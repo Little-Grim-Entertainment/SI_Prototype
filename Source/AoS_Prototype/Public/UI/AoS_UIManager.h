@@ -17,6 +17,6 @@ class AOS_PROTOTYPE_API UAoS_UIManager : public UGameInstanceSubsystem
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void DisplayLoadingScreen();
+	void DisplayLoadingScreen(bool bShouldDisplay);
 	
 };

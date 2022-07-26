@@ -8,7 +8,6 @@
 
 class UAoS_CaseManager;
 
-
 UENUM(BlueprintType)
 enum EPlayerMode
 {
@@ -21,6 +20,8 @@ enum EPlayerMode
 	PM_VendorMode   UMETA(DisplayName = "VendorMode"),
   };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode);
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
 {
@@ -29,13 +30,19 @@ class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
 public:
 	
 	UAoS_GameInstance();
+
+	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
+	FOnPlayerModeChanged OnPlayerModeChanged;
 	
 	UFUNCTION(Exec, Category = Cases)
 	void ResetCase(FString CaseToResetName);
-
+	
+	UFUNCTION(BlueprintCallable)
+	void SpawnPlayer();
+	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
 	void SetPlayerMode(EPlayerMode InPlayerMode);
 		

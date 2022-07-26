@@ -8,6 +8,10 @@
 
 class UAoS_UIManager;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginLevelLoad, ULevelStreaming*, LoadingLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelLoaded, ULevelStreaming*, LoadedLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, ULevelStreaming*, UnloadedLevel);
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_LevelManager : public UGameInstanceSubsystem
 {
@@ -17,8 +21,15 @@ public:
 
 	UAoS_LevelManager();
 
+	UPROPERTY(BlueprintAssignable, Category = "Levels")
+	FOnBeginLevelLoad OnBeginLevelLoad;
+	UPROPERTY(BlueprintAssignable, Category = "Levels")
+	FOnLevelLoaded OnLevelLoaded;
+	UPROPERTY(BlueprintAssignable, Category = "Levels")
+	FOnLevelUnloaded OnLevelUnloaded;
+
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(TSoftObjectPtr<UWorld> LevelToLoad);
+	void LoadLevel(const TSoftObjectPtr<UWorld> InLevelToLoad);
 
 private:
 
@@ -28,11 +39,23 @@ private:
 	UGameInstance* GameInstance;
 	UPROPERTY()
 	UAoS_UIManager* UIManager;
-	
 	UPROPERTY()
-	TSoftObjectPtr<UWorld> CurrentStreamingLevel;
+	ULevelStreaming* LevelToLoad;
+	UPROPERTY()
+	ULevelStreaming* LevelToUnload;
+	UPROPERTY()
+	ULevelStreaming* CurrentStreamingLevel;
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	void SetCurrentStreamingLevel(TSoftObjectPtr<UWorld> LevelToSet);
+
+	UFUNCTION()
+	void ExecuteLevelLoad(const ULevelStreaming* InLevelToLoad);
+	UFUNCTION()
+	void ExecuteLevelUnload(const ULevelStreaming* InLevelToUnload);
 	
+	UFUNCTION()
+	void LevelUnloaded();
+	UFUNCTION()
+	void LevelLoaded();
+	
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 };

@@ -3,7 +3,7 @@
 
 #include "UI/AoS_UIManager.h"
 
-void UAoS_UIManager::DisplayLoadingScreen()
+void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay)
 {
 	
 }
