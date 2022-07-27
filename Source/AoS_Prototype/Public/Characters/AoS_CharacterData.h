@@ -7,9 +7,7 @@
 #include "Engine/DataAsset.h"
 #include "AoS_CharacterData.generated.h"
 
-/**
- * 
- */
+
 UCLASS(BlueprintType)
 class AOS_PROTOTYPE_API UAoS_CharacterData : public UDataAsset
 {
@@ -26,5 +24,6 @@ public:
 
 private:
 
-	
+
+
 };

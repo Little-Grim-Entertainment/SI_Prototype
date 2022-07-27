@@ -53,7 +53,7 @@ void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
 	World = GetWorld();
 	if (World)
 	{
-		GameInstance = World->GetGameInstance();
+		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
 		if (GameInstance)
 		{
 			
@@ -97,7 +97,8 @@ void UAoS_LevelManager::LevelLoaded()
 		{
 			CurrentStreamingLevel = CurrentLevel;
 			OnLevelLoaded.Broadcast(CurrentLevel);
- 		}
+			GameInstance->SpawnPlayer();
+		}
 	}
 	UIManager->DisplayLoadingScreen(false);
 }

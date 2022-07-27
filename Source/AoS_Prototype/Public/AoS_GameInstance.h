@@ -7,6 +7,10 @@
 #include "AoS_GameInstance.generated.h"
 
 class UAoS_CaseManager;
+class AAoS_Nick;
+class UAoS_CharacterData;
+class APlayerStart;
+class AAoS_Character;
 
 UENUM(BlueprintType)
 enum EPlayerMode
@@ -33,6 +37,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
 	FOnPlayerModeChanged OnPlayerModeChanged;
+
+	UPROPERTY(EditAnywhere, Category = "PlayerData")
+	UAoS_CharacterData* CDA_NickSpade;
 	
 	UFUNCTION(Exec, Category = Cases)
 	void ResetCase(FString CaseToResetName);
@@ -50,9 +57,14 @@ private:
 
 	UPROPERTY()
 	UAoS_CaseManager* CaseManager;
-
+	UPROPERTY()
+	AAoS_Nick* NickSpadeCharacter;
+	UPROPERTY()
+	TSubclassOf<AAoS_Character> NickClassRef;
 	EPlayerMode PlayerMode;
 
 	virtual void Init() override;
+
+	APlayerStart* GetPlayerStart() const;
 	
 };

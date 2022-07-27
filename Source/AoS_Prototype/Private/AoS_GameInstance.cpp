@@ -3,6 +3,10 @@
 
 #include "AoS_GameInstance.h"
 #include "Cases/AoS_CaseManager.h"
+#include "Characters/AoS_CharacterData.h"
+#include "Characters/AoS_Nick.h"
+#include "Characters/AoS_Character.h"
+#include "GameFramework/GameModeBase.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -28,10 +32,35 @@ void UAoS_GameInstance::ResetCase(FString CaseToResetName)
 
 void UAoS_GameInstance::SpawnPlayer()
 {
-	if (GetWorld())
+	if (const APlayerStart* PlayerStart = GetPlayerStart())
 	{
-		// Get player start and spawn at location
-		//TArray<APlayerStart*> PlayerStarts = UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStarts);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Player Start Found!"));	
+		if (!NickSpadeCharacter)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Nick Character Not Found!"));
+			NickClassRef = CDA_NickSpade->CharacterClass;
+			if (NickClassRef != nullptr)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Nick Class Found!"));	
+
+				const FActorSpawnParameters PlayerSpawnParameters;
+				NickSpadeCharacter = GetWorld()->SpawnActor<AAoS_Nick>(NickClassRef, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation(), PlayerSpawnParameters);
+			}
+			else
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Nick Class Not Found!"));	
+			}
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Nick Character Found!"));	
+			NickSpadeCharacter->SetActorLocation(PlayerStart->GetActorLocation());
+			NickSpadeCharacter->SetActorRotation(PlayerStart->GetActorRotation());
+		}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("No Player Start Found!"));	
 	}
 }
 
@@ -51,4 +80,19 @@ void UAoS_GameInstance::Init()
 	Super::Init();
 
 	CaseManager = GetSubsystem<UAoS_CaseManager>();
+}
+
+APlayerStart* UAoS_GameInstance::GetPlayerStart() const
+{
+	TArray<AActor*> PlayerStartActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStartActors);
+
+	for (AActor* CurrentActor : PlayerStartActors)
+	{
+		if (APlayerStart* PlayerStart = Cast<APlayerStart>(CurrentActor))
+		{
+			return PlayerStart;
+		}
+	}
+	return nullptr;
 }

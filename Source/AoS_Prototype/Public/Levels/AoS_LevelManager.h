@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AoS_GameInstance.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_LevelManager.generated.h"
 
@@ -36,7 +37,7 @@ private:
 	UPROPERTY()
 	UWorld* World;
 	UPROPERTY()
-	UGameInstance* GameInstance;
+	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	UAoS_UIManager* UIManager;
 	UPROPERTY()
