@@ -60,7 +60,10 @@ void UAoS_GameInstance::SpawnPlayer()
 		bIsInMenu = true;
 	}
 
-	GetWorld()->GetFirstPlayerController()->Possess(NickSpadeCharacter);
+	if (AoS_PlayerController)
+	{
+		AoS_PlayerController->Possess(NickSpadeCharacter);
+	}
 }
 
 EPlayerMode UAoS_GameInstance::GetPlayerMode() const
