@@ -2,10 +2,8 @@
 
 
 #include "Levels/AoS_LevelManager.h"
-
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/AoS_UIManager.h"
 
 
 UAoS_LevelManager::UAoS_LevelManager()
@@ -41,7 +39,6 @@ void UAoS_LevelManager::LoadLevel(const TSoftObjectPtr<UWorld> InLevelToLoad)
 			{
 				ExecuteLevelLoad(LevelToLoad);
 			}
-			UIManager->DisplayLoadingScreen(true);
 		}
 	}
 }
@@ -57,7 +54,6 @@ void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
 		if (GameInstance)
 		{
 			
-			UIManager = GameInstance->GetSubsystem<UAoS_UIManager>();
 		}
 	}
 }
@@ -97,8 +93,6 @@ void UAoS_LevelManager::LevelLoaded()
 		{
 			CurrentStreamingLevel = CurrentLevel;
 			OnLevelLoaded.Broadcast(CurrentLevel);
-			GameInstance->SpawnPlayer();
 		}
 	}
-	UIManager->DisplayLoadingScreen(false);
 }

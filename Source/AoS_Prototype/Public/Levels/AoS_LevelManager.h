@@ -38,15 +38,14 @@ private:
 	UWorld* World;
 	UPROPERTY()
 	UAoS_GameInstance* GameInstance;
-	UPROPERTY()
-	UAoS_UIManager* UIManager;
+
 	UPROPERTY()
 	ULevelStreaming* LevelToLoad;
 	UPROPERTY()
 	ULevelStreaming* LevelToUnload;
 	UPROPERTY()
 	ULevelStreaming* CurrentStreamingLevel;
-
+	
 
 	UFUNCTION()
 	void ExecuteLevelLoad(const ULevelStreaming* InLevelToLoad);

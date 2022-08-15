@@ -5,6 +5,7 @@
 #include "Cases/AoS_Case.h"
 #include "Cases/AoS_Part.h"
 #include "Cases/AoS_Objective.h"
+#include "AoS_GameInstance.h"
 
 UAoS_CaseManager::UAoS_CaseManager()
 {
@@ -136,6 +137,20 @@ void UAoS_CaseManager::SetActivePart(UAoS_Part* PartToSet)
 void UAoS_CaseManager::SetActiveObjectives(TArray<UAoS_Objective*> ObjectivesToSet)
 {
 	ActiveObjectives = ObjectivesToSet;
+}
+
+void UAoS_CaseManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+
+	World = GetWorld();
+	if (World)
+	{
+		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
+		if (GameInstance)
+		{
+		}
+	}
 }
 
 void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)

@@ -6,6 +6,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_CaseManager.generated.h"
 
+class UAoS_GameInstance;
 class UAoS_Case;
 class UAoS_Part;
 class UAoS_Objective;
@@ -74,6 +75,11 @@ public:
 	
 private:
 
+
+	UPROPERTY()
+	UWorld* World;
+	UPROPERTY()
+	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	UAoS_Case* ActiveCase;
 	UPROPERTY()
@@ -86,6 +92,8 @@ private:
 
 	UPROPERTY()
 	TArray<UAoS_Objective*> ActiveObjectives;
+
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	void ObjectiveCompleted(UAoS_Objective* CompletedObjective);
 	void PartCompleted(UAoS_Part* CompletedPart);
