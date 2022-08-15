@@ -28,9 +28,13 @@ public:
 	FOnLevelLoaded OnLevelLoaded;
 	UPROPERTY(BlueprintAssignable, Category = "Levels")
 	FOnLevelUnloaded OnLevelUnloaded;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	void LoadLevel(const TSoftObjectPtr<UWorld> InLevelToLoad);
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	TArray<FString> GetMapNames();
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	TSoftObjectPtr<UWorld> GetMapFromName(FString MapName);
 
 private:
 

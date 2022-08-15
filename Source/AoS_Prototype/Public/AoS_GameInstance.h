@@ -17,6 +17,8 @@ class UAoS_CaseManager;
 class UAoS_LevelManager;
 class UAoS_UIManager;
 
+class UAoS_MapList;
+
 UENUM(BlueprintType)
 enum EPlayerMode
 {
@@ -47,6 +49,8 @@ public:
 	UAoS_CharacterData* CDA_NickSpade;
 	UPROPERTY(EditAnywhere, Category = "Loading")
 	TSubclassOf<UAoS_UserWidget> LoadingScreen;
+	UPROPERTY(EditAnywhere, Category = "Levels")
+	UAoS_MapList* MapList;
 	
 	UFUNCTION(Exec, Category = Cases)
 	void ResetCase(FString CaseToResetName);

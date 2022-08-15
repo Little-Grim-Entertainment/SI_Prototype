@@ -2,6 +2,8 @@
 
 
 #include "Levels/AoS_LevelManager.h"
+
+#include "Data/AoS_MapList.h"
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -41,6 +43,42 @@ void UAoS_LevelManager::LoadLevel(const TSoftObjectPtr<UWorld> InLevelToLoad)
 			}
 		}
 	}
+}
+
+TArray<FString> UAoS_LevelManager::GetMapNames()
+{
+	TArray<FString> MapNames;
+
+	if (!GameInstance->MapList)
+	{
+		const FString NoMaps = "Map List Not Found.";
+		MapNames.Add(NoMaps);
+	}
+	else
+	{
+		if (GameInstance->MapList->Maps.Num() > 0)
+		{
+			for (const TSoftObjectPtr<UWorld> CurrentMap : GameInstance->MapList->Maps)
+			{
+				MapNames.AddUnique(CurrentMap.GetAssetName());
+			}
+		}
+	}
+
+	return MapNames;
+}
+
+TSoftObjectPtr<UWorld> UAoS_LevelManager::GetMapFromName(FString MapName)
+{
+	if (!GameInstance) {return nullptr;}
+	for (TSoftObjectPtr<UWorld> CurrentMap : GameInstance->MapList->Maps)
+	{
+		if (MapName == CurrentMap.GetAssetName())
+		{
+			return CurrentMap;
+		}
+	}
+	return nullptr;
 }
 
 void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
