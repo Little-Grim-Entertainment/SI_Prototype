@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "Engine/GameInstance.h"
-#include "UI/AoS_UserWidget.h"
 #include "AoS_GameInstance.generated.h"
 
+class UAoS_UserWidget;
+class UAoS_WorldManager;
 class AAoS_Character;
 class UAoS_CharacterData;
 class AAoS_Nick;
@@ -45,6 +46,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
 	FOnPlayerModeChanged OnPlayerModeChanged;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
+	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "PlayerData")
 	UAoS_CharacterData* CDA_NickSpade;
 	UPROPERTY(EditAnywhere, Category = "Loading")
@@ -77,6 +80,8 @@ public:
 	void OnLevelFinishLoad(ULevelStreaming* LoadedLevel);
 	UFUNCTION()
 	void OnLevelFinishUnload(ULevelStreaming* UnloadedLevel);
+
+	UAoS_WorldManager* GetWorldManager() const {return WorldManager;};
 		
 private:
 
@@ -87,6 +92,8 @@ private:
 	UAoS_LevelManager* LevelManager;
 	UPROPERTY()
 	UAoS_UIManager* UIManager;
+	UPROPERTY()
+	UAoS_WorldManager* WorldManager;
 	
 	UPROPERTY()
 	AAoS_Nick* NickSpadeCharacter;

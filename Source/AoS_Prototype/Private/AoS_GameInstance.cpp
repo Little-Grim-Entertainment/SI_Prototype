@@ -12,6 +12,7 @@
 #include "UI/AoS_UIManager.h"
 #include "Cases/AoS_CaseManager.h"
 #include "Levels/AoS_LevelManager.h"
+#include "World/AoS_WorldManager.h"
 
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
@@ -136,6 +137,7 @@ void UAoS_GameInstance::Init()
 	CaseManager = GetSubsystem<UAoS_CaseManager>();
 	UIManager = GetSubsystem<UAoS_UIManager>();
 	LevelManager = GetSubsystem<UAoS_LevelManager>();
+	WorldManager = GetSubsystem<UAoS_WorldManager>();
 	if(LevelManager)
 	{
 		SetupLevelBindings();

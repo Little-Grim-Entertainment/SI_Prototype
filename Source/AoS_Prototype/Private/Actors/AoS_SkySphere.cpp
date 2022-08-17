@@ -3,10 +3,12 @@
 
 #include "Actors/AoS_SkySphere.h"
 
+#include "AoS_GameInstance.h"
 #include "Components/LightComponent.h"
 #include "Curves/CurveLinearColor.h"
 #include "Engine/DirectionalLight.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "World/AoS_WorldManager.h"
 
 
 // Sets default values
@@ -107,7 +109,16 @@ void AAoS_SkySphere::RefreshMaterial()
 void AAoS_SkySphere::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	if (GameInstance)
+	{
+		WorldManager = GameInstance->GetWorldManager();
+	}
+	if (WorldManager)
+	{
+		WorldManager->SetSkySphere(this);
+	}
 }
 
 void AAoS_SkySphere::OnConstruction(const FTransform& Transform)
@@ -130,6 +141,7 @@ void AAoS_SkySphere::OnConstruction(const FTransform& Transform)
 		bRefreshMaterial = false;
 	}
 	RefreshMaterial();
+	
 }
 
 // Called every frame

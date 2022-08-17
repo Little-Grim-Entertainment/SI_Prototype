@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AoS_SkySphere.generated.h"
 
+class UAoS_WorldManager;
 class ADirectionalLight;
 
 UCLASS()
@@ -74,4 +75,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+
+	UPROPERTY()
+	UAoS_WorldManager* WorldManager;
 };
