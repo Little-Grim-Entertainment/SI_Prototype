@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// This subsystem will handle the creation and display of the various UI in Ace of Spades
 
 #pragma once
 

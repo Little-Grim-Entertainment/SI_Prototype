@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// This subsystem will handle the loading and unloading of levels inside the persistent level
 
 #pragma once
 
