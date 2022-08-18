@@ -19,6 +19,7 @@ class UAoS_LevelManager;
 class UAoS_UIManager;
 
 class UAoS_MapList;
+class UAoS_MapData;
 
 UENUM(BlueprintType)
 enum EPlayerMode
@@ -68,6 +69,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
 	void SetPlayerMode(EPlayerMode InPlayerMode);
+	UFUNCTION(BlueprintCallable, Category = "PlayerData")
+	void SetIsInMenu(const bool bInMenu);
 
 	void SetupLevelBindings();
 	void SetupUIBindings();
@@ -75,11 +78,11 @@ public:
 	
 	// Level Delegates
 	UFUNCTION()
-	void OnLevelBeginLoad(ULevelStreaming* LoadingLevel);
+	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel);
 	UFUNCTION()
-	void OnLevelFinishLoad(ULevelStreaming* LoadedLevel);
+	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel);
 	UFUNCTION()
-	void OnLevelFinishUnload(ULevelStreaming* UnloadedLevel);
+	void OnLevelFinishUnload(UAoS_MapData* UnloadedLevel);
 
 	UAoS_WorldManager* GetWorldManager() const {return WorldManager;};
 		

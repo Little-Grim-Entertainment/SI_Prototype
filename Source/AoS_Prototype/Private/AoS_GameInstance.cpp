@@ -14,6 +14,8 @@
 #include "Levels/AoS_LevelManager.h"
 #include "World/AoS_WorldManager.h"
 
+#include "Data/AoS_MapData.h"
+
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -54,11 +56,6 @@ void UAoS_GameInstance::SpawnPlayer()
 			NickSpadeCharacter->SetActorLocation(PlayerStart->GetActorLocation());
 			NickSpadeCharacter->SetActorRotation(PlayerStart->GetActorRotation());
 		}
-		bIsInMenu = false;
-	}
-	else
-	{
-		bIsInMenu = true;
 	}
 
 	if (AoS_PlayerController)
@@ -83,6 +80,11 @@ void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
 	OnPlayerModeChanged.Broadcast(InPlayerMode);
 }
 
+void UAoS_GameInstance::SetIsInMenu(const bool bInMenu)
+{
+	bIsInMenu = bInMenu;
+}
+
 void UAoS_GameInstance::SetupLevelBindings()
 {
 	LevelManager->OnBeginLevelLoad.AddDynamic(this, &UAoS_GameInstance::OnLevelBeginLoad);
@@ -100,12 +102,12 @@ void UAoS_GameInstance::SetupCaseBindings()
 	
 }
 
-void UAoS_GameInstance::OnLevelBeginLoad(ULevelStreaming* LoadingLevel)
+void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel)
 {
 	UIManager->DisplayLoadingScreen(true);
 }
 
-void UAoS_GameInstance::OnLevelFinishLoad(ULevelStreaming* LoadedLevel)
+void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 {
 	if (!AoS_PlayerController)
 	{
@@ -125,7 +127,7 @@ void UAoS_GameInstance::OnLevelFinishLoad(ULevelStreaming* LoadedLevel)
 	}
 }
 
-void UAoS_GameInstance::OnLevelFinishUnload(ULevelStreaming* UnloadedLevel)
+void UAoS_GameInstance::OnLevelFinishUnload(UAoS_MapData* UnloadedLevel)
 {
 	
 }

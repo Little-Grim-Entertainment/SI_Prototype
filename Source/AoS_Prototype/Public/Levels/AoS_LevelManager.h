@@ -3,15 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AoS_GameInstance.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_LevelManager.generated.h"
 
+class UAoS_GameInstance;
 class UAoS_UIManager;
+class UAoS_MapData;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginLevelLoad, ULevelStreaming*, LoadingLevel);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelLoaded, ULevelStreaming*, LoadedLevel);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, ULevelStreaming*, UnloadedLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginLevelLoad, UAoS_MapData*, LoadingLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelLoaded, UAoS_MapData*, LoadedLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, UAoS_MapData*, UnloadedLevel);
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_LevelManager : public UGameInstanceSubsystem
@@ -30,11 +31,11 @@ public:
 	FOnLevelUnloaded OnLevelUnloaded;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(const TSoftObjectPtr<UWorld> InLevelToLoad);
+	void LoadLevel(UAoS_MapData* InLevelToLoad);
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	TArray<FString> GetMapNames();
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	TSoftObjectPtr<UWorld> GetMapFromName(FString MapName);
+	UAoS_MapData* GetMapFromName(FString MapName);
 
 private:
 
@@ -44,17 +45,19 @@ private:
 	UAoS_GameInstance* GameInstance;
 
 	UPROPERTY()
-	ULevelStreaming* LevelToLoad;
+	UAoS_MapData* LevelToLoad;
 	UPROPERTY()
-	ULevelStreaming* LevelToUnload;
+	UAoS_MapData* LevelToUnload;
 	UPROPERTY()
-	ULevelStreaming* CurrentStreamingLevel;
+	UAoS_MapData* CurrentStreamingLevel;
+	UPROPERTY()
+	UAoS_MapData* MainMenu;
 	
 
 	UFUNCTION()
-	void ExecuteLevelLoad(const ULevelStreaming* InLevelToLoad);
+	void ExecuteLevelLoad(const UAoS_MapData* InLevelToLoad);
 	UFUNCTION()
-	void ExecuteLevelUnload(const ULevelStreaming* InLevelToUnload);
+	void ExecuteLevelUnload(const UAoS_MapData* InLevelToUnload);
 	
 	UFUNCTION()
 	void LevelUnloaded();

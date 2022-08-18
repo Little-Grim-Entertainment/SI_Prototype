@@ -2,7 +2,8 @@
 
 
 #include "Levels/AoS_LevelManager.h"
-
+#include "AoS_GameInstance.h"
+#include "Data/AoS_MapData.h"
 #include "Data/AoS_MapList.h"
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
@@ -10,27 +11,38 @@
 
 UAoS_LevelManager::UAoS_LevelManager()
 {
-	
+	static ConstructorHelpers::FObjectFinder<UAoS_MapData> MainMenuAsset(TEXT("/Game/AoS/Maps/Menus/DA_MainMenu"));
+	MainMenu = MainMenuAsset.Object;
 }
 
-void UAoS_LevelManager::LoadLevel(const TSoftObjectPtr<UWorld> InLevelToLoad)
+void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad)
 {
+	if (!InLevelToLoad) {return;}
+	
 	if (World && GameInstance)
 	{
 		TArray<ULevelStreaming*> StreamingLevels = World->GetStreamingLevels();
 		
 		for (ULevelStreaming* CurrentLevel : StreamingLevels)
 		{
-			if (CurrentLevel->GetWorldAsset().GetAssetName() == InLevelToLoad.GetAssetName())
+			if (!CurrentStreamingLevel && CurrentLevel->IsLevelLoaded())
 			{
-				LevelToLoad = CurrentLevel;
+				FLatentActionInfo UnloadInfo;
+				UnloadInfo.UUID = 0;
+				UnloadInfo.Linkage = 0;
+				UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(World, CurrentLevel, UnloadInfo, false);
+			}
+			if (CurrentLevel->GetWorldAsset().GetAssetName() == InLevelToLoad->Map.GetAssetName())
+			{
+				InLevelToLoad->SetStreamingLevelRef(CurrentLevel);
+				LevelToLoad = InLevelToLoad;
 				break;
 			}
 		}
 		
 		if (LevelToLoad)
 		{
-			OnBeginLevelLoad.Broadcast(LevelToLoad);
+			OnBeginLevelLoad.Broadcast(InLevelToLoad);
 
 			if (CurrentStreamingLevel)
 			{
@@ -56,9 +68,9 @@ TArray<FString> UAoS_LevelManager::GetMapNames()
 	}
 	else
 	{
-		if (GameInstance->MapList->Maps.Num() > 0)
+		if (GameInstance->MapList->GetAllMaps().Num() > 0)
 		{
-			for (const TSoftObjectPtr<UWorld> CurrentMap : GameInstance->MapList->Maps)
+			for (const TSoftObjectPtr<UWorld> CurrentMap : GameInstance->MapList->GetAllMaps())
 			{
 				MapNames.AddUnique(CurrentMap.GetAssetName());
 			}
@@ -68,12 +80,12 @@ TArray<FString> UAoS_LevelManager::GetMapNames()
 	return MapNames;
 }
 
-TSoftObjectPtr<UWorld> UAoS_LevelManager::GetMapFromName(FString MapName)
+UAoS_MapData* UAoS_LevelManager::GetMapFromName(FString MapName)
 {
 	if (!GameInstance) {return nullptr;}
-	for (TSoftObjectPtr<UWorld> CurrentMap : GameInstance->MapList->Maps)
+	for (UAoS_MapData* CurrentMap : GameInstance->MapList->GetAllMaps())
 	{
-		if (MapName == CurrentMap.GetAssetName())
+		if (MapName == CurrentMap->GetName())
 		{
 			return CurrentMap;
 		}
@@ -89,31 +101,34 @@ void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
 	if (World)
 	{
 		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
-		if (GameInstance)
+		if (!CurrentStreamingLevel)
 		{
-			
+			if (MainMenu)
+			{
+				LoadLevel(MainMenu);
+			}
 		}
 	}
 }
 
-void UAoS_LevelManager::ExecuteLevelLoad(const ULevelStreaming* InLevelToLoad)
+void UAoS_LevelManager::ExecuteLevelLoad(const UAoS_MapData* InLevelToLoad)
 {
 	FLatentActionInfo LoadInfo;
 	LoadInfo.CallbackTarget = this;
 	LoadInfo.ExecutionFunction = "LevelLoaded";
 	LoadInfo.UUID = 0;
 	LoadInfo.Linkage = 0;
-	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(World, InLevelToLoad->GetWorldAsset(), true, false, LoadInfo);
+	UGameplayStatics::LoadStreamLevelBySoftObjectPtr(World, InLevelToLoad->GetStreamingLevelRef()->GetWorldAsset(), true, false, LoadInfo);
 }
 
-void UAoS_LevelManager::ExecuteLevelUnload(const ULevelStreaming* InLevelToUnload)
+void UAoS_LevelManager::ExecuteLevelUnload(const UAoS_MapData* InLevelToUnload)
 {
 	FLatentActionInfo UnloadInfo;
 	UnloadInfo.CallbackTarget = this;
 	UnloadInfo.ExecutionFunction = "LevelUnloaded";
 	UnloadInfo.UUID = 0;
 	UnloadInfo.Linkage = 0;
-	UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(World, InLevelToUnload->GetWorldAsset(), UnloadInfo, false);
+	UGameplayStatics::UnloadStreamLevelBySoftObjectPtr(World, InLevelToUnload->GetStreamingLevelRef()->GetWorldAsset(), UnloadInfo, false);
 }
 
 void UAoS_LevelManager::LevelUnloaded()
@@ -129,8 +144,24 @@ void UAoS_LevelManager::LevelLoaded()
 	{
 		if (CurrentLevel->IsLevelLoaded())
 		{
-			CurrentStreamingLevel = CurrentLevel;
-			OnLevelLoaded.Broadcast(CurrentLevel);
+			for (UAoS_MapData* CurrentMapData : GameInstance->MapList->GetAllMaps())
+			{
+				if (CurrentMapData->Map.GetAssetName() == CurrentLevel->GetWorldAsset().GetAssetName())
+				{
+					CurrentStreamingLevel = CurrentMapData;
+					CurrentStreamingLevel->SetStreamingLevelRef(CurrentLevel);
+					if (CurrentStreamingLevel->MapType == EMapType::MT_Menu)
+					{
+						GameInstance->SetIsInMenu(true);
+					}
+					else
+					{
+						GameInstance->SetIsInMenu(false);
+					}
+					OnLevelLoaded.Broadcast(CurrentStreamingLevel);
+					return;
+				}
+			}
 		}
 	}
 }
