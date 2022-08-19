@@ -52,7 +52,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "PlayerData")
 	UAoS_CharacterData* CDA_NickSpade;
 	UPROPERTY(EditAnywhere, Category = "Loading")
-	TSubclassOf<UAoS_UserWidget> LoadingScreen;
+	TArray<TSubclassOf<UAoS_UserWidget>> LoadingScreens;
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	UAoS_MapList* MapList;
 	
@@ -75,6 +75,7 @@ public:
 	void SetupLevelBindings();
 	void SetupUIBindings();
 	void SetupCaseBindings();
+
 	
 	// Level Delegates
 	UFUNCTION()
@@ -84,8 +85,6 @@ public:
 	UFUNCTION()
 	void OnLevelFinishUnload(UAoS_MapData* UnloadedLevel);
 
-	UAoS_WorldManager* GetWorldManager() const {return WorldManager;};
-		
 private:
 
 	// Subsystems
@@ -103,10 +102,16 @@ private:
 	UPROPERTY()
 	AAoS_PlayerController* AoS_PlayerController;
 
+	UPROPERTY()
+	UAoS_MapData* MainMenu;
+
+	FTimerHandle LoadingScreenDelayHandle;
 	EPlayerMode PlayerMode;
 	bool bIsInMenu;
 
 	virtual void Init() override;
+
+	void PostLoadingScreenDelay();
 
 	APlayerStart* GetPlayerStart() const;
 	

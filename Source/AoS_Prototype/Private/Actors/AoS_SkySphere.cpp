@@ -113,7 +113,7 @@ void AAoS_SkySphere::BeginPlay()
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (GameInstance)
 	{
-		WorldManager = GameInstance->GetWorldManager();
+		WorldManager = GameInstance->GetSubsystem<UAoS_WorldManager>();
 	}
 	if (WorldManager)
 	{

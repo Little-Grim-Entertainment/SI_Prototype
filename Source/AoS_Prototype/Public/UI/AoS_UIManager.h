@@ -29,5 +29,6 @@ private:
 	UAoS_UserWidget* LoadingScreen;
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
 	
 };

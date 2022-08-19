@@ -21,6 +21,9 @@
 
 UAoS_GameInstance::UAoS_GameInstance()
 {
+	static ConstructorHelpers::FObjectFinder<UAoS_MapData> MainMenuAsset(TEXT("/Game/AoS/Maps/Menus/DA_MainMenu"));
+	MainMenu = MainMenuAsset.Object;
+	
 	bIsInMenu = false;
 }
 
@@ -104,7 +107,10 @@ void UAoS_GameInstance::SetupCaseBindings()
 
 void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel)
 {
-	UIManager->DisplayLoadingScreen(true);
+	if (UIManager)
+	{
+		UIManager->DisplayLoadingScreen(true);
+	}
 }
 
 void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
@@ -114,7 +120,6 @@ void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 		AoS_PlayerController = Cast<AAoS_PlayerController>(GetFirstLocalPlayerController());
 	}
 	SpawnPlayer();
-	UIManager->DisplayLoadingScreen(false);
 	if (bIsInMenu)
 	{
 		AoS_PlayerController->bShowMouseCursor = true;
@@ -125,11 +130,13 @@ void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 		AoS_PlayerController->bShowMouseCursor = false;
 		AoS_PlayerController->SetInputMode(FInputModeGameOnly());
 	}
+	
+	GetWorld()->GetTimerManager().SetTimer(LoadingScreenDelayHandle, this, &UAoS_GameInstance::PostLoadingScreenDelay, 5.0f);
 }
 
 void UAoS_GameInstance::OnLevelFinishUnload(UAoS_MapData* UnloadedLevel)
 {
-	
+
 }
 
 void UAoS_GameInstance::Init()
@@ -143,8 +150,20 @@ void UAoS_GameInstance::Init()
 	if(LevelManager)
 	{
 		SetupLevelBindings();
+		if (!LevelManager->GetCurrentStreamingLevel())
+		{
+			LevelManager->LoadLevel(MainMenu, false);
+		}
 	}
 	
+}
+
+void UAoS_GameInstance::PostLoadingScreenDelay()
+{
+	if (UIManager)
+	{
+		UIManager->DisplayLoadingScreen(false);
+	}
 }
 
 APlayerStart* UAoS_GameInstance::GetPlayerStart() const

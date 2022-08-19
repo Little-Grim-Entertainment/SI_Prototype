@@ -31,11 +31,13 @@ public:
 	FOnLevelUnloaded OnLevelUnloaded;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(UAoS_MapData* InLevelToLoad);
+	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true);
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	TArray<FString> GetMapNames();
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	UAoS_MapData* GetMapFromName(FString MapName);
+
+	UAoS_MapData* GetCurrentStreamingLevel() const {return CurrentStreamingLevel;}
 
 private:
 
@@ -50,9 +52,10 @@ private:
 	UAoS_MapData* LevelToUnload;
 	UPROPERTY()
 	UAoS_MapData* CurrentStreamingLevel;
-	UPROPERTY()
-	UAoS_MapData* MainMenu;
-	
+
+
+	FTimerHandle LoadDelayHandle;
+	FTimerHandle UnloadDelayHandle;
 
 	UFUNCTION()
 	void ExecuteLevelLoad(const UAoS_MapData* InLevelToLoad);
@@ -63,6 +66,11 @@ private:
 	void LevelUnloaded();
 	UFUNCTION()
 	void LevelLoaded();
+
+	UAoS_MapData* GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel);
+	void PostLoadDelay();
+	void PostUnloadDelay();
+
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 };
