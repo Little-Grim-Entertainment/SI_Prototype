@@ -7,9 +7,8 @@
 #include "Data/AoS_Defaults.h"
 #include "AoS_UserWidget.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFadeOutComplete);
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_UserWidget : public UUserWidget
 {
@@ -22,7 +21,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ProjectDefaults")
 	UAoS_Defaults* ProjectDefaults;
+	UPROPERTY(BlueprintCallable)
+	FOnFadeOutComplete OnFadeOutComplete;
 	
+	UFUNCTION(BlueprintImplementableEvent)
+	void FadeInWidget();
+	UFUNCTION(BlueprintImplementableEvent)
+	void FadeOutWidget();
+
+	void FadeOutComplete();
 
 protected:
 

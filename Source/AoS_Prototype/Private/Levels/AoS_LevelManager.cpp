@@ -6,6 +6,7 @@
 #include "Data/AoS_MapData.h"
 #include "Data/AoS_MapList.h"
 #include "Engine/LevelStreaming.h"
+#include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -33,7 +34,7 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay)
 					LevelToUnload = CurrentLevelData;
 					if (bAllowDelay)
 					{
-						GetWorld()->GetTimerManager().SetTimer(UnloadDelayHandle, this, &UAoS_LevelManager::PostUnloadDelay, 2.0f);
+						GetWorld()->GetTimerManager().SetTimer(UnloadDelayHandle, this, &UAoS_LevelManager::PostUnloadDelay, 0.5f);
 					}
 					else
 					{
@@ -53,7 +54,7 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay)
 		{
 			if (bAllowDelay)
 			{
-				GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, this, &UAoS_LevelManager::PostLoadDelay, 2.0f);
+				GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, this, &UAoS_LevelManager::PostLoadDelay, 0.5f);
 			}
 			else
 			{

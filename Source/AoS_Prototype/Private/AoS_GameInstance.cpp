@@ -130,7 +130,6 @@ void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 		AoS_PlayerController->bShowMouseCursor = false;
 		AoS_PlayerController->SetInputMode(FInputModeGameOnly());
 	}
-	
 	GetWorld()->GetTimerManager().SetTimer(LoadingScreenDelayHandle, this, &UAoS_GameInstance::PostLoadingScreenDelay, 5.0f);
 }
 

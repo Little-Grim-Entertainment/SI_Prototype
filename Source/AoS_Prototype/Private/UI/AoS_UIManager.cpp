@@ -29,7 +29,7 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay)
 		{
 			if (LoadingScreen)
 			{
-				LoadingScreen->RemoveFromViewport();
+				LoadingScreen->FadeOutWidget();
 			}
 		}
 	}
