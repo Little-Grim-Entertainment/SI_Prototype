@@ -3,8 +3,14 @@
 
 #include "UI/AoS_UIManager.h"
 #include "AoS_GameInstance.h"
+#include "Levels/AoS_LevelManager.h"
 #include "UI/AoS_UserWidget.h"
 
+
+UAoS_UIManager::UAoS_UIManager()
+{
+
+}
 
 void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay)
 {

@@ -1,4 +1,4 @@
-// This subsystem will handle the creation and display of the various UI in Ace of Spades
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -8,13 +8,18 @@
 
 class UAoS_UserWidget;
 class UAoS_GameInstance;
+class UAoS_MapData;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_UIManager : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
+	// This subsystem will handle the creation and display of the various UI in Ace of Spades
+	
 public:
+
+	UAoS_UIManager();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay);

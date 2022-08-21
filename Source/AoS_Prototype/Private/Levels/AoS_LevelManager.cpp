@@ -6,13 +6,13 @@
 #include "Data/AoS_MapData.h"
 #include "Data/AoS_MapList.h"
 #include "Engine/LevelStreaming.h"
-#include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 
 
 UAoS_LevelManager::UAoS_LevelManager()
 {
-
+	static ConstructorHelpers::FObjectFinder<UAoS_MapData> MainMenuAsset(TEXT("/Game/AoS/Maps/Menus/DA_MainMenu"));
+	MainMenu = MainMenuAsset.Object;
 }
 
 void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay)
@@ -32,14 +32,7 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay)
 				if (UAoS_MapData* CurrentLevelData = GetMapDataFromStreamingLevel(CurrentLevel))
 				{
 					LevelToUnload = CurrentLevelData;
-					if (bAllowDelay)
-					{
-						GetWorld()->GetTimerManager().SetTimer(UnloadDelayHandle, this, &UAoS_LevelManager::PostUnloadDelay, 0.5f);
-					}
-					else
-					{
-						ExecuteLevelUnload(LevelToUnload);
-					}
+					ExecuteLevelUnload(LevelToUnload);
 				}
 			}
 			if (CurrentLevel->GetWorldAsset().GetAssetName() == InLevelToLoad->Map.GetAssetName())
@@ -147,6 +140,7 @@ void UAoS_LevelManager::LevelLoaded()
 			if (UAoS_MapData* CurrentLevelData = GetMapDataFromStreamingLevel(CurrentLevel))
 			{
 				CurrentStreamingLevel = CurrentLevelData;
+				
 				if (CurrentStreamingLevel->MapType == EMapType::MT_Menu)
 				{
 					GameInstance->SetIsInMenu(true);
@@ -155,6 +149,7 @@ void UAoS_LevelManager::LevelLoaded()
 				{
 					GameInstance->SetIsInMenu(false);
 				}
+				GameInstance->UpdateMapType(CurrentStreamingLevel->MapType);
 				OnLevelLoaded.Broadcast(CurrentStreamingLevel);
 				return;
 			}
@@ -188,10 +183,19 @@ void UAoS_LevelManager::PostLoadDelay()
 	}
 }
 
-void UAoS_LevelManager::PostUnloadDelay()
+void UAoS_LevelManager::LoadMainMenu()
 {
-	if  (LevelToUnload)
+	if(MainMenu)
 	{
-		ExecuteLevelUnload(LevelToUnload);
+		GameInstance->GetLevelManager()->LoadLevel(MainMenu, false);
 	}
 }
+
+void UAoS_LevelManager::LevelManagerOnGameInstanceInit()
+{
+	if (!GetCurrentStreamingLevel())
+	{
+		LoadMainMenu();
+	}
+}
+

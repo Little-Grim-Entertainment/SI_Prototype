@@ -20,10 +20,7 @@
 #include "Kismet/GameplayStatics.h"
 
 UAoS_GameInstance::UAoS_GameInstance()
-{
-	static ConstructorHelpers::FObjectFinder<UAoS_MapData> MainMenuAsset(TEXT("/Game/AoS/Maps/Menus/DA_MainMenu"));
-	MainMenu = MainMenuAsset.Object;
-	
+{	
 	bIsInMenu = false;
 }
 
@@ -67,6 +64,15 @@ void UAoS_GameInstance::SpawnPlayer()
 	}
 }
 
+void UAoS_GameInstance::UpdateMapType(EMapType InMapType)
+{
+	if (InMapType != CurrentMapType)
+	{
+		CurrentMapType = InMapType;
+		OnMapTypeChanged.Broadcast(InMapType);
+	}
+}
+
 EPlayerMode UAoS_GameInstance::GetPlayerMode() const
 {
 	return PlayerMode;
@@ -88,21 +94,48 @@ void UAoS_GameInstance::SetIsInMenu(const bool bInMenu)
 	bIsInMenu = bInMenu;
 }
 
+void UAoS_GameInstance::SetupBindings()
+{
+	if(LevelManager)
+	{
+		LevelManager->OnBeginLevelLoad.AddDynamic(this, &UAoS_GameInstance::OnLevelBeginLoad);
+		LevelManager->OnLevelLoaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishLoad);
+		LevelManager->OnLevelUnloaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishUnload);
+		SetupLevelBindings();
+	}
+	if (UIManager)
+	{
+		SetupUIBindings();
+	}
+	if (CaseManager)
+	{
+		SetupCaseBindings();
+	}
+	if (WorldManager)
+	{
+		SetupWorldBindings();
+	}
+
+	OnSubsystemBindingsComplete.Broadcast();
+}
+
 void UAoS_GameInstance::SetupLevelBindings()
 {
-	LevelManager->OnBeginLevelLoad.AddDynamic(this, &UAoS_GameInstance::OnLevelBeginLoad);
-	LevelManager->OnLevelLoaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishLoad);
-	LevelManager->OnLevelUnloaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishUnload);
+	OnGameInstanceInit.AddDynamic(LevelManager, &UAoS_LevelManager::LevelManagerOnGameInstanceInit);
 }
 
 void UAoS_GameInstance::SetupUIBindings()
 {
-	
+
 }
 
 void UAoS_GameInstance::SetupCaseBindings()
 {
-	
+	void SetupCaseBindings();
+}
+
+void UAoS_GameInstance::SetupWorldBindings()
+{
 }
 
 void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel)
@@ -130,7 +163,10 @@ void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 		AoS_PlayerController->bShowMouseCursor = false;
 		AoS_PlayerController->SetInputMode(FInputModeGameOnly());
 	}
-	GetWorld()->GetTimerManager().SetTimer(LoadingScreenDelayHandle, this, &UAoS_GameInstance::PostLoadingScreenDelay, 5.0f);
+	if (UIManager)
+	{
+		UIManager->DisplayLoadingScreen(false);
+	}	
 }
 
 void UAoS_GameInstance::OnLevelFinishUnload(UAoS_MapData* UnloadedLevel)
@@ -146,23 +182,10 @@ void UAoS_GameInstance::Init()
 	UIManager = GetSubsystem<UAoS_UIManager>();
 	LevelManager = GetSubsystem<UAoS_LevelManager>();
 	WorldManager = GetSubsystem<UAoS_WorldManager>();
-	if(LevelManager)
-	{
-		SetupLevelBindings();
-		if (!LevelManager->GetCurrentStreamingLevel())
-		{
-			LevelManager->LoadLevel(MainMenu, false);
-		}
-	}
 	
-}
-
-void UAoS_GameInstance::PostLoadingScreenDelay()
-{
-	if (UIManager)
-	{
-		UIManager->DisplayLoadingScreen(false);
-	}
+	SetupBindings();
+	
+	OnGameInstanceInit.Broadcast();
 }
 
 APlayerStart* UAoS_GameInstance::GetPlayerStart() const

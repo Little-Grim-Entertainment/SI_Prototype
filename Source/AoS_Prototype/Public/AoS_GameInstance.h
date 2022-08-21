@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <Data/AoS_MapData.h>
+
 #include "CoreMinimal.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "Engine/GameInstance.h"
@@ -19,7 +21,6 @@ class UAoS_LevelManager;
 class UAoS_UIManager;
 
 class UAoS_MapList;
-class UAoS_MapData;
 
 UENUM(BlueprintType)
 enum EPlayerMode
@@ -34,6 +35,11 @@ enum EPlayerMode
   };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMapTypeChanged, EMapType, NewMapType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameInstanceInit);
+
+
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
@@ -45,7 +51,13 @@ public:
 	UAoS_GameInstance();
 
 	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
+	FOnSubsystemBindingsComplete OnSubsystemBindingsComplete;
+	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
 	FOnPlayerModeChanged OnPlayerModeChanged;
+	UPROPERTY(BlueprintAssignable, Category = "MapData")
+	FOnMapTypeChanged OnMapTypeChanged;
+	UPROPERTY(BlueprintAssignable, Category = "MapData")
+	FOnGameInstanceInit OnGameInstanceInit;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
 	float TimeModifier = 10.0f;
@@ -61,20 +73,34 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SpawnPlayer();
+	UFUNCTION(BlueprintCallable)
+	void UpdateMapType(EMapType InMapType);
 	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	AAoS_PlayerController* GetAOSPlayerController();
 	
+	UFUNCTION()
+	UAoS_UIManager* GetUIManager() const {return UIManager;}
+	UFUNCTION()
+	UAoS_WorldManager* GetWorldManager() const {return WorldManager;}
+	UFUNCTION()
+	UAoS_LevelManager* GetLevelManager() const {return LevelManager;}
+	UFUNCTION()
+	UAoS_CaseManager* GetCaseManager() const {return CaseManager;}
+		
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
 	void SetPlayerMode(EPlayerMode InPlayerMode);
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
 	void SetIsInMenu(const bool bInMenu);
 
+	void SetupBindings();
 	void SetupLevelBindings();
 	void SetupUIBindings();
 	void SetupCaseBindings();
+	void SetupWorldBindings();
+
 
 	
 	// Level Delegates
@@ -103,16 +129,14 @@ private:
 	AAoS_PlayerController* AoS_PlayerController;
 
 	UPROPERTY()
-	UAoS_MapData* MainMenu;
+	TEnumAsByte<EMapType> CurrentMapType;
 
 	FTimerHandle LoadingScreenDelayHandle;
 	EPlayerMode PlayerMode;
 	bool bIsInMenu;
 
 	virtual void Init() override;
-
-	void PostLoadingScreenDelay();
-
+	
 	APlayerStart* GetPlayerStart() const;
 	
 };

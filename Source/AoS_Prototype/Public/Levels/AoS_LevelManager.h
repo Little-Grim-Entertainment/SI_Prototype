@@ -1,4 +1,4 @@
-// This subsystem will handle the loading and unloading of levels inside the persistent level
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -19,6 +19,8 @@ class AOS_PROTOTYPE_API UAoS_LevelManager : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
+	// This subsystem will handle the loading and unloading of levels inside the persistent level
+	
 public:
 
 	UAoS_LevelManager();
@@ -37,6 +39,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	UAoS_MapData* GetMapFromName(FString MapName);
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void LoadMainMenu();
+	UFUNCTION()
+	void LevelManagerOnGameInstanceInit();
+
 	UAoS_MapData* GetCurrentStreamingLevel() const {return CurrentStreamingLevel;}
 
 private:
@@ -52,6 +59,8 @@ private:
 	UAoS_MapData* LevelToUnload;
 	UPROPERTY()
 	UAoS_MapData* CurrentStreamingLevel;
+	UPROPERTY()
+	UAoS_MapData* MainMenu;
 
 
 	FTimerHandle LoadDelayHandle;
@@ -69,8 +78,6 @@ private:
 
 	UAoS_MapData* GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel);
 	void PostLoadDelay();
-	void PostUnloadDelay();
-
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 };
