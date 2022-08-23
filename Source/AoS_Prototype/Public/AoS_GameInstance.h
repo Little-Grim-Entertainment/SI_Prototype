@@ -2,11 +2,10 @@
 
 #pragma once
 
-#include <Data/AoS_MapData.h>
-
 #include "CoreMinimal.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "Engine/GameInstance.h"
+#include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.generated.h"
 
 class UAoS_UserWidget;
@@ -21,6 +20,7 @@ class UAoS_LevelManager;
 class UAoS_UIManager;
 
 class UAoS_MapList;
+class UAoS_MapData;
 
 UENUM(BlueprintType)
 enum EPlayerMode
@@ -35,7 +35,6 @@ enum EPlayerMode
   };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMapTypeChanged, EMapType, NewMapType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameInstanceInit);
 
@@ -54,8 +53,7 @@ public:
 	FOnSubsystemBindingsComplete OnSubsystemBindingsComplete;
 	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
 	FOnPlayerModeChanged OnPlayerModeChanged;
-	UPROPERTY(BlueprintAssignable, Category = "MapData")
-	FOnMapTypeChanged OnMapTypeChanged;
+
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnGameInstanceInit OnGameInstanceInit;
 
@@ -73,8 +71,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SpawnPlayer();
-	UFUNCTION(BlueprintCallable)
-	void UpdateMapType(EMapType InMapType);
 	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
@@ -92,24 +88,8 @@ public:
 		
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
 	void SetPlayerMode(EPlayerMode InPlayerMode);
-	UFUNCTION(BlueprintCallable, Category = "PlayerData")
-	void SetIsInMenu(const bool bInMenu);
 
 	void SetupBindings();
-	void SetupLevelBindings();
-	void SetupUIBindings();
-	void SetupCaseBindings();
-	void SetupWorldBindings();
-
-
-	
-	// Level Delegates
-	UFUNCTION()
-	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel);
-	UFUNCTION()
-	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel);
-	UFUNCTION()
-	void OnLevelFinishUnload(UAoS_MapData* UnloadedLevel);
 
 private:
 
@@ -127,10 +107,7 @@ private:
 	AAoS_Nick* NickSpadeCharacter;
 	UPROPERTY()
 	AAoS_PlayerController* AoS_PlayerController;
-
-	UPROPERTY()
-	TEnumAsByte<EMapType> CurrentMapType;
-
+	
 	FTimerHandle LoadingScreenDelayHandle;
 	EPlayerMode PlayerMode;
 	bool bIsInMenu;
@@ -138,5 +115,15 @@ private:
 	virtual void Init() override;
 	
 	APlayerStart* GetPlayerStart() const;
+
+	// Level Delegates
+	UFUNCTION()
+	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel);
+	UFUNCTION()
+	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel);
+	UFUNCTION()
+	void OnLevelFinishUnload(UAoS_MapData* UnloadedLevel);
+	UFUNCTION()
+	void OnMapTypeChanged(EMapType InMapType);
 	
 };

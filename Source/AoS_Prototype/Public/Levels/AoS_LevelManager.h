@@ -6,6 +6,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_LevelManager.generated.h"
 
+enum class EMapType : uint8;
+
 class UAoS_GameInstance;
 class UAoS_UIManager;
 class UAoS_MapData;
@@ -13,6 +15,7 @@ class UAoS_MapData;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginLevelLoad, UAoS_MapData*, LoadingLevel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelLoaded, UAoS_MapData*, LoadedLevel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, UAoS_MapData*, UnloadedLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMapTypeChanged, EMapType, NewMapType);
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_LevelManager : public UGameInstanceSubsystem
@@ -31,6 +34,8 @@ public:
 	FOnLevelLoaded OnLevelLoaded;
 	UPROPERTY(BlueprintAssignable, Category = "Levels")
 	FOnLevelUnloaded OnLevelUnloaded;
+	UPROPERTY(BlueprintAssignable, Category = "MapData")
+	FOnMapTypeChanged OnMapTypeChanged;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true);
@@ -38,6 +43,11 @@ public:
 	TArray<FString> GetMapNames();
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	UAoS_MapData* GetMapFromName(FString MapName);
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	EMapType GetCurrentMapType();
+	
+	UFUNCTION(BlueprintCallable)
+    void UpdateMapType(EMapType InMapType);
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void LoadMainMenu();
@@ -61,6 +71,8 @@ private:
 	UAoS_MapData* CurrentStreamingLevel;
 	UPROPERTY()
 	UAoS_MapData* MainMenu;
+	UPROPERTY()
+	TEnumAsByte<EMapType> CurrentMapType;
 
 
 	FTimerHandle LoadDelayHandle;

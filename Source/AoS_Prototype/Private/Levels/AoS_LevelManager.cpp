@@ -3,8 +3,8 @@
 
 #include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.h"
-#include "Data/AoS_MapData.h"
 #include "Data/AoS_MapList.h"
+#include "Data/AoS_MapData.h"
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -93,6 +93,11 @@ UAoS_MapData* UAoS_LevelManager::GetMapFromName(FString MapName)
 	return nullptr;
 }
 
+EMapType UAoS_LevelManager::GetCurrentMapType()
+{
+	return CurrentMapType;
+}
+
 void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -140,16 +145,7 @@ void UAoS_LevelManager::LevelLoaded()
 			if (UAoS_MapData* CurrentLevelData = GetMapDataFromStreamingLevel(CurrentLevel))
 			{
 				CurrentStreamingLevel = CurrentLevelData;
-				
-				if (CurrentStreamingLevel->MapType == EMapType::MT_Menu)
-				{
-					GameInstance->SetIsInMenu(true);
-				}
-				else
-				{
-					GameInstance->SetIsInMenu(false);
-				}
-				GameInstance->UpdateMapType(CurrentStreamingLevel->MapType);
+				UpdateMapType(CurrentStreamingLevel->MapType);
 				OnLevelLoaded.Broadcast(CurrentStreamingLevel);
 				return;
 			}
@@ -199,3 +195,11 @@ void UAoS_LevelManager::LevelManagerOnGameInstanceInit()
 	}
 }
 
+void UAoS_LevelManager::UpdateMapType(EMapType InMapType)
+{
+	if (InMapType != CurrentMapType)
+	{
+		CurrentMapType = InMapType;
+		OnMapTypeChanged.Broadcast(InMapType);
+	}
+}

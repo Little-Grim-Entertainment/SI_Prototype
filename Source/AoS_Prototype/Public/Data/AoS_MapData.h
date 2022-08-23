@@ -7,7 +7,7 @@
 #include "AoS_MapData.generated.h"
 
 UENUM(BlueprintType)
-enum EMapType
+enum class EMapType : uint8
 {
 	MT_Menu     UMETA(DisplayName = "Menu"),
 	MT_Interior     UMETA(DisplayName = "Interior"),

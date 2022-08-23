@@ -6,7 +6,8 @@
 #include "AoS_GameInstance.h"
 #include "Components/LightComponent.h"
 #include "Curves/CurveLinearColor.h"
-#include "Engine/DirectionalLight.h"
+#include "World/AoS_SunLight.h"
+#include "Components/DirectionalLightComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "World/AoS_WorldManager.h"
 
@@ -16,7 +17,7 @@ AAoS_SkySphere::AAoS_SkySphere()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	Base = CreateDefaultSubobject<USceneComponent>(TEXT("Base"));
 	SetRootComponent(Base);
 	SkySphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SkySphereMesh"));
@@ -25,14 +26,14 @@ AAoS_SkySphere::AAoS_SkySphere()
 
 void AAoS_SkySphere::UpdateSunDirection()
 {
-	if (!SkySphereMesh || !SkyMaterial || !DynamicSkyMaterial || !DirectionalLightActor || !HorizonColorCurve || !ZenithColorCurve || !CloudColorColorCurve) {return;}
-	const FLinearColor LightDirectionVector = UKismetMathLibrary::Conv_VectorToLinearColor(UKismetMathLibrary::Conv_RotatorToVector(DirectionalLightActor->GetActorRotation()));
+	if (!SkySphereMesh || !SkyMaterial || !DynamicSkyMaterial || !SunLightActor || !HorizonColorCurve || !ZenithColorCurve || !CloudColorColorCurve) {return;}
+	const FLinearColor LightDirectionVector = UKismetMathLibrary::Conv_VectorToLinearColor(UKismetMathLibrary::Conv_RotatorToVector(SunLightActor->GetActorRotation()));
 	DynamicSkyMaterial->SetVectorParameterValue("Light direction", LightDirectionVector);
 
-	const FLinearColor SunColorVector = UKismetMathLibrary::Conv_ColorToLinearColor(DirectionalLightActor->GetLightComponent()->LightColor);
+	const FLinearColor SunColorVector = UKismetMathLibrary::Conv_ColorToLinearColor(SunLightActor->GetSunLightComponent()->LightColor);
 	DynamicSkyMaterial->SetVectorParameterValue("Sun color", SunColorVector);
 
-	SunHeight = UKismetMathLibrary::MapRangeUnclamped(DirectionalLightActor->GetActorRotation().Pitch, 0, -90, 0, 1);
+	SunHeight = UKismetMathLibrary::MapRangeUnclamped(SunLightActor->GetActorRotation().Pitch, 0, -90, 0, 1);
 
 	const FLinearColor HorizonColorVector = HorizonColorCurve->GetClampedLinearColorValue(SunHeight);
 	DynamicSkyMaterial->SetVectorParameterValue("Horizon color", HorizonColorVector);
@@ -48,20 +49,21 @@ void AAoS_SkySphere::UpdateSunDirection()
 
 	const float SunHeightValue = UKismetMathLibrary::SelectFloat(FMath::Abs(SunHeight), 0, SunHeight < 0);
 	DynamicSkyMaterial->SetScalarParameterValue("Sun height", SunHeightValue);
+
 }
 
 void AAoS_SkySphere::RefreshMaterial()
 {
 	if (!SkySphereMesh || !SkyMaterial  || !DynamicSkyMaterial || !HorizonColorCurve || !ZenithColorCurve || !CloudColorColorCurve) {return;}
-	if (DirectionalLightActor)
+	if (SunLightActor)
 	{
-		const FLinearColor LightDirectionVector = UKismetMathLibrary::Conv_VectorToLinearColor(UKismetMathLibrary::Conv_RotatorToVector(DirectionalLightActor->GetActorRotation()));
+		const FLinearColor LightDirectionVector = UKismetMathLibrary::Conv_VectorToLinearColor(UKismetMathLibrary::Conv_RotatorToVector(SunLightActor->GetActorRotation()));
 		DynamicSkyMaterial->SetVectorParameterValue("Light direction", LightDirectionVector);
 
-		const FLinearColor SunColorVector = UKismetMathLibrary::Conv_ColorToLinearColor(DirectionalLightActor->GetLightComponent()->LightColor);
+		const FLinearColor SunColorVector = UKismetMathLibrary::Conv_ColorToLinearColor(SunLightActor->GetSunLightComponent()->LightColor);
 		DynamicSkyMaterial->SetVectorParameterValue("Sun color", SunColorVector);
 
-		SunHeight = UKismetMathLibrary::MapRangeUnclamped(DirectionalLightActor->GetActorRotation().Pitch, 0, -90, 0, 1);
+		SunHeight = UKismetMathLibrary::MapRangeUnclamped(SunLightActor->GetActorRotation().Pitch, 0, -90, 0, 1);
 	}
 	else
 	{
@@ -105,6 +107,19 @@ void AAoS_SkySphere::RefreshMaterial()
 	DynamicSkyMaterial->SetScalarParameterValue("Stars brightness", StarsBrightness);
 }
 
+void AAoS_SkySphere::RotateSun(const FRotator InRotation)
+{
+	if(SunLightActor)
+	{
+		SunLightActor->AddActorLocalRotation(InRotation);
+	}
+}
+
+void AAoS_SkySphere::SetSunLightActor(AAoS_SunLight* SunLightToSet)
+{
+	SunLightActor = SunLightToSet;
+}
+
 // Called when the game starts or when spawned
 void AAoS_SkySphere::BeginPlay()
 {
@@ -140,6 +155,7 @@ void AAoS_SkySphere::OnConstruction(const FTransform& Transform)
 	{
 		bRefreshMaterial = false;
 	}
+
 	RefreshMaterial();
 	
 }

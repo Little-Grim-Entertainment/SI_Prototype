@@ -41,6 +41,21 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay)
 	}
 }
 
+void UAoS_UIManager::UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel)
+{
+	DisplayLoadingScreen(true);
+}
+
+void UAoS_UIManager::UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel)
+{
+	DisplayLoadingScreen(false);
+}
+
+void UAoS_UIManager::UIManagerOnGameInstanceInit()
+{
+
+}
+
 void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -51,6 +66,7 @@ void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
 		if (GameInstance)
 		{
+
 		}
 	}
 }

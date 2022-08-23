@@ -24,6 +24,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay);
 
+	void UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel);
+	void UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel);
+
+	UFUNCTION()
+	void UIManagerOnGameInstanceInit();
+
 private:
 
 	UPROPERTY()

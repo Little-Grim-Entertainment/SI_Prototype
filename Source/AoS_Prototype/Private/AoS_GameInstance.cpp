@@ -57,19 +57,26 @@ void UAoS_GameInstance::SpawnPlayer()
 			NickSpadeCharacter->SetActorRotation(PlayerStart->GetActorRotation());
 		}
 	}
+	
+	if (!AoS_PlayerController)
+	{
+		AoS_PlayerController = Cast<AAoS_PlayerController>(GetFirstLocalPlayerController());
+	}
 
 	if (AoS_PlayerController)
 	{
 		AoS_PlayerController->Possess(NickSpadeCharacter);
-	}
-}
-
-void UAoS_GameInstance::UpdateMapType(EMapType InMapType)
-{
-	if (InMapType != CurrentMapType)
-	{
-		CurrentMapType = InMapType;
-		OnMapTypeChanged.Broadcast(InMapType);
+		
+		if (LevelManager->GetCurrentMapType() == EMapType::MT_Menu)
+		{
+			AoS_PlayerController->bShowMouseCursor = true;
+			AoS_PlayerController->SetInputMode(FInputModeUIOnly());
+		}
+		else
+		{
+			AoS_PlayerController->bShowMouseCursor = false;
+			AoS_PlayerController->SetInputMode(FInputModeGameOnly());
+		}
 	}
 }
 
@@ -89,11 +96,6 @@ void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
 	OnPlayerModeChanged.Broadcast(InPlayerMode);
 }
 
-void UAoS_GameInstance::SetIsInMenu(const bool bInMenu)
-{
-	bIsInMenu = bInMenu;
-}
-
 void UAoS_GameInstance::SetupBindings()
 {
 	if(LevelManager)
@@ -101,77 +103,59 @@ void UAoS_GameInstance::SetupBindings()
 		LevelManager->OnBeginLevelLoad.AddDynamic(this, &UAoS_GameInstance::OnLevelBeginLoad);
 		LevelManager->OnLevelLoaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishLoad);
 		LevelManager->OnLevelUnloaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishUnload);
-		SetupLevelBindings();
+		LevelManager->OnMapTypeChanged.AddDynamic(this, &UAoS_GameInstance::OnMapTypeChanged);
+		
+		OnGameInstanceInit.AddDynamic(LevelManager, &UAoS_LevelManager::LevelManagerOnGameInstanceInit);
 	}
 	if (UIManager)
 	{
-		SetupUIBindings();
+		OnGameInstanceInit.AddDynamic(UIManager, &UAoS_UIManager::UIManagerOnGameInstanceInit);
 	}
 	if (CaseManager)
 	{
-		SetupCaseBindings();
 	}
 	if (WorldManager)
 	{
-		SetupWorldBindings();
+		OnGameInstanceInit.AddDynamic(WorldManager, &UAoS_WorldManager::WorldManagerOnGameInstanceInit);
 	}
 
 	OnSubsystemBindingsComplete.Broadcast();
-}
-
-void UAoS_GameInstance::SetupLevelBindings()
-{
-	OnGameInstanceInit.AddDynamic(LevelManager, &UAoS_LevelManager::LevelManagerOnGameInstanceInit);
-}
-
-void UAoS_GameInstance::SetupUIBindings()
-{
-
-}
-
-void UAoS_GameInstance::SetupCaseBindings()
-{
-	void SetupCaseBindings();
-}
-
-void UAoS_GameInstance::SetupWorldBindings()
-{
 }
 
 void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel)
 {
 	if (UIManager)
 	{
-		UIManager->DisplayLoadingScreen(true);
+		UIManager->UIOnLevelBeginLoad(LoadingLevel);
 	}
 }
 
 void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 {
-	if (!AoS_PlayerController)
-	{
-		AoS_PlayerController = Cast<AAoS_PlayerController>(GetFirstLocalPlayerController());
-	}
 	SpawnPlayer();
-	if (bIsInMenu)
-	{
-		AoS_PlayerController->bShowMouseCursor = true;
-		AoS_PlayerController->SetInputMode(FInputModeUIOnly());
-	}
-	else
-	{
-		AoS_PlayerController->bShowMouseCursor = false;
-		AoS_PlayerController->SetInputMode(FInputModeGameOnly());
-	}
+
 	if (UIManager)
 	{
-		UIManager->DisplayLoadingScreen(false);
-	}	
+		UIManager->UIOnLevelFinishLoad(LoadedLevel);
+	}
+	if (WorldManager)
+	{
+		WorldManager->WorldOnLevelFinishLoad(LoadedLevel);
+	}
+	
 }
 
 void UAoS_GameInstance::OnLevelFinishUnload(UAoS_MapData* UnloadedLevel)
 {
+	
+}
 
+void UAoS_GameInstance::OnMapTypeChanged(EMapType InMapType)
+{
+	if (WorldManager)
+	{
+		WorldManager->WorldOnMapTypeChange(InMapType);
+	}
 }
 
 void UAoS_GameInstance::Init()

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AoS_SkySphere.generated.h"
 
+class AAoS_SunLight;
 class UAoS_WorldManager;
 class ADirectionalLight;
 
@@ -43,8 +44,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bRefreshMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ADirectionalLight* DirectionalLightActor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bColorsDeterminedBySunPosition = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SunBrightness = 50.0f;
@@ -60,11 +59,19 @@ public:
 	UCurveLinearColor* ZenithColorCurve;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCurveLinearColor* CloudColorColorCurve;
+		
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	AAoS_SunLight* SunLightActor;
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateSunDirection();
 	UFUNCTION(BlueprintCallable)
 	void RefreshMaterial();
+	UFUNCTION(BlueprintCallable)
+	void RotateSun(const FRotator InRotation);
+
+	UFUNCTION()
+	void SetSunLightActor(AAoS_SunLight* SunLightToSet);
 
 protected:
 	// Called when the game starts or when spawned
