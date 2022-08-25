@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AoS_SkySphere.generated.h"
 
+class UAoS_GameInstance;
 class AAoS_SunLight;
 class UAoS_WorldManager;
 class ADirectionalLight;
@@ -68,7 +69,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RefreshMaterial();
 	UFUNCTION(BlueprintCallable)
-	void RotateSun(const FRotator InRotation);
+	void RotateSun(FRotator InRotation);
 
 	UFUNCTION()
 	void SetSunLightActor(AAoS_SunLight* SunLightToSet);
@@ -86,4 +87,6 @@ private:
 
 	UPROPERTY()
 	UAoS_WorldManager* WorldManager;
+	UPROPERTY()
+	UAoS_GameInstance* GameInstance;
 };

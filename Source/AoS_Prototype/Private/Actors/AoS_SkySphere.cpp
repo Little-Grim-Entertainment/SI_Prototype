@@ -107,11 +107,12 @@ void AAoS_SkySphere::RefreshMaterial()
 	DynamicSkyMaterial->SetScalarParameterValue("Stars brightness", StarsBrightness);
 }
 
-void AAoS_SkySphere::RotateSun(const FRotator InRotation)
+void AAoS_SkySphere::RotateSun(FRotator InRotation)
 {
 	if(SunLightActor)
 	{
-		SunLightActor->AddActorLocalRotation(InRotation);
+		SunLightActor->SetActorRelativeRotation(InRotation);
+		RefreshMaterial();
 	}
 }
 
@@ -125,7 +126,7 @@ void AAoS_SkySphere::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (GameInstance)
 	{
 		WorldManager = GameInstance->GetSubsystem<UAoS_WorldManager>();

@@ -24,7 +24,7 @@ UAoS_GameInstance::UAoS_GameInstance()
 	bIsInMenu = false;
 }
 
-void UAoS_GameInstance::ResetCase(FString CaseToResetName)
+void UAoS_GameInstance::CheatResetCase(FString CaseToResetName)
 {
 	if (CaseManager)
 	{

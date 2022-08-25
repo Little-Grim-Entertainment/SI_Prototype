@@ -38,6 +38,7 @@ private:
 	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	UAoS_UserWidget* LoadingScreen;
+
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

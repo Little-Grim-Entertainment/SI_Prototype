@@ -13,7 +13,58 @@ class AAoS_SkySphere;
 class UAoS_GameInstance;
 class UAoS_MapData;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNewDayStarted);
+UENUM(BlueprintType)
+enum class EWeekDay : uint8
+{
+	WD_Sunday = 0	UMETA(DisplayName = "Sunday"),
+	WD_Monday		UMETA(DisplayName = "Monday"),
+	WD_Tuesday		UMETA(DisplayName = "Tuesday"),
+	WD_Wednesday	UMETA(DisplayName = "Wednesday"),
+	WD_Thursday		UMETA(DisplayName = "Thursday"),
+	WD_Friday		UMETA(DisplayName = "Friday"),
+	WD_Saturday		UMETA(DisplayName = "Saturday"),
+	Count			UMETA(Hidden)
+};
+
+ENUM_RANGE_BY_COUNT(EWeekDay, EWeekDay::Count);
+
+UENUM(BlueprintType)
+enum class EMeridiemIndicator : uint8
+{
+	WD_AM = 0	UMETA(DisplayName = "AM"),
+	WD_PM		UMETA(DisplayName = "PM"),
+	Count			UMETA(Hidden)
+};
+
+ENUM_RANGE_BY_COUNT(EMeridiemIndicator, EMeridiemIndicator::Count);
+
+USTRUCT(BlueprintType)
+struct FTimeStamp
+{
+	GENERATED_BODY()
+
+	EWeekDay WeekDay = EWeekDay::WD_Sunday;
+	int32 Hour = 0;
+	int32 Minute = 0;
+	int32 Second = 0;
+	int32 Millisecond = 0;
+	EMeridiemIndicator MeridiemIndicator = EMeridiemIndicator::WD_AM;
+	float CurrentTimeFloat = 0.00000;
+};
+
+USTRUCT()
+struct FAOSWorldTimer
+{
+	GENERATED_BODY()
+	
+	FString TimerName;
+	FTimerHandle TimerHandle;
+	FTimerDelegate::TMethodPtr< class UAoS_WorldManager > TimerMethod;
+	float Rate;
+	bool bShouldLoop;
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewDayStarted, EWeekDay, NewDay);
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_WorldManager : public UGameInstanceSubsystem
@@ -38,9 +89,19 @@ public:
 	void WorldOnLevelFinishLoad(UAoS_MapData* LoadedLevel);
 
 	UFUNCTION(BlueprintCallable)
-	void StartTimer();
+	void StartTimerByHandle(FTimerHandle TimerToStart);
+	UFUNCTION(BlueprintCallable)
+	void PauseTimer(bool bShouldPause);
+
 	UFUNCTION()
-	void UpdateTimer();
+	void SetSunRotationModifier(int32 Percentage);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetTimeStamp(EWeekDay InWeekDay, int32 InHour, int32 InMin, EMeridiemIndicator InMeridiemIndicator);
+	
+	UFUNCTION(BlueprintCallable)
+	FTimeStamp GetTimeStamp();
+
 	
 protected:
 
@@ -56,18 +117,31 @@ private:
 	UPROPERTY()
 	AAoS_SkySphere* SkySphere;
 
-	int32 CurrentTimeHour = 0;
-	int32 CurrentTimeMin = 0;
-	int32 CurrentTimeSec = 0;
-	int32 CurrentTimeMilSec = 0;
+	float SunRotationModifier;
+	float SunRotationSpeed = .005;
 	
+	FTimeStamp CurrentTimeStamp;
+		
 	FTSTicker::FDelegateHandle TickerDelegateHandle;
 	FTimerHandle TimeOfDayHandle;
-	FTimerHandle NormalTimeOfDayHandle;
 
+	TArray<FAOSWorldTimer> WorldTimers;
 	
-
 	bool bTimePaused = false;
 
 	AAoS_SunLight* GetLevelSunLight();
+
+	UFUNCTION()
+	void UpdateWorld();
+	UFUNCTION()
+	void UpdateTimer();
+	UFUNCTION()
+	void UpdateSky();
+	UFUNCTION()
+	void UpdateFloatTime();
+	UFUNCTION()
+	void InitializeWorldTimers();
+
+	void CreateNewWorldTimer(FTimerHandle InTimerHandle, FString InTimerName, FTimerDelegate::TMethodPtr<UAoS_WorldManager> InTimerMethod, float InRate, bool bInShouldLoop);
 };
+

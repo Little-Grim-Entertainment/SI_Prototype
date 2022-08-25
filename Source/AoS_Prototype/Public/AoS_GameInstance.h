@@ -67,7 +67,7 @@ public:
 	UAoS_MapList* MapList;
 	
 	UFUNCTION(Exec, Category = Cases)
-	void ResetCase(FString CaseToResetName);
+	void CheatResetCase(FString CaseToResetName);
 	
 	UFUNCTION(BlueprintCallable)
 	void SpawnPlayer();
