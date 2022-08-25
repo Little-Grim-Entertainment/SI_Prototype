@@ -88,7 +88,7 @@ public:
 		
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
 	void SetPlayerMode(EPlayerMode InPlayerMode);
-
+	UFUNCTION()
 	void SetupBindings();
 
 private:

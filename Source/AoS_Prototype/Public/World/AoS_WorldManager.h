@@ -57,11 +57,11 @@ struct FAOSWorldTimer
 {
 	GENERATED_BODY()
 	
-	FString TimerName;
+	FString TimerName = "NULL";
 	FTimerHandle TimerHandle;
 	FTimerDelegate::TMethodPtr< class UAoS_WorldManager > TimerMethod;
-	float Rate;
-	bool bShouldLoop;
+	float Rate = 0.0f;
+	bool bShouldLoop = true;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewDayStarted, EWeekDay, NewDay);
@@ -80,7 +80,7 @@ public:
 
 	UFUNCTION()
 	void SetSkySphere(AAoS_SkySphere* SkySphereToSet);
-
+	UFUNCTION()
 	void WorldOnMapTypeChange(EMapType InMapType);
 	
 	UFUNCTION()
@@ -88,19 +88,26 @@ public:
 	UFUNCTION()
 	void WorldOnLevelFinishLoad(UAoS_MapData* LoadedLevel);
 
+	// Timers
 	UFUNCTION(BlueprintCallable)
-	void StartTimerByHandle(FTimerHandle TimerToStart);
+	void StartTimerByHandle(FTimerHandle& InTimerHandle);
 	UFUNCTION(BlueprintCallable)
-	void PauseTimer(bool bShouldPause);
-
+	void PauseTimerByHandle(FTimerHandle& InTimerHandle, bool bShouldPause);
 	UFUNCTION()
-	void SetSunRotationModifier(int32 Percentage);
+	void ResetTimerByHandle(FTimerHandle& InTimerHandle);
+	UFUNCTION()
+	FAOSWorldTimer& GetTimerByHandle(FTimerHandle& InTimerHandle);
+
+	
+	UFUNCTION()
+	void SetSunRotationModifier(float InRate);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetTimeStamp(EWeekDay InWeekDay, int32 InHour, int32 InMin, EMeridiemIndicator InMeridiemIndicator);
 	
 	UFUNCTION(BlueprintCallable)
 	FTimeStamp GetTimeStamp();
+
 
 	
 protected:
@@ -117,8 +124,8 @@ private:
 	UPROPERTY()
 	AAoS_SkySphere* SkySphere;
 
-	float SunRotationModifier;
-	float SunRotationSpeed = .005;
+	float SunRotationModifier = 1.0f;
+	float SunRotationSpeed = 0.005f;
 	
 	FTimeStamp CurrentTimeStamp;
 		
@@ -126,6 +133,7 @@ private:
 	FTimerHandle TimeOfDayHandle;
 
 	TArray<FAOSWorldTimer> WorldTimers;
+	FAOSWorldTimer DefaultTimer;
 	
 	bool bTimePaused = false;
 
@@ -142,6 +150,6 @@ private:
 	UFUNCTION()
 	void InitializeWorldTimers();
 
-	void CreateNewWorldTimer(FTimerHandle InTimerHandle, FString InTimerName, FTimerDelegate::TMethodPtr<UAoS_WorldManager> InTimerMethod, float InRate, bool bInShouldLoop);
+	void CreateNewWorldTimer(FTimerHandle& InTimerHandle, FString InTimerName, FTimerDelegate::TMethodPtr<UAoS_WorldManager> InTimerMethod, float InRate, bool bInShouldLoop);
 };
 

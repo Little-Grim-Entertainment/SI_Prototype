@@ -58,27 +58,23 @@ void UAoS_WorldManager::WorldOnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 	}
 }
 
-void UAoS_WorldManager::StartTimerByHandle(FTimerHandle TimerToStart)
+void UAoS_WorldManager::StartTimerByHandle(FTimerHandle& InTimerHandle)
 {
-	for (FAOSWorldTimer CurrentTimer : WorldTimers)
-	{
-		if (CurrentTimer.TimerHandle == TimerToStart)
-		{
-			GetWorld()->GetTimerManager().SetTimer(CurrentTimer.TimerHandle, this, CurrentTimer.TimerMethod, CurrentTimer.Rate, CurrentTimer.bShouldLoop);
-			return;
-		}
-	}
+	FAOSWorldTimer& TimerToStart = GetTimerByHandle(InTimerHandle);
+
+	GetWorld()->GetTimerManager().SetTimer(InTimerHandle, this, TimerToStart.TimerMethod, TimerToStart.Rate, TimerToStart.bShouldLoop);
+	TimerToStart.TimerHandle = InTimerHandle;
 }
 
-void UAoS_WorldManager::PauseTimer(bool bShouldPause)
+void UAoS_WorldManager::PauseTimerByHandle(FTimerHandle& InTimerHandle, bool bShouldPause)
 {
 	if (bShouldPause)
 	{
-		UKismetSystemLibrary::K2_PauseTimerHandle(GetWorld(), TimeOfDayHandle);
+		GetWorld()->GetTimerManager().PauseTimer(InTimerHandle);
 	}
 	else
 	{
-		UKismetSystemLibrary::K2_UnPauseTimerHandle(GetWorld(), TimeOfDayHandle);
+		GetWorld()->GetTimerManager().UnPauseTimer(InTimerHandle);
 	}
 }
 
@@ -113,7 +109,7 @@ void UAoS_WorldManager::SetTimeStamp(EWeekDay InWeekDay, int32 InHour, int32 InM
 FTimeStamp UAoS_WorldManager::GetTimeStamp()
 {
 	FTimeStamp TimeStamp;
-	TimeStamp.Hour = 12;
+	TimeStamp.Hour = CurrentTimeStamp.Hour;
 	if (CurrentTimeStamp.Hour == 0)
 	{
 		TimeStamp.Hour = 12;
@@ -122,11 +118,33 @@ FTimeStamp UAoS_WorldManager::GetTimeStamp()
 	{
 		TimeStamp.Hour = CurrentTimeStamp.Hour - 12;
 	}
+
 	TimeStamp.Minute = CurrentTimeStamp.Minute;
 	TimeStamp.MeridiemIndicator = CurrentTimeStamp.MeridiemIndicator;
 	TimeStamp.WeekDay = CurrentTimeStamp.WeekDay;
 	TimeStamp.CurrentTimeFloat = CurrentTimeStamp.CurrentTimeFloat;
 	return TimeStamp;
+}
+
+FAOSWorldTimer& UAoS_WorldManager::GetTimerByHandle(FTimerHandle& InTimerHandle)
+{
+	for (FAOSWorldTimer& CurrentTimer : WorldTimers)
+	{
+		if (CurrentTimer.TimerHandle == InTimerHandle)
+		{
+			return CurrentTimer;
+		}
+	}
+	return DefaultTimer;
+}
+
+void UAoS_WorldManager::ResetTimerByHandle(FTimerHandle& InTimerHandle)
+{
+	FAOSWorldTimer& TimerToReset = GetTimerByHandle(InTimerHandle);
+	
+	GetWorld()->GetTimerManager().ClearTimer(InTimerHandle);
+	TimerToReset.TimerHandle = InTimerHandle;
+	StartTimerByHandle(InTimerHandle);
 }
 
 void UAoS_WorldManager::UpdateTimer()
@@ -191,8 +209,10 @@ void UAoS_WorldManager::UpdateFloatTime()
 	CurrentTimeStamp.CurrentTimeFloat = CurrentTimeStamp.Hour + ModifiedMin + ModifiedSec;
 }
 
-void UAoS_WorldManager::CreateNewWorldTimer(FTimerHandle InTimerHandle, FString InTimerName, FTimerDelegate::TMethodPtr<UAoS_WorldManager> InTimerMethod, float InRate, bool bInShouldLoop)
+void UAoS_WorldManager::CreateNewWorldTimer(FTimerHandle& InTimerHandle, FString InTimerName, FTimerDelegate::TMethodPtr<UAoS_WorldManager> InTimerMethod, float InRate, bool bInShouldLoop)
 {
+	const FAOSWorldTimer& CurrentTimer = GetTimerByHandle(InTimerHandle);
+	if (CurrentTimer.TimerName != "NULL") {return;}
 	FAOSWorldTimer NewTimer;
 	NewTimer.TimerHandle = InTimerHandle;
 	NewTimer.TimerName = InTimerName;
@@ -205,7 +225,7 @@ void UAoS_WorldManager::CreateNewWorldTimer(FTimerHandle InTimerHandle, FString 
 
 void UAoS_WorldManager::InitializeWorldTimers()
 {
-	CreateNewWorldTimer(TimeOfDayHandle, "TimeOfDay", &UAoS_WorldManager::UpdateWorld, 0.005f, true);
+	CreateNewWorldTimer(TimeOfDayHandle, "TimeOfDay", &UAoS_WorldManager::UpdateWorld, SunRotationModifier * SunRotationSpeed, true);
 }
 
 void UAoS_WorldManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -257,12 +277,17 @@ void UAoS_WorldManager::UpdateWorld()
 	int32 Minute = GetTimeStamp().Minute;
 	FString MinuteString = UKismetTextLibrary::Conv_IntToText(Minute, false, true, 2, 2).ToString();
 	FString MeridiemIndicatorStr = UEnum::GetDisplayValueAsText(GetTimeStamp().MeridiemIndicator).ToString();
+
+	GetWorld()->GetTimerManager().ListTimers();
 		
 	GEngine->AddOnScreenDebugMessage(-1, 0.005f, FColor::Red, FString::Printf(TEXT("%s %s:%s %s"), *DayString, *HourString, *MinuteString, *MeridiemIndicatorStr));
 }
 
-void UAoS_WorldManager::SetSunRotationModifier(int32 Percentage)
+void UAoS_WorldManager::SetSunRotationModifier(float InRate)
 {
-	
+	FAOSWorldTimer& SunTimer = GetTimerByHandle(TimeOfDayHandle);
+	SunRotationModifier = InRate;
+	SunTimer.Rate = SunRotationSpeed * SunRotationModifier;
+	ResetTimerByHandle(TimeOfDayHandle);
 }
 

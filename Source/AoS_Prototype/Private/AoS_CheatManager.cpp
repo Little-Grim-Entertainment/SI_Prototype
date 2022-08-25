@@ -37,10 +37,22 @@ void UAoS_CheatManager::CheatSetTimeStamp(FString Day, int32 Hour, int32 Minutes
 	WorldManager->SetTimeStamp(WeekDay, Hour, Minutes, MeridiemIndicator);
 }
 
-void UAoS_CheatManager::CheatIncreaseSunRotationSpeed(int32 Percentage)
+void UAoS_CheatManager::CheatIncreaseSunRotationSpeed(float Percentage)
 {
-	if (Percentage < 0 || Percentage > 100) {return;}
+	float FinalRate;
+	if (Percentage <= 0)
+	{
+		FinalRate = 1;
+	}
+	else
+	{
+		FinalRate = Percentage/100;
+	}	
 	
+	UAoS_WorldManager* WorldManager = GameInstance->GetSubsystem<UAoS_WorldManager>();
+
+	WorldManager->SetSunRotationModifier(1.0f);
+	WorldManager->SetSunRotationModifier(FinalRate);
 }
 
 void UAoS_CheatManager::InitCheatManager()
