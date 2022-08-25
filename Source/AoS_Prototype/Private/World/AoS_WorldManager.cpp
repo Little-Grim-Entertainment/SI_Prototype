@@ -31,13 +31,21 @@ void UAoS_WorldManager::SetSkySphere(AAoS_SkySphere* SkySphereToSet)
 
 void UAoS_WorldManager::WorldOnMapTypeChange(EMapType InMapType)
 {
-	if (InMapType != EMapType::MT_Exterior)
+	switch (InMapType)
 	{
-		bTimePaused = true;
-	}
-	else
-	{
-		bTimePaused = false;
+		case EMapType::MT_Exterior:
+			PauseTimerByHandle(TimeOfDayHandle, false);
+			bRotateSun = true;
+			break;
+		case EMapType::MT_Interior:
+			PauseTimerByHandle(TimeOfDayHandle, false);
+			bRotateSun = false;
+			break;
+		case EMapType::MT_Menu:
+			PauseTimerByHandle(TimeOfDayHandle, true);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -48,11 +56,12 @@ void UAoS_WorldManager::WorldManagerOnGameInstanceInit()
 		GameInstance->GetLevelManager()->OnMapTypeChanged.AddDynamic(this, &UAoS_WorldManager::WorldOnMapTypeChange);
 	}
 	StartTimerByHandle(TimeOfDayHandle);
+	PauseTimerByHandle(TimeOfDayHandle, true);
 }
 
 void UAoS_WorldManager::WorldOnLevelFinishLoad(UAoS_MapData* LoadedLevel)
 {
-	if (!bTimePaused && SkySphere)
+	if (bRotateSun && SkySphere)
 	{
 		SkySphere->SetSunLightActor(GetLevelSunLight());
 	}
@@ -75,6 +84,20 @@ void UAoS_WorldManager::PauseTimerByHandle(FTimerHandle& InTimerHandle, bool bSh
 	else
 	{
 		GetWorld()->GetTimerManager().UnPauseTimer(InTimerHandle);
+	}
+}
+
+void UAoS_WorldManager::PauseTimerByName(FString InTimerName, bool bShouldPause)
+{
+	FAOSWorldTimer& TimerToPause = GetTimerByName(InTimerName);
+
+	if (bShouldPause)
+	{
+		GetWorld()->GetTimerManager().PauseTimer(TimerToPause.TimerHandle);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().UnPauseTimer(TimerToPause.TimerHandle);
 	}
 }
 
@@ -138,6 +161,18 @@ FAOSWorldTimer& UAoS_WorldManager::GetTimerByHandle(FTimerHandle& InTimerHandle)
 	return DefaultTimer;
 }
 
+FAOSWorldTimer& UAoS_WorldManager::GetTimerByName(FString InTimerName)
+{
+	for (FAOSWorldTimer& CurrentTimer : WorldTimers)
+	{
+		if (CurrentTimer.TimerName == InTimerName)
+		{
+			return CurrentTimer;
+		}
+	}
+	return DefaultTimer;
+}
+
 void UAoS_WorldManager::ResetTimerByHandle(FTimerHandle& InTimerHandle)
 {
 	FAOSWorldTimer& TimerToReset = GetTimerByHandle(InTimerHandle);
@@ -191,7 +226,7 @@ void UAoS_WorldManager::UpdateTimer()
 
 void UAoS_WorldManager::UpdateSky()
 {
-	if (!bTimePaused && GameInstance && SkySphere)
+	if (bRotateSun && GameInstance && SkySphere)
 	{
 		const float TimeFloat = GetTimeStamp().CurrentTimeFloat;
 		const float RotationSpeed = ((TimeFloat / 24.0f) *  360.0f) + 90.0f;
@@ -236,6 +271,7 @@ void UAoS_WorldManager::Initialize(FSubsystemCollectionBase& Collection)
 
 	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	InitializeWorldTimers();
+	SetTimeStamp(EWeekDay::WD_Sunday, 10, 00, EMeridiemIndicator::WD_AM);
 }
 
 void UAoS_WorldManager::Deinitialize()
@@ -277,9 +313,7 @@ void UAoS_WorldManager::UpdateWorld()
 	int32 Minute = GetTimeStamp().Minute;
 	FString MinuteString = UKismetTextLibrary::Conv_IntToText(Minute, false, true, 2, 2).ToString();
 	FString MeridiemIndicatorStr = UEnum::GetDisplayValueAsText(GetTimeStamp().MeridiemIndicator).ToString();
-
-	GetWorld()->GetTimerManager().ListTimers();
-		
+	
 	GEngine->AddOnScreenDebugMessage(-1, 0.005f, FColor::Red, FString::Printf(TEXT("%s %s:%s %s"), *DayString, *HourString, *MinuteString, *MeridiemIndicatorStr));
 }
 

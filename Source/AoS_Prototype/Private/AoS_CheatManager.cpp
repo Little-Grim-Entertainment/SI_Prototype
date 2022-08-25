@@ -31,9 +31,7 @@ void UAoS_CheatManager::CheatSetTimeStamp(FString Day, int32 Hour, int32 Minutes
 			MeridiemIndicator = CurrentMeridiemIndicator;
 		}
 	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("TimeStampCheat Called!"));
-		
+	
 	WorldManager->SetTimeStamp(WeekDay, Hour, Minutes, MeridiemIndicator);
 }
 
@@ -53,6 +51,13 @@ void UAoS_CheatManager::CheatIncreaseSunRotationSpeed(float Percentage)
 
 	WorldManager->SetSunRotationModifier(1.0f);
 	WorldManager->SetSunRotationModifier(FinalRate);
+}
+
+void UAoS_CheatManager::CheatPauseWorldTimer(bool bShouldPause)
+{
+	UAoS_WorldManager* WorldManager = GameInstance->GetSubsystem<UAoS_WorldManager>();
+
+	WorldManager->PauseTimerByName("TimeOfDay", bShouldPause);
 }
 
 void UAoS_CheatManager::InitCheatManager()

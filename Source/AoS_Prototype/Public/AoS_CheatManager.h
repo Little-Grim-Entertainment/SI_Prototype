@@ -18,10 +18,13 @@ public:
 	
 	UAoS_CheatManager();
 
+	// World Manager Cheats
 	UFUNCTION(exec)
 	void CheatSetTimeStamp(FString Day, int32 Hour, int32 Minutes, FString AMPM);
 	UFUNCTION(exec)
 	void CheatIncreaseSunRotationSpeed(float Percentage);
+	UFUNCTION(exec)
+	void CheatPauseWorldTimer(bool bShouldPause);
 
 protected:
 

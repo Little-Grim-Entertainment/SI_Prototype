@@ -93,10 +93,14 @@ public:
 	void StartTimerByHandle(FTimerHandle& InTimerHandle);
 	UFUNCTION(BlueprintCallable)
 	void PauseTimerByHandle(FTimerHandle& InTimerHandle, bool bShouldPause);
+	UFUNCTION(BlueprintCallable)
+	void PauseTimerByName(FString InTimerName, bool bShouldPause);
 	UFUNCTION()
 	void ResetTimerByHandle(FTimerHandle& InTimerHandle);
 	UFUNCTION()
 	FAOSWorldTimer& GetTimerByHandle(FTimerHandle& InTimerHandle);
+	UFUNCTION()
+	FAOSWorldTimer& GetTimerByName(FString InTimerName);
 
 	
 	UFUNCTION()
@@ -135,7 +139,7 @@ private:
 	TArray<FAOSWorldTimer> WorldTimers;
 	FAOSWorldTimer DefaultTimer;
 	
-	bool bTimePaused = false;
+	bool bRotateSun = false;
 
 	AAoS_SunLight* GetLevelSunLight();
 
