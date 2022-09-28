@@ -314,7 +314,7 @@ void UAoS_WorldManager::UpdateWorld()
 	FString MinuteString = UKismetTextLibrary::Conv_IntToText(Minute, false, true, 2, 2).ToString();
 	FString MeridiemIndicatorStr = UEnum::GetDisplayValueAsText(GetTimeStamp().MeridiemIndicator).ToString();
 	
-	GEngine->AddOnScreenDebugMessage(-1, 0.005f, FColor::Red, FString::Printf(TEXT("%s %s:%s %s"), *DayString, *HourString, *MinuteString, *MeridiemIndicatorStr));
+	//GEngine->AddOnScreenDebugMessage(-1, 0.005f, FColor::Red, FString::Printf(TEXT("%s %s:%s %s"), *DayString, *HourString, *MinuteString, *MeridiemIndicatorStr));
 }
 
 void UAoS_WorldManager::SetSunRotationModifier(float InRate)
