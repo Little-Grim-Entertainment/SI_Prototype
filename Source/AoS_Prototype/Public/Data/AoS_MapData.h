@@ -9,11 +9,11 @@
 UENUM(BlueprintType)
 enum class EMapType : uint8
 {
-	MT_Menu     UMETA(DisplayName = "Menu"),
+	MT_Persistent	UMETA(DisplayName = "Persistent"),
+	MT_Menu			UMETA(DisplayName = "Menu"),
 	MT_Interior     UMETA(DisplayName = "Interior"),
 	MT_Exterior     UMETA(DisplayName = "Exterior"),
-	MT_Test     UMETA(DisplayName = "Test"),
-	MT_None     UMETA(DisplayName = "NONE")
+	MT_None			UMETA(DisplayName = "NONE")
 };
 
 UCLASS()

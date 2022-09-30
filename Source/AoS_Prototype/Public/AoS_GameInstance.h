@@ -65,6 +65,8 @@ public:
 	TArray<TSubclassOf<UAoS_UserWidget>> LoadingScreens;
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	UAoS_MapList* MapList;
+	UPROPERTY(EditAnywhere, Category = "Levels")
+	float LevelLoadDelay = 0.0f;
 	
 	UFUNCTION(Exec, Category = Cases)
 	void CheatResetCase(FString CaseToResetName);

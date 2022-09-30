@@ -58,8 +58,8 @@ public:
 
 private:
 
-	UPROPERTY()
-	UWorld* World;
+	float LevelLoadDelay;
+	
 	UPROPERTY()
 	UAoS_GameInstance* GameInstance;
 
@@ -77,11 +77,17 @@ private:
 
 	FTimerHandle LoadDelayHandle;
 	FTimerHandle UnloadDelayHandle;
+	FTimerHandle PersistentLevelLoadTimerHandle;
 
 	UFUNCTION()
 	void ExecuteLevelLoad(const UAoS_MapData* InLevelToLoad);
 	UFUNCTION()
 	void ExecuteLevelUnload(const UAoS_MapData* InLevelToUnload);
+
+	UFUNCTION()
+	void CheckForPersistentLevelLoaded();
+	UFUNCTION()
+	void OnPersistentLevelLoaded();
 	
 	UFUNCTION()
 	void LevelUnloaded();

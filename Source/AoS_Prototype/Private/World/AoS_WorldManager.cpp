@@ -33,6 +33,9 @@ void UAoS_WorldManager::WorldOnMapTypeChange(EMapType InMapType)
 {
 	switch (InMapType)
 	{
+		case EMapType::MT_Persistent:
+			PauseTimerByHandle(TimeOfDayHandle, true);
+			bRotateSun = false;
 		case EMapType::MT_Exterior:
 			PauseTimerByHandle(TimeOfDayHandle, false);
 			bRotateSun = true;
@@ -43,6 +46,7 @@ void UAoS_WorldManager::WorldOnMapTypeChange(EMapType InMapType)
 			break;
 		case EMapType::MT_Menu:
 			PauseTimerByHandle(TimeOfDayHandle, true);
+			bRotateSun = false;
 			break;
 		default:
 			break;

@@ -16,7 +16,9 @@ class AOS_PROTOTYPE_API UAoS_MapList : public UDataAsset
 public:
 
 	UAoS_MapList();
-	
+
+	UPROPERTY(EditAnywhere, Category = "PersistentLevel")
+	UAoS_MapData* PersistentLevel;
 	UPROPERTY(EditAnywhere, Category = "Menus")
     TArray<UAoS_MapData*> MenuMaps;
 	UPROPERTY(EditAnywhere, Category = "GlassDistrict")
