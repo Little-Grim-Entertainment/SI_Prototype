@@ -122,21 +122,21 @@ void UAoS_GameInstance::SetupBindings()
 	OnSubsystemBindingsComplete.Broadcast();
 }
 
-void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel)
+void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
 {
 	if (UIManager)
 	{
-		UIManager->UIOnLevelBeginLoad(LoadingLevel);
+		UIManager->UIOnLevelBeginLoad(LoadingLevel, bShouldFade);
 	}
 }
 
-void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel)
+void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel,  bool bShouldFade)
 {
 	SpawnPlayer();
 
 	if (UIManager)
 	{
-		UIManager->UIOnLevelFinishLoad(LoadedLevel);
+		UIManager->UIOnLevelFinishLoad(LoadedLevel, bShouldFade);
 	}
 	if (WorldManager)
 	{

@@ -120,9 +120,9 @@ private:
 
 	// Level Delegates
 	UFUNCTION()
-	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel);
+	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade = true);
 	UFUNCTION()
-	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel);
+	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel, bool bShouldFade = true);
 	UFUNCTION()
 	void OnLevelFinishUnload(UAoS_MapData* UnloadedLevel);
 	UFUNCTION()

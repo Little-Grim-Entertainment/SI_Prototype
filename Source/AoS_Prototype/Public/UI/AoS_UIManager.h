@@ -22,10 +22,10 @@ public:
 	UAoS_UIManager();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void DisplayLoadingScreen(bool bShouldDisplay);
+	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
 
-	void UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel);
-	void UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel);
+	void UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
+	void UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
 
 	UFUNCTION()
 	void UIManagerOnGameInstanceInit();

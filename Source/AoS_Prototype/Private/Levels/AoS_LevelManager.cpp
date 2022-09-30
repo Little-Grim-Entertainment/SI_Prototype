@@ -15,12 +15,13 @@ UAoS_LevelManager::UAoS_LevelManager()
 	MainMenu = MainMenuAsset.Object;
 }
 
-void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay)
+void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay, bool bShouldFade)
 {
+	bLoadShouldFade = bShouldFade;
 	const UWorld* World = GetWorld();
 	if (!InLevelToLoad) {return;}
 
-	OnBeginLevelLoad.Broadcast(InLevelToLoad);
+	OnBeginLevelLoad.Broadcast(InLevelToLoad, bLoadShouldFade);
 	
 	if (World && GameInstance)
 	{
@@ -165,7 +166,7 @@ void UAoS_LevelManager::LevelLoaded()
 			{
 				CurrentStreamingLevel = CurrentLevelData;
 				UpdateMapType(CurrentStreamingLevel->MapType);
-				OnLevelLoaded.Broadcast(CurrentStreamingLevel);
+				OnLevelLoaded.Broadcast(CurrentStreamingLevel, bLoadShouldFade);
 				return;
 			}
 		}
@@ -202,7 +203,7 @@ void UAoS_LevelManager::LoadMainMenu()
 {
 	if(MainMenu)
 	{
-		GameInstance->GetLevelManager()->LoadLevel(MainMenu, false);
+		GameInstance->GetLevelManager()->LoadLevel(MainMenu, false, false);
 		if (IsValid(GameInstance))
 		{
 			LevelLoadDelay = GameInstance->LevelLoadDelay;

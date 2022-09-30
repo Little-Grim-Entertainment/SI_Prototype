@@ -12,7 +12,7 @@ UAoS_UIManager::UAoS_UIManager()
 
 }
 
-void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay)
+void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 {
 	if(GameInstance)
 	{
@@ -33,22 +33,29 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay)
 		}
 		else
 		{
-			if (LoadingScreen)
+			if (IsValid(LoadingScreen))
 			{
-				LoadingScreen->FadeOutWidget();
+				if (bShouldFade)
+				{
+					LoadingScreen->FadeOutWidget();	
+				}
+				else
+				{
+					LoadingScreen->RemoveFromParent();
+				}
 			}
 		}
 	}
 }
 
-void UAoS_UIManager::UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel)
+void UAoS_UIManager::UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
 {
-	DisplayLoadingScreen(true);
+	DisplayLoadingScreen(true, bShouldFade);
 }
 
-void UAoS_UIManager::UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel)
+void UAoS_UIManager::UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
 {
-	DisplayLoadingScreen(false);
+	DisplayLoadingScreen(false, bShouldFade);
 }
 
 void UAoS_UIManager::UIManagerOnGameInstanceInit()

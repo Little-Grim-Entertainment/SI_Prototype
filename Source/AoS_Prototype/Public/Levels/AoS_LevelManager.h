@@ -12,8 +12,8 @@ class UAoS_GameInstance;
 class UAoS_UIManager;
 class UAoS_MapData;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginLevelLoad, UAoS_MapData*, LoadingLevel);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelLoaded, UAoS_MapData*, LoadedLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBeginLevelLoad, UAoS_MapData*, LoadingLevel, bool, bShouldFade);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelLoaded, UAoS_MapData*, LoadedLevel, bool, bShouldFade);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, UAoS_MapData*, UnloadedLevel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMapTypeChanged, EMapType, NewMapType);
 
@@ -38,7 +38,7 @@ public:
 	FOnMapTypeChanged OnMapTypeChanged;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true);
+	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true);
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	TArray<FString> GetMapNames();
 	UFUNCTION(BlueprintCallable, Category = "Levels")
@@ -59,6 +59,7 @@ public:
 private:
 
 	float LevelLoadDelay;
+	bool bLoadShouldFade = true;
 	
 	UPROPERTY()
 	UAoS_GameInstance* GameInstance;
