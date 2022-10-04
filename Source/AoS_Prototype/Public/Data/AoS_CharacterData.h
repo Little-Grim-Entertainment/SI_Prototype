@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AoS_Character.h"
+#include "Characters/AoS_Character.h"
 #include "Engine/DataAsset.h"
 #include "AoS_CharacterData.generated.h"
 

@@ -32,7 +32,7 @@ enum EPlayerMode
 	PM_InterrogationMode   UMETA(DisplayName = "nterrogationMode"),
 	PM_GameMenuMode   UMETA(DisplayName = "GameMenuMode"),
 	PM_VendorMode   UMETA(DisplayName = "VendorMode"),
-  };
+};
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);

@@ -4,7 +4,7 @@
 #include "AoS_GameInstance.h"
 
 #include "Characters/AoS_Character.h"
-#include "Characters/AoS_CharacterData.h"
+#include "Data/AoS_CharacterData.h"
 #include "Characters/AoS_Nick.h"
 #include "GameFramework/PlayerStart.h"
 
