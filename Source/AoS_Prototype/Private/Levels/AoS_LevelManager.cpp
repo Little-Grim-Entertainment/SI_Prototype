@@ -3,8 +3,8 @@
 
 #include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.h"
-#include "Data/AoS_MapList.h"
-#include "Data/AoS_MapData.h"
+#include "Data/Maps/AoS_MapList.h"
+#include "Data/Maps/AoS_MapData.h"
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 

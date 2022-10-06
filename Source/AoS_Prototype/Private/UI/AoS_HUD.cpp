@@ -3,7 +3,7 @@
 
 #include "UI/AoS_HUD.h"
 #include "DlgContext.h"
-#include "Cases/AoS_CaseManager.h"
+#include "Data/Cases/AoS_CaseManager.h"
 
 UAoS_HUD::UAoS_HUD()
 {

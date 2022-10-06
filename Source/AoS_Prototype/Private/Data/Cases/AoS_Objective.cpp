@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Cases/AoS_Objective.h"
+#include "Data/Cases/AoS_Objective.h"
 
 UAoS_Objective::UAoS_Objective()
 {

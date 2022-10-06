@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "AoS_Defaults.generated.h"
+#include "AoS_UIProjectDefaults.generated.h"
 
 USTRUCT(BlueprintType)
 struct FColorDefaults
@@ -47,7 +47,7 @@ enum EFontStyle
 };
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_Defaults : public UDataAsset
+class AOS_PROTOTYPE_API UAoS_UIProjectDefaults : public UDataAsset
 {
 	GENERATED_BODY()
 

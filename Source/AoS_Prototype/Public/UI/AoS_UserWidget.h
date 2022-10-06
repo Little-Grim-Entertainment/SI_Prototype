@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Data/AoS_Defaults.h"
+#include "Data/UI/AoS_UIProjectDefaults.h"
 #include "AoS_UserWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFadeOutComplete);
@@ -20,7 +20,7 @@ class AOS_PROTOTYPE_API UAoS_UserWidget : public UUserWidget
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ProjectDefaults")
-	UAoS_Defaults* ProjectDefaults;
+	UAoS_UIProjectDefaults* UIProjectDefaults;
 	UPROPERTY(BlueprintCallable)
 	FOnFadeOutComplete OnFadeOutComplete;
 	

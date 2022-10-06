@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Cases/AoS_CaseManager.h"
-#include "Cases/AoS_Case.h"
-#include "Cases/AoS_Part.h"
-#include "Cases/AoS_Objective.h"
+#include "Data/Cases/AoS_CaseManager.h"
+#include "Data/Cases/AoS_Case.h"
+#include "Data/Cases/AoS_Part.h"
+#include "Data/Cases/AoS_Objective.h"
 #include "AoS_GameInstance.h"
 
 UAoS_CaseManager::UAoS_CaseManager()

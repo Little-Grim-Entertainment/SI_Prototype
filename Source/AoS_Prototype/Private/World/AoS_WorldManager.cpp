@@ -3,7 +3,7 @@
 
 #include "World/AoS_WorldManager.h"
 #include "AoS_GameInstance.h"
-#include "Data/AoS_MapData.h"
+#include "Data/Maps/AoS_MapData.h"
 #include "Actors/AoS_SkySphere.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetTextLibrary.h"

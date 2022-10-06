@@ -17,27 +17,27 @@ void UAoS_UserWidget::NativePreConstruct()
 
 FColorDefaults UAoS_UserWidget::GetAllColors()
 {
-	if (!ProjectDefaults)
+	if (!UIProjectDefaults)
 	{
 		const FColorDefaults NullColors;
 		return NullColors;
 	}
-	return ProjectDefaults->Colors;	
+	return UIProjectDefaults->Colors;	
 }
 
 FFontStyles UAoS_UserWidget::GetAllFonts()
 {
-	if (!ProjectDefaults)
+	if (!UIProjectDefaults)
 	{
 		const FFontStyles NullFonts;
 		return NullFonts;
 	}
-	return ProjectDefaults->Fonts;	
+	return UIProjectDefaults->Fonts;	
 }
 
 FSlateFontInfo UAoS_UserWidget::GetFontStyle(EFontStyle FontStyle, int FontSize = 0)
 {
-	if (!ProjectDefaults)
+	if (!UIProjectDefaults)
 	{
 		const FSlateFontInfo NullFont;
 		return NullFont;
@@ -46,23 +46,23 @@ FSlateFontInfo UAoS_UserWidget::GetFontStyle(EFontStyle FontStyle, int FontSize 
 	switch (FontStyle)
 	{
 		case FS_Header:
-			if (FontSize > 0) {ProjectDefaults->Fonts.HeaderFontStyle.Size = FontSize;}
-			return ProjectDefaults->Fonts.HeaderFontStyle;
+			if (FontSize > 0) {UIProjectDefaults->Fonts.HeaderFontStyle.Size = FontSize;}
+			return UIProjectDefaults->Fonts.HeaderFontStyle;
 		case FS_HeaderHover:
-			if (FontSize > 0) {ProjectDefaults->Fonts.HoverHeaderFontStyle.Size = FontSize;}
-			return ProjectDefaults->Fonts.HoverHeaderFontStyle;
+			if (FontSize > 0) {UIProjectDefaults->Fonts.HoverHeaderFontStyle.Size = FontSize;}
+			return UIProjectDefaults->Fonts.HoverHeaderFontStyle;
 		case FS_Secondary:
-			if (FontSize > 0) {ProjectDefaults->Fonts.SecondaryFontStyle.Size = FontSize;}
-			return ProjectDefaults->Fonts.SecondaryFontStyle;
+			if (FontSize > 0) {UIProjectDefaults->Fonts.SecondaryFontStyle.Size = FontSize;}
+			return UIProjectDefaults->Fonts.SecondaryFontStyle;
 		case FS_SecondaryHover:
-			if (FontSize > 0) {ProjectDefaults->Fonts.HoverSecondaryFontStyle.Size = FontSize;}
-			return ProjectDefaults->Fonts.HoverSecondaryFontStyle;
+			if (FontSize > 0) {UIProjectDefaults->Fonts.HoverSecondaryFontStyle.Size = FontSize;}
+			return UIProjectDefaults->Fonts.HoverSecondaryFontStyle;
 		case FS_Paragraph:
-			if (FontSize > 0) {ProjectDefaults->Fonts.ParagraphFontStyle.Size = FontSize;}
-			return ProjectDefaults->Fonts.ParagraphFontStyle;
+			if (FontSize > 0) {UIProjectDefaults->Fonts.ParagraphFontStyle.Size = FontSize;}
+			return UIProjectDefaults->Fonts.ParagraphFontStyle;
 		default:
-			if (FontSize > 0) {ProjectDefaults->Fonts.ParagraphFontStyle.Size = FontSize;}
-			return ProjectDefaults->Fonts.ParagraphFontStyle;
+			if (FontSize > 0) {UIProjectDefaults->Fonts.ParagraphFontStyle.Size = FontSize;}
+			return UIProjectDefaults->Fonts.ParagraphFontStyle;
 	}
 }
 
