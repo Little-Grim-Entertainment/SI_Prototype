@@ -80,6 +80,45 @@ void UAoS_GameInstance::SpawnPlayer()
 	}
 }
 
+void UAoS_GameInstance::SpawnGizbo()
+{
+	if (!CDA_Gizbo) {return;}
+	if (!CDA_Gizbo->CharacterClass){return;}
+	
+	if (const APlayerStart* PlayerStart = GetPlayerStart())
+	{
+		FVector GizboLocation = PlayerStart->GetActorLocation();
+
+		// Offset behind Nick, rather than spawning in the same spot
+		GizboLocation.X -= 100;
+		GizboLocation.Y += 100;
+		GizboLocation.Z -= 50;
+		
+		if (!GizboCharacter)
+		{
+			const FActorSpawnParameters PlayerSpawnParameters;
+			GizboCharacter = GetWorld()->SpawnActor<AAoS_Gizbo>(CDA_Gizbo->CharacterClass, GizboLocation, PlayerStart->GetActorRotation(), PlayerSpawnParameters);
+		}
+		else
+		{
+			GizboCharacter->SetActorLocation(GizboLocation);
+			GizboCharacter->SetActorRotation(PlayerStart->GetActorRotation());
+		}
+	}
+
+	/*
+	if (!AoS_GizboController)
+	{
+		AoS_GizboController = Cast<AAoS_GizboController>(GetFirstLocalPlayerController());
+	}
+	*/
+
+	if (AoS_GizboController)
+	{
+		AoS_GizboController->Possess(GizboCharacter);
+	}
+}
+
 EPlayerMode UAoS_GameInstance::GetPlayerMode() const
 {
 	return PlayerMode;
@@ -88,6 +127,11 @@ EPlayerMode UAoS_GameInstance::GetPlayerMode() const
 AAoS_PlayerController* UAoS_GameInstance::GetAOSPlayerController()
 {
 	return AoS_PlayerController;
+}
+
+AAoS_GizboController* UAoS_GameInstance::GetAOSGizboController()
+{
+	return AoS_GizboController;
 }
 
 void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
@@ -133,6 +177,7 @@ void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShoul
 void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel,  bool bShouldFade)
 {
 	SpawnPlayer();
+	SpawnGizbo();
 
 	if (UIManager)
 	{

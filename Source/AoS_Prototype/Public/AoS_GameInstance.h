@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/AoS_Gizbo.h"
+#include "Controllers/AoS_GizboController.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "Engine/GameInstance.h"
 #include "Levels/AoS_LevelManager.h"
@@ -13,6 +15,7 @@ class UAoS_WorldManager;
 class AAoS_Character;
 class UAoS_CharacterData;
 class AAoS_Nick;
+class AAoS_Gizbo;
 class APlayerStart;
 
 class UAoS_CaseManager;
@@ -61,6 +64,8 @@ public:
 	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "PlayerData")
 	UAoS_CharacterData* CDA_NickSpade;
+	UPROPERTY(EditAnywhere, Category = "GizboData")
+	UAoS_CharacterData* CDA_Gizbo;
 	UPROPERTY(EditAnywhere, Category = "Loading")
 	TArray<TSubclassOf<UAoS_UserWidget>> LoadingScreens;
 	UPROPERTY(EditAnywhere, Category = "Levels")
@@ -73,11 +78,16 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SpawnPlayer();
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnGizbo();
 	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	AAoS_PlayerController* GetAOSPlayerController();
+	UFUNCTION(BlueprintPure, Category = "GizboData")
+	AAoS_GizboController* GetAOSGizboController();
 	
 	UFUNCTION()
 	UAoS_UIManager* GetUIManager() const {return UIManager;}
@@ -109,6 +119,10 @@ private:
 	AAoS_Nick* NickSpadeCharacter;
 	UPROPERTY()
 	AAoS_PlayerController* AoS_PlayerController;
+	UPROPERTY()
+	AAoS_Gizbo* GizboCharacter;
+	UPROPERTY()
+	AAoS_GizboController* AoS_GizboController;
 	
 	FTimerHandle LoadingScreenDelayHandle;
 	EPlayerMode PlayerMode;
