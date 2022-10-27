@@ -6,6 +6,9 @@
 #include "Characters/AoS_Character.h"
 #include "AoS_Nick.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_Nick : public AAoS_Character
 {
@@ -20,19 +23,19 @@ public:
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
-
+	UCameraComponent* FollowCamera;
 
 		
 	// ================== FUNCTIONS ==================
 public:
 
 	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
 	
 protected:
 

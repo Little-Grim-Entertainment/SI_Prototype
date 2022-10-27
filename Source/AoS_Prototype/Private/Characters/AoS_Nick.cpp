@@ -2,7 +2,6 @@
 
 
 #include "Characters/AoS_Nick.h"
-#include "Components/Actor/AoS_LineTraces.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
