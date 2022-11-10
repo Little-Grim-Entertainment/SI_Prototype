@@ -30,6 +30,7 @@ public:
 
 private:
 
+	UPROPERTY()
 	UAoS_CaseManager* CaseManagerRef;
 	bool bBindingsSetup;
 	
