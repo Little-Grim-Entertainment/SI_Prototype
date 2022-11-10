@@ -32,7 +32,7 @@ enum EPlayerMode
 	PM_DialogueMode      UMETA(DisplayName = "DialogueMode"),
 	PM_ObservationMode   UMETA(DisplayName = "ObservationMode"),
 	PM_InspectionMode   UMETA(DisplayName = "InspectionMode"),
-	PM_InterrogationMode   UMETA(DisplayName = "nterrogationMode"),
+	PM_InterrogationMode   UMETA(DisplayName = "InterrogationMode"),
 	PM_GameMenuMode   UMETA(DisplayName = "GameMenuMode"),
 	PM_VendorMode   UMETA(DisplayName = "VendorMode"),
 };
