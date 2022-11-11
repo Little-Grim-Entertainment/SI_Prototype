@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "Components/TimelineComponent.h"
 
 #include "AoS_MusicManager.generated.h"
 
 class UCurveFloat;
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_MusicManager : public UTickableWorldSubsystem
+class AOS_PROTOTYPE_API UAoS_MusicManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -33,25 +32,27 @@ public:
 
 protected:
 
-	TStatId GetStatId() const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void Tick(float DeltaTime) override;
-
-	FTimeline FadeTimeline;
-
-	UFUNCTION()
-	void TickMusicFade(float Value);
-	UFUNCTION()
-	void OnFadeOutComplete();
 
 private:
 	
 	UPROPERTY()
 	UAudioComponent* BackgroundMusic;
 	UPROPERTY()
-	UAudioComponent* PausedMusic;
-	UPROPERTY()
 	UCurveFloat* FadeCurve;
+	UPROPERTY()
+	TSoftObjectPtr<USoundBase> MetaSoundSoftClassPtr;
+	UPROPERTY()
+	TSoftObjectPtr<USoundBase> MusicSoftClassPtr;
 
-	void SetFadeCurve(float InMaxVolume);
+	FTimerHandle MusicTimecode;
+
+	bool bMusicIsPaused = false;
+	
+	float MusicTimeAtPause = 0.f;
+	float MusicVolumeAtPause = 1.f;
+	float MusicPitchAtPause = 1.f;
+
+	UFUNCTION()
+	void TickMusicTimecode();
 };

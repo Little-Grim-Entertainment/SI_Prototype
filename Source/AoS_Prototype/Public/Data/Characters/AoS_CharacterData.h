@@ -8,6 +8,8 @@
 #include "AoS_CharacterData.generated.h"
 
 class UDlgDialogue;
+class UAoS_Case;
+class UAoS_Part;
 
 struct FAoS_DialogueData
 {
