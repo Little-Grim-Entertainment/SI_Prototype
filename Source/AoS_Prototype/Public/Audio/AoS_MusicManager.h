@@ -47,11 +47,12 @@ private:
 
 	FTimerHandle MusicTimecode;
 
-	bool bMusicIsPaused = false;
-	
-	float MusicTimeAtPause = 0.f;
-	float MusicVolumeAtPause = 1.f;
-	float MusicPitchAtPause = 1.f;
+	bool bMusicIsPaused;
+	bool bMusicHasIntro;
+	float MusicTimeAtPause;
+	float MusicVolumeAtPause;
+	float MusicPitchAtPause;
+	float MusicLoopStart;
 
 	UFUNCTION()
 	void TickMusicTimecode();

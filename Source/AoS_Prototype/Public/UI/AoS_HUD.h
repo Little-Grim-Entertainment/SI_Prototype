@@ -6,7 +6,7 @@
 #include "UI/AoS_UserWidget.h"
 #include "AoS_HUD.generated.h"
 
-class UDlgContext;
+class UAoS_DialogueBox;
 class UAoS_CaseManager;
 class UAoS_Case;
 class UAoS_Part;
@@ -21,13 +21,18 @@ public:
 	
 	UAoS_HUD();
 
-	UFUNCTION(BlueprintNativeEvent)
-	void DisplayDialogueBox(UDlgContext* DlgContext);
-	void DisplayDialogueBox_Implementation(UDlgContext* DlgContext);
+	UFUNCTION(BlueprintCallable)
+	UAoS_DialogueBox* GetDialogueBox() const;
+	
 	UFUNCTION(BlueprintNativeEvent)
 	void OnObjectiveComplete(UAoS_Objective* CompletedObjective);
 	void OnObjectiveComplete_Implementation(UAoS_Objective* CompletedObjective);
 
+protected:
+
+	UPROPERTY(meta=(BindWidget))
+	UAoS_DialogueBox* DialogueBox;
+	
 private:
 
 	UPROPERTY()

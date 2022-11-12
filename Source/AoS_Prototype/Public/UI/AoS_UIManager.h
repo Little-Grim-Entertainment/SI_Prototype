@@ -6,6 +6,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
+class UAoS_HUD;
+class UDlgContext;
 class UAoS_UserWidget;
 class UAoS_GameInstance;
 class UAoS_MapData;
@@ -24,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void DisplayDialogueBox(UDlgContext* DlgContext);
+
 	void UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
 	void UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
 
@@ -38,6 +43,8 @@ private:
 	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	UAoS_UserWidget* LoadingScreen;
+	UPROPERTY()
+	UAoS_HUD* PlayerHUD;
 
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

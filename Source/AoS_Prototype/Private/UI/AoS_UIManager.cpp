@@ -3,11 +3,17 @@
 
 #include "UI/AoS_UIManager.h"
 #include "AoS_GameInstance.h"
-#include "Levels/AoS_LevelManager.h"
+#include "UI/AoS_DialogueBox.h"
+#include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
 
 
 UAoS_UIManager::UAoS_UIManager()
+{
+
+}
+
+void UAoS_UIManager::UIManagerOnGameInstanceInit()
 {
 
 }
@@ -48,6 +54,17 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 	}
 }
 
+void UAoS_UIManager::DisplayDialogueBox(UDlgContext* DlgContext)
+{
+	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox()))
+	{
+		return;
+	}
+	
+	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
+	PlayerHUD->GetDialogueBox()->UpdateDialogueBox(DlgContext);
+}
+
 void UAoS_UIManager::UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
 {
 	DisplayLoadingScreen(true, bShouldFade);
@@ -56,11 +73,6 @@ void UAoS_UIManager::UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShould
 void UAoS_UIManager::UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
 {
 	DisplayLoadingScreen(false, bShouldFade);
-}
-
-void UAoS_UIManager::UIManagerOnGameInstanceInit()
-{
-
 }
 
 void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)

@@ -10,7 +10,12 @@
 
 UAoS_MusicManager::UAoS_MusicManager()
 {
-
+	bMusicIsPaused = false;
+	bMusicHasIntro = false;
+	MusicTimeAtPause = 0.f;
+	MusicVolumeAtPause = 1.f;
+	MusicPitchAtPause = 1.f;
+	MusicLoopStart = 0.f;
 }
 
 void UAoS_MusicManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -33,6 +38,8 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(USoundBase* MetaSoundSou
 	
 	if (IsValid(BackgroundMusic))
 	{
+		bMusicHasIntro = false;
+
 		BackgroundMusic->SetObjectParameter("Wave Asset", MusicToPlay);
 		BackgroundMusic->SetFloatParameter("Start Time", StartTime);
 
@@ -61,9 +68,15 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(USoundBase*
 	
 	if (IsValid(BackgroundMusic))
 	{
+		bMusicHasIntro = true;
+		MusicLoopStart = LoopStart;
+		
 		BackgroundMusic->SetObjectParameter("Wave Asset", MusicToPlay);
 		BackgroundMusic->SetFloatParameter("Start Time", StartTime);
 		BackgroundMusic->SetFloatParameter("Loop Start", LoopStart);
+
+		GetWorld()->GetTimerManager().SetTimer(MusicTimecode, this, &ThisClass::TickMusicTimecode, 0.001f, true);
+
 		if (bShouldFade)
 		{
 			BackgroundMusic->FadeIn(FadeInDuration);
@@ -105,8 +118,15 @@ void UAoS_MusicManager::ResumeMusicWithFade(const float FadeInDuration)
 	{
 		bMusicIsPaused = false;
 		GetWorld()->GetTimerManager().UnPauseTimer(MusicTimecode);
-		
-		PlayBackgroundMusic(CurrentMetaSound, CurrentMusic, MusicVolumeAtPause, MusicPitchAtPause, MusicTimeAtPause, true, FadeInDuration);
+
+		if (bMusicHasIntro)
+		{
+			PlayBackgroundMusicLoopWithIntro(CurrentMetaSound, CurrentMusic, MusicVolumeAtPause, MusicPitchAtPause, MusicTimeAtPause, MusicLoopStart, true, FadeInDuration);
+		}
+		else
+		{
+			PlayBackgroundMusic(CurrentMetaSound, CurrentMusic, MusicVolumeAtPause, MusicPitchAtPause, MusicTimeAtPause, true, FadeInDuration);
+		}
 	}
 }
 

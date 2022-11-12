@@ -57,7 +57,7 @@ public:
 	UAoS_MapData* GetCurrentStreamingLevel() const {return CurrentStreamingLevel;}
 
 private:
-
+		
 	float LevelLoadDelay;
 	bool bLoadShouldFade = true;
 	
