@@ -39,7 +39,7 @@ void UAoS_GameInstance::Init()
 	OnGameInstanceInit.Broadcast();
 }
 
-
+// ToDo: Maybe take this out of Game Instance at some point
 void UAoS_GameInstance::SpawnPlayer()
 {
 	if (!CDA_NickSpade) {return;}
@@ -81,6 +81,7 @@ void UAoS_GameInstance::SpawnPlayer()
 	}
 }
 
+// ToDo this should eventually go in the Gizbo Manager
 void UAoS_GameInstance::SpawnGizbo()
 {
 	if (!CDA_Gizbo) {return;}

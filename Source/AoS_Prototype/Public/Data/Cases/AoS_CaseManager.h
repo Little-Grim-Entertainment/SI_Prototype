@@ -21,6 +21,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPartComplete, UAoS_Part*, Complet
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveActivated, UAoS_Objective*, ActivatedObjective);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveComplete, UAoS_Objective*, CompletedObjective);
 
+// This system is responsible for handling the receiving, completing, and updating of cases
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_CaseManager : public UGameInstanceSubsystem
 {

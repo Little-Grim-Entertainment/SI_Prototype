@@ -9,6 +9,8 @@
 
 class UCurveFloat;
 
+// This system is responsible for playing, stopping, and pausing the game music
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_MusicManager : public UWorldSubsystem
 {

@@ -66,6 +66,8 @@ struct FAOSWorldTimer
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewDayStarted, EWeekDay, NewDay);
 
+// This system is responsible for handling world events such as the time of day and world clock
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_WorldManager : public UGameInstanceSubsystem
 {
