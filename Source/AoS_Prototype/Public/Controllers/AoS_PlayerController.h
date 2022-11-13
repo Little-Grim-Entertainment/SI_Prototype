@@ -80,6 +80,8 @@ public:
 	// Getters
 	UFUNCTION(BlueprintPure)
 	UAoS_HUD* GetPlayerHUD();
+	UFUNCTION()
+	TSubclassOf<UAoS_HUD> GetPlayerHUDClass() const;
 	
 	
 protected:

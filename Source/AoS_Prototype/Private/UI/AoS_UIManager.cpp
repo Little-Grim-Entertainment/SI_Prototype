@@ -25,7 +25,6 @@ void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 		{
 			GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::UAoS_UIManager::OnGameInstanceInit);
 		}
-		PlayerController = Cast<AAoS_PlayerController>(World->GetFirstPlayerController());
 	}
 }
 
@@ -102,9 +101,10 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 
 void UAoS_UIManager::CreatePlayerHUD()
 {
+	PlayerController = GameInstance->GetAOSPlayerController();
 	if (IsValid(PlayerController))
 	{
-		PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController, PlayerController->GetPlayerHUD()->StaticClass());
+		PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController, PlayerController->GetPlayerHUDClass());
 		if (IsValid(PlayerHUD))
 		{
 			PlayerHUD->AddToViewport();

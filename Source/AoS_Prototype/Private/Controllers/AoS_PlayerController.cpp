@@ -120,6 +120,11 @@ UAoS_HUD* AAoS_PlayerController::GetPlayerHUD()
 	return PlayerHUD;
 }
 
+TSubclassOf<UAoS_HUD> AAoS_PlayerController::GetPlayerHUDClass() const
+{
+	return PlayerHUD_Class;
+}
+
 void AAoS_PlayerController::ShowHUD()
 {
 	if (!PlayerHUD) {return;}
