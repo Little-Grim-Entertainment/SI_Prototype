@@ -13,6 +13,8 @@ class UAoS_UserWidget;
 class UAoS_GameInstance;
 class UAoS_MapData;
 
+enum class EPlayerMode : uint8;
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_UIManager : public UGameInstanceSubsystem
 {
@@ -36,6 +38,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayDialogueBox(UDlgContext* DlgContext);
+
+	// Game Instance Delegates
+	UFUNCTION()
+	void OnPlayerModeChanged(EPlayerMode NewPlayerMode);
+	
+	// Level Manager Delegates
 	UFUNCTION()
 	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
 	UFUNCTION()

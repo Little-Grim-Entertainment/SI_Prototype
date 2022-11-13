@@ -33,14 +33,82 @@ void UAoS_UIManager::OnGameInstanceInit()
 {
 	GameInstance->GetLevelManager()->OnBeginLevelLoad.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelBeginLoad);
 	GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelFinishLoad);
+	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::UAoS_UIManager::OnPlayerModeChanged);
+}
+
+void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
+{
+	switch (NewPlayerMode)
+	{
+		case EPlayerMode::PM_ExplorationMode:
+		{
+			if(!IsValid(PlayerHUD))
+			{
+				CreatePlayerHUD();	
+			}
+			else
+			{
+				ShowPlayerHUD(true);
+			}
+			break;	
+		}
+		case EPlayerMode::PM_GameMenuMode:
+		{
+			
+			break;	
+		}
+		case EPlayerMode::PM_CinematicMode:
+		{
+			if (IsValid(PlayerHUD))
+			{
+				ShowPlayerHUD(false);
+			}
+			break;	
+		}
+		case EPlayerMode::PM_DialogueMode:
+		{
+			break;	
+		}
+		case EPlayerMode::PM_InspectionMode:
+		{
+			break;	
+		}
+		case EPlayerMode::PM_InterrogationMode:
+		{
+			break;	
+		}
+		case EPlayerMode::PM_ObservationMode:
+		{
+			break;	
+		}
+		case EPlayerMode::PM_VendorMode:
+		{
+			break;	
+		}
+		case EPlayerMode::PM_LevelLoadingMode:
+		{
+			if (IsValid(PlayerHUD))
+			{
+				ShowPlayerHUD(false);
+			}
+			break;	
+		}
+		default:
+		{
+			break;
+		}
+	}
 }
 
 void UAoS_UIManager::CreatePlayerHUD()
 {
-	PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController);
-	if (IsValid(PlayerHUD))
+	if (IsValid(PlayerController))
 	{
-		PlayerHUD->AddToViewport();
+		PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController, PlayerController->GetPlayerHUD()->StaticClass());
+		if (IsValid(PlayerHUD))
+		{
+			PlayerHUD->AddToViewport();
+		}
 	}
 }
 

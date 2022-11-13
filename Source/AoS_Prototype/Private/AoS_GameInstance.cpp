@@ -91,6 +91,7 @@ void UAoS_GameInstance::SpawnGizbo()
 	{
 		FVector GizboLocation = PlayerStart->GetActorLocation();
 
+		// ToDo: @Liam we should probably create a scene component on Nick's blueprint that will act as a location pointer where Gizbo will spawn and try to get to if told to come back to Nick.
 		// Offset behind Nick, rather than spawning in the same spot
 		GizboLocation.X -= 100;
 		GizboLocation.Y += 100;
