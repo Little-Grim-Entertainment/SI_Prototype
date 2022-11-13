@@ -4,9 +4,32 @@
 #include "AoS_CheatManager.h"
 #include "World/AoS_WorldManager.h"
 #include "AoS_GameInstance.h"
+#include "Data/Cases/AoS_CaseManager.h"
 
 UAoS_CheatManager::UAoS_CheatManager()
 {
+}
+
+void UAoS_CheatManager::InitCheatManager()
+{
+	Super::InitCheatManager();
+	
+	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+}
+
+void UAoS_CheatManager::CheatResetCase(FString CaseToResetName)
+{
+	if (UAoS_CaseManager* CaseManager = GameInstance->GetCaseManager())
+	{
+		if (CaseToResetName == "All")
+		{
+			CaseManager->ResetAllCases();
+		}
+		else
+		{
+			CaseManager->ResetCase(CaseToResetName);
+		}
+	}
 }
 
 void UAoS_CheatManager::CheatSetTimeStamp(FString Day, int32 Hour, int32 Minutes, FString AMPM)
@@ -58,11 +81,4 @@ void UAoS_CheatManager::CheatPauseWorldTimer(bool bShouldPause)
 	UAoS_WorldManager* WorldManager = GameInstance->GetSubsystem<UAoS_WorldManager>();
 
 	WorldManager->PauseTimerByName("TimeOfDay", bShouldPause);
-}
-
-void UAoS_CheatManager::InitCheatManager()
-{
-	Super::InitCheatManager();
-	
-	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 }

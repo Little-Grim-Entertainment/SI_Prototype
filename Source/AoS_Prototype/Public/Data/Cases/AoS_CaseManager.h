@@ -57,7 +57,8 @@ public:
 	void ResetAllCases();
 	UFUNCTION(BlueprintCallable)
 	void ResetCase(FString CaseToResetName);
-	
+	UFUNCTION()
+	void OnGameInstanceInit();
 
 	UFUNCTION(BlueprintPure)
 	UAoS_Case* GetActiveCase() const;

@@ -26,7 +26,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
 	FString MapName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
-	TEnumAsByte<EMapType> MapType;
+	EMapType MapType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
 	TSoftObjectPtr<UWorld> Map;
 

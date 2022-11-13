@@ -25,6 +25,8 @@ public:
 	void CheatIncreaseSunRotationSpeed(float Percentage);
 	UFUNCTION(exec)
 	void CheatPauseWorldTimer(bool bShouldPause);
+	UFUNCTION(exec)
+	void CheatResetCase(FString CaseToResetName);
 
 protected:
 

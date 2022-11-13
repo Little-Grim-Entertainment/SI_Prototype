@@ -7,7 +7,7 @@
 #include "AoS_LineTraces.generated.h"
 
 UENUM(BlueprintType)
-enum ETraceType
+enum class ETraceType : uint8
 {
 	None		UMETA(DisplayName = "None"),
 	ForOneFrame UMETA(DisplayName = "ForOneFrame"), 
@@ -23,7 +23,7 @@ struct FTraceConditions
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float SearchDistance = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TEnumAsByte<ETraceType> DrawDebugType;
+	ETraceType DrawDebugType;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Offsets")
 	float StartZOffset = 0.0f;

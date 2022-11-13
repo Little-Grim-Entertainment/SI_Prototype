@@ -52,7 +52,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void LoadMainMenu();
 	UFUNCTION()
-	void LevelManagerOnGameInstanceInit();
+	void OnGameInstanceInit();
 
 	UAoS_MapData* GetCurrentStreamingLevel() const {return CurrentStreamingLevel;}
 
@@ -73,7 +73,7 @@ private:
 	UPROPERTY()
 	UAoS_MapData* MainMenu;
 	UPROPERTY()
-	TEnumAsByte<EMapType> CurrentMapType;
+	EMapType CurrentMapType;
 
 
 	FTimerHandle LoadDelayHandle;

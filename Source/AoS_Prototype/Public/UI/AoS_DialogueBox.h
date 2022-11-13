@@ -29,9 +29,9 @@ public:
 	
 protected:
 
-	UPROPERTY(meta=(BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UTextBlock* TXT_CharacterName;
-	UPROPERTY(meta=(BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UTextBlock* TXT_CharacterDialogue;
 
 private:

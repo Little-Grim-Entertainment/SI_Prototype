@@ -24,20 +24,21 @@ UAoS_GameInstance::UAoS_GameInstance()
 	bIsInMenu = false;
 }
 
-void UAoS_GameInstance::CheatResetCase(FString CaseToResetName)
+void UAoS_GameInstance::Init()
 {
-	if (CaseManager)
-	{
-		if (CaseToResetName == "All")
-		{
-			CaseManager->ResetAllCases();
-		}
-		else
-		{
-			CaseManager->ResetCase(CaseToResetName);
-		}
-	}
+	Super::Init();
+	
+	CaseManager = GetSubsystem<UAoS_CaseManager>();
+	UIManager = GetSubsystem<UAoS_UIManager>();
+	LevelManager = GetSubsystem<UAoS_LevelManager>();
+	WorldManager = GetSubsystem<UAoS_WorldManager>();
+
+	LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::UAoS_GameInstance::OnLevelFinishLoad);
+	
+	OnSubsystemBindingsComplete.Broadcast();
+	OnGameInstanceInit.Broadcast();
 }
+
 
 void UAoS_GameInstance::SpawnPlayer()
 {
@@ -136,85 +137,19 @@ AAoS_GizboController* UAoS_GameInstance::GetAOSGizboController()
 
 void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
 {
+	if(InPlayerMode == PlayerMode)
+	{
+		return;
+	}
+	
 	PlayerMode = InPlayerMode;
 	OnPlayerModeChanged.Broadcast(InPlayerMode);
-}
-
-void UAoS_GameInstance::SetupBindings()
-{
-	if(LevelManager)
-	{
-		LevelManager->OnBeginLevelLoad.AddDynamic(this, &UAoS_GameInstance::OnLevelBeginLoad);
-		LevelManager->OnLevelLoaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishLoad);
-		LevelManager->OnLevelUnloaded.AddDynamic(this, &UAoS_GameInstance::OnLevelFinishUnload);
-		LevelManager->OnMapTypeChanged.AddDynamic(this, &UAoS_GameInstance::OnMapTypeChanged);
-		
-		OnGameInstanceInit.AddDynamic(LevelManager, &UAoS_LevelManager::LevelManagerOnGameInstanceInit);
-	}
-	if (UIManager)
-	{
-		OnGameInstanceInit.AddDynamic(UIManager, &UAoS_UIManager::UIManagerOnGameInstanceInit);
-	}
-	if (CaseManager)
-	{
-	}
-	if (WorldManager)
-	{
-		OnGameInstanceInit.AddDynamic(WorldManager, &UAoS_WorldManager::WorldManagerOnGameInstanceInit);
-	}
-
-	OnSubsystemBindingsComplete.Broadcast();
-}
-
-void UAoS_GameInstance::OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
-{
-	if (UIManager)
-	{
-		UIManager->UIOnLevelBeginLoad(LoadingLevel, bShouldFade);
-	}
 }
 
 void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel,  bool bShouldFade)
 {
 	SpawnPlayer();
 	SpawnGizbo();
-
-	if (UIManager)
-	{
-		UIManager->UIOnLevelFinishLoad(LoadedLevel, bShouldFade);
-	}
-	if (WorldManager)
-	{
-		WorldManager->WorldOnLevelFinishLoad(LoadedLevel);
-	}
-	
-}
-
-void UAoS_GameInstance::OnLevelFinishUnload(UAoS_MapData* UnloadedLevel)
-{
-	
-}
-
-void UAoS_GameInstance::OnMapTypeChanged(EMapType InMapType)
-{
-	if (WorldManager)
-	{
-		WorldManager->WorldOnMapTypeChange(InMapType);
-	}
-}
-
-void UAoS_GameInstance::Init()
-{
-	Super::Init();
-	
-	CaseManager = GetSubsystem<UAoS_CaseManager>();
-	UIManager = GetSubsystem<UAoS_UIManager>();
-	LevelManager = GetSubsystem<UAoS_LevelManager>();
-	WorldManager = GetSubsystem<UAoS_WorldManager>();
-	
-	SetupBindings();
-	
-	OnGameInstanceInit.Broadcast();
 }
 
 APlayerStart* UAoS_GameInstance::GetPlayerStart() const

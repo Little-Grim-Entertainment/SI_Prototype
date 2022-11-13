@@ -15,6 +15,38 @@ UAoS_LevelManager::UAoS_LevelManager()
 	MainMenu = MainMenuAsset.Object;
 }
 
+void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+	
+	if (IsValid(GetWorld()))
+	{
+		GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+		if(IsValid(GameInstance))
+		{
+			GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::OnGameInstanceInit);
+		}
+	}
+}
+
+void UAoS_LevelManager::OnGameInstanceInit()
+{
+	UWorld* PersistentLevel = GameInstance->MapList->PersistentLevel->Map.Get();
+	if (GetWorld() != PersistentLevel)
+	{
+		if (IsValid(GameInstance->MapList->PersistentLevel))
+		{
+			const TSoftObjectPtr<UWorld> PersistentLevelPointer = GameInstance->MapList->PersistentLevel->Map;
+			UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), PersistentLevelPointer);
+			GetWorld()->GetTimerManager().SetTimer(PersistentLevelLoadTimerHandle, this, &UAoS_LevelManager::CheckForPersistentLevelLoaded, .001);
+		}
+	}
+	else if (!GetCurrentStreamingLevel())
+	{
+		LoadMainMenu();
+	}
+}
+
 void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay, bool bShouldFade)
 {
 	bLoadShouldFade = bShouldFade;
@@ -22,6 +54,8 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay,
 	if (!InLevelToLoad) {return;}
 
 	OnBeginLevelLoad.Broadcast(InLevelToLoad, bLoadShouldFade);
+	GameInstance->SetPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+
 	
 	if (World && GameInstance)
 	{
@@ -100,16 +134,6 @@ EMapType UAoS_LevelManager::GetCurrentMapType()
 	return CurrentMapType;
 }
 
-void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-	
-	if (IsValid(GetWorld()))
-	{
-		GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-	}
-}
-
 void UAoS_LevelManager::ExecuteLevelLoad(const UAoS_MapData* InLevelToLoad)
 {
 	GetWorld()->GetTimerManager().ClearTimer(LoadDelayHandle);
@@ -166,6 +190,14 @@ void UAoS_LevelManager::LevelLoaded()
 			{
 				CurrentStreamingLevel = CurrentLevelData;
 				UpdateMapType(CurrentStreamingLevel->MapType);
+				if (CurrentStreamingLevel->MapType != EMapType::MT_Menu)
+				{
+					GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+				}
+				else
+				{
+					GameInstance->SetPlayerMode(EPlayerMode::PM_GameMenuMode);
+				}
 				OnLevelLoaded.Broadcast(CurrentStreamingLevel, bLoadShouldFade);
 				return;
 			}
@@ -208,24 +240,6 @@ void UAoS_LevelManager::LoadMainMenu()
 		{
 			LevelLoadDelay = GameInstance->LevelLoadDelay;
 		}
-	}
-}
-
-void UAoS_LevelManager::LevelManagerOnGameInstanceInit()
-{
-	UWorld* PersistentLevel = GameInstance->MapList->PersistentLevel->Map.Get();
-	if (GetWorld() != PersistentLevel)
-	{
-		if (IsValid(GameInstance->MapList->PersistentLevel))
-		{
-			const TSoftObjectPtr<UWorld> PersistentLevelPointer = GameInstance->MapList->PersistentLevel->Map;
-			UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), PersistentLevelPointer);
-			GetWorld()->GetTimerManager().SetTimer(PersistentLevelLoadTimerHandle, this, &UAoS_LevelManager::CheckForPersistentLevelLoaded, .001);
-		}
-	}
-	else if (!GetCurrentStreamingLevel())
-	{
-		LoadMainMenu();
 	}
 }
 

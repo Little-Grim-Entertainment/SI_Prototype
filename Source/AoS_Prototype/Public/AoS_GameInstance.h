@@ -26,15 +26,17 @@ class UAoS_MapList;
 class UAoS_MapData;
 
 UENUM(BlueprintType)
-enum EPlayerMode
+enum class EPlayerMode : uint8
 {
-	PM_ExplorationMode     UMETA(DisplayName = "ExplorationMode"),
-	PM_DialogueMode      UMETA(DisplayName = "DialogueMode"),
-	PM_ObservationMode   UMETA(DisplayName = "ObservationMode"),
-	PM_InspectionMode   UMETA(DisplayName = "InspectionMode"),
-	PM_InterrogationMode   UMETA(DisplayName = "InterrogationMode"),
-	PM_GameMenuMode   UMETA(DisplayName = "GameMenuMode"),
-	PM_VendorMode   UMETA(DisplayName = "VendorMode"),
+	PM_ExplorationMode		UMETA(DisplayName = "ExplorationMode"),
+	PM_LevelLoadingMode		UMETA(DisplayName = "LevelLoadingMode"),
+	PM_CinematicMode		UMETA(DisplayName = "CinematicMode"),
+	PM_DialogueMode			UMETA(DisplayName = "DialogueMode"),
+	PM_ObservationMode		UMETA(DisplayName = "ObservationMode"),
+	PM_InspectionMode		UMETA(DisplayName = "InspectionMode"),
+	PM_InterrogationMode	UMETA(DisplayName = "InterrogationMode"),
+	PM_GameMenuMode			UMETA(DisplayName = "GameMenuMode"),
+	PM_VendorMode			UMETA(DisplayName = "VendorMode"),
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode);
@@ -73,9 +75,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	float LevelLoadDelay = 0.0f;
 	
-	UFUNCTION(Exec, Category = Cases)
-	void CheatResetCase(FString CaseToResetName);
-	
 	UFUNCTION(BlueprintCallable)
 	void SpawnPlayer();
 
@@ -100,9 +99,7 @@ public:
 		
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
 	void SetPlayerMode(EPlayerMode InPlayerMode);
-	UFUNCTION()
-	void SetupBindings();
-
+	
 private:
 
 	// Subsystems
@@ -133,13 +130,7 @@ private:
 	APlayerStart* GetPlayerStart() const;
 
 	// Level Delegates
-	UFUNCTION()
-	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade = true);
-	UFUNCTION()
-	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel, bool bShouldFade = true);
-	UFUNCTION()
-	void OnLevelFinishUnload(UAoS_MapData* UnloadedLevel);
-	UFUNCTION()
-	void OnMapTypeChanged(EMapType InMapType);
 	
+	UFUNCTION()
+	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel, bool bShouldFade = true);	
 };

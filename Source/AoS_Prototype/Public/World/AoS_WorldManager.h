@@ -81,12 +81,12 @@ public:
 	UFUNCTION()
 	void SetSkySphere(AAoS_SkySphere* SkySphereToSet);
 	UFUNCTION()
-	void WorldOnMapTypeChange(EMapType InMapType);
+	void OnMapTypeChange(EMapType InMapType);
 	
 	UFUNCTION()
-	void WorldManagerOnGameInstanceInit();
+	void OnGameInstanceInit();
 	UFUNCTION()
-	void WorldOnLevelFinishLoad(UAoS_MapData* LoadedLevel);
+	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel, bool bShouldFade);
 
 	// Timers
 	UFUNCTION(BlueprintCallable)

@@ -13,9 +13,62 @@ UAoS_UIManager::UAoS_UIManager()
 
 }
 
-void UAoS_UIManager::UIManagerOnGameInstanceInit()
+void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 {
+	Super::Initialize(Collection);
 
+	World = GetWorld();
+	if (World)
+	{
+		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
+		if (IsValid(GameInstance))
+		{
+			GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::UAoS_UIManager::OnGameInstanceInit);
+		}
+		PlayerController = Cast<AAoS_PlayerController>(World->GetFirstPlayerController());
+	}
+}
+
+void UAoS_UIManager::OnGameInstanceInit()
+{
+	GameInstance->GetLevelManager()->OnBeginLevelLoad.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelBeginLoad);
+	GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelFinishLoad);
+}
+
+void UAoS_UIManager::CreatePlayerHUD()
+{
+	PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController);
+	if (IsValid(PlayerHUD))
+	{
+		PlayerHUD->AddToViewport();
+	}
+}
+
+void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
+{
+	if(!IsValid(PlayerHUD))
+	{
+		return;
+	}
+
+	if (bShouldShow)
+	{
+		PlayerHUD->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		PlayerHUD->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void UAoS_UIManager::RemovePlayerHUD()
+{
+	if (!IsValid(PlayerHUD))
+	{
+		return;
+	}
+	
+	PlayerHUD->RemoveFromParent();
 }
 
 void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
@@ -65,27 +118,13 @@ void UAoS_UIManager::DisplayDialogueBox(UDlgContext* DlgContext)
 	PlayerHUD->GetDialogueBox()->UpdateDialogueBox(DlgContext);
 }
 
-void UAoS_UIManager::UIOnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
+void UAoS_UIManager::OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
 {
 	DisplayLoadingScreen(true, bShouldFade);
 }
 
-void UAoS_UIManager::UIOnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
+void UAoS_UIManager::OnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
 {
 	DisplayLoadingScreen(false, bShouldFade);
 }
 
-void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	World = GetWorld();
-	if (World)
-	{
-		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
-		if (GameInstance)
-		{
-
-		}
-	}
-}

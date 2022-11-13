@@ -21,6 +21,40 @@ UAoS_WorldManager::UAoS_WorldManager()
 	CurrentTimeStamp.MeridiemIndicator = EMeridiemIndicator::WD_AM;	
 }
 
+void UAoS_WorldManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	TickerDelegateHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UAoS_WorldManager::Tick));
+
+	Super::Initialize(Collection);
+
+	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	if (IsValid(GameInstance))
+	{
+		GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::OnGameInstanceInit);
+	}
+	InitializeWorldTimers();
+	SetTimeStamp(EWeekDay::WD_Sunday, 10, 00, EMeridiemIndicator::WD_AM);
+}
+
+void UAoS_WorldManager::Deinitialize()
+{
+
+	FTSTicker::GetCoreTicker().RemoveTicker(TickerDelegateHandle);
+
+	Super::Deinitialize();
+}
+
+void UAoS_WorldManager::OnGameInstanceInit()
+{
+	if (GameInstance)
+	{
+		GameInstance->GetLevelManager()->OnMapTypeChanged.AddDynamic(this, &ThisClass::OnMapTypeChange);
+		GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelFinishLoad);
+	}
+	StartTimerByHandle(TimeOfDayHandle);
+	PauseTimerByHandle(TimeOfDayHandle, true);
+}
+
 void UAoS_WorldManager::SetSkySphere(AAoS_SkySphere* SkySphereToSet)
 {
 	if (SkySphereToSet)
@@ -29,7 +63,7 @@ void UAoS_WorldManager::SetSkySphere(AAoS_SkySphere* SkySphereToSet)
 	}
 }
 
-void UAoS_WorldManager::WorldOnMapTypeChange(EMapType InMapType)
+void UAoS_WorldManager::OnMapTypeChange(EMapType InMapType)
 {
 	switch (InMapType)
 	{
@@ -53,17 +87,7 @@ void UAoS_WorldManager::WorldOnMapTypeChange(EMapType InMapType)
 	}
 }
 
-void UAoS_WorldManager::WorldManagerOnGameInstanceInit()
-{
-	if (GameInstance)
-	{
-		GameInstance->GetLevelManager()->OnMapTypeChanged.AddDynamic(this, &UAoS_WorldManager::WorldOnMapTypeChange);
-	}
-	StartTimerByHandle(TimeOfDayHandle);
-	PauseTimerByHandle(TimeOfDayHandle, true);
-}
-
-void UAoS_WorldManager::WorldOnLevelFinishLoad(UAoS_MapData* LoadedLevel)
+void UAoS_WorldManager::OnLevelFinishLoad(UAoS_MapData* LoadedLevel, bool bShouldFade)
 {
 	if (bRotateSun && SkySphere)
 	{
@@ -265,25 +289,6 @@ void UAoS_WorldManager::CreateNewWorldTimer(FTimerHandle& InTimerHandle, FString
 void UAoS_WorldManager::InitializeWorldTimers()
 {
 	CreateNewWorldTimer(TimeOfDayHandle, "TimeOfDay", &UAoS_WorldManager::UpdateWorld, SunRotationModifier * SunRotationSpeed, true);
-}
-
-void UAoS_WorldManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	TickerDelegateHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UAoS_WorldManager::Tick));
-
-	Super::Initialize(Collection);
-
-	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-	InitializeWorldTimers();
-	SetTimeStamp(EWeekDay::WD_Sunday, 10, 00, EMeridiemIndicator::WD_AM);
-}
-
-void UAoS_WorldManager::Deinitialize()
-{
-
-	FTSTicker::GetCoreTicker().RemoveTicker(TickerDelegateHandle);
-
-	Super::Deinitialize();
 }
 
 bool UAoS_WorldManager::Tick(float DeltaSeconds)
