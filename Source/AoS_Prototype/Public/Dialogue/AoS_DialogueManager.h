@@ -3,17 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
+#include "Subsystems/AoS_WorldSubsystem.h"
 #include "AoS_DialogueManager.generated.h"
 
-class UAoS_GameInstance;
 class UDlgDialogue;
 class UDlgContext;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginDialogue, UDlgDialogue*, DlgDialogue);
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_DialogueManager : public UWorldSubsystem
+class AOS_PROTOTYPE_API UAoS_DialogueManager : public UAoS_WorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -26,20 +25,14 @@ public:
 	// loaded into the CharacterManager's ActiveCharactersData
 	void StartDialogue(FText CharacterName);
 
-protected:
-	
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-
 private:
 
-	UPROPERTY()
-	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	FOnBeginDialogue OnBeginDialogueDelegate;
 
 	UPROPERTY()
 	UDlgContext* ActiveDialogueContext;
-
+	
 	void StartDefaultDialogue(FText CharacterName);
 
 };

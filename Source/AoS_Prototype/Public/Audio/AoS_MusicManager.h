@@ -3,17 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
+#include "Subsystems/AoS_WorldSubsystem.h"
 #include "AoS_MusicManager.generated.h"
 
-enum class EPlayerMode : uint8;
-class UAoS_GameInstance;
 class UCurveFloat;
 
 // This system is responsible for playing, stopping, and pausing the game music
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_MusicManager : public UWorldSubsystem
+class AOS_PROTOTYPE_API UAoS_MusicManager : public UAoS_WorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -35,7 +33,7 @@ public:
 
 protected:
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode) override;
 
 private:
 	
@@ -47,8 +45,6 @@ private:
 	TSoftObjectPtr<USoundBase> MetaSoundSoftClassPtr;
 	UPROPERTY()
 	TSoftObjectPtr<USoundBase> MusicSoftClassPtr;
-	UPROPERTY()
-	UAoS_GameInstance* GameInstance;
 
 	FTimerHandle MusicTimecode;
 
@@ -61,6 +57,4 @@ private:
 
 	UFUNCTION()
 	void TickMusicTimecode();
-	UFUNCTION()
-	void OnPlayerModeChanged(EPlayerMode NewPlayerMode);
 };

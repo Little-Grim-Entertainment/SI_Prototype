@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_WorldManager.generated.h"
 
-class AAoS_SunLight;
 enum class EMapType : uint8;
 
+class AAoS_SunLight;
 class AAoS_SkySphere;
-class UAoS_GameInstance;
 class UAoS_MapData;
 
 UENUM(BlueprintType)
@@ -69,7 +68,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewDayStarted, EWeekDay, NewDay);
 // This system is responsible for handling world events such as the time of day and world clock
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_WorldManager : public UGameInstanceSubsystem
+class AOS_PROTOTYPE_API UAoS_WorldManager : public UAoS_GameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -84,9 +83,6 @@ public:
 	void SetSkySphere(AAoS_SkySphere* SkySphereToSet);
 	UFUNCTION()
 	void OnMapTypeChange(EMapType InMapType);
-	
-	UFUNCTION()
-	void OnGameInstanceInit();
 	UFUNCTION()
 	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel, bool bShouldFade);
 
@@ -120,13 +116,12 @@ protected:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+	virtual void OnGameInstanceInit() override;
 	
 	bool Tick(float DeltaSeconds);
 
 private:
 
-	UPROPERTY()
-	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	AAoS_SkySphere* SkySphere;
 

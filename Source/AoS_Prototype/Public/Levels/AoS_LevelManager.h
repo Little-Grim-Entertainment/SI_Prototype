@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_LevelManager.generated.h"
 
 enum class EMapType : uint8;
 
-class UAoS_GameInstance;
 class UAoS_UIManager;
 class UAoS_MapData;
 
@@ -18,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, UAoS_MapData*, Unl
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMapTypeChanged, EMapType, NewMapType);
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_LevelManager : public UGameInstanceSubsystem
+class AOS_PROTOTYPE_API UAoS_LevelManager : public UAoS_GameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -51,18 +50,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void LoadMainMenu();
-	UFUNCTION()
-	void OnGameInstanceInit();
 
 	UAoS_MapData* GetCurrentStreamingLevel() const {return CurrentStreamingLevel;}
+
+protected:
+	
+	virtual void OnGameInstanceInit() override;
 
 private:
 		
 	float LevelLoadDelay;
 	bool bLoadShouldFade = true;
-	
-	UPROPERTY()
-	UAoS_GameInstance* GameInstance;
 
 	UPROPERTY()
 	UAoS_MapData* LevelToLoad;
@@ -97,6 +95,4 @@ private:
 
 	UAoS_MapData* GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel);
 	void PostLoadDelay();
-	
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 };

@@ -145,10 +145,7 @@ AAoS_GizboController* UAoS_GameInstance::GetAOSGizboController()
 
 void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
 {
-	if(InPlayerMode == PlayerMode)
-	{
-		return;
-	}
+	if(InPlayerMode == PlayerMode){return;}
 	
 	PlayerMode = InPlayerMode;
 	OnPlayerModeChanged.Broadcast(InPlayerMode);

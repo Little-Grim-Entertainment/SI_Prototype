@@ -26,12 +26,7 @@ void UAoS_WorldManager::Initialize(FSubsystemCollectionBase& Collection)
 	TickerDelegateHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UAoS_WorldManager::Tick));
 
 	Super::Initialize(Collection);
-
-	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-	if (IsValid(GameInstance))
-	{
-		GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::OnGameInstanceInit);
-	}
+	
 	InitializeWorldTimers();
 	SetTimeStamp(EWeekDay::WD_Sunday, 10, 00, EMeridiemIndicator::WD_AM);
 }
@@ -46,11 +41,11 @@ void UAoS_WorldManager::Deinitialize()
 
 void UAoS_WorldManager::OnGameInstanceInit()
 {
-	if (GameInstance)
-	{
-		GameInstance->GetLevelManager()->OnMapTypeChanged.AddDynamic(this, &ThisClass::OnMapTypeChange);
-		GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelFinishLoad);
-	}
+	Super::OnGameInstanceInit();
+	
+	GameInstance->GetLevelManager()->OnMapTypeChanged.AddDynamic(this, &ThisClass::OnMapTypeChange);
+	GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelFinishLoad);
+
 	StartTimerByHandle(TimeOfDayHandle);
 	PauseTimerByHandle(TimeOfDayHandle, true);
 }

@@ -5,31 +5,15 @@
 #include "Data/Cases/AoS_Case.h"
 #include "Data/Cases/AoS_Part.h"
 #include "Data/Cases/AoS_Objective.h"
-#include "AoS_GameInstance.h"
 
 UAoS_CaseManager::UAoS_CaseManager()
 {
 	
 }
 
-void UAoS_CaseManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	World = GetWorld();
-	if (World)
-	{
-		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
-		if (IsValid(GameInstance))
-		{
-			GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::UAoS_CaseManager::OnGameInstanceInit);
-		}
-	}
-}
-
 void UAoS_CaseManager::OnGameInstanceInit()
 {
-	
+	Super::OnGameInstanceInit();
 }
 
 void UAoS_CaseManager::AcceptCase(UAoS_Case* CaseToAccept)

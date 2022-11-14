@@ -7,34 +7,31 @@
 
 void UAoS_DialogueBox::SetCharacterName(FText InCharacterName)
 {
-	if (IsValid(TXT_CharacterName))
-	{
-		TXT_CharacterName->SetText(InCharacterName);
-		CurrentSpeaker = InCharacterName;
-	}
+	if (!IsValid(TXT_CharacterName)){return;}
+
+	TXT_CharacterName->SetText(InCharacterName);
+	CurrentSpeaker = InCharacterName;
 }
 
 void UAoS_DialogueBox::SetCharacterDialogue(FText InCharacterDialogue)
 {
-	if (IsValid(TXT_CharacterDialogue))
-	{
-		TXT_CharacterName->SetText(InCharacterDialogue);
-		CurrentDialogue = InCharacterDialogue;
-	}
+	if (!IsValid(TXT_CharacterDialogue)){return;}
+	
+	TXT_CharacterName->SetText(InCharacterDialogue);
+	CurrentDialogue = InCharacterDialogue;
 }
 
 void UAoS_DialogueBox::UpdateDialogueBox(UDlgContext* DlgContext)
 {
-	if (IsValid(DlgContext))
+	if (!IsValid(DlgContext)){return;}
+	
+	if (GetCurrentSpeaker().ToString() != DlgContext->GetActiveNodeParticipantDisplayName().ToString())
 	{
-		if (GetCurrentSpeaker().ToString() != DlgContext->GetActiveNodeParticipantDisplayName().ToString())
-		{
-			SetCharacterName(DlgContext->GetActiveNodeParticipantDisplayName());
-		}
-		if (GetCurrentDialogue().ToString() != DlgContext->GetActiveNodeText().ToString())
-		{
-			SetCharacterDialogue(DlgContext->GetActiveNodeText());
-		}
+		SetCharacterName(DlgContext->GetActiveNodeParticipantDisplayName());
+	}
+	if (GetCurrentDialogue().ToString() != DlgContext->GetActiveNodeText().ToString())
+	{
+		SetCharacterDialogue(DlgContext->GetActiveNodeText());
 	}
 }
 

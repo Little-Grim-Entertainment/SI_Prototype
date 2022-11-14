@@ -17,6 +17,8 @@ void UAoS_CheatManager::InitCheatManager()
 	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 }
 
+
+
 void UAoS_CheatManager::CheatResetCase(FString CaseToResetName)
 {
 	if (UAoS_CaseManager* CaseManager = GameInstance->GetCaseManager())

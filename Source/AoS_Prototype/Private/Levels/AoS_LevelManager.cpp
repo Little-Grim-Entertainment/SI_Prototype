@@ -15,22 +15,10 @@ UAoS_LevelManager::UAoS_LevelManager()
 	MainMenu = MainMenuAsset.Object;
 }
 
-void UAoS_LevelManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-	
-	if (IsValid(GetWorld()))
-	{
-		GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-		if(IsValid(GameInstance))
-		{
-			GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::OnGameInstanceInit);
-		}
-	}
-}
-
 void UAoS_LevelManager::OnGameInstanceInit()
 {
+	Super::OnGameInstanceInit();
+	
 	UWorld* PersistentLevel = GameInstance->MapList->PersistentLevel->Map.Get();
 	if (GetWorld() != PersistentLevel)
 	{

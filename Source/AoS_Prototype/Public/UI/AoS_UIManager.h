@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "AoS_GameInstance.h"
+#include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
 class UAoS_DialogueManager;
@@ -15,13 +16,12 @@ class AAoS_PlayerController;
 class UAoS_HUD;
 class UDlgContext;
 class UAoS_UserWidget;
-class UAoS_GameInstance;
 class UAoS_MapData;
 
 enum class EPlayerMode : uint8;
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_UIManager : public UGameInstanceSubsystem
+class AOS_PROTOTYPE_API UAoS_UIManager : public UAoS_GameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -44,10 +44,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayDialogueBox(UDlgContext* DlgContext);
 
-	// Game Instance Delegates
-	UFUNCTION()
-	void OnPlayerModeChanged(EPlayerMode NewPlayerMode);
-	
 	// Level Manager Delegates
 	UFUNCTION()
 	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
@@ -76,24 +72,18 @@ public:
 	UFUNCTION()
 	void OnBeginDialogue(UDlgDialogue* DlgDialogue);
 
-	UFUNCTION()
-	void OnGameInstanceInit();
-
 	void BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager);
 
 protected:
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void OnGameInstanceInit() override;
+	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode) override;
 
 private:
 
 	void BindLevelManagerDelegates();
 	void BindCaseManagerDelegates();
-
-	UPROPERTY()
-	UWorld* World;
-	UPROPERTY()
-	UAoS_GameInstance* GameInstance;
+	
 	UPROPERTY()
 	AAoS_PlayerController* PlayerController;
 	UPROPERTY()

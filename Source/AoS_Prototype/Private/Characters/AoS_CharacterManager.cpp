@@ -3,8 +3,28 @@
 
 #include "Characters/AoS_CharacterManager.h"
 #include "Data/Characters/AoS_CharacterData.h"
+#include "AoS_GameInstance.h"
+#include "Data/Cases/AoS_CaseManager.h"
+
+void UAoS_CharacterManager::OnGameInstanceInit()
+{
+	if(!IsValid(GameInstance)){return;}
+
+	GameInstance->GetCaseManager()->OnPartActivated.AddDynamic(this, &ThisClass::OnPartActivated);
+	GameInstance->GetCaseManager()->OnPartComplete.AddDynamic(this, &ThisClass::OnPartCompleted);
+}
 
 UAoS_CharacterData* UAoS_CharacterManager::GetActiveCharacterData(FText CharacterName)
 {
 	return nullptr;
+}
+
+void UAoS_CharacterManager::OnPartActivated(UAoS_Part* ActivatedPart)
+{
+	
+}
+
+void UAoS_CharacterManager::OnPartCompleted(UAoS_Part* CompletedPart)
+{
+	
 }

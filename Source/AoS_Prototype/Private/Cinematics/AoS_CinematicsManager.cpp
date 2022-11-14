@@ -8,17 +8,6 @@
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 
-
-
-
-
-void UAoS_CinematicsManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-}
-
 void UAoS_CinematicsManager::PlayCinematic(ULevelSequence* LevelSequenceToPlay, bool bAutoPlay, int32 Loop, float PlayRate, float StartOffset, bool bRandomStartTime, bool bRestoreState, bool bDisableMovementInput, bool bDisableLookInput, bool bHidePlayer, bool bHideHud, bool bDisableCameraCuts, bool bPauseAtEnd)
 {
 	ALevelSequenceActor* LevelSequenceActor;
@@ -38,10 +27,8 @@ void UAoS_CinematicsManager::PlayCinematic(ULevelSequence* LevelSequenceToPlay, 
 	PlaybackSettings.bPauseAtEnd = bPauseAtEnd;
 	
 	CurrentCinematic = ULevelSequencePlayer::CreateLevelSequencePlayer(this, LevelSequenceToPlay, PlaybackSettings, LevelSequenceActor);
-	if(!IsValid(GameInstance) || !IsValid(CurrentCinematic))
-	{
-		return;
-	}
+
+	if(!IsValid(GameInstance) || !IsValid(CurrentCinematic)){return;}
 
 	CurrentCinematic->OnFinished.AddDynamic(this, &ThisClass::OnCinematicEnd);
 	CurrentCinematic->Play();		
@@ -52,10 +39,7 @@ void UAoS_CinematicsManager::PlayCinematic(ULevelSequence* LevelSequenceToPlay, 
 
 void UAoS_CinematicsManager::OnCinematicEnd()
 {
-	if(!IsValid(GameInstance))
-	{
-		return;
-	}
+	if(!IsValid(GameInstance)){return;}
 
 	GameInstance->SetPlayerMode(PreviousPlayerMode);
 }

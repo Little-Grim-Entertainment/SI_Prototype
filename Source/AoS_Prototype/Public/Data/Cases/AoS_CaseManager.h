@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_CaseManager.generated.h"
 
-class UAoS_GameInstance;
 class UAoS_Case;
 class UAoS_Part;
 class UAoS_Objective;
@@ -24,7 +23,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveComplete, UAoS_Objective
 // This system is responsible for handling the receiving, completing, and updating of cases
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_CaseManager : public UGameInstanceSubsystem
+class AOS_PROTOTYPE_API UAoS_CaseManager : public UAoS_GameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -59,8 +58,6 @@ public:
 	void ResetAllCases();
 	UFUNCTION(BlueprintCallable)
 	void ResetCase(FString CaseToResetName);
-	UFUNCTION()
-	void OnGameInstanceInit();
 
 	UFUNCTION(BlueprintPure)
 	UAoS_Case* GetActiveCase() const;
@@ -75,14 +72,13 @@ public:
 
 	void SetActivePart(UAoS_Part* PartToSet);
 	void SetActiveObjectives(TArray<UAoS_Objective*> ObjectivesToSet);
+
+protected:
+
+	virtual void OnGameInstanceInit() override;
 	
 private:
 
-
-	UPROPERTY()
-	UWorld* World;
-	UPROPERTY()
-	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	UAoS_Case* ActiveCase;
 	UPROPERTY()
@@ -95,8 +91,6 @@ private:
 
 	UPROPERTY()
 	TArray<UAoS_Objective*> ActiveObjectives;
-
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	void ObjectiveCompleted(UAoS_Objective* CompletedObjective);
 	void PartCompleted(UAoS_Part* CompletedPart);

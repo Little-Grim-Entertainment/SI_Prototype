@@ -18,17 +18,6 @@ UAoS_MusicManager::UAoS_MusicManager()
 	MusicLoopStart = 0.f;
 }
 
-void UAoS_MusicManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-	if (IsValid(GameInstance))
-	{
-		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
-	}
-}
-
 void UAoS_MusicManager::TickMusicTimecode()
 {
 	MusicTimeAtPause += .001;
@@ -36,6 +25,8 @@ void UAoS_MusicManager::TickMusicTimecode()
 
 void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 {
+	Super::OnPlayerModeChanged(NewPlayerMode);
+	
 	switch (NewPlayerMode)
 	{
 		case EPlayerMode::PM_CinematicMode:

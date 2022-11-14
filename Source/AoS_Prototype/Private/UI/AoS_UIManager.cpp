@@ -27,24 +27,10 @@ UAoS_UIManager::UAoS_UIManager()
 
 }
 
-void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	World = GetWorld();
-	if (World)
-	{
-		GameInstance = Cast<UAoS_GameInstance>(World->GetGameInstance());
-		if (IsValid(GameInstance))
-		{
-			GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::UAoS_UIManager::OnGameInstanceInit);
-		}
-	}
-}
-
 void UAoS_UIManager::OnGameInstanceInit()
 {
-	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::UAoS_UIManager::OnPlayerModeChanged);
+	Super::OnGameInstanceInit();
+	
 	BindLevelManagerDelegates();
 	BindCaseManagerDelegates();
 }
@@ -79,6 +65,8 @@ void UAoS_UIManager::BindCaseManagerDelegates()
 
 void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 {
+	Super::OnPlayerModeChanged(NewPlayerMode);
+	
 	switch (NewPlayerMode)
 	{
 		case EPlayerMode::PM_ExplorationMode:
@@ -108,6 +96,7 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 		}
 		case EPlayerMode::PM_DialogueMode:
 		{
+				
 			break;	
 		}
 		case EPlayerMode::PM_InspectionMode:
@@ -144,22 +133,18 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 void UAoS_UIManager::CreatePlayerHUD()
 {
 	PlayerController = GameInstance->GetAOSPlayerController();
-	if (IsValid(PlayerController))
+	if (!IsValid(PlayerController)){return;}
+	
+	PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController, PlayerController->GetPlayerHUDClass());
+	if (IsValid(PlayerHUD))
 	{
-		PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController, PlayerController->GetPlayerHUDClass());
-		if (IsValid(PlayerHUD))
-		{
-			PlayerHUD->AddToViewport();
-		}
+		PlayerHUD->AddToViewport();
 	}
 }
 
 void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
 {
-	if(!IsValid(PlayerHUD))
-	{
-		return;
-	}
+	if(!IsValid(PlayerHUD)){return;}
 
 	if (bShouldShow)
 	{
@@ -173,45 +158,41 @@ void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
 
 void UAoS_UIManager::RemovePlayerHUD()
 {
-	if (!IsValid(PlayerHUD))
-	{
-		return;
-	}
+	if (!IsValid(PlayerHUD)){return;}
 	
 	PlayerHUD->RemoveFromParent();
 }
 
 void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 {
-	if(GameInstance)
+	if (!IsValid(GameInstance)){return;}
+	
+	if (bShouldDisplay)
 	{
-		if (bShouldDisplay)
+		if (GameInstance->LoadingScreens.Num() > 0)
 		{
-			if (GameInstance->LoadingScreens.Num() > 0)
+			const int32 RandNumb = FMath::RandRange(0, GameInstance->LoadingScreens.Num() - 1);
+			if (const TSubclassOf<UAoS_UserWidget> SelectedLoadingScreen = GameInstance->LoadingScreens[RandNumb])
 			{
-				const int32 RandNumb = FMath::RandRange(0, GameInstance->LoadingScreens.Num() - 1);
-				if (const TSubclassOf<UAoS_UserWidget> SelectedLoadingScreen = GameInstance->LoadingScreens[RandNumb])
+				LoadingScreen = Cast<UAoS_UserWidget>(CreateWidget(GetWorld()->GetFirstPlayerController(), SelectedLoadingScreen));
+				if (IsValid(LoadingScreen))
 				{
-					LoadingScreen = Cast<UAoS_UserWidget>(CreateWidget(GetWorld()->GetFirstPlayerController(), SelectedLoadingScreen));
-					if (LoadingScreen)
-					{
-						LoadingScreen->AddToViewport();
-					}
+					LoadingScreen->AddToViewport();
 				}
 			}
 		}
-		else
+	}
+	else
+	{
+		if (IsValid(LoadingScreen))
 		{
-			if (IsValid(LoadingScreen))
+			if (bShouldFade)
 			{
-				if (bShouldFade)
-				{
-					LoadingScreen->FadeOutWidget();	
-				}
-				else
-				{
-					LoadingScreen->RemoveFromParent();
-				}
+				LoadingScreen->FadeOutWidget();	
+			}
+			else
+			{
+				LoadingScreen->RemoveFromParent();
 			}
 		}
 	}
@@ -219,10 +200,7 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 
 void UAoS_UIManager::DisplayDialogueBox(UDlgContext* DlgContext)
 {
-	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox()))
-	{
-		return;
-	}
+	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())){return;}
 	
 	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
 	PlayerHUD->GetDialogueBox()->UpdateDialogueBox(DlgContext);
