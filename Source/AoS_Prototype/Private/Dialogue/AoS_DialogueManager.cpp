@@ -13,16 +13,15 @@ void UAoS_DialogueManager::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-	if(GameInstance)
+	if(IsValid(GameInstance))
 	{
 		UAoS_UIManager* UIManager = Cast<UAoS_UIManager>(GameInstance->GetUIManager());
 		if (IsValid(UIManager))
 		{
-			;
+			UIManager->BindDialogueManagerDelegates(this);
 		}
 	}
 }
-
 
 FOnBeginDialogue& UAoS_DialogueManager::GetOnBeginDialogue()
 {

@@ -6,6 +6,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
+class UAoS_DialogueManager;
+class UDlgDialogue;
 class UAoS_Objective;
 class UAoS_Part;
 class UAoS_Case;
@@ -53,7 +55,6 @@ public:
 	void OnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
 
 	// Case Manager Delegates
-
 	UFUNCTION()
 	void OnCaseAccepted(UAoS_Case* AcceptedCase);
 	UFUNCTION()
@@ -71,8 +72,14 @@ public:
 	UFUNCTION()
 	void OnObjectiveCompleted(UAoS_Objective* CompletedObjective);
 
+	//Dialogue Manager Delegates
+	UFUNCTION()
+	void OnBeginDialogue(UDlgDialogue* DlgDialogue);
+
 	UFUNCTION()
 	void OnGameInstanceInit();
+
+	void BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager);
 
 protected:
 

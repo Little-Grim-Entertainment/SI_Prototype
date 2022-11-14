@@ -7,6 +7,7 @@
 // Subsystems
 #include "Data/Cases/AoS_CaseManager.h"
 #include "Levels/AoS_LevelManager.h"
+#include "Dialogue/AoS_DialogueManager.h"
 
 // Case Data
 #include "Data/Cases/AoS_Case.h"
@@ -46,6 +47,11 @@ void UAoS_UIManager::OnGameInstanceInit()
 	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::UAoS_UIManager::OnPlayerModeChanged);
 	BindLevelManagerDelegates();
 	BindCaseManagerDelegates();
+}
+
+void UAoS_UIManager::BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager)
+{
+	InDialogueManager->GetOnBeginDialogue().AddDynamic(this, &ThisClass::OnBeginDialogue);
 }
 
 void UAoS_UIManager::BindLevelManagerDelegates()
@@ -263,6 +269,11 @@ void UAoS_UIManager::OnObjectiveActivated(UAoS_Objective* ActivatedObjective)
 }
 
 void UAoS_UIManager::OnObjectiveCompleted(UAoS_Objective* CompletedObjective)
+{
+	
+}
+
+void UAoS_UIManager::OnBeginDialogue(UDlgDialogue* DlgDialogue)
 {
 	
 }
