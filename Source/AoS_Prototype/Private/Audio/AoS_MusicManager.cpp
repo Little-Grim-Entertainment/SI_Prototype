@@ -2,7 +2,7 @@
 
 
 #include "Audio/AoS_MusicManager.h"
-
+#include "AoS_GameInstance.h"
 #include "AudioDevice.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -21,12 +21,40 @@ UAoS_MusicManager::UAoS_MusicManager()
 void UAoS_MusicManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
+
+	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	if (IsValid(GameInstance))
+	{
+		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
+	}
 }
 
 void UAoS_MusicManager::TickMusicTimecode()
 {
 	MusicTimeAtPause += .001;
+}
+
+void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
+{
+	switch (NewPlayerMode)
+	{
+		case EPlayerMode::PM_CinematicMode:
+			{
+				if(IsValid(BackgroundMusic) && !bMusicIsPaused)
+				{
+					PauseMusicWithFade(.5);
+				}
+				break;	
+			}
+		default:
+			{
+				if(bMusicIsPaused)
+				{
+					ResumeMusicWithFade(.5);
+				}
+				break;
+			}
+	}
 }
 
 UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier, float PitchMultiplier, float StartTime, bool bShouldFade, float FadeInDuration)

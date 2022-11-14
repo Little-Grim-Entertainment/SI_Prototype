@@ -7,6 +7,8 @@
 
 #include "AoS_MusicManager.generated.h"
 
+enum class EPlayerMode : uint8;
+class UAoS_GameInstance;
 class UCurveFloat;
 
 // This system is responsible for playing, stopping, and pausing the game music
@@ -46,6 +48,8 @@ private:
 	TSoftObjectPtr<USoundBase> MetaSoundSoftClassPtr;
 	UPROPERTY()
 	TSoftObjectPtr<USoundBase> MusicSoftClassPtr;
+	UPROPERTY()
+	UAoS_GameInstance* GameInstance;
 
 	FTimerHandle MusicTimecode;
 
@@ -58,4 +62,6 @@ private:
 
 	UFUNCTION()
 	void TickMusicTimecode();
+	UFUNCTION()
+	void OnPlayerModeChanged(EPlayerMode NewPlayerMode);
 };
