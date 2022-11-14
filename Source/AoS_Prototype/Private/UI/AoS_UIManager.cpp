@@ -3,9 +3,22 @@
 
 #include "UI/AoS_UIManager.h"
 #include "AoS_GameInstance.h"
+
+// Subsystems
+#include "Data/Cases/AoS_CaseManager.h"
+#include "Levels/AoS_LevelManager.h"
+
+// Case Data
+#include "Data/Cases/AoS_Case.h"
+#include "Data/Cases/AoS_Part.h"
+#include "Data/Cases/AoS_Objective.h"
+
+// UI
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
+
+#include "Controllers/AoS_PlayerController.h"
 
 
 UAoS_UIManager::UAoS_UIManager()
@@ -30,10 +43,33 @@ void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void UAoS_UIManager::OnGameInstanceInit()
 {
+	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::UAoS_UIManager::OnPlayerModeChanged);
+	BindLevelManagerDelegates();
+	BindCaseManagerDelegates();
+}
+
+void UAoS_UIManager::BindLevelManagerDelegates()
+{
 	GameInstance->GetLevelManager()->OnBeginLevelLoad.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelBeginLoad);
 	GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelFinishLoad);
-	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::UAoS_UIManager::OnPlayerModeChanged);
 }
+
+void UAoS_UIManager::BindCaseManagerDelegates()
+{
+	// Case Bindings
+	GameInstance->GetCaseManager()->OnCaseAccepted.AddDynamic(this, &ThisClass::OnCaseAccepted);
+	GameInstance->GetCaseManager()->OnCaseActivated.AddDynamic(this, &ThisClass::OnCaseActivated);
+	GameInstance->GetCaseManager()->OnCaseComplete.AddDynamic(this, &ThisClass::OnCaseCompleted);
+
+	// Part Bindings
+	GameInstance->GetCaseManager()->OnPartActivated.AddDynamic(this, &ThisClass::OnPartActivated);
+	GameInstance->GetCaseManager()->OnPartComplete.AddDynamic(this, &ThisClass::OnPartCompleted);
+
+	// Objective Bindings
+	GameInstance->GetCaseManager()->OnObjectiveActivated.AddDynamic(this, &ThisClass::OnObjectiveActivated);
+	GameInstance->GetCaseManager()->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);
+}
+
 
 void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 {
@@ -195,4 +231,41 @@ void UAoS_UIManager::OnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldF
 {
 	DisplayLoadingScreen(false, bShouldFade);
 }
+
+void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
+{
+	
+}
+
+void UAoS_UIManager::OnCaseActivated(UAoS_Case* ActivatedCase)
+{
+	
+}
+
+void UAoS_UIManager::OnCaseCompleted(UAoS_Case* CompletedCase)
+{
+	
+}
+
+void UAoS_UIManager::OnPartActivated(UAoS_Part* ActivatedPart)
+{
+	
+}
+
+void UAoS_UIManager::OnPartCompleted(UAoS_Part* CompletedPart)
+{
+	
+}
+
+void UAoS_UIManager::OnObjectiveActivated(UAoS_Objective* ActivatedObjective)
+{
+	
+}
+
+void UAoS_UIManager::OnObjectiveCompleted(UAoS_Objective* CompletedObjective)
+{
+	
+}
+
+
 

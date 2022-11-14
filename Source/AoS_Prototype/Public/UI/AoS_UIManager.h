@@ -6,6 +6,9 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
+class UAoS_Objective;
+class UAoS_Part;
+class UAoS_Case;
 class AAoS_PlayerController;
 class UAoS_HUD;
 class UDlgContext;
@@ -49,6 +52,25 @@ public:
 	UFUNCTION()
 	void OnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
 
+	// Case Manager Delegates
+
+	UFUNCTION()
+	void OnCaseAccepted(UAoS_Case* AcceptedCase);
+	UFUNCTION()
+	void OnCaseActivated(UAoS_Case* ActivatedCase);
+	UFUNCTION()
+	void OnCaseCompleted(UAoS_Case* CompletedCase);
+
+	UFUNCTION()
+	void OnPartActivated(UAoS_Part* ActivatedPart);
+	UFUNCTION()
+	void OnPartCompleted(UAoS_Part* CompletedPart);
+	
+	UFUNCTION()
+	void OnObjectiveActivated(UAoS_Objective* ActivatedObjective);
+	UFUNCTION()
+	void OnObjectiveCompleted(UAoS_Objective* CompletedObjective);
+
 	UFUNCTION()
 	void OnGameInstanceInit();
 
@@ -57,6 +79,9 @@ protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 private:
+
+	void BindLevelManagerDelegates();
+	void BindCaseManagerDelegates();
 
 	UPROPERTY()
 	UWorld* World;

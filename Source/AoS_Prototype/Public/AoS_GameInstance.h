@@ -3,13 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Characters/AoS_Gizbo.h"
-#include "Controllers/AoS_GizboController.h"
-#include "Controllers/AoS_PlayerController.h"
 #include "Engine/GameInstance.h"
-#include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.generated.h"
 
+class AAoS_GizboController;
+class AAoS_PlayerController;
 class UAoS_UserWidget;
 class UAoS_WorldManager;
 class AAoS_Character;

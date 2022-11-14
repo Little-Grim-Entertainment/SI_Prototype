@@ -3,21 +3,27 @@
 
 #include "AoS_GameInstance.h"
 
-#include "Characters/AoS_Character.h"
-#include "Data/Characters/AoS_CharacterData.h"
-#include "Characters/AoS_Nick.h"
-#include "GameFramework/PlayerStart.h"
-
 // Subsystems
 #include "UI/AoS_UIManager.h"
 #include "Data/Cases/AoS_CaseManager.h"
 #include "Levels/AoS_LevelManager.h"
 #include "World/AoS_WorldManager.h"
 
+#include "Characters/AoS_Character.h"
+#include "Characters/AoS_Nick.h"
+#include "Characters/AoS_Gizbo.h"
+
+#include "Data/Characters/AoS_CharacterData.h"
 #include "Data/Maps/AoS_MapData.h"
 
+#include "Controllers/AoS_GizboController.h"
+#include "Controllers/AoS_PlayerController.h"
+
+// UE5
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerStart.h"
+
 
 UAoS_GameInstance::UAoS_GameInstance()
 {	
