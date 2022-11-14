@@ -8,6 +8,7 @@
 
 class UAoS_GameInstance;
 class UDlgDialogue;
+class UDlgContext;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginDialogue, UDlgDialogue*, DlgDialogue);
 
@@ -21,6 +22,10 @@ public:
 	UFUNCTION()
 	FOnBeginDialogue& GetOnBeginDialogue();
 
+	// assumes that active characters using non-default dialogue have an associated AoS_CharacterData
+	// loaded into the CharacterManager's ActiveCharactersData
+	void StartDialogue(FText CharacterName);
+
 protected:
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -31,4 +36,10 @@ private:
 	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
 	FOnBeginDialogue OnBeginDialogueDelegate;
+
+	UPROPERTY()
+	UDlgContext* ActiveDialogueContext;
+
+	void StartDefaultDialogue(FText CharacterName);
+
 };
