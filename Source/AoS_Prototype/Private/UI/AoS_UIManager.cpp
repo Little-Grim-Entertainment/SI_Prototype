@@ -251,7 +251,7 @@ void UAoS_UIManager::OnObjectiveCompleted(UAoS_Objective* CompletedObjective)
 	
 }
 
-void UAoS_UIManager::OnBeginDialogue(UDlgDialogue* DlgDialogue)
+void UAoS_UIManager::OnBeginDialogue(UDlgContext* DlgContext)
 {
 	
 }

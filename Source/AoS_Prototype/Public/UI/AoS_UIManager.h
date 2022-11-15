@@ -70,7 +70,7 @@ public:
 
 	//Dialogue Manager Delegates
 	UFUNCTION()
-	void OnBeginDialogue(UDlgDialogue* DlgDialogue);
+	void OnBeginDialogue(UDlgContext* DlgContext);
 
 	void BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager);
 

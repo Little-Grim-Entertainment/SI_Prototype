@@ -20,7 +20,12 @@ void UAoS_DialogueManager::StartDialogue(FText CharacterName)
 {
 	if (!IsValid(GameInstance)) return;
 	UAoS_CharacterManager* CharacterManager = GameInstance->GetSubsystem<UAoS_CharacterManager>();
-	check(CharacterManager);
+	if (!IsValid(CharacterManager))
+	{
+		UE_LOG(LogTemp, Error, TEXT("CharacterManager not found!"));
+		StartDefaultDialogue(CharacterName);
+		return;
+	}
 
 	UAoS_CharacterData* CharacterData = CharacterManager->GetActiveCharacterData(CharacterName);
 	if (!CharacterData || !CharacterData->CurrentDialogueData.RelevantDialogue)
@@ -30,11 +35,27 @@ void UAoS_DialogueManager::StartDialogue(FText CharacterName)
 	}
 
 	ActiveDialogueContext = UDlgManager::StartDialogueWithDefaultParticipants(GetWorld(), CharacterData->CurrentDialogueData.RelevantDialogue);
-	check(ActiveDialogueContext);
+	if (!IsValid(ActiveDialogueContext))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Dialogue not started correctly."));
+		return;
+	}
+
+	GameInstance->SetPlayerMode(EPlayerMode::PM_DialogueMode);
+	OnBeginDialogueDelegate.Broadcast(ActiveDialogueContext);
 }
 
 
 void UAoS_DialogueManager::StartDefaultDialogue(FText CharacterName)
 {
+	// find default dialogue
 
+
+	GameInstance->SetPlayerMode(EPlayerMode::PM_DialogueMode);
+	OnBeginDialogueDelegate.Broadcast(ActiveDialogueContext);
+}
+
+void UAoS_DialogueManager::OnInterrogationPressed()
+{
+	GameInstance->SetPlayerMode(EPlayerMode::PM_InterrogationMode);
 }

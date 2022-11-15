@@ -9,7 +9,7 @@
 class UDlgDialogue;
 class UDlgContext;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginDialogue, UDlgDialogue*, DlgDialogue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginDialogue, UDlgContext*, DialogueContext);
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_DialogueManager : public UAoS_WorldSubsystem
@@ -24,6 +24,12 @@ public:
 	// assumes that active characters using non-default dialogue have an associated AoS_CharacterData
 	// loaded into the CharacterManager's ActiveCharactersData
 	void StartDialogue(FText CharacterName);
+
+	void OnNextPressed();
+	void OnPreviousPressed();
+	void OnBackButtonPressed();
+
+	void OnInterrogationPressed();
 
 private:
 
