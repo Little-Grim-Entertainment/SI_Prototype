@@ -65,12 +65,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)	
 	bool CreateLineTrace(ETraceType DrawDebugType, FVector Start, FVector End, FLinearColor TraceColor, FLinearColor TraceHitColor, FHitResult& HitResults);
 	UFUNCTION(BlueprintCallable)
-	void ShowHUD();
-	UFUNCTION(BlueprintCallable)
-	void HideHUD();
-	UFUNCTION(BlueprintCallable)
-	void RefreshHUD();
-	UFUNCTION(BlueprintCallable)
 	void LockPlayerMovement(bool bLockMovement, bool bLockTurning);
 	
 	void SetFocusedActor(AActor* ActorToSet);

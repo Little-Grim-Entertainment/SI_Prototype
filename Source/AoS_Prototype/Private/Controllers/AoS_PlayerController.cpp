@@ -30,12 +30,6 @@ void AAoS_PlayerController::SetupInputComponent()
 
 void AAoS_PlayerController::BeginPlay()
 {
-	if (PlayerHUD_Class && !PlayerHUD)
-	{
-		PlayerHUD = CreateWidget<UAoS_HUD>(GetWorld()->GetFirstPlayerController(), PlayerHUD_Class, "PlayerHUD");
-		ShowHUD();
-	}
-		
 	Super::BeginPlay();
 }
 
@@ -123,24 +117,6 @@ UAoS_HUD* AAoS_PlayerController::GetPlayerHUD()
 TSubclassOf<UAoS_HUD> AAoS_PlayerController::GetPlayerHUDClass() const
 {
 	return PlayerHUD_Class;
-}
-
-void AAoS_PlayerController::ShowHUD()
-{
-	if (!PlayerHUD) {return;}
-	PlayerHUD->AddToViewport();
-}
-
-void AAoS_PlayerController::HideHUD()
-{
-	if (!PlayerHUD) {return;}
-	PlayerHUD->RemoveFromViewport();
-}
-
-void AAoS_PlayerController::RefreshHUD()
-{
-	HideHUD();
-	ShowHUD();
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
