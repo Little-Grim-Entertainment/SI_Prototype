@@ -2,19 +2,11 @@
 
 
 #include "Dialogue/AoS_DialogueManager.h"
-#include "DlgContext.h"
-#include "DlgDialogue.h"
-#include "DlgManager.h"
 #include "AoS_GameInstance.h"
 #include "Characters/AoS_CharacterManager.h"
 #include "Data/Characters/AoS_CharacterData.h"
 #include "Kismet/GameplayStatics.h"
 
-
-FOnBeginDialogue& UAoS_DialogueManager::GetOnBeginDialogue()
-{
-	return OnBeginDialogueDelegate;
-}
 
 void UAoS_DialogueManager::StartDialogue(FText CharacterName)
 {
@@ -34,15 +26,7 @@ void UAoS_DialogueManager::StartDialogue(FText CharacterName)
 		return;
 	}
 
-	ActiveDialogueContext = UDlgManager::StartDialogueWithDefaultParticipants(GetWorld(), CharacterData->CurrentDialogueData.RelevantDialogue);
-	if (!IsValid(ActiveDialogueContext))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Dialogue not started correctly."));
-		return;
-	}
-
 	GameInstance->SetPlayerMode(EPlayerMode::PM_DialogueMode);
-	OnBeginDialogueDelegate.Broadcast(ActiveDialogueContext);
 }
 
 
@@ -52,7 +36,6 @@ void UAoS_DialogueManager::StartDefaultDialogue(FText CharacterName)
 
 
 	GameInstance->SetPlayerMode(EPlayerMode::PM_DialogueMode);
-	OnBeginDialogueDelegate.Broadcast(ActiveDialogueContext);
 }
 
 void UAoS_DialogueManager::OnInterrogationPressed()

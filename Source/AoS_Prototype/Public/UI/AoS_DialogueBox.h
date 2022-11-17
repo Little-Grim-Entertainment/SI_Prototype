@@ -8,7 +8,6 @@
 
 class UButton;
 class UTextBlock;
-class UDlgContext;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNextClickedDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNextHoveredDelegate);
@@ -30,8 +29,6 @@ public:
 	void SetCharacterName(FText InCharacterName);
 	UFUNCTION(BlueprintCallable)
 	void SetCharacterDialogue(FText InCharacterDialogue);
-	UFUNCTION(BlueprintCallable)
-	void UpdateDialogueBox(UDlgContext* DlgContext);
 	UFUNCTION(BlueprintCallable)
 	FText GetCurrentSpeaker() const;
 	UFUNCTION(BlueprintCallable)

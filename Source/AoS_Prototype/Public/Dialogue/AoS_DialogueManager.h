@@ -6,20 +6,12 @@
 #include "Subsystems/AoS_WorldSubsystem.h"
 #include "AoS_DialogueManager.generated.h"
 
-class UDlgDialogue;
-class UDlgContext;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBeginDialogue, UDlgContext*, DialogueContext);
-
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_DialogueManager : public UAoS_WorldSubsystem
 {
 	GENERATED_BODY()
 
 public:
-
-	UFUNCTION()
-	FOnBeginDialogue& GetOnBeginDialogue();
 
 	// assumes that active characters using non-default dialogue have an associated AoS_CharacterData
 	// loaded into the CharacterManager's ActiveCharactersData
@@ -33,12 +25,6 @@ public:
 
 private:
 
-	UPROPERTY()
-	FOnBeginDialogue OnBeginDialogueDelegate;
-
-	UPROPERTY()
-	UDlgContext* ActiveDialogueContext;
-	
 	void StartDefaultDialogue(FText CharacterName);
 
 };

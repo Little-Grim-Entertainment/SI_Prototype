@@ -2,7 +2,6 @@
 
 
 #include "UI/AoS_DialogueBox.h"
-#include "DlgContext.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Dialogue/AoS_DialogueManager.h"
@@ -54,20 +53,6 @@ void UAoS_DialogueBox::SetCharacterDialogue(FText InCharacterDialogue)
 	
 	TXT_CharacterName->SetText(InCharacterDialogue);
 	CurrentDialogue = InCharacterDialogue;
-}
-
-void UAoS_DialogueBox::UpdateDialogueBox(UDlgContext* DlgContext)
-{
-	if (!IsValid(DlgContext)){return;}
-	
-	if (GetCurrentSpeaker().ToString() != DlgContext->GetActiveNodeParticipantDisplayName().ToString())
-	{
-		SetCharacterName(DlgContext->GetActiveNodeParticipantDisplayName());
-	}
-	if (GetCurrentDialogue().ToString() != DlgContext->GetActiveNodeText().ToString())
-	{
-		SetCharacterDialogue(DlgContext->GetActiveNodeText());
-	}
 }
 
 FText UAoS_DialogueBox::GetCurrentSpeaker() const

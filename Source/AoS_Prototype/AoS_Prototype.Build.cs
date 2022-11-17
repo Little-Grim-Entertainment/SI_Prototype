@@ -9,6 +9,6 @@ public class AoS_Prototype : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] { "EditorScriptingUtilities" });
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "Slate", "SlateCore", "DlgSystem", "MoviePlayer", "UMG", "LevelSequence", "MovieScene" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "Slate", "SlateCore", "MoviePlayer", "UMG", "LevelSequence", "MovieScene" });
 	}
 }

@@ -31,10 +31,6 @@ public:
 	FText CharacterName;	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	class UAoS_InteractableComponent* InteractableComponent;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	class UDlgDialogue* DialogueTree;
-	UPROPERTY(BlueprintReadWrite, Category = "Dialogue")
-	class UDlgContext* ActiveContext;
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	class UBoxComponent* OverlapBox;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,  Category = "Interaction")

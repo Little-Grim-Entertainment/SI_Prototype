@@ -37,7 +37,6 @@ void UAoS_UIManager::OnGameInstanceInit()
 
 void UAoS_UIManager::BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager)
 {
-	InDialogueManager->GetOnBeginDialogue().AddDynamic(this, &ThisClass::OnBeginDialogue);
 }
 
 void UAoS_UIManager::BindLevelManagerDelegates()
@@ -198,12 +197,11 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 	}
 }
 
-void UAoS_UIManager::DisplayDialogueBox(UDlgContext* DlgContext)
+void UAoS_UIManager::DisplayDialogueBox()
 {
 	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())){return;}
 	
 	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
-	PlayerHUD->GetDialogueBox()->UpdateDialogueBox(DlgContext);
 }
 
 void UAoS_UIManager::OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
@@ -247,11 +245,6 @@ void UAoS_UIManager::OnObjectiveActivated(UAoS_Objective* ActivatedObjective)
 }
 
 void UAoS_UIManager::OnObjectiveCompleted(UAoS_Objective* CompletedObjective)
-{
-	
-}
-
-void UAoS_UIManager::OnBeginDialogue(UDlgContext* DlgContext)
 {
 	
 }

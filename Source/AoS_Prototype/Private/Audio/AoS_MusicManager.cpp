@@ -115,9 +115,6 @@ void UAoS_MusicManager::PauseMusicWithFade(const float FadeOutDuration)
 	{
 		return;
 	}
-	
-	TArray<FActiveSound*> ActiveSounds = BackgroundMusic->GetAudioDevice()->GetActiveSounds();
-	
 
 	MusicTimeAtPause += FadeOutDuration;
 	MusicVolumeAtPause = BackgroundMusic->VolumeMultiplier;

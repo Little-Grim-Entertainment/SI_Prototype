@@ -3,18 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AoS_GameInstance.h"
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
 class UAoS_DialogueManager;
-class UDlgDialogue;
 class UAoS_Objective;
 class UAoS_Part;
 class UAoS_Case;
 class AAoS_PlayerController;
 class UAoS_HUD;
-class UDlgContext;
 class UAoS_UserWidget;
 class UAoS_MapData;
 
@@ -41,9 +38,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
 
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void DisplayDialogueBox(UDlgContext* DlgContext);
-
 	// Level Manager Delegates
 	UFUNCTION()
 	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
@@ -69,15 +63,15 @@ public:
 	void OnObjectiveCompleted(UAoS_Objective* CompletedObjective);
 
 	//Dialogue Manager Delegates
-	UFUNCTION()
-	void OnBeginDialogue(UDlgContext* DlgContext);
-
 	void BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager);
 
 protected:
 
 	virtual void OnGameInstanceInit() override;
 	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode) override;
+
+	void DisplayDialogueBox();
+
 
 private:
 

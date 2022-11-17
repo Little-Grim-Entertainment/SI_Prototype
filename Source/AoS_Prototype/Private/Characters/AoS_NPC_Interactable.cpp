@@ -6,9 +6,6 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "Components/WidgetComponent.h"
 #include "Camera/CameraComponent.h"
-#include "DlgDialogue.h"
-#include "DlgManager.h"
-
 
 AAoS_NPC_Interactable::AAoS_NPC_Interactable()
 {
