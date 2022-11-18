@@ -11,9 +11,7 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"AIModule",
-				"UMG",
-				"GenericGraphEditor",
-				"GenericGraphRuntime"
+				"UMG"
 			]
 		}
 	],
