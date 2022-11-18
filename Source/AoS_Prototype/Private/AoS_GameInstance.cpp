@@ -45,47 +45,6 @@ void UAoS_GameInstance::Init()
 	OnGameInstanceInit.Broadcast();
 }
 
-// ToDo: Maybe take this out of Game Instance at some point
-void UAoS_GameInstance::SpawnPlayer()
-{
-	if (!CDA_NickSpade) {return;}
-	if (!CDA_NickSpade->CharacterClass){return;}
-	
-	if (const APlayerStart* PlayerStart = GetPlayerStart())
-	{
-		if (!NickSpadeCharacter)
-		{
-			const FActorSpawnParameters PlayerSpawnParameters;
-			NickSpadeCharacter = GetWorld()->SpawnActor<AAoS_Nick>(CDA_NickSpade->CharacterClass, PlayerStart->GetActorLocation(), PlayerStart->GetActorRotation(), PlayerSpawnParameters);
-		}
-		else
-		{
-			NickSpadeCharacter->SetActorLocation(PlayerStart->GetActorLocation());
-			NickSpadeCharacter->SetActorRotation(PlayerStart->GetActorRotation());
-		}
-	}
-	
-	if (!AoS_PlayerController)
-	{
-		AoS_PlayerController = Cast<AAoS_PlayerController>(GetFirstLocalPlayerController());
-	}
-
-	if (AoS_PlayerController)
-	{
-		AoS_PlayerController->Possess(NickSpadeCharacter);
-		
-		if (LevelManager->GetCurrentMapType() == EMapType::MT_Menu)
-		{
-			AoS_PlayerController->bShowMouseCursor = true;
-			AoS_PlayerController->SetInputMode(FInputModeUIOnly());
-		}
-		else
-		{
-			AoS_PlayerController->bShowMouseCursor = false;
-			AoS_PlayerController->SetInputMode(FInputModeGameOnly());
-		}
-	}
-}
 
 // ToDo this should eventually go in the Gizbo Manager
 void UAoS_GameInstance::SpawnGizbo()
@@ -153,7 +112,7 @@ void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
 
 void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel,  bool bShouldFade)
 {
-	SpawnPlayer();
+	//SpawnPlayer();
 	SpawnGizbo();
 }
 

@@ -6,9 +6,9 @@ public class AoS_Prototype : ModuleRules
 {
 	public AoS_Prototype(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PrivateDependencyModuleNames.AddRange(new string[] { "EditorScriptingUtilities" });
+		PrivateDependencyModuleNames.AddRange(new string[] { });
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "Slate", "SlateCore", "MoviePlayer", "UMG", "LevelSequence", "MovieScene" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Slate", "SlateCore", "MoviePlayer", "UMG", "LevelSequence", "MovieScene" });
 	}
 }

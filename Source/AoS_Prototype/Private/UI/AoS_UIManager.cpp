@@ -18,8 +18,12 @@
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+
 
 #include "Controllers/AoS_PlayerController.h"
+#include "Data/Maps/AoS_MapData.h"
+#include "GameFramework/GameModeBase.h"
 
 
 UAoS_UIManager::UAoS_UIManager()
@@ -33,10 +37,13 @@ void UAoS_UIManager::OnGameInstanceInit()
 	
 	BindLevelManagerDelegates();
 	BindCaseManagerDelegates();
+
+	PlayerController = GameInstance->GetAOSPlayerController();
 }
 
 void UAoS_UIManager::BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager)
 {
+	
 }
 
 void UAoS_UIManager::BindLevelManagerDelegates()
@@ -65,61 +72,54 @@ void UAoS_UIManager::BindCaseManagerDelegates()
 void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 {
 	Super::OnPlayerModeChanged(NewPlayerMode);
+
+	if(NewPlayerMode != EPlayerMode::PM_MainMenuMode && IsValid(MainMenu))
+	{
+		RemoveMainMenu();
+	}
+	if(GameInstance->GetLevelManager()->GetCurrentLoadedLevel()->MapType == EMapType::MT_Menu && NewPlayerMode != EPlayerMode::PM_LevelLoadingMode)
+	{
+		if (IsValid(PlayerHUD))
+		{
+			RemovePlayerHUD();
+		}
+		SetMenuMode(true);	
+	}
+	else if (NewPlayerMode != EPlayerMode::PM_LevelLoadingMode)
+	{
+		CreatePlayerHUD();
+		SetMenuMode(false);
+	}
 	
 	switch (NewPlayerMode)
 	{
-		case EPlayerMode::PM_ExplorationMode:
+		case EPlayerMode::PM_MainMenuMode:
 		{
-			if(!IsValid(PlayerHUD))
-			{
-				CreatePlayerHUD();	
-			}
-			else
-			{
-				ShowPlayerHUD(true);
-			}
-			break;	
-		}
-		case EPlayerMode::PM_GameMenuMode:
-		{
-			
+			CreateMainMenu();
+			SetMenuMode(true, MainMenu);
 			break;	
 		}
 		case EPlayerMode::PM_CinematicMode:
 		{
 			if (IsValid(PlayerHUD))
 			{
-				ShowPlayerHUD(false);
+				RemovePlayerHUD();
 			}
-			break;	
-		}
-		case EPlayerMode::PM_DialogueMode:
-		{
-				
-			break;	
-		}
-		case EPlayerMode::PM_InspectionMode:
-		{
-			break;	
-		}
-		case EPlayerMode::PM_InterrogationMode:
-		{
-			break;	
-		}
-		case EPlayerMode::PM_ObservationMode:
-		{
-			break;	
-		}
-		case EPlayerMode::PM_VendorMode:
-		{
 			break;	
 		}
 		case EPlayerMode::PM_LevelLoadingMode:
 		{
 			if (IsValid(PlayerHUD))
 			{
-				ShowPlayerHUD(false);
+				RemovePlayerHUD();
 			}
+			if(!IsValid(PlayerController))
+			{
+				PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+				if(!IsValid(PlayerController)){break;}
+			}
+			SetMenuMode(false);
+			PlayerController->SetShowMouseCursor(false);
 			break;	
 		}
 		default:
@@ -131,10 +131,10 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 
 void UAoS_UIManager::CreatePlayerHUD()
 {
-	PlayerController = GameInstance->GetAOSPlayerController();
-	if (!IsValid(PlayerController)){return;}
+	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!IsValid(GameInstance)){return;}
 	
-	PlayerHUD =	CreateWidget<UAoS_HUD>(PlayerController, PlayerController->GetPlayerHUDClass());
+	PlayerHUD =	CreateWidget<UAoS_HUD>(GameInstance, GameInstance->PlayerHUD_Class);
 	if (IsValid(PlayerHUD))
 	{
 		PlayerHUD->AddToViewport();
@@ -143,8 +143,6 @@ void UAoS_UIManager::CreatePlayerHUD()
 
 void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
 {
-	if(!IsValid(PlayerHUD)){return;}
-
 	if (bShouldShow)
 	{
 		PlayerHUD->SetVisibility(ESlateVisibility::Visible);
@@ -162,6 +160,45 @@ void UAoS_UIManager::RemovePlayerHUD()
 	PlayerHUD->RemoveFromParent();
 }
 
+void UAoS_UIManager::CreateMainMenu()
+{
+	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!IsValid(PlayerController)){return;}
+	
+	MainMenu =	CreateWidget<UAoS_UserWidget>(PlayerController, GameInstance->MainMenu_Class);
+	if (IsValid(MainMenu))
+	{
+		MainMenu->AddToViewport();
+	}
+}
+
+void UAoS_UIManager::RemoveMainMenu()
+{
+	if (!IsValid(MainMenu)){return;}
+	
+	MainMenu->RemoveFromParent();
+}
+
+void UAoS_UIManager::SetMenuMode(bool bInMenu, UAoS_UserWidget* WidgetToFocus)
+{
+	if(!IsValid(PlayerController))
+	{
+		PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+		if(!IsValid(PlayerController)){return;}
+	}
+	
+	if (bInMenu)
+	{
+		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, WidgetToFocus);
+		PlayerController->SetShowMouseCursor(true);
+	}
+	else
+	{
+		UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
+		PlayerController->SetShowMouseCursor(false);
+	}
+}
+
 void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 {
 	if (!IsValid(GameInstance)){return;}
@@ -174,9 +211,18 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			if (const TSubclassOf<UAoS_UserWidget> SelectedLoadingScreen = GameInstance->LoadingScreens[RandNumb])
 			{
 				LoadingScreen = Cast<UAoS_UserWidget>(CreateWidget(GetWorld()->GetFirstPlayerController(), SelectedLoadingScreen));
+				
 				if (IsValid(LoadingScreen))
 				{
-					LoadingScreen->AddToViewport();
+					GameInstance->GetGameViewportClient()->AddViewportWidgetContent(LoadingScreen->TakeWidget());
+					if(!IsValid(PlayerController))
+					{
+						PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+						if(!IsValid(PlayerController)){return;}
+					}
+					PlayerController->SetIgnoreMoveInput(true);
+					PlayerController->SetIgnoreLookInput(true);
+					SetMenuMode(true, LoadingScreen);
 				}
 			}
 		}
@@ -187,12 +233,19 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 		{
 			if (bShouldFade)
 			{
-				LoadingScreen->FadeOutWidget();	
+				LoadingScreen->FadeOutWidget();
 			}
 			else
 			{
-				LoadingScreen->RemoveFromParent();
+				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(LoadingScreen->TakeWidget());
 			}
+			if(!IsValid(PlayerController))
+			{
+				PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+				if(!IsValid(PlayerController)){return;}
+			}
+			PlayerController->SetIgnoreMoveInput(false);
+			PlayerController->SetIgnoreLookInput(false);
 		}
 	}
 }

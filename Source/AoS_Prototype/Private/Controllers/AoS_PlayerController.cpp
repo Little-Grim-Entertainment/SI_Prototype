@@ -2,6 +2,9 @@
 
 
 #include "Controllers/AoS_PlayerController.h"
+
+#include "AoS_GameInstance.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -31,6 +34,12 @@ void AAoS_PlayerController::SetupInputComponent()
 void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	if (IsValid(GameInstance))
+	{
+		
+	}
 }
 
 void AAoS_PlayerController::RequestMoveForward(float Value)
@@ -106,17 +115,6 @@ void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
 		{
 			OnInteractableActorRemoved.Broadcast();
 		}
-}
-
-UAoS_HUD* AAoS_PlayerController::GetPlayerHUD()
-{
-	if (!PlayerHUD) {return nullptr;}
-	return PlayerHUD;
-}
-
-TSubclassOf<UAoS_HUD> AAoS_PlayerController::GetPlayerHUDClass() const
-{
-	return PlayerHUD_Class;
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)

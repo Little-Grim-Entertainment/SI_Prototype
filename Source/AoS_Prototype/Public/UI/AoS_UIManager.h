@@ -34,6 +34,13 @@ public:
 	void ShowPlayerHUD(bool bShouldShow);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemovePlayerHUD();
+
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void CreateMainMenu();
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveMainMenu();
+
+	void SetMenuMode(bool bInMenu = false, UAoS_UserWidget* WidgetToFocus = nullptr);
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
@@ -84,5 +91,7 @@ private:
 	UAoS_UserWidget* LoadingScreen;
 	UPROPERTY()
 	UAoS_HUD* PlayerHUD;
+	UPROPERTY()
+	UAoS_UserWidget* MainMenu;
 	
 };

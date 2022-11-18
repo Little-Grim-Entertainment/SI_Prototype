@@ -14,5 +14,6 @@ class AOS_PROTOTYPE_API UAoS_LoadingScreen : public UAoS_UserWidget
 {
 	GENERATED_BODY()
 
-
+	
+	
 };

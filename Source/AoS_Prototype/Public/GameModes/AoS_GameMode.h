@@ -6,6 +6,7 @@
 #include "GameFramework/GameMode.h"
 #include "AoS_GameMode.generated.h"
 
+class UAoS_LevelManager;
 class UAoS_HUD;
 
 UCLASS()
@@ -16,5 +17,14 @@ class AOS_PROTOTYPE_API AAoS_GameMode : public AGameMode
 public:
 
 	AAoS_GameMode();
+
+protected:
+
+	virtual void BeginPlay() override;
+
+private:
+
+	UPROPERTY()
+	UAoS_LevelManager* LevelManager;
 	
 };

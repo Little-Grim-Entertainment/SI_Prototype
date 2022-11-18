@@ -11,6 +11,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AA
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
 
+enum class EPlayerMode : uint8;
+
 class UAoS_HUD;
 
 UCLASS()
@@ -28,8 +30,7 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 
 protected:
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUD")
-	TSubclassOf<UAoS_HUD> PlayerHUD_Class;
+
 	
 public:
 	
@@ -71,13 +72,6 @@ public:
 	void AddToInteractableActors(AActor* ActorToAdd);
 	void RemoveFromInteractableActors(AActor* ActorToRemove);
 	
-	// Getters
-	UFUNCTION(BlueprintPure)
-	UAoS_HUD* GetPlayerHUD();
-	UFUNCTION()
-	TSubclassOf<UAoS_HUD> GetPlayerHUDClass() const;
-	
-	
 protected:
 
 	// Player Input Functions
@@ -88,5 +82,4 @@ protected:
 	void RequestTurnRight(float AxisValue);
 	void RequestLookUp(float AxisValue);
 	void RequestInteract();
-	
 };

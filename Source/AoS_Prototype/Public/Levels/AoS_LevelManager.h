@@ -37,7 +37,7 @@ public:
 	FOnMapTypeChanged OnMapTypeChanged;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true,  FString InPlayerStartTag = "None");
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	TArray<FString> GetMapNames();
 	UFUNCTION(BlueprintCallable, Category = "Levels")
@@ -47,11 +47,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
     void UpdateMapType(EMapType InMapType);
+	
+	UFUNCTION()
+	void LevelLoaded();
+	UFUNCTION()
+	void OnGameLoaded();
 
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void LoadMainMenu();
-
-	UAoS_MapData* GetCurrentStreamingLevel() const {return CurrentStreamingLevel;}
+	UAoS_MapData* GetCurrentLoadedLevel() const {return CurrentLevel;}
 
 protected:
 	
@@ -65,13 +67,13 @@ private:
 	UPROPERTY()
 	UAoS_MapData* LevelToLoad;
 	UPROPERTY()
-	UAoS_MapData* LevelToUnload;
-	UPROPERTY()
-	UAoS_MapData* CurrentStreamingLevel;
+	UAoS_MapData* CurrentLevel;
 	UPROPERTY()
 	UAoS_MapData* MainMenu;
 	UPROPERTY()
 	EMapType CurrentMapType;
+
+	FString PlayerStartTag;
 
 
 	FTimerHandle LoadDelayHandle;
@@ -79,20 +81,7 @@ private:
 	FTimerHandle PersistentLevelLoadTimerHandle;
 
 	UFUNCTION()
-	void ExecuteLevelLoad(const UAoS_MapData* InLevelToLoad);
-	UFUNCTION()
-	void ExecuteLevelUnload(const UAoS_MapData* InLevelToUnload);
-
-	UFUNCTION()
-	void CheckForPersistentLevelLoaded();
-	UFUNCTION()
-	void OnPersistentLevelLoaded();
-	
-	UFUNCTION()
-	void LevelUnloaded();
-	UFUNCTION()
-	void LevelLoaded();
+	void ExecuteLevelLoad();
 
 	UAoS_MapData* GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel);
-	void PostLoadDelay();
 };

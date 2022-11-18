@@ -20,16 +20,16 @@ class AOS_PROTOTYPE_API UAoS_MusicManager : public UAoS_WorldSubsystem
 public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayBackgroundMusic(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier = 1.f, float PitchMultiplier = 1.f, float StartTime = 0.f, bool bShouldFade = false, float FadeInDuration = 0.f);
+	UAudioComponent* PlayBackgroundMusic(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier = 1.f, float PitchMultiplier = 1.f, float StartTime = 0.f, bool bShouldFade = false);
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayBackgroundMusicLoopWithIntro(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier = 1.f, float PitchMultiplier = 1.f, float StartTime = 0.f, float LoopStart = 0.f, bool bShouldFade = false, float FadeInDuration = 0.0f);
+	UAudioComponent* PlayBackgroundMusicLoopWithIntro(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier = 1.f, float PitchMultiplier = 1.f, float StartTime = 0.f, float LoopStart = 0.f, bool bShouldFade = false);
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	void PauseMusicWithFade(const float FadeOutDuration);
+	void PauseMusicWithFade();
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	void ResumeMusicWithFade(const float FadeInDuration);
+	void ResumeMusicWithFade();
 
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	void StopBackgroundMusic(bool bShouldFade, float FadeOutDuration, float FadeVolumeLevel);
+	void StopBackgroundMusic(bool bShouldFade, float FadeVolumeLevel);
 
 protected:
 

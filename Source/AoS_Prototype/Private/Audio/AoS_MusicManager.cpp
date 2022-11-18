@@ -33,7 +33,7 @@ void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 			{
 				if(IsValid(BackgroundMusic) && !bMusicIsPaused)
 				{
-					PauseMusicWithFade(.5);
+					PauseMusicWithFade();
 				}
 				break;	
 			}
@@ -41,16 +41,16 @@ void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 			{
 				if(bMusicIsPaused)
 				{
-					ResumeMusicWithFade(.5);
+					ResumeMusicWithFade();
 				}
 				break;
 			}
 	}
 }
 
-UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier, float PitchMultiplier, float StartTime, bool bShouldFade, float FadeInDuration)
+UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier, float PitchMultiplier, float StartTime, bool bShouldFade)
 {
-	BackgroundMusic = UGameplayStatics::CreateSound2D(GetWorld(), MetaSoundSource, VolumeMultiplier, PitchMultiplier);	
+	BackgroundMusic = UGameplayStatics::CreateSound2D(GameInstance, MetaSoundSource, VolumeMultiplier, PitchMultiplier, StartTime, nullptr, true);	
 
 	MetaSoundSoftClassPtr = MetaSoundSource;
 	MusicSoftClassPtr = MusicToPlay;
@@ -66,7 +66,7 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(USoundBase* MetaSoundSou
 		
 		if (bShouldFade)
 		{
-			BackgroundMusic->FadeIn(FadeInDuration);
+			BackgroundMusic->FadeIn(GameInstance->AudioFadeInDuration);
 		}
 		else
 		{
@@ -78,9 +78,9 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(USoundBase* MetaSoundSou
 	return nullptr;
 }
 
-UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier, float PitchMultiplier, float StartTime, float LoopStart, bool bShouldFade, float FadeInDuration)
+UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier, float PitchMultiplier, float StartTime, float LoopStart, bool bShouldFade)
 {
-	BackgroundMusic = UGameplayStatics::CreateSound2D(GetWorld(), MetaSoundSource, VolumeMultiplier, PitchMultiplier);
+	BackgroundMusic = UGameplayStatics::CreateSound2D(GameInstance, MetaSoundSource, VolumeMultiplier, PitchMultiplier, StartTime, nullptr, true);
 	
 	MetaSoundSoftClassPtr = MetaSoundSource;
 	MusicSoftClassPtr = MusicToPlay;
@@ -98,7 +98,7 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(USoundBase*
 
 		if (bShouldFade)
 		{
-			BackgroundMusic->FadeIn(FadeInDuration);
+			BackgroundMusic->FadeIn(GameInstance->AudioFadeInDuration);
 		}
 		else
 		{
@@ -109,24 +109,24 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(USoundBase*
 	return nullptr;
 }
 
-void UAoS_MusicManager::PauseMusicWithFade(const float FadeOutDuration)
+void UAoS_MusicManager::PauseMusicWithFade()
 {
 	if (!IsValid(BackgroundMusic))
 	{
 		return;
 	}
 
-	MusicTimeAtPause += FadeOutDuration;
+	MusicTimeAtPause += GameInstance->AudioFadeInDuration;
 	MusicVolumeAtPause = BackgroundMusic->VolumeMultiplier;
 	MusicPitchAtPause = BackgroundMusic->PitchMultiplier;
 
 	bMusicIsPaused = true;
 	GetWorld()->GetTimerManager().PauseTimer(MusicTimecode);
 	
-	StopBackgroundMusic(true, FadeOutDuration, 0);
+	StopBackgroundMusic(true, 0);
 }
 
-void UAoS_MusicManager::ResumeMusicWithFade(const float FadeInDuration)
+void UAoS_MusicManager::ResumeMusicWithFade()
 {
 	USoundBase* CurrentMetaSound = MetaSoundSoftClassPtr.Get();
 	USoundBase* CurrentMusic = MusicSoftClassPtr.Get();
@@ -137,22 +137,22 @@ void UAoS_MusicManager::ResumeMusicWithFade(const float FadeInDuration)
 
 		if (bMusicHasIntro)
 		{
-			PlayBackgroundMusicLoopWithIntro(CurrentMetaSound, CurrentMusic, MusicVolumeAtPause, MusicPitchAtPause, MusicTimeAtPause, MusicLoopStart, true, FadeInDuration);
+			PlayBackgroundMusicLoopWithIntro(CurrentMetaSound, CurrentMusic, MusicVolumeAtPause, MusicPitchAtPause, MusicTimeAtPause, MusicLoopStart, true);
 		}
 		else
 		{
-			PlayBackgroundMusic(CurrentMetaSound, CurrentMusic, MusicVolumeAtPause, MusicPitchAtPause, MusicTimeAtPause, true, FadeInDuration);
+			PlayBackgroundMusic(CurrentMetaSound, CurrentMusic, MusicVolumeAtPause, MusicPitchAtPause, MusicTimeAtPause, true);
 		}
 	}
 }
 
-void UAoS_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeOutDuration, float FadeVolumeLevel)
+void UAoS_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLevel)
 {
 	if (IsValid(BackgroundMusic))
 	{
 		if (bShouldFade)
 		{
-			BackgroundMusic->FadeOut(FadeOutDuration, FadeVolumeLevel);
+			BackgroundMusic->FadeOut(GameInstance->AudioFadeInDuration, FadeVolumeLevel);
 		}
 		else
 		{

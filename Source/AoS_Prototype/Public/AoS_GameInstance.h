@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "AoS_GameInstance.generated.h"
 
+class UAoS_HUD;
 class AAoS_GizboController;
 class AAoS_PlayerController;
 class UAoS_UserWidget;
@@ -26,6 +27,8 @@ class UAoS_MapData;
 UENUM(BlueprintType)
 enum class EPlayerMode : uint8
 {
+	PM_NONE					UMETA(DisplayName = "NONE"),
+	PM_MainMenuMode			UMETA(DisplayName = "MainMenuMode"),
 	PM_ExplorationMode		UMETA(DisplayName = "ExplorationMode"),
 	PM_LevelLoadingMode		UMETA(DisplayName = "LevelLoadingMode"),
 	PM_CinematicMode		UMETA(DisplayName = "CinematicMode"),
@@ -60,6 +63,11 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnGameInstanceInit OnGameInstanceInit;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UAoS_UserWidget> MainMenu_Class;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UAoS_HUD> PlayerHUD_Class;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
 	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "PlayerData")
@@ -72,9 +80,11 @@ public:
 	UAoS_MapList* MapList;
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	float LevelLoadDelay = 0.0f;
-	
-	UFUNCTION(BlueprintCallable)
-	void SpawnPlayer();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
+	float AudioFadeInDuration = .5f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
+	float AudioFadeOutDuration = .5f;
 
 	UFUNCTION(BlueprintCallable)
 	void SpawnGizbo();
