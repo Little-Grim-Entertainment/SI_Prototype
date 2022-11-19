@@ -15,11 +15,11 @@ TArray<UAoS_MapData*> UAoS_MapList::GetAllMaps()
 	{
 		AllMaps.AddUnique(CurrentMap);
 	}
-	for (UAoS_MapData* CurrentMap : GlassDistrictInteriorMaps)
+	for (UAoS_MapData* CurrentMap : NovaLuxDistrictInteriorMaps)
 	{
 		AllMaps.AddUnique(CurrentMap);
 	}
-	for (UAoS_MapData* CurrentMap : GlassDistrictExteriorMaps)
+	for (UAoS_MapData* CurrentMap : NovaLuxDistrictExteriorMaps)
 	{
 		AllMaps.AddUnique(CurrentMap);
 	}

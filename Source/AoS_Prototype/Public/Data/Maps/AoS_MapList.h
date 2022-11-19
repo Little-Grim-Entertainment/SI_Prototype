@@ -21,10 +21,10 @@ public:
 	UAoS_MapData* PersistentLevel;
 	UPROPERTY(EditAnywhere, Category = "Menus")
     TArray<UAoS_MapData*> MenuMaps;
-	UPROPERTY(EditAnywhere, Category = "GlassDistrict")
-	TArray<UAoS_MapData*> GlassDistrictInteriorMaps;
-	UPROPERTY(EditAnywhere, Category = "GlassDistrict")
-	TArray<UAoS_MapData*> GlassDistrictExteriorMaps;
+	UPROPERTY(EditAnywhere, Category = "NovaLuxDistrict")
+	TArray<UAoS_MapData*> NovaLuxDistrictInteriorMaps;
+	UPROPERTY(EditAnywhere, Category = "NovaLuxDistrict")
+	TArray<UAoS_MapData*> NovaLuxDistrictExteriorMaps;
 	
 	UPROPERTY(EditAnywhere, Category = "TestMaps")
 	TArray<UAoS_MapData*> TestMaps;
