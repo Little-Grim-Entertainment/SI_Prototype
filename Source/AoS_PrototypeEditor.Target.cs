@@ -10,5 +10,6 @@ public class AoS_PrototypeEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("AoS_Prototype");
+		ExtraModuleNames.Add("DialogueSystemEditor");
 	}
 }

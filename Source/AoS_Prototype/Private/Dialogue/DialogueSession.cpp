@@ -1,5 +1,19 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Dialogue/DialogueSession.h"
+#include "Dialogue/DialogueSessionNode.h"
+#include "Dialogue/DialogueSessionEdge.h"
 
-//#include "Dialogue/DialogueSession.h"
+#define LOCTEXT_NAMESPACE "DialogueSession"
 
+UDialogueSession::UDialogueSession()
+{
+    NodeType = UDialogueSessionNode::StaticClass();
+    EdgeType = UDialogueSessionEdge::StaticClass();
+
+    LeftDialoguerBgColor = FLinearColor::Black;
+    RightDialoguerBgColor = FLinearColor(0.93f, 0.93f, 0.93f, 1.f);
+
+    Name = "DialogueSession";
+}
+
+#undef LOCTEXT_NAMESPACE

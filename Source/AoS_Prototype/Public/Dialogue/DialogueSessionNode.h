@@ -1,17 +1,35 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
-/*#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 #include "GenericGraphNode.h"
 #include "DialogueSessionNode.generated.h"
 
-/**
- * 
- #1#
-UCLASS()
-class AOS_PROTOTYPE_API UDialogueSessionNode : public UGenericGraphNode
+UENUM(BlueprintType)
+enum class EDialoguerPostion : uint8
 {
-	GENERATED_BODY()
-	
-};*/
+    Left,
+    Right
+};
+
+UCLASS(Blueprintable)
+class UDialogueSessionNode : public UGenericGraphNode
+{
+    GENERATED_BODY()
+public:
+    UDialogueSessionNode();
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DialogueSession")
+    FText Paragraph;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DialogueSession")
+    EDialoguerPostion DialoguerPostion;
+
+#if WITH_EDITOR
+    virtual FText GetNodeTitle() const override;
+
+    virtual void SetNodeTitle(const FText& NewTitle) override;
+
+    virtual FLinearColor GetBackgroundColor() const override;
+#endif
+};
