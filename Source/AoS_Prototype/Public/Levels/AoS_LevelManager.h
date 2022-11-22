@@ -37,7 +37,7 @@ public:
 	FOnMapTypeChanged OnMapTypeChanged;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true,  FString InPlayerStartTag = "None");
+	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true,  FString InPlayerStartTag = FString(TEXT("")));
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	TArray<FString> GetMapNames();
 	UFUNCTION(BlueprintCallable, Category = "Levels")

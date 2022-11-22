@@ -13,6 +13,12 @@ void UAoS_WorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	if (!IsValid(GameInstance)){return;}
 
 	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
+	GameInstance->OnGameModeBeginPlay.AddDynamic(this, &ThisClass::OnGameModeBeginPlay);
+}
+
+void UAoS_WorldSubsystem::OnGameModeBeginPlay()
+{
+	
 }
 
 void UAoS_WorldSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode)

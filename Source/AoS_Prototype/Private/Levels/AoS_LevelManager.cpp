@@ -92,7 +92,7 @@ void UAoS_LevelManager::ExecuteLevelLoad()
 {
 	if (IsValid(LevelToLoad))
 	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelToLoad->Map);
+		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelToLoad->Map, true, PlayerStartTag);
 	}
 }
 

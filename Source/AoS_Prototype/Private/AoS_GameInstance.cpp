@@ -8,26 +8,12 @@
 #include "Data/Cases/AoS_CaseManager.h"
 #include "Levels/AoS_LevelManager.h"
 #include "World/AoS_WorldManager.h"
-
-#include "Characters/AoS_Character.h"
-#include "Characters/AoS_Nick.h"
-#include "Characters/AoS_Gizbo.h"
-
-#include "Data/Characters/AoS_CharacterData.h"
-#include "Data/Maps/AoS_MapData.h"
-
-#include "Controllers/AoS_GizboController.h"
-#include "Controllers/AoS_PlayerController.h"
-
-// UE5
-#include "GameFramework/GameModeBase.h"
-#include "Kismet/GameplayStatics.h"
-#include "GameFramework/PlayerStart.h"
+#include "GameModes/AoS_GameMode.h"
 
 
 UAoS_GameInstance::UAoS_GameInstance()
 {	
-	bIsInMenu = false;
+	CurrentGameMode = nullptr;
 }
 
 void UAoS_GameInstance::Init()
@@ -38,53 +24,9 @@ void UAoS_GameInstance::Init()
 	UIManager = GetSubsystem<UAoS_UIManager>();
 	LevelManager = GetSubsystem<UAoS_LevelManager>();
 	WorldManager = GetSubsystem<UAoS_WorldManager>();
-
-	LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::UAoS_GameInstance::OnLevelFinishLoad);
 	
 	OnSubsystemBindingsComplete.Broadcast();
 	OnGameInstanceInit.Broadcast();
-}
-
-
-// ToDo this should eventually go in the Gizbo Manager
-void UAoS_GameInstance::SpawnGizbo()
-{
-	if (!CDA_Gizbo) {return;}
-	if (!CDA_Gizbo->CharacterClass){return;}
-	
-	if (const APlayerStart* PlayerStart = GetPlayerStart())
-	{
-		FVector GizboLocation = PlayerStart->GetActorLocation();
-
-		// ToDo: @Liam we should probably create a scene component on Nick's blueprint that will act as a location pointer where Gizbo will spawn and try to get to if told to come back to Nick.
-		// Offset behind Nick, rather than spawning in the same spot
-		GizboLocation.X -= 100;
-		GizboLocation.Y += 100;
-		GizboLocation.Z -= 50;
-		
-		if (!GizboCharacter)
-		{
-			const FActorSpawnParameters PlayerSpawnParameters;
-			GizboCharacter = GetWorld()->SpawnActor<AAoS_Gizbo>(CDA_Gizbo->CharacterClass, GizboLocation, PlayerStart->GetActorRotation(), PlayerSpawnParameters);
-		}
-		else
-		{
-			GizboCharacter->SetActorLocation(GizboLocation);
-			GizboCharacter->SetActorRotation(PlayerStart->GetActorRotation());
-		}
-	}
-
-	/*
-	if (!AoS_GizboController)
-	{
-		AoS_GizboController = Cast<AAoS_GizboController>(GetFirstLocalPlayerController());
-	}
-	*/
-
-	if (AoS_GizboController)
-	{
-		AoS_GizboController->Possess(GizboCharacter);
-	}
 }
 
 EPlayerMode UAoS_GameInstance::GetPlayerMode() const
@@ -92,14 +34,14 @@ EPlayerMode UAoS_GameInstance::GetPlayerMode() const
 	return PlayerMode;
 }
 
-AAoS_PlayerController* UAoS_GameInstance::GetAOSPlayerController()
+AAoS_GameMode* UAoS_GameInstance::GetCurrentGameMode()
 {
-	return AoS_PlayerController;
+	return CurrentGameMode;
 }
 
-AAoS_GizboController* UAoS_GameInstance::GetAOSGizboController()
+void UAoS_GameInstance::SetCurrentGameMode(AAoS_GameMode* InGameMode)
 {
-	return AoS_GizboController;
+	CurrentGameMode = InGameMode;
 }
 
 void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
@@ -108,25 +50,4 @@ void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
 	
 	PlayerMode = InPlayerMode;
 	OnPlayerModeChanged.Broadcast(InPlayerMode);
-}
-
-void UAoS_GameInstance::OnLevelFinishLoad(UAoS_MapData* LoadedLevel,  bool bShouldFade)
-{
-	//SpawnPlayer();
-	SpawnGizbo();
-}
-
-APlayerStart* UAoS_GameInstance::GetPlayerStart() const
-{
-	TArray<AActor*> PlayerStartActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStartActors);
-
-	for (AActor* CurrentActor : PlayerStartActors)
-	{
-		if (APlayerStart* PlayerStart = Cast<APlayerStart>(CurrentActor))
-		{
-			return PlayerStart;
-		}
-	}
-	return nullptr;
 }

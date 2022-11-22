@@ -76,6 +76,7 @@ protected:
 
 	virtual void OnGameInstanceInit() override;
 	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode) override;
+	virtual void OnGameModeBeginPlay() override;
 
 	void DisplayDialogueBox();
 

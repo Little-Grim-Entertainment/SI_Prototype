@@ -23,6 +23,8 @@ protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	UFUNCTION()
+	virtual void OnGameModeBeginPlay();
+	UFUNCTION()
 	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode);
 		
 };

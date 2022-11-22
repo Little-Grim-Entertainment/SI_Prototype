@@ -12,11 +12,17 @@ void UAoS_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection
 	if (!IsValid(GameInstance)){return;}
 
 	GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::OnGameInstanceInit);
+	GameInstance->OnGameModeBeginPlay.AddDynamic(this, &ThisClass::OnGameModeBeginPlay);	
 }
 
 void UAoS_GameInstanceSubsystem::OnGameInstanceInit()
 {
 	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
+}
+
+void UAoS_GameInstanceSubsystem::OnGameModeBeginPlay()
+{
+	
 }
 
 void UAoS_GameInstanceSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode)

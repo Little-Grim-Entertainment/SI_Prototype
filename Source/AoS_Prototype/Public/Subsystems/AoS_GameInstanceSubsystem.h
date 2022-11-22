@@ -24,6 +24,7 @@ protected:
 	UFUNCTION()
 	virtual void OnGameInstanceInit();
 	UFUNCTION()
+	virtual void OnGameModeBeginPlay();
+	UFUNCTION()
 	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode);
-
 };

@@ -23,7 +23,7 @@
 
 #include "Controllers/AoS_PlayerController.h"
 #include "Data/Maps/AoS_MapData.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameModes/AoS_GameMode.h"
 
 
 UAoS_UIManager::UAoS_UIManager()
@@ -37,8 +37,13 @@ void UAoS_UIManager::OnGameInstanceInit()
 	
 	BindLevelManagerDelegates();
 	BindCaseManagerDelegates();
+}
 
-	PlayerController = GameInstance->GetAOSPlayerController();
+void UAoS_UIManager::OnGameModeBeginPlay()
+{
+	Super::OnGameModeBeginPlay();
+
+	
 }
 
 void UAoS_UIManager::BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager)
@@ -134,7 +139,7 @@ void UAoS_UIManager::CreatePlayerHUD()
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (!IsValid(GameInstance)){return;}
 	
-	PlayerHUD =	CreateWidget<UAoS_HUD>(GameInstance, GameInstance->PlayerHUD_Class);
+	PlayerHUD =	CreateWidget<UAoS_HUD>(GameInstance, GameInstance->GetCurrentGameMode()->PlayerHUD_Class);
 	if (IsValid(PlayerHUD))
 	{
 		PlayerHUD->AddToViewport();
@@ -165,7 +170,7 @@ void UAoS_UIManager::CreateMainMenu()
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (!IsValid(PlayerController)){return;}
 	
-	MainMenu =	CreateWidget<UAoS_UserWidget>(PlayerController, GameInstance->MainMenu_Class);
+	MainMenu =	CreateWidget<UAoS_UserWidget>(PlayerController,  GameInstance->GetCurrentGameMode()->MainMenuClass);
 	if (IsValid(MainMenu))
 	{
 		MainMenu->AddToViewport();
