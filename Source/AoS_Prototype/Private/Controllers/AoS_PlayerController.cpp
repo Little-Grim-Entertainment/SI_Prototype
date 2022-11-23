@@ -57,7 +57,7 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 		FHitResult HitResult;
 		ObservationStart = Nick->GetObservationCamera()->GetComponentLocation();
 		ObservationEnd = Nick->GetObservationCamera()->GetComponentLocation() + Nick->GetObservationCamera()->GetForwardVector() * ObservationDistance;
-		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECollisionChannel::ECC_Pawn);
+		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECC_Pawn);
 		if(HitResult.GetActor())
 		{
 			AAoS_InteractableActor* I = Cast<AAoS_InteractableActor>(HitResult.GetActor());
@@ -126,10 +126,20 @@ void AAoS_PlayerController::RequestInteract()
 void AAoS_PlayerController::RequestObservation()
 {
 	bObservationMode = !bObservationMode;
-
-	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-	bObservationMode ? GameInstance->SetPlayerMode(EPlayerMode::PM_ObservationMode) : GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
 	
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	
+	if(bObservationMode)
+	{
+		GameInstance->SetPlayerMode(EPlayerMode::PM_ObservationMode);
+		LockPlayerMovement(true, false);
+	}
+	else
+	{
+		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+		LockPlayerMovement(false, false);
+	}
+
 	Nick->GetFollowCamera()->SetActive(!bObservationMode);
 	Nick->GetObservationCamera()->SetActive(bObservationMode);
 	
