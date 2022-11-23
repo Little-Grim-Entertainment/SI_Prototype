@@ -28,8 +28,8 @@ void UAoS_InteractableComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedC
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerCharacter && PlayerController && bIsInteractable)
 	{
+		PlayerController->SetFocusedActor(GetOwner());
 		OnPlayerBeginOverlap.Broadcast(PlayerCharacter);
-		PlayerController->AddToInteractableActors(GetOwner());
 	}
 }
 
@@ -37,8 +37,8 @@ void UAoS_InteractableComponent::OnEndOverlap(UPrimitiveComponent* OverlappedCom
 {
 	if (PlayerCharacter)
 	{
+		PlayerController->SetFocusedActor(nullptr);
 		OnPlayerEndOverlap.Broadcast(PlayerCharacter);
-		PlayerController->RemoveFromInteractableActors(GetOwner());
 		PlayerCharacter = nullptr;
 		PlayerController = nullptr;
 	}
@@ -56,8 +56,4 @@ void UAoS_InteractableComponent::TickComponent(float DeltaTime, ELevelTick TickT
 void UAoS_InteractableComponent::SetIsInteractable(bool bInteractable)
 {
 	bIsInteractable = bInteractable;
-	if (PlayerCharacter)
-	{
-		PlayerController->RemoveFromInteractableActors(GetOwner());
-	}
 }

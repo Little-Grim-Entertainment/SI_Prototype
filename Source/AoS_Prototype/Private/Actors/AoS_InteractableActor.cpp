@@ -44,6 +44,7 @@ void AAoS_InteractableActor::BeginPlay()
 	InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);
 }
 
+
 // Called every frame
 void AAoS_InteractableActor::Tick(float DeltaTime)
 {

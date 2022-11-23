@@ -24,11 +24,22 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 	AActor* FocusedActor;
 	UPROPERTY()
 	UAoS_HUD* PlayerHUD;
-
+	UPROPERTY()
+	AAoS_Nick* Nick = nullptr;
+	
 	bool bPlayerCanMove = true;
 	bool bPlayerCanTurn = true;
+<<<<<<< Updated upstream
 
 protected:
+=======
+	bool bObservationMode = false;
+	
+	float ObservationDistance = 1000.;
+
+	FVector ObservationStart = FVector(0);
+	FVector ObservationEnd = FVector(0);
+>>>>>>> Stashed changes
 	
 
 	
@@ -49,28 +60,18 @@ public:
 	UAoS_LineTraces* LineTraceComponent;
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractPressed OnInteractPressed;
-
 	
 	FOnInteractableActorAdded OnInteractableActorAdded;
 	FOnInteractableActorRemoved OnInteractableActorRemoved;
 
-	UPROPERTY()
-	TArray<AActor*> InteractableActors;
-
 	// ================== FUNCTIONS ==================
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnInteractableActorFound(AActor* ActorFound);
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnInteractableActorLost(AActor* ActorLost);
 	UFUNCTION(BlueprintImplementableEvent)	
 	bool CreateLineTrace(ETraceType DrawDebugType, FVector Start, FVector End, FLinearColor TraceColor, FLinearColor TraceHitColor, FHitResult& HitResults);
 	UFUNCTION(BlueprintCallable)
 	void LockPlayerMovement(bool bLockMovement, bool bLockTurning);
-	
-	void SetFocusedActor(AActor* ActorToSet);
-	void AddToInteractableActors(AActor* ActorToAdd);
-	void RemoveFromInteractableActors(AActor* ActorToRemove);
+	UFUNCTION(BlueprintCallable)
+	void SetFocusedActor(AActor* InActorToFocus);
 	
 protected:
 

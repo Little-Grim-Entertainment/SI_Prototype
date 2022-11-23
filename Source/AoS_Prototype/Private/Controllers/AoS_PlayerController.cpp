@@ -87,17 +87,16 @@ void AAoS_PlayerController::RequestTurnRight(float AxisValue)
 
 void AAoS_PlayerController::RequestInteract()
 {
-	if (!GetPawn()) {return;}
-	if (!FocusedActor)
+	if (!GetPawn() || !IsValid(FocusedActor)) {return;}
+
+	if (IAoS_InteractInterface* InteractableActor = Cast<IAoS_InteractInterface>(FocusedActor))
 	{
-		OnInteractPressed.Broadcast(nullptr, this);
-	}
-	else
-	{
+		InteractableActor->Execute_OnInteract(Cast<UObject>(FocusedActor), FocusedActor);
 		OnInteractPressed.Broadcast(FocusedActor, this);
 	}
 }
 
+<<<<<<< Updated upstream
 void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
 {
 	if (!ActorToAdd || !this) {return;}
@@ -115,6 +114,30 @@ void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
 		{
 			OnInteractableActorRemoved.Broadcast();
 		}
+=======
+void AAoS_PlayerController::RequestObservation()
+{
+	bObservationMode = !bObservationMode;
+	
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	
+	if(bObservationMode)
+	{
+		GameInstance->SetPlayerMode(EPlayerMode::PM_ObservationMode);
+		LockPlayerMovement(true, false);
+	}
+	else
+	{
+		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+		LockPlayerMovement(false, false);
+	}
+
+	Nick->GetFollowCamera()->SetActive(!bObservationMode);
+	Nick->GetObservationCamera()->SetActive(bObservationMode);
+	
+	Nick->bUseControllerRotationPitch = bObservationMode;
+	Nick->bUseControllerRotationYaw = bObservationMode;
+>>>>>>> Stashed changes
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
@@ -123,16 +146,10 @@ void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTur
 	bPlayerCanTurn = !bLockTurning;
 }
 
-void AAoS_PlayerController::SetFocusedActor(AActor* ActorToSet)
+void AAoS_PlayerController::SetFocusedActor(AActor* InActorToFocus)
 {
-	if (ActorToSet)
+	if (IsValid(InActorToFocus))
 	{
-		FocusedActor = ActorToSet;
-		OnInteractableActorFound(FocusedActor);
-	}
-	else
-	{
-		OnInteractableActorLost(FocusedActor);
-		FocusedActor = nullptr;
+		FocusedActor = InActorToFocus;
 	}
 }
