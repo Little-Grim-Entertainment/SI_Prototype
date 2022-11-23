@@ -4,7 +4,10 @@
 #include "Controllers/AoS_PlayerController.h"
 
 #include "AoS_GameInstance.h"
+#include "Actors/AoS_InteractableActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Camera/CameraComponent.h"
+#include "Characters/AoS_Nick.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -24,6 +27,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	check(InputComponent);
 
 	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
+	InputComponent->BindAction("ObservationMode", IE_Pressed, this, &AAoS_PlayerController::RequestObservation),
 	
 	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
@@ -39,6 +43,27 @@ void AAoS_PlayerController::BeginPlay()
 	if (IsValid(GameInstance))
 	{
 		
+	}
+
+	Nick = Cast<AAoS_Nick>(GetPawn());
+}
+
+void AAoS_PlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(bObservationMode)
+	{
+		FHitResult HitResult;
+		ObservationStart = Nick->GetObservationCamera()->GetComponentLocation();
+		ObservationEnd = Nick->GetObservationCamera()->GetComponentLocation() + Nick->GetObservationCamera()->GetForwardVector() * ObservationDistance;
+		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECollisionChannel::ECC_Pawn);
+		if(HitResult.GetActor())
+		{
+			AAoS_InteractableActor* I = Cast<AAoS_InteractableActor>(HitResult.GetActor());
+			if(I)
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Item"));	
+		}
 	}
 }
 
@@ -96,6 +121,20 @@ void AAoS_PlayerController::RequestInteract()
 	{
 		OnInteractPressed.Broadcast(FocusedActor, this);
 	}
+}
+
+void AAoS_PlayerController::RequestObservation()
+{
+	bObservationMode = !bObservationMode;
+
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	bObservationMode ? GameInstance->SetPlayerMode(EPlayerMode::PM_ObservationMode) : GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+	
+	Nick->GetFollowCamera()->SetActive(!bObservationMode);
+	Nick->GetObservationCamera()->SetActive(bObservationMode);
+	
+	Nick->bUseControllerRotationPitch = bObservationMode;
+	Nick->bUseControllerRotationYaw = bObservationMode;
 }
 
 void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
