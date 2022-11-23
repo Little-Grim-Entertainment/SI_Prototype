@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "AoS_InteractableActor.generated.h"
 
+class AAoS_Nick;
+class UWidgetComponent;
+
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_InteractableActor : public AActor
 {
@@ -21,18 +24,22 @@ public:
 	class UAoS_InteractableComponent* InteractableComponent;
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	class UBoxComponent* OverlapBox;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
-	class UWidgetComponent* InteractionIcon;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
-	class UWidgetComponent* InteractionPrompt;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
+	UWidgetComponent* InteractionIcon;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
+	UWidgetComponent* InteractionPrompt;	
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+private:
+
+	UFUNCTION()
+	void OnBeginOverlap(AAoS_Nick* InNickActor);
+	UFUNCTION()
+	void OnEndOverlap(AAoS_Nick* InNickActor);
 
 };

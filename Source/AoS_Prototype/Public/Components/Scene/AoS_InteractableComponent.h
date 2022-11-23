@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "AoS_InteractableComponent.generated.h"
 
+class UWidgetComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerBeginOverlap, class AAoS_Nick*, Player);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerEndOverlap, class AAoS_Nick*, Player);
 
@@ -24,7 +26,7 @@ class AOS_PROTOTYPE_API UAoS_InteractableComponent : public UBoxComponent
 public:	
 	// Sets default values for this component's properties
 	UAoS_InteractableComponent();
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Overlap")
 	FOnPlayerBeginOverlap OnPlayerBeginOverlap;
 	UPROPERTY(BlueprintAssignable, Category = "Overlap")
@@ -54,10 +56,12 @@ public:
 	FText GetInteractionText() {return InteractionText;}
 	UFUNCTION(BlueprintPure)
 	bool GetIsInteractable() {return bIsInteractable;}
-
+	
 	// Setters
 	UFUNCTION(BlueprintCallable)
 	void SetIsInteractable(bool bInteractable);
 	UFUNCTION(BlueprintCallable)
 	void SetInteractionText(FText TextToSet) { InteractionText = TextToSet;}
 };
+
+

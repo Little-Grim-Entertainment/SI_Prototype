@@ -3,14 +3,13 @@
 
 #include "Components/Scene/AoS_InteractableComponent.h"
 #include "Characters/AoS_Nick.h"
+#include "Components/WidgetComponent.h"
 #include "Controllers/AoS_PlayerController.h"
 
 UAoS_InteractableComponent::UAoS_InteractableComponent()
 {
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 // Called when the game starts
