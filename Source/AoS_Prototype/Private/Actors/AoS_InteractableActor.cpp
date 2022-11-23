@@ -5,6 +5,7 @@
 #include "Components/Scene/AoS_InteractableComponent.h"
 #include "Characters/AoS_Nick.h"
 #include "Components/WidgetComponent.h"
+#include "UI/AoS_InteractionPrompt.h"
 
 // Sets default values
 AAoS_InteractableActor::AAoS_InteractableActor()
@@ -30,6 +31,15 @@ void AAoS_InteractableActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (IsValid(InteractionPrompt))
+	{
+		UAoS_InteractionPrompt* InteractionPromptWidget = Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
+		if (IsValid(InteractionPromptWidget))
+		{
+			InteractionPromptWidget->SetInteractText(InteractableComponent->GetInteractionText());
+		}
+	}
+
 	InteractableComponent->OnPlayerBeginOverlap.AddDynamic(this, &ThisClass::OnBeginOverlap);
 	InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);
 }
@@ -43,11 +53,25 @@ void AAoS_InteractableActor::Tick(float DeltaTime)
 
 void AAoS_InteractableActor::OnBeginOverlap(AAoS_Nick* InNickActor)
 {
-		
+	if (IsValid(InteractionPrompt))
+	{
+		UAoS_InteractionPrompt* InteractionPromptWidget = Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
+		if (IsValid(InteractionPromptWidget))
+		{
+			InteractionPromptWidget->ShowWidget();
+		}
+	}
 }
 
 void AAoS_InteractableActor::OnEndOverlap(AAoS_Nick* InNickActor)
 {
-	
+	if (IsValid(InteractionPrompt))
+	{
+		UAoS_InteractionPrompt* InteractionPromptWidget = Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
+		if (IsValid(InteractionPromptWidget))
+		{
+			InteractionPromptWidget->HideWidget();
+		}
+	}
 }
 
