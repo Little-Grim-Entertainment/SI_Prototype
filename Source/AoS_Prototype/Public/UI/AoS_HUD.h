@@ -23,6 +23,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UAoS_DialogueBox* GetDialogueBox() const;
+
+	UFUNCTION(BlueprintCallable)
+	UAoS_UserWidget* GetReticle() const;
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void OnObjectiveComplete(UAoS_Objective* CompletedObjective);
@@ -32,6 +35,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	UAoS_DialogueBox* DialogueBox;
+
+	UPROPERTY(meta=(BindWidget))
+	UAoS_UserWidget* Reticle;
 	
 private:
 

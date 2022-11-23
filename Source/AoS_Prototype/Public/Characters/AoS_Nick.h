@@ -26,7 +26,8 @@ private:
 	USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* ObservationCamera;
 		
 	// ================== FUNCTIONS ==================
 public:
@@ -35,6 +36,8 @@ public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	/** Returns ObservationCamera subobject **/
+	FORCEINLINE UCameraComponent* GetObservationCamera() const { return ObservationCamera; }
 
 	
 protected:

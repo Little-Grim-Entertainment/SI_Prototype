@@ -15,6 +15,11 @@ UAoS_DialogueBox* UAoS_HUD::GetDialogueBox() const
 	return DialogueBox;
 }
 
+UAoS_UserWidget* UAoS_HUD::GetReticle() const
+{
+	return Reticle;
+}
+
 void UAoS_HUD::NativeConstruct()
 {
 	Super::NativeConstruct();
