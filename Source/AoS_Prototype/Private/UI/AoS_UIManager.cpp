@@ -78,6 +78,8 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 {
 	Super::OnPlayerModeChanged(NewPlayerMode);
 
+	RemovePlayerHUD();
+	
 	if(NewPlayerMode != EPlayerMode::PM_MainMenuMode && IsValid(MainMenu))
 	{
 		RemoveMainMenu();
@@ -95,7 +97,6 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 		CreatePlayerHUD();
 		SetMenuMode(false);
 	}
-	
 	switch (NewPlayerMode)
 	{
 		case EPlayerMode::PM_MainMenuMode:
@@ -126,6 +127,13 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 			SetMenuMode(false);
 			PlayerController->SetShowMouseCursor(false);
 			break;	
+		}
+		case EPlayerMode::PM_ObservationMode:
+		{
+			if (IsValid(PlayerHUD))
+			{
+				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Visible);
+			}
 		}
 		default:
 		{
