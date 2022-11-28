@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorT
 
 enum class EPlayerMode : uint8;
 
+class AAoS_Nick;
 class UAoS_HUD;
 
 UCLASS()
@@ -29,19 +30,15 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 	
 	bool bPlayerCanMove = true;
 	bool bPlayerCanTurn = true;
-<<<<<<< Updated upstream
 
 protected:
-=======
+
 	bool bObservationMode = false;
 	
 	float ObservationDistance = 1000.;
 
 	FVector ObservationStart = FVector(0);
 	FVector ObservationEnd = FVector(0);
->>>>>>> Stashed changes
-	
-
 	
 public:
 	
@@ -83,4 +80,5 @@ protected:
 	void RequestTurnRight(float AxisValue);
 	void RequestLookUp(float AxisValue);
 	void RequestInteract();
+	void RequestObservation();
 };

@@ -5,6 +5,9 @@
 
 #include "AoS_GameInstance.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Camera/CameraComponent.h"
+#include "Characters/AoS_Nick.h"
+#include "Interfaces/AoS_InteractInterface.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -24,7 +27,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	check(InputComponent);
 
 	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
-	
+	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestObservation);
 	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
 	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
@@ -40,6 +43,8 @@ void AAoS_PlayerController::BeginPlay()
 	{
 		
 	}
+
+	Nick = Cast<AAoS_Nick>(GetPawn()); 
 }
 
 void AAoS_PlayerController::RequestMoveForward(float Value)
@@ -96,25 +101,6 @@ void AAoS_PlayerController::RequestInteract()
 	}
 }
 
-<<<<<<< Updated upstream
-void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
-{
-	if (!ActorToAdd || !this) {return;}
-	
-	InteractableActors.AddUnique(ActorToAdd);
-	OnInteractableActorAdded.Broadcast(InteractableActors);
-}
-
-void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
-{
-	if (!ActorToRemove || !this) {return;}
-
-	InteractableActors.Remove(ActorToRemove);
-	if (InteractableActors.Num() == 0)
-		{
-			OnInteractableActorRemoved.Broadcast();
-		}
-=======
 void AAoS_PlayerController::RequestObservation()
 {
 	bObservationMode = !bObservationMode;
@@ -132,12 +118,11 @@ void AAoS_PlayerController::RequestObservation()
 		LockPlayerMovement(false, false);
 	}
 
-	Nick->GetFollowCamera()->SetActive(!bObservationMode);
+	Nick->GetFollowCamera()->SetActive(bObservationMode);
 	Nick->GetObservationCamera()->SetActive(bObservationMode);
 	
 	Nick->bUseControllerRotationPitch = bObservationMode;
 	Nick->bUseControllerRotationYaw = bObservationMode;
->>>>>>> Stashed changes
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
