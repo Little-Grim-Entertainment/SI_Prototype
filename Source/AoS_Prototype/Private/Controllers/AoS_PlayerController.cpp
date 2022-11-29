@@ -27,7 +27,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	check(InputComponent);
 
 	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
-	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestObservation);
+	InputComponent->BindAction("ObservationMode", IE_Pressed,this, &AAoS_PlayerController::RequestObservation);
 	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
 	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
@@ -118,7 +118,7 @@ void AAoS_PlayerController::RequestObservation()
 		LockPlayerMovement(false, false);
 	}
 
-	Nick->GetFollowCamera()->SetActive(bObservationMode);
+	Nick->GetFollowCamera()->SetActive(!bObservationMode);
 	Nick->GetObservationCamera()->SetActive(bObservationMode);
 	
 	Nick->bUseControllerRotationPitch = bObservationMode;
