@@ -13,8 +13,6 @@
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
-	//LineTraceComponent = CreateDefaultSubobject<UAoS_LineTraces>(TEXT("LineTraceComponent"));
-	
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
