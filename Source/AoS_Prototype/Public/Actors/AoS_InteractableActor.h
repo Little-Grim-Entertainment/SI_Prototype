@@ -7,6 +7,8 @@
 #include "Interfaces/AoS_InteractInterface.h"
 #include "AoS_InteractableActor.generated.h"
 
+class UAoS_InteractionIcon;
+class UAoS_InteractionPrompt;
 class AAoS_Nick;
 class UAoS_InteractableComponent;
 class UBoxComponent;
@@ -30,7 +32,26 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UWidgetComponent* InteractionIcon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
-	UWidgetComponent* InteractionPrompt;	
+	UWidgetComponent* InteractionPrompt;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowInteractionPromptWidget();
+	UFUNCTION(BlueprintCallable)
+	void RefreshInteractionPromptWidget();
+	UFUNCTION(BlueprintCallable)
+	void HideInteractionPromptWidget();
+	UFUNCTION(BlueprintCallable)
+	void ShowInteractionIconWidget();
+	UFUNCTION(BlueprintCallable)
+	void RefreshInteractionIconWidget();
+	UFUNCTION(BlueprintCallable)
+	void HideInteractionIconWidget();
+		
+	UFUNCTION(BlueprintPure)
+	UAoS_InteractionPrompt* GetInteractionPromptWidget() const;
+	UFUNCTION(BlueprintPure)
+	UAoS_InteractionIcon* GetInteractionIconWidget() const;
+	
 
 protected:
 	// Called when the game starts or when spawned

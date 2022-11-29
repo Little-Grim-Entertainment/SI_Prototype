@@ -12,3 +12,7 @@ void UAoS_InteractionWidget::HideWidget_Implementation()
 {
 	
 }
+
+void UAoS_InteractionWidget::RefreshWidget_Implementation()
+{
+}

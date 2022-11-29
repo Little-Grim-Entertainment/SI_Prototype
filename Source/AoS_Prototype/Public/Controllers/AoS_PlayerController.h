@@ -55,8 +55,6 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
-	UPROPERTY(EditDefaultsOnly, Category = LineTracing)
-	UAoS_LineTraces* LineTraceComponent;
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractPressed OnInteractPressed;
 	

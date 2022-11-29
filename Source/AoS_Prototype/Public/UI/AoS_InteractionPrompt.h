@@ -6,9 +6,8 @@
 #include "AoS_InteractionWidget.h"
 #include "AoS_InteractionPrompt.generated.h"
 
-/**
- * 
- */
+class UTextBlock;
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_InteractionPrompt : public UAoS_InteractionWidget
 {
@@ -24,7 +23,8 @@ public:
 
 protected:
 
+	virtual void ShowWidget_Implementation() override;
+
 	UPROPERTY(BlueprintReadOnly)
 	FText InteractionText;
-	
 };
