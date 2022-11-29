@@ -159,6 +159,7 @@ void AAoS_PlayerController::RequestObservation()
 	{
 		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
 		LockPlayerMovement(false, false);
+		Nick->SetActorRotation(FRotator(0., Nick->GetActorRotation().Yaw, 0.));
 	}
 
 	Nick->GetFollowCamera()->SetActive(!bObservationMode);
