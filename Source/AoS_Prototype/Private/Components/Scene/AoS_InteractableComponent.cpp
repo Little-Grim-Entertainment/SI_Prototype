@@ -4,7 +4,10 @@
 #include "Components/Scene/AoS_InteractableComponent.h"
 #include "Characters/AoS_Nick.h"
 #include "Components/WidgetComponent.h"
+#include "Interfaces/AoS_InteractInterface.h"
 #include "Controllers/AoS_PlayerController.h"
+#include "UI/AoS_InteractionIcon.h"
+#include "UI/AoS_InteractionPrompt.h"
 
 UAoS_InteractableComponent::UAoS_InteractableComponent()
 {
@@ -16,7 +19,14 @@ UAoS_InteractableComponent::UAoS_InteractableComponent()
 void UAoS_InteractableComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	InteractableOwner = Cast<IAoS_InteractInterface>(GetOwner());
+	if (InteractableOwner)
+	{
+		InteractionIcon = InteractableOwner->Execute_GetInteractionIconComponent(Cast<UObject>(GetOwner()));
+		InteractionPrompt = InteractableOwner->Execute_GetInteractionPromptComponent(Cast<UObject>(GetOwner()));
+	}
+	
 	OnComponentBeginOverlap.AddDynamic(this, &UAoS_InteractableComponent::OnBeginOverlap);
 	OnComponentEndOverlap.AddDynamic(this, &UAoS_InteractableComponent::OnEndOverlap);
 }
@@ -56,4 +66,64 @@ void UAoS_InteractableComponent::TickComponent(float DeltaTime, ELevelTick TickT
 void UAoS_InteractableComponent::SetIsInteractable(bool bInteractable)
 {
 	bIsInteractable = bInteractable;
+}
+
+void UAoS_InteractableComponent::ShowInteractionPromptWidget()
+{
+	if (!IsValid(InteractionPrompt)) {return;}
+	
+	UAoS_InteractionPrompt* InteractionPromptWidget = GetInteractionPromptWidget();
+	if (IsValid(InteractionPromptWidget))
+	{
+		InteractionPromptWidget->SetInteractText(GetInteractionText());
+		InteractionPromptWidget->ShowWidget();
+	}
+}
+
+void UAoS_InteractableComponent::RefreshInteractionPromptWidget(float InShowDelay)
+{
+	if (!IsValid(InteractionPrompt)) {return;}
+	
+	UAoS_InteractionPrompt* InteractionPromptWidget = GetInteractionPromptWidget();
+	if (IsValid(InteractionPromptWidget))
+	{
+		HideInteractionPromptWidget();
+		GetWorld()->GetTimerManager().SetTimer(RefreshDelayHandle, this, &ThisClass::ShowInteractionPromptWidget, InShowDelay, false);
+	}
+}
+
+void UAoS_InteractableComponent::HideInteractionPromptWidget()
+{
+	if (!IsValid(InteractionPrompt)) {return;}
+	
+	UAoS_InteractionPrompt* InteractionPromptWidget = GetInteractionPromptWidget();
+	if (IsValid(InteractionPromptWidget))
+	{
+		InteractionPromptWidget->HideWidget();
+	}
+}
+
+void UAoS_InteractableComponent::ShowInteractionIconWidget()
+{
+	GetInteractionIconWidget()->ShowWidget();
+}
+
+void UAoS_InteractableComponent::RefreshInteractionIconWidget()
+{
+	GetInteractionIconWidget()->RefreshWidget();
+}
+
+void UAoS_InteractableComponent::HideInteractionIconWidget()
+{
+	GetInteractionIconWidget()->HideWidget();
+}
+
+UAoS_InteractionPrompt* UAoS_InteractableComponent::GetInteractionPromptWidget() const
+{
+	return Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
+}
+
+UAoS_InteractionIcon* UAoS_InteractableComponent::GetInteractionIconWidget() const
+{
+	return Cast<UAoS_InteractionIcon>(InteractionIcon->GetWidget());
 }

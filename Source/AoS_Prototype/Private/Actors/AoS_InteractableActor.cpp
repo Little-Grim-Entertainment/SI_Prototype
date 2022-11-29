@@ -5,6 +5,7 @@
 #include "Components/Scene/AoS_InteractableComponent.h"
 #include "Characters/AoS_Nick.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "UI/AoS_InteractionIcon.h"
 #include "UI/AoS_InteractionPrompt.h"
 
@@ -45,7 +46,6 @@ void AAoS_InteractableActor::BeginPlay()
 	InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);
 }
 
-
 // Called every frame
 void AAoS_InteractableActor::Tick(float DeltaTime)
 {
@@ -55,66 +55,22 @@ void AAoS_InteractableActor::Tick(float DeltaTime)
 
 void AAoS_InteractableActor::OnBeginOverlap(AAoS_Nick* InNickActor)
 {
-	if (IsValid(InteractionPrompt))
-	{
-		UAoS_InteractionPrompt* InteractionPromptWidget = GetInteractionPromptWidget();
-		if (IsValid(InteractionPromptWidget))
-		{
-			InteractionPromptWidget->SetInteractText(InteractableComponent->GetInteractionText());
-			InteractionPromptWidget->ShowWidget();
-		}
-	}
+	if (!IsValid(InteractableComponent)) {return;}
+	InteractableComponent->ShowInteractionPromptWidget();
 }
 
 void AAoS_InteractableActor::OnEndOverlap(AAoS_Nick* InNickActor)
 {
-	if (IsValid(InteractionPrompt))
-	{
-		UAoS_InteractionPrompt* InteractionPromptWidget = GetInteractionPromptWidget();
-		if (IsValid(InteractionPromptWidget))
-		{
-			InteractionPromptWidget->HideWidget();
-		}
-	}
+	if (!IsValid(InteractableComponent)) {return;}
+	InteractableComponent->HideInteractionPromptWidget();
 }
 
-
-void AAoS_InteractableActor::ShowInteractionPromptWidget()
+UWidgetComponent* AAoS_InteractableActor::GetInteractionIconComponent_Implementation()
 {
-	GetInteractionPromptWidget()->ShowWidget();
+	return InteractionIcon;
 }
 
-void AAoS_InteractableActor::RefreshInteractionPromptWidget()
+UWidgetComponent* AAoS_InteractableActor::GetInteractionPromptComponent_Implementation()
 {
-	GetInteractionPromptWidget()->RefreshWidget();
-}
-
-void AAoS_InteractableActor::HideInteractionPromptWidget()
-{
-	GetInteractionPromptWidget()->HideWidget();
-}
-
-void AAoS_InteractableActor::ShowInteractionIconWidget()
-{
-	GetInteractionIconWidget()->ShowWidget();
-}
-
-void AAoS_InteractableActor::RefreshInteractionIconWidget()
-{
-	GetInteractionIconWidget()->RefreshWidget();
-}
-
-void AAoS_InteractableActor::HideInteractionIconWidget()
-{
-	GetInteractionIconWidget()->HideWidget();
-}
-
-UAoS_InteractionPrompt* AAoS_InteractableActor::GetInteractionPromptWidget() const
-{
-	return Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
-}
-
-UAoS_InteractionIcon* AAoS_InteractableActor::GetInteractionIconWidget() const
-{
-	return Cast<UAoS_InteractionIcon>(InteractionIcon->GetWidget());
+	return InteractionPrompt;
 }
