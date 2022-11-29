@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorT
 
 enum class EPlayerMode : uint8;
 
+class AAoS_Nick;
 class UAoS_HUD;
 
 UCLASS()
@@ -21,7 +22,9 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 	GENERATED_BODY()
 
 	UPROPERTY()
-	AActor* FocusedActor;
+	AActor* InteractableActor;
+	UPROPERTY()
+	AActor* ObservableActor;
 	UPROPERTY()
 	UAoS_HUD* PlayerHUD;
 	UPROPERTY()
@@ -29,19 +32,15 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 	
 	bool bPlayerCanMove = true;
 	bool bPlayerCanTurn = true;
-<<<<<<< Updated upstream
 
 protected:
-=======
+
 	bool bObservationMode = false;
 	
 	float ObservationDistance = 1000.;
 
 	FVector ObservationStart = FVector(0);
 	FVector ObservationEnd = FVector(0);
->>>>>>> Stashed changes
-	
-
 	
 public:
 	
@@ -71,16 +70,20 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LockPlayerMovement(bool bLockMovement, bool bLockTurning);
 	UFUNCTION(BlueprintCallable)
-	void SetFocusedActor(AActor* InActorToFocus);
+	void SetInteractableActor(AActor* InInteractableActor);
+	UFUNCTION(BlueprintCallable)
+	void SetObservableActor(AActor* InObservableActor);
 	
 protected:
 
 	// Player Input Functions
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	void RequestMoveForward(float Value);
 	void RequestMoveRight(float Value);
 	void RequestTurnRight(float AxisValue);
 	void RequestLookUp(float AxisValue);
 	void RequestInteract();
+	void RequestObservation();
 };

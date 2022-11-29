@@ -4,13 +4,15 @@
 #include "Controllers/AoS_PlayerController.h"
 
 #include "AoS_GameInstance.h"
+#include "Actors/AoS_InteractableActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Camera/CameraComponent.h"
+#include "Characters/AoS_Nick.h"
+#include "Interfaces/AoS_InteractInterface.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
-	LineTraceComponent = CreateDefaultSubobject<UAoS_LineTraces>(TEXT("LineTraceComponent"));
-	
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
@@ -24,7 +26,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	check(InputComponent);
 
 	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
-	
+	InputComponent->BindAction("ObservationMode", IE_Pressed,this, &AAoS_PlayerController::RequestObservation);
 	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
 	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
@@ -39,6 +41,42 @@ void AAoS_PlayerController::BeginPlay()
 	if (IsValid(GameInstance))
 	{
 		
+	}
+
+	Nick = Cast<AAoS_Nick>(GetPawn()); 
+}
+
+void AAoS_PlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(bObservationMode)
+	{
+		FHitResult HitResult;
+		ObservationStart = Nick->GetObservationCamera()->GetComponentLocation();
+		ObservationEnd = Nick->GetObservationCamera()->GetComponentLocation() + Nick->GetObservationCamera()->GetForwardVector() * ObservationDistance;
+		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECC_Pawn);
+		if(HitResult.GetActor())
+		{
+			AActor* HitActor = HitResult.GetActor();
+			const bool bObservable = HitActor->ActorHasTag(FName(TEXT("Observable")));
+			
+			if(bObservable && HitActor != ObservableActor)
+			{
+				ObservableActor = HitActor;
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("On"));
+			}
+			else if(!bObservable && ObservableActor)
+			{
+				ObservableActor = nullptr;
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
+			}
+		}
+		else if(ObservableActor)
+		{
+			ObservableActor = nullptr;
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
+		}
 	}
 }
 
@@ -87,34 +125,25 @@ void AAoS_PlayerController::RequestTurnRight(float AxisValue)
 
 void AAoS_PlayerController::RequestInteract()
 {
-	if (!GetPawn() || !IsValid(FocusedActor)) {return;}
+	if (!GetPawn()) {return;}
 
-	if (IAoS_InteractInterface* InteractableActor = Cast<IAoS_InteractInterface>(FocusedActor))
+	if(ObservableActor)
 	{
-		InteractableActor->Execute_OnInteract(Cast<UObject>(FocusedActor), FocusedActor);
-		OnInteractPressed.Broadcast(FocusedActor, this);
+		if (const IAoS_InteractInterface* InterfaceActor = Cast<IAoS_InteractInterface>(ObservableActor))
+		{
+			InterfaceActor->Execute_OnObserved(Cast<UObject>(ObservableActor), ObservableActor);
+		}
+	}
+	else if(InteractableActor)
+	{
+		if (const IAoS_InteractInterface* InterfaceActor = Cast<IAoS_InteractInterface>(InteractableActor))
+		{
+			InterfaceActor->Execute_OnInteract(Cast<UObject>(InteractableActor), InteractableActor);
+			OnInteractPressed.Broadcast(InteractableActor, this);
+		}
 	}
 }
 
-<<<<<<< Updated upstream
-void AAoS_PlayerController::AddToInteractableActors(AActor* ActorToAdd)
-{
-	if (!ActorToAdd || !this) {return;}
-	
-	InteractableActors.AddUnique(ActorToAdd);
-	OnInteractableActorAdded.Broadcast(InteractableActors);
-}
-
-void AAoS_PlayerController::RemoveFromInteractableActors(AActor* ActorToRemove)
-{
-	if (!ActorToRemove || !this) {return;}
-
-	InteractableActors.Remove(ActorToRemove);
-	if (InteractableActors.Num() == 0)
-		{
-			OnInteractableActorRemoved.Broadcast();
-		}
-=======
 void AAoS_PlayerController::RequestObservation()
 {
 	bObservationMode = !bObservationMode;
@@ -137,7 +166,6 @@ void AAoS_PlayerController::RequestObservation()
 	
 	Nick->bUseControllerRotationPitch = bObservationMode;
 	Nick->bUseControllerRotationYaw = bObservationMode;
->>>>>>> Stashed changes
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
@@ -146,10 +174,18 @@ void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTur
 	bPlayerCanTurn = !bLockTurning;
 }
 
-void AAoS_PlayerController::SetFocusedActor(AActor* InActorToFocus)
+void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	if (IsValid(InActorToFocus))
+	if (IsValid(InInteractableActor))
 	{
-		FocusedActor = InActorToFocus;
+		InteractableActor = InInteractableActor;
+	}
+}
+
+void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
+{
+	if (IsValid(InObservableActor))
+	{
+		ObservableActor = InObservableActor;
 	}
 }

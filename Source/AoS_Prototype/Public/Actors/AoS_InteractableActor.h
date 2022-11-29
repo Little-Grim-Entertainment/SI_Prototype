@@ -7,12 +7,9 @@
 #include "Interfaces/AoS_InteractInterface.h"
 #include "AoS_InteractableActor.generated.h"
 
-<<<<<<< Updated upstream
 class AAoS_Nick;
-=======
 class UAoS_InteractableComponent;
 class UBoxComponent;
->>>>>>> Stashed changes
 class UWidgetComponent;
 
 UCLASS()
@@ -29,30 +26,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	UAoS_InteractableComponent* InteractableComponent;
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
-<<<<<<< Updated upstream
 	class UBoxComponent* OverlapBox;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UWidgetComponent* InteractionIcon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UWidgetComponent* InteractionPrompt;	
-=======
-	UBoxComponent* OverlapBox;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
-	UWidgetComponent* InteractionIcon;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
-	UWidgetComponent* InteractionPrompt;
->>>>>>> Stashed changes
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-<<<<<<< Updated upstream
-=======
-
-
 
 public:	
->>>>>>> Stashed changes
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
