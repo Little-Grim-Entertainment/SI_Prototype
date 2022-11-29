@@ -34,6 +34,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
 	APlayerStart* GetPlayerStart(FString InPlayerStartTag = FString(TEXT(""))) const;
+	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
+	TArray<APlayerStart*> GetAllPlayerStarts() const;
 
 protected:
 

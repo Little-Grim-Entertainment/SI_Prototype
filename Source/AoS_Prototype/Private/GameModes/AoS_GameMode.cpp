@@ -17,6 +17,16 @@ AAoS_GameMode::AAoS_GameMode()
 	}
 }
 
+void AAoS_GameMode::InitGameState()
+{
+	Super::InitGameState();
+
+	if (IsValid(GameInstance))
+	{
+		GameInstance->SetCurrentGameMode(this);
+	}	
+}
+	
 void AAoS_GameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -35,37 +45,40 @@ void AAoS_GameMode::BeginPlay()
 	GameInstance->OnGameModeBeginPlay.Broadcast();
 }
 
-void AAoS_GameMode::InitGameState()
-{
-	Super::InitGameState();
-
-	if (IsValid(GameInstance))
-	{
-		GameInstance->SetCurrentGameMode(this);
-	}	
-}
-
 APlayerStart* AAoS_GameMode::GetPlayerStart(FString InPlayerStartTag) const
 {
+	for (APlayerStart* PlayerStart : GetAllPlayerStarts())
+	{
+		if (InPlayerStartTag != FString(TEXT("")))
+		{
+			if(PlayerStart->PlayerStartTag.ToString() == InPlayerStartTag)
+			{
+				return PlayerStart;					
+			}
+		}
+		else
+		{
+			return PlayerStart;
+		}
+	}
+	
+	return nullptr;
+}
+
+TArray<APlayerStart*> AAoS_GameMode::GetAllPlayerStarts() const
+{
 	TArray<AActor*> PlayerStartActors;
+	TArray<APlayerStart*> PlayerStarts;
+
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStartActors);
 
 	for (AActor* CurrentActor : PlayerStartActors)
 	{
 		if (APlayerStart* PlayerStart = Cast<APlayerStart>(CurrentActor))
 		{
-			if (InPlayerStartTag != FString(TEXT("")))
-			{
-				if(PlayerStart->PlayerStartTag.ToString() == InPlayerStartTag)
-				{
-					return PlayerStart;					
-				}
-			}
-			else
-			{
-				return PlayerStart;
-			}
+			PlayerStarts.AddUnique(PlayerStart);
 		}
 	}
-	return nullptr;
+	
+	return PlayerStarts;
 }

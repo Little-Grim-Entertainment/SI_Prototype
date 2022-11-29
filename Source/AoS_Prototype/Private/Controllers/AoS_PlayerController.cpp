@@ -40,7 +40,7 @@ void AAoS_PlayerController::BeginPlay()
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (IsValid(GameInstance))
 	{
-		
+		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
 	}
 
 	Nick = Cast<AAoS_Nick>(GetPawn()); 
@@ -167,6 +167,24 @@ void AAoS_PlayerController::RequestObservation()
 	
 	Nick->bUseControllerRotationPitch = bObservationMode;
 	Nick->bUseControllerRotationYaw = bObservationMode;
+}
+
+void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
+{
+	switch (InPlayerMode)
+	{
+		case EPlayerMode::PM_MainMenuMode:
+		{
+			Nick->GetMesh()->SetVisibility(false);
+		}
+		default:
+		{
+			if (!Nick->GetMesh()->IsVisible())
+			{
+				Nick->GetMesh()->SetVisibility(true);	
+			}
+		}
+	}
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
