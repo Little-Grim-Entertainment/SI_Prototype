@@ -22,7 +22,9 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 	GENERATED_BODY()
 
 	UPROPERTY()
-	AActor* FocusedActor;
+	AActor* InteractableActor;
+	UPROPERTY()
+	AActor* ObservableActor;
 	UPROPERTY()
 	UAoS_HUD* PlayerHUD;
 	UPROPERTY()
@@ -68,13 +70,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LockPlayerMovement(bool bLockMovement, bool bLockTurning);
 	UFUNCTION(BlueprintCallable)
-	void SetFocusedActor(AActor* InActorToFocus);
+	void SetInteractableActor(AActor* InInteractableActor);
+	UFUNCTION(BlueprintCallable)
+	void SetObservableActor(AActor* InObservableActor);
 	
 protected:
 
 	// Player Input Functions
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	void RequestMoveForward(float Value);
 	void RequestMoveRight(float Value);
 	void RequestTurnRight(float AxisValue);

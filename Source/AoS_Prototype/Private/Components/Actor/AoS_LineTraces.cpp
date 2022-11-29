@@ -41,18 +41,18 @@ void UAoS_LineTraces::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		AActor* InteractableActor = SearchForInteractableActor();
 		if (InteractableActor && !bInteractableFound)
 		{
-			PlayerController->SetFocusedActor(InteractableActor);
+			PlayerController->SetInteractableActor(InteractableActor);
 			bInteractableFound = true;
 		}
 		if (!InteractableActor && bInteractableFound)
 		{
-			PlayerController->SetFocusedActor(nullptr);
+			PlayerController->SetInteractableActor(nullptr);
 			bInteractableFound = false;
 		}
 	}
 	else if (bInteractableFound)
 	{
-		PlayerController->SetFocusedActor(nullptr);
+		PlayerController->SetInteractableActor(nullptr);
 		bInteractableFound = false;
 	}
 }

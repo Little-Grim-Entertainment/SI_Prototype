@@ -28,7 +28,7 @@ void UAoS_InteractableComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedC
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerCharacter && PlayerController && bIsInteractable)
 	{
-		PlayerController->SetFocusedActor(GetOwner());
+		PlayerController->SetInteractableActor(GetOwner());
 		OnPlayerBeginOverlap.Broadcast(PlayerCharacter);
 	}
 }
@@ -37,7 +37,7 @@ void UAoS_InteractableComponent::OnEndOverlap(UPrimitiveComponent* OverlappedCom
 {
 	if (PlayerCharacter)
 	{
-		PlayerController->SetFocusedActor(nullptr);
+		PlayerController->SetInteractableActor(nullptr);
 		OnPlayerEndOverlap.Broadcast(PlayerCharacter);
 		PlayerCharacter = nullptr;
 		PlayerController = nullptr;
