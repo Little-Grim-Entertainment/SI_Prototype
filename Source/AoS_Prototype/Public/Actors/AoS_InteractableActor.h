@@ -7,6 +7,8 @@
 #include "Interfaces/AoS_InteractInterface.h"
 #include "AoS_InteractableActor.generated.h"
 
+class UAoS_InteractionIcon;
+class UAoS_InteractionPrompt;
 class AAoS_Nick;
 class UAoS_InteractableComponent;
 class UBoxComponent;
@@ -25,12 +27,10 @@ public:
 	UStaticMeshComponent* Mesh;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	UAoS_InteractableComponent* InteractableComponent;
-	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
-	class UBoxComponent* OverlapBox;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UWidgetComponent* InteractionIcon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
-	UWidgetComponent* InteractionPrompt;	
+	UWidgetComponent* InteractionPrompt;
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,5 +46,10 @@ private:
 	void OnBeginOverlap(AAoS_Nick* InNickActor);
 	UFUNCTION()
 	void OnEndOverlap(AAoS_Nick* InNickActor);
+
+	UFUNCTION()
+	virtual UWidgetComponent* GetInteractionIconComponent_Implementation() override;
+	UFUNCTION()
+	virtual UWidgetComponent* GetInteractionPromptComponent_Implementation() override;
 
 };

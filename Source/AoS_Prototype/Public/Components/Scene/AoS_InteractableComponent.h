@@ -6,6 +6,10 @@
 #include "Components/BoxComponent.h"
 #include "AoS_InteractableComponent.generated.h"
 
+class IAoS_InteractInterface;
+class AAoS_PlayerController;
+class UAoS_InteractionIcon;
+class UAoS_InteractionPrompt;
 class UWidgetComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerBeginOverlap, class AAoS_Nick*, Player);
@@ -18,10 +22,22 @@ class AOS_PROTOTYPE_API UAoS_InteractableComponent : public UBoxComponent
 
 	UPROPERTY()
 	bool bIsInteractable = true;
+	
 	UPROPERTY()
 	AAoS_Nick* PlayerCharacter;
+	
 	UPROPERTY()
-	class AAoS_PlayerController* PlayerController;
+	AAoS_PlayerController* PlayerController;
+	
+	UPROPERTY()
+	UWidgetComponent* InteractionIcon;
+	
+	UPROPERTY()
+	UWidgetComponent* InteractionPrompt;
+
+	IAoS_InteractInterface* InteractableOwner;
+
+	FTimerHandle RefreshDelayHandle;
 	
 public:	
 	// Sets default values for this component's properties
@@ -47,10 +63,10 @@ protected:
 	UFUNCTION()
 	void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
 	// Getters
 	UFUNCTION(BlueprintPure)
 	FText GetInteractionText() {return InteractionText;}
@@ -62,6 +78,24 @@ public:
 	void SetIsInteractable(bool bInteractable);
 	UFUNCTION(BlueprintCallable)
 	void SetInteractionText(FText TextToSet) { InteractionText = TextToSet;}
+
+	UFUNCTION(BlueprintCallable)
+	void ShowInteractionPromptWidget();
+	UFUNCTION(BlueprintCallable)
+	void RefreshInteractionPromptWidget(float InShowDelay);
+	UFUNCTION(BlueprintCallable)
+	void HideInteractionPromptWidget();
+	UFUNCTION(BlueprintCallable)
+	void ShowInteractionIconWidget();
+	UFUNCTION(BlueprintCallable)
+	void RefreshInteractionIconWidget();
+	UFUNCTION(BlueprintCallable)
+	void HideInteractionIconWidget();
+	
+	UFUNCTION(BlueprintPure)
+	UAoS_InteractionPrompt* GetInteractionPromptWidget() const;
+	UFUNCTION(BlueprintPure)
+	UAoS_InteractionIcon* GetInteractionIconWidget() const;
 };
 
 

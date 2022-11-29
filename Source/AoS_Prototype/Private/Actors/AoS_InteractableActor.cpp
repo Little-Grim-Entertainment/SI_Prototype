@@ -5,6 +5,8 @@
 #include "Components/Scene/AoS_InteractableComponent.h"
 #include "Characters/AoS_Nick.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "UI/AoS_InteractionIcon.h"
 #include "UI/AoS_InteractionPrompt.h"
 
 // Sets default values
@@ -44,7 +46,6 @@ void AAoS_InteractableActor::BeginPlay()
 	InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);
 }
 
-
 // Called every frame
 void AAoS_InteractableActor::Tick(float DeltaTime)
 {
@@ -54,25 +55,22 @@ void AAoS_InteractableActor::Tick(float DeltaTime)
 
 void AAoS_InteractableActor::OnBeginOverlap(AAoS_Nick* InNickActor)
 {
-	if (IsValid(InteractionPrompt))
-	{
-		UAoS_InteractionPrompt* InteractionPromptWidget = Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
-		if (IsValid(InteractionPromptWidget))
-		{
-			InteractionPromptWidget->ShowWidget();
-		}
-	}
+	if (!IsValid(InteractableComponent)) {return;}
+	InteractableComponent->ShowInteractionPromptWidget();
 }
 
 void AAoS_InteractableActor::OnEndOverlap(AAoS_Nick* InNickActor)
 {
-	if (IsValid(InteractionPrompt))
-	{
-		UAoS_InteractionPrompt* InteractionPromptWidget = Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
-		if (IsValid(InteractionPromptWidget))
-		{
-			InteractionPromptWidget->HideWidget();
-		}
-	}
+	if (!IsValid(InteractableComponent)) {return;}
+	InteractableComponent->HideInteractionPromptWidget();
 }
 
+UWidgetComponent* AAoS_InteractableActor::GetInteractionIconComponent_Implementation()
+{
+	return InteractionIcon;
+}
+
+UWidgetComponent* AAoS_InteractableActor::GetInteractionPromptComponent_Implementation()
+{
+	return InteractionPrompt;
+}
