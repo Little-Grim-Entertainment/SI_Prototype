@@ -48,6 +48,4 @@ private:
 	UAoS_LevelManager* LevelManager;
 	UPROPERTY()
 	UAoS_GameInstance* GameInstance;
-
-	
 };
