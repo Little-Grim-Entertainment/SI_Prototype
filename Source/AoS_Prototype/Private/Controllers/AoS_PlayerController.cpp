@@ -195,16 +195,10 @@ void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTur
 
 void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	if (IsValid(InInteractableActor))
-	{
-		InteractableActor = InInteractableActor;
-	}
+	InteractableActor = InInteractableActor;
 }
 
 void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 {
-	if (IsValid(InObservableActor))
-	{
-		ObservableActor = InObservableActor;
-	}
+	ObservableActor = InObservableActor;
 }
