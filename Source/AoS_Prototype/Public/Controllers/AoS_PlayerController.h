@@ -84,5 +84,7 @@ protected:
 	void RequestLookUp(float AxisValue);
 	void RequestInteract();
 	void RequestObservation();
+
+	UFUNCTION()
 	void OnPlayerModeChanged(EPlayerMode InPlayerMode);
 };
