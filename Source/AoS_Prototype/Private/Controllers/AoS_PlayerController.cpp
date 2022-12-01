@@ -221,19 +221,21 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 		case EPlayerMode::PM_ExplorationMode:
 		{
 			LockPlayerMovement(false, false);
+			break;
 		}
 		case EPlayerMode::PM_VideoMode:
 		{
 			LockPlayerMovement(true, true);
-			UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+			/*UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
 			if (CinematicsManager)
 			{
 				MediaSoundComponent->SetMediaPlayer(CinematicsManager->GetCurrentMediaPlayer());
-			}
+			}*/
+			break;
 		}
 		default:
 		{
-			
+			break;
 		}
 	}
 }

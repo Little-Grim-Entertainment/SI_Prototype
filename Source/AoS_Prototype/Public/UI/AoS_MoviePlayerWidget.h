@@ -23,6 +23,7 @@ public:
 	void SetMediaPlayer(UMediaPlayer* InMediaPlayer);
 	void SetMediaSource(UMediaSource* InMediaSource);
 
+	UFUNCTION(BlueprintNativeEvent)
 	void PlayVideo();
 	
 protected:
@@ -30,9 +31,7 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	UImage* IMG_Video;
 	
-	UFUNCTION(BlueprintNativeEvent)
-	void OnVideoPlay();
-	void OnVideoPlay_Implementation();
+	void PlayVideo_Implementation();
 	
 	UFUNCTION(BlueprintPure)
 	UMediaTexture* GetCurrentMediaTexture() const;

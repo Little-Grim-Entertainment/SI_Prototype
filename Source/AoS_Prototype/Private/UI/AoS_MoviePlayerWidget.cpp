@@ -7,11 +7,6 @@
 #include "MediaPlayer.h"
 #include "Components/Image.h"
 
-void UAoS_MoviePlayerWidget::OnVideoPlay_Implementation()
-{
-	
-}
-
 UMediaTexture* UAoS_MoviePlayerWidget::GetCurrentMediaTexture() const
 {
 	return CurrentMediaTexture;
@@ -43,9 +38,8 @@ void UAoS_MoviePlayerWidget::SetMediaSource(UMediaSource* InMediaSource)
 	}
 }
 
-void UAoS_MoviePlayerWidget::PlayVideo()
+void UAoS_MoviePlayerWidget::PlayVideo_Implementation()
 {
 	if (!IsValid(CurrentMediaPlayer) || !IsValid(CurrentMediaSource)) {return;}
-
-	OnVideoPlay();
+	
 }

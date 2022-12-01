@@ -53,6 +53,14 @@ void UAoS_CinematicsManager::PlayVideo(UMediaPlayer* InMediaPlayer, UMediaSource
 	{
 		CurrentMediaPlayer->SetNativeVolume(InVolume);
 	}
+
+	const AAoS_PlayerController* PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	if (IsValid(PlayerController))
+	{
+		PlayerController->GetMediaSoundComponent()->SetMediaPlayer(CurrentMediaPlayer);
+	}
+
+	CurrentMediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::UAoS_CinematicsManager::OnVideoEnd);
 	
 	PreviousPlayerMode = GameInstance->GetPlayerMode();
 	GameInstance->SetPlayerMode(EPlayerMode::PM_VideoMode);
