@@ -88,7 +88,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShowInteractionIconWidget();
 	UFUNCTION(BlueprintCallable)
-	void RefreshInteractionIconWidget();
+	void RefreshInteractionIconWidget(float InShowDelay);
 	UFUNCTION(BlueprintCallable)
 	void HideInteractionIconWidget();
 	

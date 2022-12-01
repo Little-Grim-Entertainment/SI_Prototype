@@ -83,9 +83,19 @@ UAoS_MapData* UAoS_LevelManager::GetMapFromName(FString MapName)
 	return nullptr;
 }
 
-EMapType UAoS_LevelManager::GetCurrentMapType()
+EMapType UAoS_LevelManager::GetCurrentMapType() const
 {
 	return CurrentMapType;
+}
+
+UAoS_MapData* UAoS_LevelManager::GetCurrentMap() const
+{
+	return CurrentLevel;
+}
+
+FString UAoS_LevelManager::GetCurrentMapName() const
+{
+	return CurrentLevel->MapName;
 }
 
 void UAoS_LevelManager::ExecuteLevelLoad()

@@ -84,7 +84,7 @@ void UAoS_InteractableComponent::RefreshInteractionPromptWidget(float InShowDela
 {
 	if (!IsValid(InteractionPrompt)) {return;}
 	
-	UAoS_InteractionPrompt* InteractionPromptWidget = GetInteractionPromptWidget();
+	const UAoS_InteractionPrompt* InteractionPromptWidget = GetInteractionPromptWidget();
 	if (IsValid(InteractionPromptWidget))
 	{
 		HideInteractionPromptWidget();
@@ -105,17 +105,36 @@ void UAoS_InteractableComponent::HideInteractionPromptWidget()
 
 void UAoS_InteractableComponent::ShowInteractionIconWidget()
 {
-	GetInteractionIconWidget()->ShowWidget();
+	if (!IsValid(InteractionIcon)) {return;}
+	
+	UAoS_InteractionIcon* InteractionIconWidget = GetInteractionIconWidget();
+	if (IsValid(InteractionIconWidget))
+	{
+		InteractionIconWidget->ShowWidget();
+	}
 }
 
-void UAoS_InteractableComponent::RefreshInteractionIconWidget()
+void UAoS_InteractableComponent::RefreshInteractionIconWidget(float InShowDelay)
 {
-	GetInteractionIconWidget()->RefreshWidget();
+	if (!IsValid(InteractionIcon)) {return;}
+	
+	const UAoS_InteractionIcon* InteractionIconWidget = GetInteractionIconWidget();
+	if (IsValid(InteractionIconWidget))
+	{
+		HideInteractionIconWidget();
+		GetWorld()->GetTimerManager().SetTimer(RefreshDelayHandle, this, &ThisClass::ShowInteractionIconWidget, InShowDelay, false);
+	}
 }
 
 void UAoS_InteractableComponent::HideInteractionIconWidget()
 {
-	GetInteractionIconWidget()->HideWidget();
+	if (!IsValid(InteractionIcon)) {return;}
+	
+	UAoS_InteractionIcon* InteractionIconWidget = GetInteractionIconWidget();
+	if (IsValid(InteractionIconWidget))
+	{
+		InteractionIconWidget->HideWidget();
+	}
 }
 
 UAoS_InteractionPrompt* UAoS_InteractableComponent::GetInteractionPromptWidget() const

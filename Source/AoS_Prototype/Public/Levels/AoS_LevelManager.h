@@ -43,7 +43,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	UAoS_MapData* GetMapFromName(FString MapName);
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	EMapType GetCurrentMapType();
+	EMapType GetCurrentMapType() const;
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	UAoS_MapData* GetCurrentMap() const;
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	FString GetCurrentMapName() const;
 	
 	UFUNCTION(BlueprintCallable)
     void UpdateMapType(EMapType InMapType);

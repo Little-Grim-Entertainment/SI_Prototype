@@ -84,4 +84,14 @@ protected:
 	void RequestLookUp(float AxisValue);
 	void RequestInteract();
 	void RequestObservation();
+
+	void PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera);
+
+	UFUNCTION()
+	void OnPlayerModeChanged(EPlayerMode InPlayerMode);
+
+private:
+
+	FTimerHandle CameraBlendHandle;
+	FTimerDelegate CameraBlendDelegate;
 };

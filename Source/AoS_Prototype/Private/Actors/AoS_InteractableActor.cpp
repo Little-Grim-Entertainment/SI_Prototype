@@ -41,9 +41,11 @@ void AAoS_InteractableActor::BeginPlay()
 			InteractionPromptWidget->SetInteractText(InteractableComponent->GetInteractionText());
 		}
 	}
-
-	InteractableComponent->OnPlayerBeginOverlap.AddDynamic(this, &ThisClass::OnBeginOverlap);
-	InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);
+	if (IsValid(InteractableComponent))
+	{
+		InteractableComponent->OnPlayerBeginOverlap.AddDynamic(this, &ThisClass::OnBeginOverlap);
+		InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);	
+	}
 }
 
 // Called every frame

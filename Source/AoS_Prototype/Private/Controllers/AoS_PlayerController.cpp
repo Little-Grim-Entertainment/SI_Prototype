@@ -6,9 +6,12 @@
 #include "AoS_GameInstance.h"
 #include "Actors/AoS_InteractableActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/AoS_Nick.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Interfaces/AoS_InteractInterface.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -40,7 +43,7 @@ void AAoS_PlayerController::BeginPlay()
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (IsValid(GameInstance))
 	{
-		
+		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
 	}
 
 	Nick = Cast<AAoS_Nick>(GetPawn()); 
@@ -147,25 +150,80 @@ void AAoS_PlayerController::RequestInteract()
 void AAoS_PlayerController::RequestObservation()
 {
 	bObservationMode = !bObservationMode;
+
+	UCameraComponent* FollowCameraComponent = Nick->GetFollowCamera();
+	UCameraComponent* ObservationCameraComponent = Nick->GetObservationCamera();
+
+	const FVector FollowCamLocation = FollowCameraComponent->GetComponentLocation();
+	const FRotator FollowCamRotation = FollowCameraComponent->GetComponentRotation();
+
+	FVector ObservationCamLocation = ObservationCameraComponent->GetComponentLocation();
+	const FRotator ObservationCamRotation = ObservationCameraComponent->GetComponentRotation();
+
+	FVector ForwardVector = Nick->GetFollowCamera()->GetForwardVector();
+	ObservationCamLocation *= ForwardVector;
+	
+	ACameraActor* FollowCameraActor = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), FollowCamLocation, FollowCamRotation);
+	ACameraActor* ObservationCameraActor = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), ObservationCamLocation, ObservationCamRotation);
 	
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+
+	float CameraTransitionTime = 0.25f;
+
+	DisableInput(this);
+	SetControlRotation(FRotator(0, Nick->GetActorRotation().Yaw, 0));
+	Nick->SetActorRotation(FRotator(0., Nick->GetActorRotation().Yaw, 0));
 	
 	if(bObservationMode)
 	{
 		GameInstance->SetPlayerMode(EPlayerMode::PM_ObservationMode);
 		LockPlayerMovement(true, false);
+		SetViewTarget(FollowCameraActor);
+		SetViewTargetWithBlend(ObservationCameraActor, CameraTransitionTime);
 	}
 	else
 	{
 		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
 		LockPlayerMovement(false, false);
+		SetViewTarget(ObservationCameraActor);
+		SetViewTargetWithBlend(FollowCameraActor, CameraTransitionTime);
 	}
 
+	CameraBlendDelegate = FTimerDelegate::CreateUObject(this, &AAoS_PlayerController::PostCameraBlend, FollowCameraActor, ObservationCameraActor);
+	
+	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, CameraBlendDelegate, CameraTransitionTime, false);
+}
+
+void AAoS_PlayerController::PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera)
+{
 	Nick->GetFollowCamera()->SetActive(!bObservationMode);
 	Nick->GetObservationCamera()->SetActive(bObservationMode);
 	
 	Nick->bUseControllerRotationPitch = bObservationMode;
 	Nick->bUseControllerRotationYaw = bObservationMode;
+
+	InFollowCamera->Destroy();
+	InObservationCamera->Destroy();
+
+	EnableInput(this);
+}
+
+void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
+{
+	switch (InPlayerMode)
+	{
+		case EPlayerMode::PM_MainMenuMode:
+		{
+			Nick->GetMesh()->SetVisibility(false);
+		}
+		default:
+		{
+			if (!Nick->GetMesh()->IsVisible())
+			{
+				Nick->GetMesh()->SetVisibility(true);	
+			}
+		}
+	}
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
@@ -176,16 +234,10 @@ void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTur
 
 void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	if (IsValid(InInteractableActor))
-	{
-		InteractableActor = InInteractableActor;
-	}
+	InteractableActor = InInteractableActor;
 }
 
 void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 {
-	if (IsValid(InObservableActor))
-	{
-		ObservableActor = InObservableActor;
-	}
+	ObservableActor = InObservableActor;
 }
