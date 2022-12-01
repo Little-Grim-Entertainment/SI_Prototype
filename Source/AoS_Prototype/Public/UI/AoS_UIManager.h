@@ -6,6 +6,8 @@
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
+class UMediaPlayer;
+class UAoS_MoviePlayerWidget;
 class UAoS_DialogueManager;
 class UAoS_Objective;
 class UAoS_Part;
@@ -34,6 +36,11 @@ public:
 	void ShowPlayerHUD(bool bShouldShow);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemovePlayerHUD();
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void CreateMoviePlayerWidget();
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveMoviePlayerWidget();
+
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateMainMenu();
@@ -94,5 +101,7 @@ private:
 	UAoS_HUD* PlayerHUD;
 	UPROPERTY()
 	UAoS_UserWidget* MainMenu;
+	UPROPERTY()
+	UAoS_MoviePlayerWidget* MoviePlayerWidget;
 	
 };

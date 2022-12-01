@@ -6,6 +6,7 @@
 #include "GameFramework/GameMode.h"
 #include "AoS_GameMode.generated.h"
 
+class UAoS_MoviePlayerWidget;
 class UAoS_GameInstance;
 class UAoS_UserWidget;
 class APlayerStart;
@@ -26,6 +27,8 @@ public:
 	TSubclassOf<UAoS_UserWidget> MainMenuClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_HUD> PlayerHUD_Class;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
+	TSubclassOf<UAoS_MoviePlayerWidget> MoviePlayerWidget;
 	
 	UPROPERTY(EditAnywhere, Category = "CharacterData")
 	UAoS_CharacterData* NickSpadeCDA;

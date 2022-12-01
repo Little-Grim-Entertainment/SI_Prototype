@@ -7,6 +7,8 @@
 #include "Components/Actor/AoS_LineTraces.h"
 #include "AoS_PlayerController.generated.h"
 
+
+class UMediaSoundComponent;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
@@ -58,6 +60,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractPressed OnInteractPressed;
 	
+	
 	FOnInteractableActorAdded OnInteractableActorAdded;
 	FOnInteractableActorRemoved OnInteractableActorRemoved;
 
@@ -71,6 +74,9 @@ public:
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
+
+	UFUNCTION(BlueprintPure)
+	UMediaSoundComponent* GetMediaSoundComponent() const;
 	
 protected:
 
@@ -91,6 +97,9 @@ protected:
 	void OnPlayerModeChanged(EPlayerMode InPlayerMode);
 
 private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UMediaSoundComponent* MediaSoundComponent;
 
 	FTimerHandle CameraBlendHandle;
 	FTimerDelegate CameraBlendDelegate;
