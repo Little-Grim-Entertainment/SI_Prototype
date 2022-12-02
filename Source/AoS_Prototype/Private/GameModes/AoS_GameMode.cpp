@@ -7,6 +7,7 @@
 #include "Data/Characters/AoS_CharacterData.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetStringLibrary.h"
 #include "Levels/AoS_LevelManager.h"
 
 AAoS_GameMode::AAoS_GameMode()
@@ -17,16 +18,33 @@ AAoS_GameMode::AAoS_GameMode()
 	}
 }
 
-void AAoS_GameMode::InitGameState()
+void AAoS_GameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
-	Super::InitGameState();
+	Super::InitGame(MapName, Options, ErrorMessage);
 
+	
 	if (IsValid(GameInstance))
 	{
-		GameInstance->SetCurrentGameMode(this);
+		GameInstance->OnInitGame.Broadcast();
+		GameInstance->SetGameMode(this);
 	}	
 }
+
+void AAoS_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+	FString PlayerStartTag = UKismetStringLibrary::GetSubstring(OptionsString, 1, OptionsString.Len() - 1);
+	if (PlayerStartTag == FString(""))
+	{
+		PlayerStartTag = FString("NickSpawn");
+	}
 	
+	AActor* PlayerStart = FindPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStartTag);
+
+	RestartPlayerAtPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStart);
+}
+
 void AAoS_GameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -34,13 +52,7 @@ void AAoS_GameMode::BeginPlay()
 	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (!IsValid(GameInstance)){return;}
 
-	GameInstance->SetCurrentGameMode(this);
-	
-	LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
-	if (IsValid(LevelManager))
-	{
-		LevelManager->LevelLoaded();
-	}
+	GameInstance->SetGameMode(this);
 
 	GameInstance->OnGameModeBeginPlay.Broadcast();
 }
@@ -81,4 +93,9 @@ TArray<APlayerStart*> AAoS_GameMode::GetAllPlayerStarts() const
 	}
 	
 	return PlayerStarts;
+}
+
+void AAoS_GameMode::RestartNickSpawn()
+{
+	HandleStartingNewPlayer(GetWorld()->GetFirstPlayerController());
 }

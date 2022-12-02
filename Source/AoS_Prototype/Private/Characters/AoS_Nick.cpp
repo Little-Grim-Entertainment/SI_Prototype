@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Data/Characters/AoS_NickCharacterData.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_Nick::AAoS_Nick()
@@ -46,6 +47,17 @@ AAoS_Nick::AAoS_Nick()
 void AAoS_Nick::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!IsValid(NickCharacterData)) {return;}
+	
+	if (GetWorld()->GetMapName() == "M_NicksOffice")
+	{
+		GetMesh()->SetSkeletalMesh(NickCharacterData->GetClothingMeshFromName(FName(TEXT("NoJacketNick"))));
+	}
+	else
+	{
+		GetMesh()->SetSkeletalMesh(NickCharacterData->GetClothingMeshFromName(FName(TEXT("JacketNick"))));
+	}
 }
 
 

@@ -7,6 +7,7 @@
 #include "AoS_CinematicsManager.generated.h"
 
 
+class UAoS_MapData;
 class UMediaTexture;
 class UMediaSource;
 class UMediaPlayer;
@@ -42,6 +43,10 @@ public:
 	UFUNCTION()
 	void OnVideoEnd();
 
+protected:
+
+	virtual void OnGameModeBeginPlay() override;
+	
 private:
 
 	UPROPERTY()
@@ -53,9 +58,13 @@ private:
 	UPROPERTY()
 	UMediaTexture* CurrentMediaTexture;
 
+	float CurrentMediaVolume;
+
 	EPlayerMode PreviousPlayerMode;
 	
 	UFUNCTION()
 	void OnCinematicEnd();
+	UFUNCTION()
+	void DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade);
 	
 };

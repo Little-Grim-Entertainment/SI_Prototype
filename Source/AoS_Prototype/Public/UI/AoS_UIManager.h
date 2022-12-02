@@ -6,6 +6,8 @@
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
+class UAoS_InteractionWidget;
+class UAoS_InteractionPrompt;
 class UMediaPlayer;
 class UAoS_MoviePlayerWidget;
 class UAoS_DialogueManager;
@@ -41,23 +43,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveMoviePlayerWidget();
 
-
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateMainMenu();
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveMainMenu();
-
-	void SetMenuMode(bool bInMenu = false, UAoS_UserWidget* WidgetToFocus = nullptr);
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
-
-	// Level Manager Delegates
-	UFUNCTION()
-	void OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
-	UFUNCTION()
-	void OnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade);
-
+	
 	// Case Manager Delegates
 	UFUNCTION()
 	void OnCaseAccepted(UAoS_Case* AcceptedCase);
@@ -70,14 +63,22 @@ public:
 	void OnPartActivated(UAoS_Part* ActivatedPart);
 	UFUNCTION()
 	void OnPartCompleted(UAoS_Part* CompletedPart);
+
+	UFUNCTION()
+	void SetMenuMode(bool bInMenu = false, UAoS_UserWidget* WidgetToFocus = nullptr);
+
+	UFUNCTION()
+	void AddActiveInteractionWidget(UAoS_InteractionWidget* InInteractionWidget);
+	UFUNCTION()
+	void RemoveActiveInteractionWidget(UAoS_InteractionWidget* InInteractionWidget);
 	
 	UFUNCTION()
 	void OnObjectiveActivated(UAoS_Objective* ActivatedObjective);
 	UFUNCTION()
 	void OnObjectiveCompleted(UAoS_Objective* CompletedObjective);
 
-	//Dialogue Manager Delegates
-	void BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager);
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	TArray<UAoS_InteractionWidget*>& GetActiveInteractionWidgets();
 
 protected:
 
@@ -86,11 +87,11 @@ protected:
 	virtual void OnGameModeBeginPlay() override;
 
 	void DisplayDialogueBox();
+	void HideActiveInteractionWidgets();
 
 
 private:
 
-	void BindLevelManagerDelegates();
 	void BindCaseManagerDelegates();
 	
 	UPROPERTY()
@@ -103,5 +104,7 @@ private:
 	UAoS_UserWidget* MainMenu;
 	UPROPERTY()
 	UAoS_MoviePlayerWidget* MoviePlayerWidget;
+	UPROPERTY()
+	TArray<UAoS_InteractionWidget*> ActiveInteractionWidgets;
 	
 };

@@ -8,6 +8,7 @@
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 #include "Controllers/AoS_PlayerController.h"
+#include "Levels/AoS_LevelManager.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
 #include "MediaAssets/Public/MediaSource.h"
@@ -48,6 +49,18 @@ void UAoS_CinematicsManager::PlayVideo(UMediaPlayer* InMediaPlayer, UMediaSource
 	CurrentMediaPlayer = InMediaPlayer;
 	CurrentMediaSource = InMediaSource;
 	CurrentMediaTexture = InMediaTexture;
+	CurrentMediaVolume = InVolume;
+
+	if (!GameInstance->GetLevelManager()->GetLevelHasLoaded())
+	{
+		GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedVideoPlay);
+		return;
+	}
+	
+	if (CurrentMediaPlayer->OnEndReached.IsBound())
+	{
+		CurrentMediaPlayer->OnEndReached.RemoveAll(this);
+	}
 
 	if (InVolume != 1.0f)
 	{
@@ -59,7 +72,7 @@ void UAoS_CinematicsManager::PlayVideo(UMediaPlayer* InMediaPlayer, UMediaSource
 	{
 		PlayerController->GetMediaSoundComponent()->SetMediaPlayer(CurrentMediaPlayer);
 	}
-
+	
 	CurrentMediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::UAoS_CinematicsManager::OnVideoEnd);
 	
 	PreviousPlayerMode = GameInstance->GetPlayerMode();
@@ -93,11 +106,23 @@ void UAoS_CinematicsManager::OnCinematicEnd()
 	GameInstance->SetPlayerMode(PreviousPlayerMode);
 }
 
+void UAoS_CinematicsManager::DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade)
+{
+	PlayVideo(CurrentMediaPlayer, CurrentMediaSource, CurrentMediaTexture, CurrentMediaVolume);
+}
+
 void UAoS_CinematicsManager::OnVideoEnd()
 {
 	if(!IsValid(GameInstance)){return;}
 
 	GameInstance->SetPlayerMode(PreviousPlayerMode);
 	OnVideoEnded.Broadcast();
+}
+
+void UAoS_CinematicsManager::OnGameModeBeginPlay()
+{
+	Super::OnGameModeBeginPlay();
+
+	
 }
 	

@@ -9,6 +9,7 @@
 enum class EPlayerMode : uint8;
 
 class UAoS_GameInstance;
+class AAoS_GameMode;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstanceSubsystem : public UGameInstanceSubsystem
@@ -23,6 +24,8 @@ protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	UFUNCTION()
 	virtual void OnGameInstanceInit();
+	UFUNCTION()
+	virtual void OnInitGame();	
 	UFUNCTION()
 	virtual void OnGameModeBeginPlay();
 	UFUNCTION()

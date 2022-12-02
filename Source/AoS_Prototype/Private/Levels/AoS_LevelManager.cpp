@@ -16,10 +16,28 @@ UAoS_LevelManager::UAoS_LevelManager()
 	MainMenu = MainMenuAsset.Object;
 }
 
-void UAoS_LevelManager::OnGameInstanceInit()
+void UAoS_LevelManager::OnInitGame()
 {
-	Super::OnGameInstanceInit();
-	OnGameLoaded();
+	Super::OnInitGame();
+
+	UWorld* World = GetWorld();
+	if (!World){return;}
+	
+	FString MapName = World->GetName();
+	MapName = UKismetStringLibrary::Replace(MapName, "M_", "DA_");
+	UAoS_MapData* StartingMap = GetMapFromName(MapName);
+	
+	if (IsValid(StartingMap))
+	{
+		LevelToLoad = StartingMap;
+	}
+}
+
+void UAoS_LevelManager::OnGameModeBeginPlay()
+{
+	Super::OnGameModeBeginPlay();
+
+	LevelLoaded();
 }
 
 void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay, bool bShouldFade, FString InPlayerStartTag)
@@ -30,6 +48,7 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay,
 	PlayerStartTag = InPlayerStartTag;
 	LevelToLoad = InLevelToLoad;
 	LevelLoadDelay = GameInstance->LevelLoadDelay;
+	bLevelHasLoaded = false;
 	
 	OnBeginLevelLoad.Broadcast(InLevelToLoad, bLoadShouldFade);
 	GameInstance->SetPlayerMode(EPlayerMode::PM_LevelLoadingMode);
@@ -95,7 +114,13 @@ UAoS_MapData* UAoS_LevelManager::GetCurrentMap() const
 
 FString UAoS_LevelManager::GetCurrentMapName() const
 {
+	if (!IsValid(CurrentLevel)) {return "";}
 	return CurrentLevel->MapName;
+}
+
+bool UAoS_LevelManager::GetLevelHasLoaded() const
+{
+	return bLevelHasLoaded;
 }
 
 void UAoS_LevelManager::ExecuteLevelLoad()
@@ -110,7 +135,7 @@ void UAoS_LevelManager::LevelLoaded()
 {
 	if(!IsValid(LevelToLoad))
 	{
-		OnGameLoaded();
+		OnInitGame();
 		if(!IsValid(LevelToLoad)){return;}
 	}
 	
@@ -124,8 +149,11 @@ void UAoS_LevelManager::LevelLoaded()
 		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
 	}
 	
+	bLevelHasLoaded = true;
 	OnLevelLoaded.Broadcast(CurrentLevel, bLoadShouldFade);
 }
+
+
 
 UAoS_MapData* UAoS_LevelManager::GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel)
 {
@@ -138,19 +166,6 @@ UAoS_MapData* UAoS_LevelManager::GetMapDataFromStreamingLevel(ULevelStreaming* I
 		}
 	}
 	return nullptr;
-}
-
-void UAoS_LevelManager::OnGameLoaded()
-{
-	UWorld* World = GetWorld();
-	FString MapName = World->GetName();
-	MapName = UKismetStringLibrary::Replace(MapName, "M_", "DA_");
-	UAoS_MapData* StartingMap = GetMapFromName(MapName);
-	
-	if (IsValid(StartingMap))
-	{
-		LevelToLoad = StartingMap;
-	}
 }
 
 void UAoS_LevelManager::UpdateMapType(EMapType InMapType)

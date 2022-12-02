@@ -39,11 +39,15 @@ public:
 	APlayerStart* GetPlayerStart(FString InPlayerStartTag = FString(TEXT(""))) const;
 	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
 	TArray<APlayerStart*> GetAllPlayerStarts() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
+	void RestartNickSpawn();
 
 protected:
 
 	virtual void BeginPlay() override;
-	virtual void InitGameState() override;
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
 
 private:
 

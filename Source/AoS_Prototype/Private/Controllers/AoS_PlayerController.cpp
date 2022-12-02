@@ -4,7 +4,6 @@
 #include "Controllers/AoS_PlayerController.h"
 
 #include "AoS_GameInstance.h"
-#include "AssetTypeCategories.h"
 #include "Actors/AoS_InteractableActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Camera/CameraActor.h"
@@ -12,6 +11,7 @@
 #include "Characters/AoS_Nick.h"
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameModes/AoS_GameMode.h"
 #include "Interfaces/AoS_InteractInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
@@ -50,6 +50,7 @@ void AAoS_PlayerController::BeginPlay()
 	if (IsValid(GameInstance))
 	{
 		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
+		OnPlayerModeChanged(GameInstance->GetPlayerMode());
 	}
 
 	Nick = Cast<AAoS_Nick>(GetPawn()); 
@@ -225,16 +226,13 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 		}
 		case EPlayerMode::PM_VideoMode:
 		{
+			PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
 			LockPlayerMovement(true, true);
-			/*UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
-			if (CinematicsManager)
-			{
-				MediaSoundComponent->SetMediaPlayer(CinematicsManager->GetCurrentMediaPlayer());
-			}*/
-			break;
+			break;	
 		}
 		default:
 		{
+			LockPlayerMovement(true, true);
 			break;
 		}
 	}

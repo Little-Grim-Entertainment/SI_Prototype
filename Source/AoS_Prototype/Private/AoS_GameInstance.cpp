@@ -13,7 +13,7 @@
 
 UAoS_GameInstance::UAoS_GameInstance()
 {	
-	CurrentGameMode = nullptr;
+	GameMode = nullptr;
 }
 
 void UAoS_GameInstance::Init()
@@ -34,14 +34,14 @@ EPlayerMode UAoS_GameInstance::GetPlayerMode() const
 	return PlayerMode;
 }
 
-AAoS_GameMode* UAoS_GameInstance::GetCurrentGameMode()
+AAoS_GameMode* UAoS_GameInstance::GetGameMode() const
 {
-	return CurrentGameMode;
+	return GameMode;
 }
 
-void UAoS_GameInstance::SetCurrentGameMode(AAoS_GameMode* InGameMode)
+void UAoS_GameInstance::SetGameMode(AAoS_GameMode* InGameMode)
 {
-	CurrentGameMode = InGameMode;
+	GameMode = InGameMode;
 }
 
 void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
