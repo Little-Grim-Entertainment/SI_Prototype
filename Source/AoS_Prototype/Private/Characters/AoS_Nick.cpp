@@ -50,7 +50,9 @@ void AAoS_Nick::BeginPlay()
 
 	if (!IsValid(NickCharacterData)) {return;}
 	
-	if (GetWorld()->GetMapName() == "M_NicksOffice")
+	FString MapName = GetWorld()->GetMapName();
+	
+	if (MapName == "M_NicksOffice")
 	{
 		GetMesh()->SetSkeletalMesh(NickCharacterData->GetClothingMeshFromName(FName(TEXT("NoJacketNick"))));
 	}
