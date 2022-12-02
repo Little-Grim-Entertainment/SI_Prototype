@@ -30,21 +30,29 @@ void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 	switch (NewPlayerMode)
 	{
 		case EPlayerMode::PM_CinematicMode:
+		{
+			if(IsValid(BackgroundMusic) && !bMusicIsPaused)
 			{
-				if(IsValid(BackgroundMusic) && !bMusicIsPaused)
-				{
-					PauseMusicWithFade();
-				}
-				break;	
+				PauseMusicWithFade();
 			}
+			break;	
+		}
+		case EPlayerMode::PM_VideoMode:
+		{
+			if(IsValid(BackgroundMusic) && !bMusicIsPaused)
+			{
+				PauseMusicWithFade();
+			}
+			break;
+		}
 		default:
+		{
+			if(bMusicIsPaused)
 			{
-				if(bMusicIsPaused)
-				{
-					ResumeMusicWithFade();
-				}
-				break;
+				ResumeMusicWithFade();
 			}
+			break;
+		}
 	}
 }
 

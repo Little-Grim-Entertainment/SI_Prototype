@@ -9,9 +9,12 @@
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/AoS_Nick.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameModes/AoS_GameMode.h"
 #include "Interfaces/AoS_InteractInterface.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "MediaAssets/Public/MediaSoundComponent.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -19,6 +22,9 @@ AAoS_PlayerController::AAoS_PlayerController()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
+
+	MediaSoundComponent = CreateDefaultSubobject<UMediaSoundComponent>(TEXT("MediaSoundComponent"));
+	MediaSoundComponent->SetupAttachment(RootComponent);
 }
 
 void AAoS_PlayerController::SetupInputComponent()
@@ -44,6 +50,7 @@ void AAoS_PlayerController::BeginPlay()
 	if (IsValid(GameInstance))
 	{
 		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
+		OnPlayerModeChanged(GameInstance->GetPlayerMode());
 	}
 
 	Nick = Cast<AAoS_Nick>(GetPawn()); 
@@ -212,16 +219,21 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 {
 	switch (InPlayerMode)
 	{
-		case EPlayerMode::PM_MainMenuMode:
+		case EPlayerMode::PM_ExplorationMode:
 		{
-			Nick->GetMesh()->SetVisibility(false);
+			LockPlayerMovement(false, false);
+			break;
+		}
+		case EPlayerMode::PM_VideoMode:
+		{
+			PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
+			LockPlayerMovement(true, true);
+			break;	
 		}
 		default:
 		{
-			if (!Nick->GetMesh()->IsVisible())
-			{
-				Nick->GetMesh()->SetVisibility(true);	
-			}
+			LockPlayerMovement(true, true);
+			break;
 		}
 	}
 }
@@ -240,4 +252,9 @@ void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 {
 	ObservableActor = InObservableActor;
+}
+
+UMediaSoundComponent* AAoS_PlayerController::GetMediaSoundComponent() const
+{
+	return MediaSoundComponent;
 }

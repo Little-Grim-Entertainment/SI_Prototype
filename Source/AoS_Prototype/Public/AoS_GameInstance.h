@@ -33,6 +33,7 @@ enum class EPlayerMode : uint8
 	PM_ExplorationMode		UMETA(DisplayName = "ExplorationMode"),
 	PM_LevelLoadingMode		UMETA(DisplayName = "LevelLoadingMode"),
 	PM_CinematicMode		UMETA(DisplayName = "CinematicMode"),
+	PM_VideoMode			UMETA(DisplayName = "VideoMode"),
 	PM_DialogueMode			UMETA(DisplayName = "DialogueMode"),
 	PM_ObservationMode		UMETA(DisplayName = "ObservationMode"),
 	PM_InspectionMode		UMETA(DisplayName = "InspectionMode"),
@@ -45,6 +46,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, N
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameInstanceInit);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameModeBeginPlay);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitGame);
+
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
@@ -64,6 +67,8 @@ public:
 	FOnGameInstanceInit OnGameInstanceInit;
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnGameModeBeginPlay OnGameModeBeginPlay;
+	UPROPERTY(BlueprintAssignable, Category = "MapData")
+	FOnInitGame OnInitGame;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
 	float TimeModifier = 10.0f;
@@ -81,11 +86,11 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
-	UFUNCTION(BlueprintPure, Category = "GameMode")
-	AAoS_GameMode* GetCurrentGameMode();
+	UFUNCTION(BlueprintPure, Category = "PlayerData")
+	AAoS_GameMode* GetGameMode() const;
 
 	UFUNCTION()
-	void SetCurrentGameMode(AAoS_GameMode* InGameMode);
+	void SetGameMode(AAoS_GameMode* InGameMode);
 	
 	UFUNCTION()
 	UAoS_UIManager* GetUIManager() const {return UIManager;}
@@ -112,7 +117,7 @@ private:
 	UAoS_WorldManager* WorldManager;
 
 	UPROPERTY()
-	AAoS_GameMode* CurrentGameMode;
+	AAoS_GameMode* GameMode;
 	
 	EPlayerMode PlayerMode;
 

@@ -2,6 +2,8 @@
 
 
 #include "Characters/AoS_GizboManager.h"
+
+#include "AoS_GameInstance.h"
 #include "Characters/AoS_Character.h"
 #include "Characters/AoS_Gizbo.h"
 #include "Controllers/AoS_GizboController.h"
@@ -12,29 +14,22 @@
 
 void UAoS_GizboManager::SpawnGizbo()
 {
-	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());
-	if (!GameMode->GizboCDA) {return;}
-	if (!GameMode->GizboCDA->CharacterClass){return;}
+	if (!GameInstance->GetGameMode()->GizboCDA) {return;}
+	if (!GameInstance->GetGameMode()->GizboCDA->CharacterClass){return;}
 	
-	if (const APlayerStart* PlayerStart = GameMode->GetPlayerStart())
+	if (const APlayerStart* GizboStart = GameInstance->GetGameMode()->GetPlayerStart("GizboSpawn"))
 	{
-		FVector GizboLocation = PlayerStart->GetActorLocation();
-
-		// ToDo: @Liam we should probably create a scene component on Nick's blueprint that will act as a location pointer where Gizbo will spawn and try to get to if told to come back to Nick.
-		// Offset behind Nick, rather than spawning in the same spot
-		GizboLocation.X -= 100;
-		GizboLocation.Y += 100;
-		GizboLocation.Z -= 50;
+		FVector GizboLocation = FVector(GizboStart->GetActorLocation().X, GizboStart->GetActorLocation().Y, GizboStart->GetActorLocation().Z - 50);
 		
 		if (!GizboCharacter)
 		{
 			const FActorSpawnParameters PlayerSpawnParameters;
-			GizboCharacter = GetWorld()->SpawnActor<AAoS_Gizbo>(GameMode->GizboCDA->CharacterClass, GizboLocation, PlayerStart->GetActorRotation(), PlayerSpawnParameters);
+			GizboCharacter = GetWorld()->SpawnActor<AAoS_Gizbo>(GameInstance->GetGameMode()->GizboCDA->CharacterClass, GizboLocation, GizboStart->GetActorRotation(), PlayerSpawnParameters);
 		}
 		else
 		{
 			GizboCharacter->SetActorLocation(GizboLocation);
-			GizboCharacter->SetActorRotation(PlayerStart->GetActorRotation());
+			GizboCharacter->SetActorRotation(GizboStart->GetActorRotation());
 		}
 	}
 

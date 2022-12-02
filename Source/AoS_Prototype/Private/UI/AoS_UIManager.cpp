@@ -6,8 +6,7 @@
 
 // Subsystems
 #include "Data/Cases/AoS_CaseManager.h"
-#include "Levels/AoS_LevelManager.h"
-#include "Dialogue/AoS_DialogueManager.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 
 // Case Data
 #include "Data/Cases/AoS_Case.h"
@@ -19,11 +18,13 @@
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "UI/AoS_MoviePlayerWidget.h"
+#include "UI/AoS_InteractionWidget.h"
 
 
 #include "Controllers/AoS_PlayerController.h"
-#include "Data/Maps/AoS_MapData.h"
 #include "GameModes/AoS_GameMode.h"
+#include "MediaAssets/Public/MediaPlayer.h"
 
 
 UAoS_UIManager::UAoS_UIManager()
@@ -35,26 +36,13 @@ void UAoS_UIManager::OnGameInstanceInit()
 {
 	Super::OnGameInstanceInit();
 	
-	BindLevelManagerDelegates();
 	BindCaseManagerDelegates();
 }
 
 void UAoS_UIManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
-
 	
-}
-
-void UAoS_UIManager::BindDialogueManagerDelegates(UAoS_DialogueManager* InDialogueManager)
-{
-	
-}
-
-void UAoS_UIManager::BindLevelManagerDelegates()
-{
-	GameInstance->GetLevelManager()->OnBeginLevelLoad.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelBeginLoad);
-	GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::UAoS_UIManager::OnLevelFinishLoad);
 }
 
 void UAoS_UIManager::BindCaseManagerDelegates()
@@ -79,26 +67,18 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 	Super::OnPlayerModeChanged(NewPlayerMode);
 
 	RemovePlayerHUD();
-	
-	if(NewPlayerMode != EPlayerMode::PM_MainMenuMode && IsValid(MainMenu))
-	{
-		RemoveMainMenu();
-	}
-	if(GameInstance->GetLevelManager()->GetCurrentLoadedLevel()->MapType == EMapType::MT_Menu && NewPlayerMode != EPlayerMode::PM_LevelLoadingMode)
-	{
-		if (IsValid(PlayerHUD))
-		{
-			RemovePlayerHUD();
-		}
-		SetMenuMode(true);	
-	}
-	else if (NewPlayerMode != EPlayerMode::PM_LevelLoadingMode)
-	{
-		CreatePlayerHUD();
-		SetMenuMode(false);
-	}
+	RemoveMoviePlayerWidget();
+	RemoveMainMenu();
+	DisplayLoadingScreen(false, true);
+		
 	switch (NewPlayerMode)
 	{
+		case EPlayerMode::PM_ExplorationMode:
+		{
+			CreatePlayerHUD();
+			SetMenuMode(false);
+			break;
+		}
 		case EPlayerMode::PM_MainMenuMode:
 		{
 			CreateMainMenu();
@@ -107,36 +87,36 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 		}
 		case EPlayerMode::PM_CinematicMode:
 		{
-			if (IsValid(PlayerHUD))
-			{
-				RemovePlayerHUD();
-			}
+			SetMenuMode(false);
 			break;	
+		}
+		case EPlayerMode::PM_VideoMode:
+		{
+			HideActiveInteractionWidgets();
+			CreateMoviePlayerWidget();
+			DisplayLoadingScreen(false, false);
+			SetMenuMode(false, MoviePlayerWidget);
+			break;
 		}
 		case EPlayerMode::PM_LevelLoadingMode:
 		{
-			if (IsValid(PlayerHUD))
-			{
-				RemovePlayerHUD();
-			}
-			if(!IsValid(PlayerController))
-			{
-				PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-				if(!IsValid(PlayerController)){break;}
-			}
-			SetMenuMode(false);
-			PlayerController->SetShowMouseCursor(false);
+			HideActiveInteractionWidgets();
+			DisplayLoadingScreen(true, true);
 			break;	
 		}
 		case EPlayerMode::PM_ObservationMode:
 		{
+			CreatePlayerHUD();
 			if (IsValid(PlayerHUD))
 			{
 				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Visible);
 			}
+			break;
 		}
 		default:
 		{
+			CreatePlayerHUD();
+			SetMenuMode(false);
 			break;
 		}
 	}
@@ -145,13 +125,38 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 void UAoS_UIManager::CreatePlayerHUD()
 {
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(GameInstance)){return;}
+	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
 	
-	PlayerHUD =	CreateWidget<UAoS_HUD>(GameInstance, GameInstance->GetCurrentGameMode()->PlayerHUD_Class);
+	PlayerHUD =	CreateWidget<UAoS_HUD>(GameInstance, GameInstance->GetGameMode()->PlayerHUD_Class);
 	if (IsValid(PlayerHUD))
 	{
 		PlayerHUD->AddToViewport();
 	}
+}
+
+void UAoS_UIManager::CreateMoviePlayerWidget()
+{
+	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	AAoS_GameMode* GameMOde = GameInstance->GetGameMode();
+	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
+	
+	MoviePlayerWidget =	CreateWidget<UAoS_MoviePlayerWidget>(GameInstance, GameInstance->GetGameMode()->MoviePlayerWidget);
+	if (IsValid(MoviePlayerWidget))
+	{
+		const UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+		MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetCurrentMediaTexture());
+		MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetCurrentMediaPlayer());
+		MoviePlayerWidget->SetMediaSource(CinematicsManager->GetCurrentMediaSource());
+		MoviePlayerWidget->AddToViewport();
+		MoviePlayerWidget->PlayVideo();
+	}
+}
+
+void UAoS_UIManager::RemoveMoviePlayerWidget()
+{
+	if (!IsValid(MoviePlayerWidget)){return;}
+	
+	MoviePlayerWidget->RemoveFromParent();
 }
 
 void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
@@ -176,9 +181,9 @@ void UAoS_UIManager::RemovePlayerHUD()
 void UAoS_UIManager::CreateMainMenu()
 {
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(PlayerController)){return;}
+	if (!IsValid(PlayerController) || !IsValid(GameInstance->GetGameMode())){return;}
 	
-	MainMenu =	CreateWidget<UAoS_UserWidget>(PlayerController,  GameInstance->GetCurrentGameMode()->MainMenuClass);
+	MainMenu =	CreateWidget<UAoS_UserWidget>(PlayerController,  GameInstance->GetGameMode()->MainMenuClass);
 	if (IsValid(MainMenu))
 	{
 		MainMenu->AddToViewport();
@@ -212,6 +217,22 @@ void UAoS_UIManager::SetMenuMode(bool bInMenu, UAoS_UserWidget* WidgetToFocus)
 	}
 }
 
+void UAoS_UIManager::AddActiveInteractionWidget(UAoS_InteractionWidget* InInteractionWidget)
+{
+	if (IsValid(InInteractionWidget))
+	{
+		ActiveInteractionWidgets.AddUnique(InInteractionWidget);
+	}
+}
+
+void UAoS_UIManager::RemoveActiveInteractionWidget(UAoS_InteractionWidget* InInteractionWidget)
+{
+	if (IsValid(InInteractionWidget))
+	{
+		ActiveInteractionWidgets.Remove(InInteractionWidget);
+	}
+}
+
 void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 {
 	if (!IsValid(GameInstance)){return;}
@@ -228,14 +249,7 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 				if (IsValid(LoadingScreen))
 				{
 					GameInstance->GetGameViewportClient()->AddViewportWidgetContent(LoadingScreen->TakeWidget());
-					if(!IsValid(PlayerController))
-					{
-						PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-						if(!IsValid(PlayerController)){return;}
-					}
-					PlayerController->SetIgnoreMoveInput(true);
-					PlayerController->SetIgnoreLookInput(true);
-					SetMenuMode(true, LoadingScreen);
+					SetMenuMode(false, LoadingScreen);
 				}
 			}
 		}
@@ -252,13 +266,7 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			{
 				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(LoadingScreen->TakeWidget());
 			}
-			if(!IsValid(PlayerController))
-			{
-				PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-				if(!IsValid(PlayerController)){return;}
-			}
-			PlayerController->SetIgnoreMoveInput(false);
-			PlayerController->SetIgnoreLookInput(false);
+			SetMenuMode(false);
 		}
 	}
 }
@@ -270,14 +278,16 @@ void UAoS_UIManager::DisplayDialogueBox()
 	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UAoS_UIManager::OnLevelBeginLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
+void UAoS_UIManager::HideActiveInteractionWidgets()
 {
-	DisplayLoadingScreen(true, bShouldFade);
-}
-
-void UAoS_UIManager::OnLevelFinishLoad(UAoS_MapData* LoadingLevel, bool bShouldFade)
-{
-	DisplayLoadingScreen(false, bShouldFade);
+	if (ActiveInteractionWidgets.Num() <= 0){return;}
+	for (UAoS_InteractionWidget* CurrentInteractionWidget : ActiveInteractionWidgets)
+	{
+		if (IsValid(CurrentInteractionWidget))
+		{
+			CurrentInteractionWidget->HideWidget();
+		}
+	}
 }
 
 void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
@@ -313,6 +323,11 @@ void UAoS_UIManager::OnObjectiveActivated(UAoS_Objective* ActivatedObjective)
 void UAoS_UIManager::OnObjectiveCompleted(UAoS_Objective* CompletedObjective)
 {
 	
+}
+
+TArray<UAoS_InteractionWidget*>& UAoS_UIManager::GetActiveInteractionWidgets()
+{
+	return ActiveInteractionWidgets;
 }
 
 

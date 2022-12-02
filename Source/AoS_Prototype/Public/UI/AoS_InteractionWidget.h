@@ -22,10 +22,4 @@ public:
 	void HideWidget();
 	UFUNCTION(BlueprintNativeEvent)
 	void RefreshWidget();
-
-protected:
-
-	virtual void ShowWidget_Implementation();
-	virtual void HideWidget_Implementation();
-	virtual void RefreshWidget_Implementation();	
 };
