@@ -48,6 +48,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameInstanceInit);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameModeBeginPlay);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitGame);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerStart);
+
 
 
 UCLASS()
@@ -63,6 +65,8 @@ public:
 	FOnSubsystemBindingsComplete OnSubsystemBindingsComplete;
 	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
 	FOnPlayerModeChanged OnPlayerModeChanged;
+	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
+	FOnPlayerStart OnPlayerStart;
 
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnGameInstanceInit OnGameInstanceInit;

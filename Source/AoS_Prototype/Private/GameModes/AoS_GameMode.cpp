@@ -43,6 +43,10 @@ void AAoS_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* Ne
 	AActor* PlayerStart = FindPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStartTag);
 
 	RestartPlayerAtPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStart);
+	if (IsValid(GameInstance))
+	{
+		GameInstance->OnPlayerStart.Broadcast();
+	}	
 }
 
 void AAoS_GameMode::BeginPlay()

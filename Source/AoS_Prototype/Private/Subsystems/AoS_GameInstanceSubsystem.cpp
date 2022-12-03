@@ -13,6 +13,7 @@ void UAoS_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection
 	if (!IsValid(GameInstance)){return;}
 
 	GameInstance->OnGameInstanceInit.AddDynamic(this, &ThisClass::OnGameInstanceInit);
+	GameInstance->OnPlayerStart.AddDynamic(this, &ThisClass::OnGameInstanceInit);
 	GameInstance->OnGameModeBeginPlay.AddDynamic(this, &ThisClass::OnGameModeBeginPlay);
 	GameInstance->OnInitGame.AddDynamic(this, &ThisClass::OnInitGame);	
 }
@@ -25,6 +26,10 @@ void UAoS_GameInstanceSubsystem::OnGameInstanceInit()
 void UAoS_GameInstanceSubsystem::OnInitGame()
 {
 
+}
+
+void UAoS_GameInstanceSubsystem::OnPlayerStart()
+{
 }
 
 void UAoS_GameInstanceSubsystem::OnGameModeBeginPlay()

@@ -41,6 +41,13 @@ void UAoS_LevelManager::OnGameModeBeginPlay()
 	LevelLoaded();
 }
 
+void UAoS_LevelManager::OnPlayerStart()
+{
+	Super::OnPlayerStart();
+
+	
+}
+
 void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay, bool bShouldFade, FString InPlayerStartTag)
 {
 	if (!InLevelToLoad) {return;}
