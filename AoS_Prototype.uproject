@@ -14,10 +14,10 @@
 				"UMG"
 			]
 		},
-
 		{
 			"Name": "DialogueSystemEditor",
-			"Type": "Editor"
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
@@ -45,6 +45,10 @@
 		},
 		{
 			"Name": "Metasound",
+			"Enabled": true
+		},
+		{
+			"Name": "EnhancedInput",
 			"Enabled": true
 		}
 	]
