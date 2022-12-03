@@ -23,6 +23,7 @@
 
 
 #include "Controllers/AoS_PlayerController.h"
+#include "Data/Videos/AoS_VideoDataAsset.h"
 #include "GameModes/AoS_GameMode.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 
@@ -66,10 +67,32 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 {
 	Super::OnPlayerModeChanged(NewPlayerMode);
 
-	RemovePlayerHUD();
-	RemoveMoviePlayerWidget();
-	RemoveMainMenu();
-	DisplayLoadingScreen(false, true);
+	switch (PreviousPlayerMode)
+	{
+		case EPlayerMode::PM_ExplorationMode:
+		{
+			RemovePlayerHUD();
+		}
+		case EPlayerMode::PM_LevelLoadingMode:
+		{
+			DisplayLoadingScreen(false, true);
+			break;
+		}
+		case EPlayerMode::PM_VideoMode:
+		{
+			RemoveMoviePlayerWidget();
+			break;
+		}
+		case EPlayerMode::PM_MainMenuMode:
+		{
+			RemoveMainMenu();
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
 		
 	switch (NewPlayerMode)
 	{
@@ -120,6 +143,8 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 			break;
 		}
 	}
+
+	PreviousPlayerMode = NewPlayerMode;
 }
 
 void UAoS_UIManager::CreatePlayerHUD()
@@ -137,16 +162,15 @@ void UAoS_UIManager::CreatePlayerHUD()
 void UAoS_UIManager::CreateMoviePlayerWidget()
 {
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	AAoS_GameMode* GameMOde = GameInstance->GetGameMode();
 	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
 	
 	MoviePlayerWidget =	CreateWidget<UAoS_MoviePlayerWidget>(GameInstance, GameInstance->GetGameMode()->MoviePlayerWidget);
 	if (IsValid(MoviePlayerWidget))
 	{
 		const UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
-		MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetCurrentMediaTexture());
-		MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetCurrentMediaPlayer());
-		MoviePlayerWidget->SetMediaSource(CinematicsManager->GetCurrentMediaSource());
+		MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetLoadedVideo()->MediaTexture);
+		MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetLoadedVideo()->MediaPlayer);
+		MoviePlayerWidget->SetMediaSource(CinematicsManager->GetLoadedVideo()->MediaSource);
 		MoviePlayerWidget->AddToViewport();
 		MoviePlayerWidget->PlayVideo();
 	}
@@ -156,7 +180,8 @@ void UAoS_UIManager::RemoveMoviePlayerWidget()
 {
 	if (!IsValid(MoviePlayerWidget)){return;}
 	
-	MoviePlayerWidget->RemoveFromParent();
+	MoviePlayerWidget->OnVideoStopped();
+	MoviePlayerWidget = nullptr;
 }
 
 void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)

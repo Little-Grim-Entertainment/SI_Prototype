@@ -7,6 +7,7 @@
 #include "AoS_CinematicsManager.generated.h"
 
 
+class UAoS_VideoDataAsset;
 class UAoS_MapData;
 class UMediaTexture;
 class UMediaSource;
@@ -14,34 +15,32 @@ class UMediaPlayer;
 class ULevelSequence;
 class ULevelSequencePlayer;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVideoEnd);
-
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_CinematicsManager : public UAoS_WorldSubsystem
 {
 	GENERATED_BODY()
 
 public:
-
-	UPROPERTY(BlueprintAssignable, Category = "Videos")
-	FOnVideoEnd OnVideoEnded;
 	
 	UFUNCTION(BlueprintCallable)
 	void PlayCinematic(ULevelSequence* LevelSequenceToPlay, bool bAutoPlay = false, int32 Loop = 0, float PlayRate = 1.0f, float StartOffset = 0.0f, bool bRandomStartTime = false, bool bRestoreState = false, bool bDisableMovementInput = false, bool bDisableLookInput = false, bool bHidePlayer = false, bool bHideHud = false, bool bDisableCameraCuts = false, bool bPauseAtEnd = false);
 	UFUNCTION(BlueprintCallable)
-	void PlayVideo(UMediaPlayer* InMediaPlayer, UMediaSource* InMediaSource, UMediaTexture* InMediaTexture, float InVolume = 1.0f);
+	void PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat, float InVolume = 1.0f);
+
+	UFUNCTION(BlueprintCallable)
+	void ResetVideoByName(FString InVideoName);
+	UFUNCTION(BlueprintCallable)
+	void ResetAllVideos();
 
 	UFUNCTION(BlueprintPure)
 	ULevelSequencePlayer* GetCurrentCinematic() const;
 	UFUNCTION(BlueprintPure)
-	UMediaPlayer* GetCurrentMediaPlayer() const;
-	UFUNCTION(BlueprintPure)
-	UMediaSource* GetCurrentMediaSource() const;
-	UFUNCTION(BlueprintPure)
-	UMediaTexture* GetCurrentMediaTexture() const;
-
+	UAoS_VideoDataAsset* GetLoadedVideo() const;
+	
 	UFUNCTION()
-	void OnVideoEnd();
+	void OnVideoSkipped();
+	UFUNCTION()
+	void OnVideoEnded();
 
 protected:
 
@@ -52,14 +51,10 @@ private:
 	UPROPERTY()
 	ULevelSequencePlayer* CurrentCinematic;
 	UPROPERTY()
-	UMediaPlayer* CurrentMediaPlayer;
+	UAoS_VideoDataAsset* LoadedVideo;
 	UPROPERTY()
-	UMediaSource* CurrentMediaSource;
-	UPROPERTY()
-	UMediaTexture* CurrentMediaTexture;
-
-	float CurrentMediaVolume;
-
+	TArray<UAoS_VideoDataAsset*> PlayedVideos;
+	
 	EPlayerMode PreviousPlayerMode;
 	
 	UFUNCTION()

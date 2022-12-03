@@ -217,6 +217,20 @@ void AAoS_PlayerController::PostCameraBlend(ACameraActor* InFollowCamera, ACamer
 
 void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 {
+
+	switch (PreviousPlayerMode)
+	{
+	case EPlayerMode::PM_VideoMode:
+		{
+			PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, true);
+			break;	
+		}
+	default:
+		{
+			break;
+		}
+	}
+	
 	switch (InPlayerMode)
 	{
 		case EPlayerMode::PM_ExplorationMode:
@@ -236,6 +250,8 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 			break;
 		}
 	}
+
+	PreviousPlayerMode = InPlayerMode;
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)

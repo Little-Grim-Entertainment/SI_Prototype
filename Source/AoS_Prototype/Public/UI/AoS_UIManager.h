@@ -106,5 +106,7 @@ private:
 	UAoS_MoviePlayerWidget* MoviePlayerWidget;
 	UPROPERTY()
 	TArray<UAoS_InteractionWidget*> ActiveInteractionWidgets;
+
+	EPlayerMode PreviousPlayerMode;
 	
 };

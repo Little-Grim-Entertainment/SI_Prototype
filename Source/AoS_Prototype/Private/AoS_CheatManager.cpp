@@ -4,7 +4,9 @@
 #include "AoS_CheatManager.h"
 #include "World/AoS_WorldManager.h"
 #include "AoS_GameInstance.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Cases/AoS_CaseManager.h"
+#include "Data/Videos/AoS_VideoDataAsset.h"
 
 UAoS_CheatManager::UAoS_CheatManager()
 {
@@ -31,6 +33,22 @@ void UAoS_CheatManager::CheatResetCase(FString CaseToResetName)
 		{
 			CaseManager->ResetCase(CaseToResetName);
 		}
+	}
+}
+
+void UAoS_CheatManager::CheatResetPlayedVideos()
+{
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
+	{
+		CinematicsManager->ResetAllVideos();
+	}
+}
+
+void UAoS_CheatManager::CheatSkipVideo()
+{
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
+	{
+		CinematicsManager->GetLoadedVideo()->SkipVideo();
 	}
 }
 

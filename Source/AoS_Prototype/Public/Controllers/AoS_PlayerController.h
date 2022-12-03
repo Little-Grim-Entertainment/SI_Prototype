@@ -101,6 +101,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UMediaSoundComponent* MediaSoundComponent;
 
+	EPlayerMode PreviousPlayerMode;
+	
 	FTimerHandle CameraBlendHandle;
 	FTimerDelegate CameraBlendDelegate;
 };

@@ -27,6 +27,10 @@ public:
 	void CheatPauseWorldTimer(bool bShouldPause);
 	UFUNCTION(exec)
 	void CheatResetCase(FString CaseToResetName);
+	UFUNCTION(exec)
+	void CheatResetPlayedVideos();
+	UFUNCTION(exec)
+	void CheatSkipVideo();
 
 protected:
 
