@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "AoS_GameInstance.generated.h"
 
+class UAoS_WatchedVideos;
 class AAoS_GameMode;
 class UAoS_HUD;
 class AAoS_GizboController;
@@ -70,12 +71,16 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnInitGame OnInitGame;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
-	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "Loading")
 	TArray<TSubclassOf<UAoS_UserWidget>> LoadingScreens;
+
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	UAoS_MapList* MapList;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
+	UAoS_WatchedVideos* WatchedVideosData;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
+	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	float LevelLoadDelay = 0.0f;
 

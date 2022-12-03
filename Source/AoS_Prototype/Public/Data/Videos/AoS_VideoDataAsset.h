@@ -33,6 +33,8 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
 	bool bCanRepeat = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
+	bool bIsOpeningVideo = false;
 
 	UPROPERTY(BlueprintAssignable, Category = "Videos")
 	FOnVideoStart OnVideoStarted;
@@ -58,13 +60,13 @@ public:
 
 
 private:
-	
+
 	bool bIsPlaying = false;
+	UPROPERTY(EditAnywhere, Category = "Videos")
 	bool bHasPlayed = false;
+	UPROPERTY(EditAnywhere, Category = "Videos")
 	bool bWasSkipped = false;
 
-	UFUNCTION()
-	void OnVideoSkip();
 	UFUNCTION()
 	void OnVideoEnd();
 

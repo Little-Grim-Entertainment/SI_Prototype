@@ -3,6 +3,7 @@
 
 #include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Maps/AoS_MapList.h"
 #include "Data/Maps/AoS_MapData.h"
 #include "Engine/LevelStreaming.h"
@@ -146,7 +147,19 @@ void UAoS_LevelManager::LevelLoaded()
 	}
 	else
 	{
-		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+		if (LevelToLoad->HasOpeningVideo())
+		{
+			UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+			if (IsValid(CinematicsManager))
+			{
+				CinematicsManager->PlayVideo(LevelToLoad->GetOpeningVideo(), false);
+				GameInstance->SetPlayerMode(EPlayerMode::PM_VideoMode);
+			}
+		}
+		else
+		{
+			GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);	
+		}
 	}
 	
 	bLevelHasLoaded = true;

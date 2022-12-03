@@ -9,6 +9,7 @@
 #include "Levels/AoS_LevelManager.h"
 #include "World/AoS_WorldManager.h"
 #include "GameModes/AoS_GameMode.h"
+#include "Data/Videos/AoS_WatchedVideos.h"
 
 
 UAoS_GameInstance::UAoS_GameInstance()

@@ -23,7 +23,6 @@ bool UAoS_VideoDataAsset::GetVideoWasSkipped() const
 void UAoS_VideoDataAsset::StartVideo()
 {
 	if (bIsPlaying) {return;}
-	MediaPlayer->OnMediaClosed.AddDynamic(this, &ThisClass::UAoS_VideoDataAsset::OnVideoSkip);
 	MediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::OnVideoEnd);
 	bIsPlaying = true;
 	bHasPlayed = false;
@@ -33,7 +32,16 @@ void UAoS_VideoDataAsset::StartVideo()
 
 void UAoS_VideoDataAsset::SkipVideo()
 {
+	if (!bIsPlaying) {return;}
+	bIsPlaying = false;
+	bHasPlayed = false;
+	bWasSkipped = true;
+	
 	MediaPlayer->Close();
+			
+	OnVideoSkipped.Broadcast();
+	
+	ClearDelegates();
 }
 
 void UAoS_VideoDataAsset::ResetVideoDefaults()
@@ -41,18 +49,6 @@ void UAoS_VideoDataAsset::ResetVideoDefaults()
 	bIsPlaying = false;
 	bHasPlayed = false;
 	bWasSkipped = false;
-}
-
-void UAoS_VideoDataAsset::OnVideoSkip()
-{
-	if (!bIsPlaying) {return;}
-	bIsPlaying = false;
-	bHasPlayed = false;
-	bWasSkipped = true;
-		
-	OnVideoSkipped.Broadcast();
-	
-	ClearDelegates();
 }
 
 void UAoS_VideoDataAsset::OnVideoEnd()

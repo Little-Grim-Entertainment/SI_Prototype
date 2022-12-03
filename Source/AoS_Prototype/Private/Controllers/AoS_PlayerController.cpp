@@ -222,7 +222,14 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 	{
 	case EPlayerMode::PM_VideoMode:
 		{
-			PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, true);
+			if (InPlayerMode == EPlayerMode::PM_LevelLoadingMode)
+			{
+				PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
+			}
+			else
+			{
+				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
+			}
 			break;	
 		}
 	default:
@@ -240,7 +247,14 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 		}
 		case EPlayerMode::PM_VideoMode:
 		{
-			PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
+			if (PreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
+			{
+				PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
+			}
+			else
+			{
+				PlayerCameraManager->StartCameraFade(0, 1, .5, FLinearColor::Black, false, false);
+			}
 			LockPlayerMovement(true, true);
 			break;	
 		}

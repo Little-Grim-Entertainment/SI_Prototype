@@ -6,6 +6,8 @@
 #include "Engine/DataAsset.h"
 #include "AoS_MapData.generated.h"
 
+class UAoS_VideoDataAsset;
+
 UENUM(BlueprintType)
 enum class EMapType : uint8
 {
@@ -29,7 +31,16 @@ public:
 	EMapType MapType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
 	TSoftObjectPtr<UWorld> Map;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
+	UAoS_VideoDataAsset* OpeningVideo;
+	
+	UFUNCTION(BlueprintPure, Category = "Videos")
+	UAoS_VideoDataAsset* GetOpeningVideo() const;
+	UFUNCTION(BlueprintPure, Category = "Videos")
+	bool HasOpeningVideo() const;
+	UFUNCTION(BlueprintPure, Category = "Videos")
+	bool OpeningVideoHasPlayed() const;
+	
 	UFUNCTION()
 	void SetStreamingLevelRef(ULevelStreaming* StreamingLevelToSet);
 

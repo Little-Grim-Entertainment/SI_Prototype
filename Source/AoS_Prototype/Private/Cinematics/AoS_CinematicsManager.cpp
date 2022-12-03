@@ -13,6 +13,7 @@
 #include "MediaAssets/Public/MediaSoundComponent.h"
 #include "MediaAssets/Public/MediaSource.h"
 #include "Data/Videos/AoS_VideoDataAsset.h"
+#include "Data/Videos/AoS_WatchedVideos.h"
 
 
 void UAoS_CinematicsManager::OnGameModeBeginPlay()
@@ -88,9 +89,10 @@ void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool 
 
 void UAoS_CinematicsManager::ResetVideoByName(FString InVideoName)
 {
-	for (UAoS_VideoDataAsset* CurrentVideo : PlayedVideos)
+	if (GetWatchedVideos().Num() <= 0){return;}
+	for (UAoS_VideoDataAsset* CurrentVideo : GetWatchedVideos())
 	{
-		if (CurrentVideo->VideoName == InVideoName)
+		if(IsValid(CurrentVideo) && CurrentVideo->VideoName == InVideoName)
 		{
 			CurrentVideo->ResetVideoDefaults();
 		}
@@ -99,10 +101,15 @@ void UAoS_CinematicsManager::ResetVideoByName(FString InVideoName)
 
 void UAoS_CinematicsManager::ResetAllVideos()
 {
-	for (UAoS_VideoDataAsset* CurrentVideo : PlayedVideos)
+	if (GetWatchedVideos().Num() <= 0){return;}
+	for (UAoS_VideoDataAsset* CurrentVideo : GetWatchedVideos())
 	{
-		CurrentVideo->ResetVideoDefaults();
+		if (IsValid(CurrentVideo))
+		{
+			CurrentVideo->ResetVideoDefaults();
+		}
 	}
+	GetWatchedVideos().Empty();
 }
 
 ULevelSequencePlayer* UAoS_CinematicsManager::GetCurrentCinematic() const
@@ -113,6 +120,14 @@ ULevelSequencePlayer* UAoS_CinematicsManager::GetCurrentCinematic() const
 UAoS_VideoDataAsset* UAoS_CinematicsManager::GetLoadedVideo() const
 {
 	return LoadedVideo;
+}
+
+TArray<UAoS_VideoDataAsset*>& UAoS_CinematicsManager::GetWatchedVideos()
+{
+	TArray<UAoS_VideoDataAsset*> EmptyArray =  TArray<UAoS_VideoDataAsset*>{nullptr};
+	if (!IsValid(GameInstance) || !GameInstance->WatchedVideosData) {return EmptyArray;}
+
+	return  GameInstance->WatchedVideosData->GetWatchedVideos();
 }
 
 void UAoS_CinematicsManager::OnCinematicEnd()
@@ -133,17 +148,20 @@ void UAoS_CinematicsManager::OnVideoEnded()
 {
 	if(!IsValid(GameInstance)){return;}
 
-	PlayedVideos.AddUnique(LoadedVideo);
-	LoadedVideo = nullptr;
-	
-	GameInstance->SetPlayerMode(PreviousPlayerMode);
+	GameInstance->WatchedVideosData->AddToWatchedVideos(LoadedVideo);
+	if (LoadedVideo->bIsOpeningVideo)
+	{
+		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+	}
+	else
+	{
+		GameInstance->SetPlayerMode(PreviousPlayerMode);	
+	}
 }
 
 void UAoS_CinematicsManager::OnVideoSkipped()
 {
 	if(!IsValid(GameInstance)){return;}
-
-	LoadedVideo = nullptr;
 	
 	GameInstance->SetPlayerMode(PreviousPlayerMode);
 }

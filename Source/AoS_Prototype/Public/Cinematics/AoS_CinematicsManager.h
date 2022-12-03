@@ -36,6 +36,8 @@ public:
 	ULevelSequencePlayer* GetCurrentCinematic() const;
 	UFUNCTION(BlueprintPure)
 	UAoS_VideoDataAsset* GetLoadedVideo() const;
+	UFUNCTION(BlueprintPure)
+	TArray<UAoS_VideoDataAsset*>& GetWatchedVideos();
 	
 	UFUNCTION()
 	void OnVideoSkipped();
@@ -52,8 +54,6 @@ private:
 	ULevelSequencePlayer* CurrentCinematic;
 	UPROPERTY()
 	UAoS_VideoDataAsset* LoadedVideo;
-	UPROPERTY()
-	TArray<UAoS_VideoDataAsset*> PlayedVideos;
 	
 	EPlayerMode PreviousPlayerMode;
 	

@@ -168,11 +168,18 @@ void UAoS_UIManager::CreateMoviePlayerWidget()
 	if (IsValid(MoviePlayerWidget))
 	{
 		const UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
-		MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetLoadedVideo()->MediaTexture);
-		MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetLoadedVideo()->MediaPlayer);
-		MoviePlayerWidget->SetMediaSource(CinematicsManager->GetLoadedVideo()->MediaSource);
-		MoviePlayerWidget->AddToViewport();
-		MoviePlayerWidget->PlayVideo();
+		if (IsValid(CinematicsManager) && IsValid(CinematicsManager->GetLoadedVideo()))
+		{
+			MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetLoadedVideo()->MediaTexture);
+			MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetLoadedVideo()->MediaPlayer);
+			MoviePlayerWidget->SetMediaSource(CinematicsManager->GetLoadedVideo()->MediaSource);
+			MoviePlayerWidget->AddToViewport();
+			MoviePlayerWidget->PlayVideo();
+		}
+		else
+		{
+			GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+		}
 	}
 }
 
