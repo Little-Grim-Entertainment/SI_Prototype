@@ -122,9 +122,9 @@ UAoS_VideoDataAsset* UAoS_CinematicsManager::GetLoadedVideo() const
 	return LoadedVideo;
 }
 
-TArray<UAoS_VideoDataAsset*>& UAoS_CinematicsManager::GetWatchedVideos()
+TArray<UAoS_VideoDataAsset*> UAoS_CinematicsManager::GetWatchedVideos()
 {
-	TArray<UAoS_VideoDataAsset*> EmptyArray =  TArray<UAoS_VideoDataAsset*>{nullptr};
+	TArray<UAoS_VideoDataAsset*> EmptyArray;
 	if (!IsValid(GameInstance) || !GameInstance->WatchedVideosData) {return EmptyArray;}
 
 	return  GameInstance->WatchedVideosData->GetWatchedVideos();

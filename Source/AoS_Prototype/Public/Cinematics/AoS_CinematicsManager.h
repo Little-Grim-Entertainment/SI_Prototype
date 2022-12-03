@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	UAoS_VideoDataAsset* GetLoadedVideo() const;
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_VideoDataAsset*>& GetWatchedVideos();
+	TArray<UAoS_VideoDataAsset*> GetWatchedVideos();
 	
 	UFUNCTION()
 	void OnVideoSkipped();

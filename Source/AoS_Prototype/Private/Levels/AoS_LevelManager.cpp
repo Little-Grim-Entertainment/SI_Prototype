@@ -4,6 +4,7 @@
 #include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.h"
 #include "Cinematics/AoS_CinematicsManager.h"
+#include "Controllers/AoS_PlayerController.h"
 #include "Data/Maps/AoS_MapList.h"
 #include "Data/Maps/AoS_MapData.h"
 #include "Engine/LevelStreaming.h"
@@ -45,6 +46,11 @@ void UAoS_LevelManager::OnPlayerStart()
 {
 	Super::OnPlayerStart();
 
+	AAoS_PlayerController* PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	if (IsValid(PlayerController))
+	{
+		PlayerController->PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
+	}
 	
 }
 

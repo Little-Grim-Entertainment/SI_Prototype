@@ -247,11 +247,7 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 		}
 		case EPlayerMode::PM_VideoMode:
 		{
-			if (PreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
-			{
-				PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
-			}
-			else
+			if (PreviousPlayerMode != EPlayerMode::PM_LevelLoadingMode)
 			{
 				PlayerCameraManager->StartCameraFade(0, 1, .5, FLinearColor::Black, false, false);
 			}

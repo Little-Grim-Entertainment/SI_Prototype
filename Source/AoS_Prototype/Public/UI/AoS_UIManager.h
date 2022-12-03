@@ -88,6 +88,7 @@ protected:
 
 	void DisplayDialogueBox();
 	void HideActiveInteractionWidgets();
+	void LoadingScreenFadeDelay();
 
 
 private:
@@ -108,5 +109,8 @@ private:
 	TArray<UAoS_InteractionWidget*> ActiveInteractionWidgets;
 
 	EPlayerMode PreviousPlayerMode;
+
+	FTimerHandle LoadingScreenFadeDelayHandle;
+	FTimerDelegate LoadingScreenFadeDelayDelegate;
 	
 };

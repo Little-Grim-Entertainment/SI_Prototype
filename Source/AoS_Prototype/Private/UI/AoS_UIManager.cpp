@@ -14,6 +14,7 @@
 #include "Data/Cases/AoS_Objective.h"
 
 // UI
+#include "ContentBrowserDelegates.h"
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
@@ -72,10 +73,18 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 		case EPlayerMode::PM_ExplorationMode:
 		{
 			RemovePlayerHUD();
+			break;
 		}
 		case EPlayerMode::PM_LevelLoadingMode:
 		{
-			DisplayLoadingScreen(false, true);
+			if(NewPlayerMode != EPlayerMode::PM_VideoMode)
+			{
+				DisplayLoadingScreen(false, true);
+			}
+			else
+			{
+				LoadingScreenFadeDelay();
+			}
 			break;
 		}
 		case EPlayerMode::PM_VideoMode:
@@ -320,6 +329,12 @@ void UAoS_UIManager::HideActiveInteractionWidgets()
 			CurrentInteractionWidget->HideWidget();
 		}
 	}
+}
+
+void UAoS_UIManager::LoadingScreenFadeDelay()
+{
+	LoadingScreenFadeDelayDelegate.BindUObject(this, &UAoS_UIManager::DisplayLoadingScreen, false, false);
+	GetWorld()->GetTimerManager().SetTimer(LoadingScreenFadeDelayHandle, LoadingScreenFadeDelayDelegate, 20.0f, false);
 }
 
 void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
