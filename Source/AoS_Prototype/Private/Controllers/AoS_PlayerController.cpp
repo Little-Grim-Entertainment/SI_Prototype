@@ -90,6 +90,19 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 	}
 }
 
+void AAoS_PlayerController::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetGameInstance());
+	if (!IsValid(GameInstance) || !IsValid(PlayerCameraManager)){return;}
+
+	if (GameInstance->GetPlayerMode() != EPlayerMode::PM_NONE)
+	{
+		PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
+	}
+}
+
 void AAoS_PlayerController::RequestMoveForward(float Value)
 {
 	if  (!bPlayerCanMove || !GetPawn()) return;
@@ -222,11 +235,7 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 	{
 	case EPlayerMode::PM_VideoMode:
 		{
-			if (InPlayerMode == EPlayerMode::PM_LevelLoadingMode)
-			{
-				PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
-			}
-			else
+			if (InPlayerMode != EPlayerMode::PM_LevelLoadingMode)
 			{
 				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
 			}

@@ -84,6 +84,8 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void PostInitializeComponents() override;
+	
 	void RequestMoveForward(float Value);
 	void RequestMoveRight(float Value);
 	void RequestTurnRight(float AxisValue);
