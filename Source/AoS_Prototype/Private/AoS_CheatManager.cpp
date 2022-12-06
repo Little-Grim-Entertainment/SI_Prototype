@@ -6,7 +6,7 @@
 #include "AoS_GameInstance.h"
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Cases/AoS_CaseManager.h"
-#include "Data/Videos/AoS_VideoDataAsset.h"
+#include "Data/Media/AoS_VideoDataAsset.h"
 
 UAoS_CheatManager::UAoS_CheatManager()
 {
@@ -48,7 +48,7 @@ void UAoS_CheatManager::CheatSkipVideo()
 {
 	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		CinematicsManager->GetLoadedVideo()->SkipVideo();
+		CinematicsManager->GetLoadedVideo()->SkipMedia();
 	}
 }
 

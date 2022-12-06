@@ -1,27 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Data/Videos/AoS_VideoDataAsset.h"
+#include "Data/Media/AoS_VideoDataAsset.h"
 
 #include "MediaPlayer.h"
 
-bool UAoS_VideoDataAsset::GetVideoIsPlaying() const
+void UAoS_VideoDataAsset::StartMedia()
 {
-	return bIsPlaying;
-}
+	Super::StartMedia();
 
-bool UAoS_VideoDataAsset::GetVideoHasPlayed() const
-{
-	return bHasPlayed;
-}
-
-bool UAoS_VideoDataAsset::GetVideoWasSkipped() const
-{
-	return bWasSkipped;
-}
-
-void UAoS_VideoDataAsset::StartVideo()
-{
 	if (bIsPlaying) {return;}
 	MediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::OnVideoEnd);
 	bIsPlaying = true;
@@ -30,8 +17,10 @@ void UAoS_VideoDataAsset::StartVideo()
 	OnVideoStarted.Broadcast();
 }
 
-void UAoS_VideoDataAsset::SkipVideo()
+void UAoS_VideoDataAsset::SkipMedia()
 {
+	Super::SkipMedia();
+
 	if (!bIsPlaying) {return;}
 	bIsPlaying = false;
 	bHasPlayed = false;
@@ -42,13 +31,6 @@ void UAoS_VideoDataAsset::SkipVideo()
 	OnVideoSkipped.Broadcast();
 	
 	ClearDelegates();
-}
-
-void UAoS_VideoDataAsset::ResetVideoDefaults()
-{
-	bIsPlaying = false;
-	bHasPlayed = false;
-	bWasSkipped = false;
 }
 
 void UAoS_VideoDataAsset::OnVideoEnd()

@@ -11,8 +11,8 @@
 #include "Levels/AoS_LevelManager.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
-#include "Data/Videos/AoS_VideoDataAsset.h"
-#include "Data/Videos/AoS_WatchedVideos.h"
+#include "Data/Media/AoS_VideoDataAsset.h"
+#include "Data/Media/AoS_WatchedMedia.h"
 
 
 void UAoS_CinematicsManager::OnGameModeBeginPlay()
@@ -53,7 +53,7 @@ void UAoS_CinematicsManager::PlayCinematic(ULevelSequence* LevelSequenceToPlay, 
 void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat, float InVolume)
 {
 	if (!IsValid(InVideoToPlay)){return;}
-	if (InVideoToPlay->GetVideoHasPlayed() && !bShouldRepeat) {return;}
+	if (InVideoToPlay->GetMediaHasPlayed() && !bShouldRepeat) {return;}
 	
 	LoadedVideo = InVideoToPlay;
 	LoadedVideo->bCanRepeat = bShouldRepeat;
@@ -81,7 +81,7 @@ void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool 
 
 	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_VideoMode);
 
-	LoadedVideo->StartVideo();
+	LoadedVideo->StartMedia();
 }
 
 void UAoS_CinematicsManager::ResetVideoByName(FString InVideoName)
@@ -89,9 +89,9 @@ void UAoS_CinematicsManager::ResetVideoByName(FString InVideoName)
 	if (GetWatchedVideos().Num() <= 0){return;}
 	for (UAoS_VideoDataAsset* CurrentVideo : GetWatchedVideos())
 	{
-		if(IsValid(CurrentVideo) && CurrentVideo->VideoName == InVideoName)
+		if(IsValid(CurrentVideo) && CurrentVideo->MediaName == InVideoName)
 		{
-			CurrentVideo->ResetVideoDefaults();
+			CurrentVideo->ResetMediaDefaults();
 		}
 	}
 }
@@ -103,7 +103,7 @@ void UAoS_CinematicsManager::ResetAllVideos()
 	{
 		if (IsValid(CurrentVideo))
 		{
-			CurrentVideo->ResetVideoDefaults();
+			CurrentVideo->ResetMediaDefaults();
 		}
 	}
 	GetWatchedVideos().Empty();
@@ -134,9 +134,9 @@ UAoS_VideoDataAsset* UAoS_CinematicsManager::GetLoadedVideo() const
 TArray<UAoS_VideoDataAsset*> UAoS_CinematicsManager::GetWatchedVideos()
 {
 	TArray<UAoS_VideoDataAsset*> EmptyArray;
-	if (!IsValid(GameInstance) || !GameInstance->WatchedVideosData) {return EmptyArray;}
+	if (!IsValid(GameInstance) || !GameInstance->WatchedMediaData) {return EmptyArray;}
 
-	return  GameInstance->WatchedVideosData->GetWatchedVideos();
+	return  GameInstance->WatchedMediaData->GetWatchedVideos();
 }
 
 void UAoS_CinematicsManager::ExecuteLoadLevelOnVideoComplete()
@@ -163,8 +163,8 @@ void UAoS_CinematicsManager::OnVideoEnded()
 {
 	if(!IsValid(GameInstance)){return;}
 
-	GameInstance->WatchedVideosData->AddToWatchedVideos(LoadedVideo);
-	if (LoadedVideo->bIsOpeningVideo)
+	GameInstance->WatchedMediaData->AddToWatchedVideos(LoadedVideo);
+	if (LoadedVideo->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 	}

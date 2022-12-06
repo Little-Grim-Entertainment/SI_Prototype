@@ -2,7 +2,7 @@
 
 
 #include "Data/Maps/AoS_MapData.h"
-#include "Data/Videos/AoS_VideoDataAsset.h"
+#include "Data/Media/AoS_VideoDataAsset.h"
 
 
 UAoS_VideoDataAsset* UAoS_MapData::GetOpeningVideo() const
@@ -19,7 +19,7 @@ bool UAoS_MapData::OpeningVideoHasPlayed() const
 {
 	if (!IsValid(OpeningVideo)){return false;}
 
-	return OpeningVideo->GetVideoHasPlayed();
+	return OpeningVideo->GetMediaHasPlayed();
 }
 
 void UAoS_MapData::SetStreamingLevelRef(ULevelStreaming* StreamingLevelToSet)

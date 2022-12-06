@@ -23,7 +23,7 @@
 
 
 #include "Controllers/AoS_PlayerController.h"
-#include "Data/Videos/AoS_VideoDataAsset.h"
+#include "Data/Media/AoS_VideoDataAsset.h"
 #include "GameModes/AoS_GameMode.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 

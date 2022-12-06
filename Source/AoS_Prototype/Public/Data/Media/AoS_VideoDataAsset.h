@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
+#include "Data/Media/AoS_MediaDataAsset.h"
 #include "AoS_VideoDataAsset.generated.h"
 
 class UMediaTexture;
@@ -15,15 +15,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVideoSkipped);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVideoEnd);
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_VideoDataAsset : public UDataAsset
+class AOS_PROTOTYPE_API UAoS_VideoDataAsset : public UAoS_MediaDataAsset
 {
 	GENERATED_BODY()
 
 public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
-	FString VideoName;
-		
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
 	UMediaPlayer* MediaPlayer;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
@@ -31,10 +28,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
 	UMediaTexture* MediaTexture;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
-	bool bCanRepeat = false;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
-	bool bIsOpeningVideo = false;
 
 	UPROPERTY(BlueprintAssignable, Category = "Videos")
 	FOnVideoStart OnVideoStarted;
@@ -43,29 +36,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Videos")
 	FOnVideoEnd OnVideoEnded;
 
-	UFUNCTION(BlueprintPure, Category = "Videos")
-	bool GetVideoIsPlaying() const;
-	UFUNCTION(BlueprintPure, Category = "Videos")
-    bool GetVideoHasPlayed() const;
-	UFUNCTION(BlueprintPure, Category = "Videos")
-	bool GetVideoWasSkipped() const;
-
-	UFUNCTION(BlueprintCallable)
-	void StartVideo();
-	UFUNCTION(BlueprintCallable)
-	void SkipVideo();
-
-	UFUNCTION(BlueprintCallable)
-	void ResetVideoDefaults();
-
+	virtual void StartMedia() override;
+	virtual void SkipMedia() override;
 
 private:
-
-	bool bIsPlaying = false;
-	UPROPERTY(EditAnywhere, Category = "Videos")
-	bool bHasPlayed = false;
-	UPROPERTY(EditAnywhere, Category = "Videos")
-	bool bWasSkipped = false;
 
 	UFUNCTION()
 	void OnVideoEnd();

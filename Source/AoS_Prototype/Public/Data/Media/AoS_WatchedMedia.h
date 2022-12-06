@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "AoS_WatchedVideos.generated.h"
+#include "AoS_WatchedMedia.generated.h"
 
 class UAoS_VideoDataAsset;
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_WatchedVideos : public UDataAsset
+class AOS_PROTOTYPE_API UAoS_WatchedMedia : public UDataAsset
 {
 	GENERATED_BODY()
-
+	
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Videos")
@@ -25,5 +25,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Videos")
 	TArray<UAoS_VideoDataAsset*> WatchedVideos;
-	
 };
