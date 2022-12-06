@@ -43,3 +43,12 @@ void UAoS_MoviePlayerWidget::PlayVideo_Implementation()
 	if (!IsValid(CurrentMediaPlayer) || !IsValid(CurrentMediaSource)) {return;}
 	
 }
+
+void UAoS_MoviePlayerWidget::OnVideoStopped_Implementation()
+{
+	if (!IsValid(CurrentMediaPlayer) || !IsValid(CurrentMediaSource)) {return;}
+
+	CurrentMediaPlayer = nullptr;
+	CurrentMediaSource = nullptr;
+	CurrentMediaTexture = nullptr;
+}

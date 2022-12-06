@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TimerManager.h"
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
@@ -83,11 +84,12 @@ public:
 protected:
 
 	virtual void OnGameInstanceInit() override;
-	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode) override;
+	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode) override;
 	virtual void OnGameModeBeginPlay() override;
 
 	void DisplayDialogueBox();
 	void HideActiveInteractionWidgets();
+	void LoadingScreenFadeDelay();
 
 
 private:
@@ -106,5 +108,8 @@ private:
 	UAoS_MoviePlayerWidget* MoviePlayerWidget;
 	UPROPERTY()
 	TArray<UAoS_InteractionWidget*> ActiveInteractionWidgets;
+
+	FTimerHandle LoadingScreenFadeDelayHandle;
+	FTimerDelegate LoadingScreenFadeDelayDelegate;
 	
 };

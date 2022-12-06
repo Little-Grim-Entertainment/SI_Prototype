@@ -23,9 +23,9 @@ void UAoS_MusicManager::TickMusicTimecode()
 	MusicTimeAtPause += .001;
 }
 
-void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
+void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
 {
-	Super::OnPlayerModeChanged(NewPlayerMode);
+	Super::OnPlayerModeChanged(NewPlayerMode, InPreviousPlayerMode);
 	
 	switch (NewPlayerMode)
 	{

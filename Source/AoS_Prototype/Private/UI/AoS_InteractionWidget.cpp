@@ -16,11 +16,7 @@ void UAoS_InteractionWidget::ShowWidget_Implementation()
 
 void UAoS_InteractionWidget::HideWidget_Implementation()
 {
-	UAoS_UIManager* UIManager = GetGameInstance()->GetSubsystem<UAoS_UIManager>();
-	if (IsValid(UIManager))
-	{
-		UIManager->RemoveActiveInteractionWidget(this);
-	}
+
 }
 
 void UAoS_InteractionWidget::RefreshWidget_Implementation()

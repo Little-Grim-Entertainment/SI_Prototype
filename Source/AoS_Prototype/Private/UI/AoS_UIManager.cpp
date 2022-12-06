@@ -23,6 +23,7 @@
 
 
 #include "Controllers/AoS_PlayerController.h"
+#include "Data/Videos/AoS_VideoDataAsset.h"
 #include "GameModes/AoS_GameMode.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 
@@ -62,14 +63,44 @@ void UAoS_UIManager::BindCaseManagerDelegates()
 }
 
 
-void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
+void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
 {
-	Super::OnPlayerModeChanged(NewPlayerMode);
+	Super::OnPlayerModeChanged(NewPlayerMode, InPreviousPlayerMode);
 
-	RemovePlayerHUD();
-	RemoveMoviePlayerWidget();
-	RemoveMainMenu();
-	DisplayLoadingScreen(false, true);
+	switch (InPreviousPlayerMode)
+	{
+		case EPlayerMode::PM_ExplorationMode:
+		{
+			RemovePlayerHUD();
+			break;
+		}
+		case EPlayerMode::PM_LevelLoadingMode:
+		{
+			if(NewPlayerMode != EPlayerMode::PM_VideoMode)
+			{
+				DisplayLoadingScreen(false, true);
+			}
+			else
+			{
+				LoadingScreenFadeDelay();
+			}
+			break;
+		}
+		case EPlayerMode::PM_VideoMode:
+		{
+			RemoveMoviePlayerWidget();
+			break;
+		}
+		case EPlayerMode::PM_MainMenuMode:
+		{
+			RemoveMainMenu();
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
 		
 	switch (NewPlayerMode)
 	{
@@ -137,18 +168,24 @@ void UAoS_UIManager::CreatePlayerHUD()
 void UAoS_UIManager::CreateMoviePlayerWidget()
 {
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	AAoS_GameMode* GameMOde = GameInstance->GetGameMode();
 	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
 	
 	MoviePlayerWidget =	CreateWidget<UAoS_MoviePlayerWidget>(GameInstance, GameInstance->GetGameMode()->MoviePlayerWidget);
 	if (IsValid(MoviePlayerWidget))
 	{
 		const UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
-		MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetCurrentMediaTexture());
-		MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetCurrentMediaPlayer());
-		MoviePlayerWidget->SetMediaSource(CinematicsManager->GetCurrentMediaSource());
-		MoviePlayerWidget->AddToViewport();
-		MoviePlayerWidget->PlayVideo();
+		if (IsValid(CinematicsManager) && IsValid(CinematicsManager->GetLoadedVideo()))
+		{
+			MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetLoadedVideo()->MediaTexture);
+			MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetLoadedVideo()->MediaPlayer);
+			MoviePlayerWidget->SetMediaSource(CinematicsManager->GetLoadedVideo()->MediaSource);
+			MoviePlayerWidget->AddToViewport();
+			MoviePlayerWidget->PlayVideo();
+		}
+		else
+		{
+			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
+		}
 	}
 }
 
@@ -156,7 +193,8 @@ void UAoS_UIManager::RemoveMoviePlayerWidget()
 {
 	if (!IsValid(MoviePlayerWidget)){return;}
 	
-	MoviePlayerWidget->RemoveFromParent();
+	MoviePlayerWidget->OnVideoStopped();
+	MoviePlayerWidget = nullptr;
 }
 
 void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
@@ -288,6 +326,14 @@ void UAoS_UIManager::HideActiveInteractionWidgets()
 			CurrentInteractionWidget->HideWidget();
 		}
 	}
+	
+	ActiveInteractionWidgets.Empty();
+}
+
+void UAoS_UIManager::LoadingScreenFadeDelay()
+{
+	LoadingScreenFadeDelayDelegate.BindUObject(this, &UAoS_UIManager::DisplayLoadingScreen, false, false);
+	GetWorld()->GetTimerManager().SetTimer(LoadingScreenFadeDelayHandle, LoadingScreenFadeDelayDelegate, 20.0f, false);
 }
 
 void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)

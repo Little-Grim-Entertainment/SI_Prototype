@@ -25,6 +25,6 @@ protected:
 	UFUNCTION()
 	virtual void OnGameModeBeginPlay();
 	UFUNCTION()
-	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode);
+	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode);
 		
 };

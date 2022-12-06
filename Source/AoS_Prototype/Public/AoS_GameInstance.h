@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "AoS_GameInstance.generated.h"
 
+class UAoS_WatchedVideos;
 class AAoS_GameMode;
 class UAoS_HUD;
 class AAoS_GizboController;
@@ -42,12 +43,13 @@ enum class EPlayerMode : uint8
 	PM_VendorMode			UMETA(DisplayName = "VendorMode"),
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode, EPlayerMode, InPreviousPlayerMode);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameInstanceInit);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameModeBeginPlay);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitGame);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerStart);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameModeSet);
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
@@ -62,6 +64,8 @@ public:
 	FOnSubsystemBindingsComplete OnSubsystemBindingsComplete;
 	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
 	FOnPlayerModeChanged OnPlayerModeChanged;
+	UPROPERTY(BlueprintAssignable, Category = "PlayerData")
+	FOnPlayerStart OnPlayerStart;
 
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnGameInstanceInit OnGameInstanceInit;
@@ -70,12 +74,16 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnInitGame OnInitGame;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
-	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "Loading")
 	TArray<TSubclassOf<UAoS_UserWidget>> LoadingScreens;
+
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	UAoS_MapList* MapList;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
+	UAoS_WatchedVideos* WatchedVideosData;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
+	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	float LevelLoadDelay = 0.0f;
 
@@ -86,6 +94,8 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
+	UFUNCTION(BlueprintPure, Category = "PlayerData")
+	EPlayerMode GetPreviousPlayerMode() const;
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	AAoS_GameMode* GetGameMode() const;
 
@@ -102,9 +112,17 @@ public:
 	UAoS_CaseManager* GetCaseManager() const {return CaseManager;}
 		
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
-	void SetPlayerMode(EPlayerMode InPlayerMode);
+	void RequestNewPlayerMode(EPlayerMode InPlayerMode);
+	UFUNCTION(BlueprintCallable, Category = "PlayerData")
+	void SetPreviousPlayerMode(EPlayerMode InPlayerMode);
+
+protected:
+
+	virtual void Init() override;
 	
 private:
+
+	FGameModeSet GameModeSet;
 
 	// Subsystems
 	UPROPERTY()
@@ -120,7 +138,12 @@ private:
 	AAoS_GameMode* GameMode;
 	
 	EPlayerMode PlayerMode;
+	EPlayerMode PreviousPlayerMode;
+	EPlayerMode QueuedPlayerMode = EPlayerMode::PM_NONE;
 
-	virtual void Init() override;
-	
+	UFUNCTION()
+	void SetPlayerMode(EPlayerMode InPlayerMode);
+
+	UFUNCTION()
+	void OnGameModeSet();
 };

@@ -84,6 +84,8 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void PostInitializeComponents() override;
+	
 	void RequestMoveForward(float Value);
 	void RequestMoveRight(float Value);
 	void RequestTurnRight(float AxisValue);
@@ -94,13 +96,13 @@ protected:
 	void PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera);
 
 	UFUNCTION()
-	void OnPlayerModeChanged(EPlayerMode InPlayerMode);
+	void OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode);
 
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UMediaSoundComponent* MediaSoundComponent;
-
+	
 	FTimerHandle CameraBlendHandle;
 	FTimerDelegate CameraBlendDelegate;
 };

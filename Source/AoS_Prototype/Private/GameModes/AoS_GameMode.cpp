@@ -23,10 +23,10 @@ void AAoS_GameMode::InitGame(const FString& MapName, const FString& Options, FSt
 	Super::InitGame(MapName, Options, ErrorMessage);
 
 	
+	
 	if (IsValid(GameInstance))
 	{
 		GameInstance->OnInitGame.Broadcast();
-		GameInstance->SetGameMode(this);
 	}	
 }
 
@@ -43,6 +43,10 @@ void AAoS_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* Ne
 	AActor* PlayerStart = FindPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStartTag);
 
 	RestartPlayerAtPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStart);
+	if (IsValid(GameInstance))
+	{
+		GameInstance->OnPlayerStart.Broadcast();
+	}	
 }
 
 void AAoS_GameMode::BeginPlay()

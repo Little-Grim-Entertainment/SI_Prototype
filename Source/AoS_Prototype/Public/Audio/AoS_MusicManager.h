@@ -33,7 +33,7 @@ public:
 
 protected:
 
-	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode) override;
+	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode) override;
 
 private:
 	

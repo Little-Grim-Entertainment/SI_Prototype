@@ -10,7 +10,6 @@
 #include "World/AoS_WorldManager.h"
 #include "GameModes/AoS_GameMode.h"
 
-
 UAoS_GameInstance::UAoS_GameInstance()
 {	
 	GameMode = nullptr;
@@ -29,9 +28,32 @@ void UAoS_GameInstance::Init()
 	OnGameInstanceInit.Broadcast();
 }
 
+void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
+{
+	if(InPlayerMode == PlayerMode){return;}
+
+	PreviousPlayerMode = PlayerMode;
+	PlayerMode = InPlayerMode;
+	OnPlayerModeChanged.Broadcast(InPlayerMode, PreviousPlayerMode);
+}
+
+void UAoS_GameInstance::OnGameModeSet()
+{
+	if (QueuedPlayerMode != EPlayerMode::PM_NONE)
+	{
+		SetPlayerMode(QueuedPlayerMode);
+		QueuedPlayerMode = EPlayerMode::PM_NONE;
+	}
+}
+
 EPlayerMode UAoS_GameInstance::GetPlayerMode() const
 {
 	return PlayerMode;
+}
+
+EPlayerMode UAoS_GameInstance::GetPreviousPlayerMode() const
+{
+	return PreviousPlayerMode;
 }
 
 AAoS_GameMode* UAoS_GameInstance::GetGameMode() const
@@ -41,13 +63,27 @@ AAoS_GameMode* UAoS_GameInstance::GetGameMode() const
 
 void UAoS_GameInstance::SetGameMode(AAoS_GameMode* InGameMode)
 {
+	if (!IsValid(InGameMode)) {return;}
+	
 	GameMode = InGameMode;
+	GameModeSet.Broadcast();
 }
 
-void UAoS_GameInstance::SetPlayerMode(EPlayerMode InPlayerMode)
+void UAoS_GameInstance::RequestNewPlayerMode(EPlayerMode InPlayerMode)
 {
-	if(InPlayerMode == PlayerMode){return;}
-	
-	PlayerMode = InPlayerMode;
-	OnPlayerModeChanged.Broadcast(InPlayerMode);
+	if (InPlayerMode == EPlayerMode::PM_NONE || InPlayerMode == PlayerMode) {return;}
+	if (!IsValid(GameMode))
+	{
+		GameModeSet.AddDynamic(this, &ThisClass::OnGameModeSet);
+		QueuedPlayerMode = InPlayerMode;
+	}
+	else
+	{
+		SetPlayerMode(InPlayerMode);
+	}
+}
+
+void UAoS_GameInstance::SetPreviousPlayerMode(EPlayerMode InPlayerMode)
+{
+	PreviousPlayerMode = InPlayerMode;
 }
