@@ -40,18 +40,17 @@ void AAoS_PlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
 	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
 	InputComponent->BindAxis("LookUpRate", this, &AAoS_PlayerController::RequestLookUp);
-}
-
-void AAoS_PlayerController::BeginPlay()
-{
-	Super::BeginPlay();
 
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (IsValid(GameInstance))
 	{
 		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
-		OnPlayerModeChanged(GameInstance->GetPlayerMode());
 	}
+}
+
+void AAoS_PlayerController::BeginPlay()
+{
+	Super::BeginPlay();
 
 	Nick = Cast<AAoS_Nick>(GetPawn()); 
 }
@@ -99,7 +98,7 @@ void AAoS_PlayerController::PostInitializeComponents()
 
 	if (GameInstance->GetPlayerMode() != EPlayerMode::PM_NONE)
 	{
-		PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
+		PlayerCameraManager->StartCameraFade(0, 1, 0.001, FLinearColor::Black, false, true);
 	}
 }
 
@@ -196,14 +195,14 @@ void AAoS_PlayerController::RequestObservation()
 	
 	if(bObservationMode)
 	{
-		GameInstance->SetPlayerMode(EPlayerMode::PM_ObservationMode);
+		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ObservationMode);
 		LockPlayerMovement(true, false);
 		SetViewTarget(FollowCameraActor);
 		SetViewTargetWithBlend(ObservationCameraActor, CameraTransitionTime);
 	}
 	else
 	{
-		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 		LockPlayerMovement(false, false);
 		SetViewTarget(ObservationCameraActor);
 		SetViewTargetWithBlend(FollowCameraActor, CameraTransitionTime);
@@ -228,10 +227,10 @@ void AAoS_PlayerController::PostCameraBlend(ACameraActor* InFollowCamera, ACamer
 	EnableInput(this);
 }
 
-void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
+void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode)
 {
 
-	switch (PreviousPlayerMode)
+	switch (InPreviousPlayerMode)
 	{
 	case EPlayerMode::PM_VideoMode:
 		{
@@ -251,15 +250,16 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 	{
 		case EPlayerMode::PM_ExplorationMode:
 		{
+			if (InPreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
+			{
+				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
+			}
 			LockPlayerMovement(false, false);
 			break;
 		}
 		case EPlayerMode::PM_VideoMode:
 		{
-			if (PreviousPlayerMode != EPlayerMode::PM_LevelLoadingMode)
-			{
-				PlayerCameraManager->StartCameraFade(0, 1, .5, FLinearColor::Black, false, false);
-			}
+			PlayerCameraManager->StartCameraFade(0, 1, .2, FLinearColor::Black, false, true);
 			LockPlayerMovement(true, true);
 			break;	
 		}
@@ -269,8 +269,6 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode)
 			break;
 		}
 	}
-
-	PreviousPlayerMode = InPlayerMode;
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)

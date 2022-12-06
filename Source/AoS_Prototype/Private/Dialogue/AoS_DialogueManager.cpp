@@ -26,7 +26,7 @@ void UAoS_DialogueManager::StartDialogue(FText CharacterName)
 		return;
 	}
 
-	GameInstance->SetPlayerMode(EPlayerMode::PM_DialogueMode);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
 }
 
 
@@ -35,10 +35,10 @@ void UAoS_DialogueManager::StartDefaultDialogue(FText CharacterName)
 	// find default dialogue
 
 
-	GameInstance->SetPlayerMode(EPlayerMode::PM_DialogueMode);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
 }
 
 void UAoS_DialogueManager::OnInterrogationPressed()
 {
-	GameInstance->SetPlayerMode(EPlayerMode::PM_InterrogationMode);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_InterrogationMode);
 }

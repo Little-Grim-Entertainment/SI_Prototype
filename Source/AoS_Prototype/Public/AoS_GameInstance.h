@@ -43,14 +43,13 @@ enum class EPlayerMode : uint8
 	PM_VendorMode			UMETA(DisplayName = "VendorMode"),
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPlayerModeChanged, EPlayerMode, NewPlayerMode, EPlayerMode, InPreviousPlayerMode);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameInstanceInit);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameModeBeginPlay);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitGame);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerStart);
-
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameModeSet);
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
@@ -96,6 +95,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
+	EPlayerMode GetPreviousPlayerMode() const;
+	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	AAoS_GameMode* GetGameMode() const;
 
 	UFUNCTION()
@@ -111,9 +112,17 @@ public:
 	UAoS_CaseManager* GetCaseManager() const {return CaseManager;}
 		
 	UFUNCTION(BlueprintCallable, Category = "PlayerData")
-	void SetPlayerMode(EPlayerMode InPlayerMode);
+	void RequestNewPlayerMode(EPlayerMode InPlayerMode);
+	UFUNCTION(BlueprintCallable, Category = "PlayerData")
+	void SetPreviousPlayerMode(EPlayerMode InPlayerMode);
+
+protected:
+
+	virtual void Init() override;
 	
 private:
+
+	FGameModeSet GameModeSet;
 
 	// Subsystems
 	UPROPERTY()
@@ -129,7 +138,12 @@ private:
 	AAoS_GameMode* GameMode;
 	
 	EPlayerMode PlayerMode;
+	EPlayerMode PreviousPlayerMode;
+	EPlayerMode QueuedPlayerMode = EPlayerMode::PM_NONE;
 
-	virtual void Init() override;
-	
+	UFUNCTION()
+	void SetPlayerMode(EPlayerMode InPlayerMode);
+
+	UFUNCTION()
+	void OnGameModeSet();
 };

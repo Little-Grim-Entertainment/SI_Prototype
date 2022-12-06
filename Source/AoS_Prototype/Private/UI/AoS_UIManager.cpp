@@ -14,7 +14,6 @@
 #include "Data/Cases/AoS_Objective.h"
 
 // UI
-#include "ContentBrowserDelegates.h"
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
@@ -64,11 +63,11 @@ void UAoS_UIManager::BindCaseManagerDelegates()
 }
 
 
-void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
+void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
 {
-	Super::OnPlayerModeChanged(NewPlayerMode);
+	Super::OnPlayerModeChanged(NewPlayerMode, InPreviousPlayerMode);
 
-	switch (PreviousPlayerMode)
+	switch (InPreviousPlayerMode)
 	{
 		case EPlayerMode::PM_ExplorationMode:
 		{
@@ -152,8 +151,6 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
 			break;
 		}
 	}
-
-	PreviousPlayerMode = NewPlayerMode;
 }
 
 void UAoS_UIManager::CreatePlayerHUD()
@@ -187,7 +184,7 @@ void UAoS_UIManager::CreateMoviePlayerWidget()
 		}
 		else
 		{
-			GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 		}
 	}
 }
@@ -329,6 +326,8 @@ void UAoS_UIManager::HideActiveInteractionWidgets()
 			CurrentInteractionWidget->HideWidget();
 		}
 	}
+	
+	ActiveInteractionWidgets.Empty();
 }
 
 void UAoS_UIManager::LoadingScreenFadeDelay()

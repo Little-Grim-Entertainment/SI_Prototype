@@ -21,7 +21,7 @@ void UAoS_WorldSubsystem::OnGameModeBeginPlay()
 	
 }
 
-void UAoS_WorldSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
+void UAoS_WorldSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
 {
 
 }

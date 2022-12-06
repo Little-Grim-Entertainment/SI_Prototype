@@ -11,7 +11,6 @@
 #include "Levels/AoS_LevelManager.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
-#include "MediaAssets/Public/MediaSource.h"
 #include "Data/Videos/AoS_VideoDataAsset.h"
 #include "Data/Videos/AoS_WatchedVideos.h"
 
@@ -48,8 +47,7 @@ void UAoS_CinematicsManager::PlayCinematic(ULevelSequence* LevelSequenceToPlay, 
 	CurrentCinematic->OnFinished.AddDynamic(this, &ThisClass::OnCinematicEnd);
 	CurrentCinematic->Play();		
 
-	PreviousPlayerMode = GameInstance->GetPlayerMode();
-	GameInstance->SetPlayerMode(EPlayerMode::PM_CinematicMode);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
 }
 
 void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat, float InVolume)
@@ -81,8 +79,7 @@ void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool 
 	LoadedVideo->OnVideoEnded.AddDynamic(this, &ThisClass::UAoS_CinematicsManager::OnVideoEnded);
 	LoadedVideo->OnVideoSkipped.AddDynamic(this, &ThisClass::UAoS_CinematicsManager::OnVideoSkipped);
 
-	PreviousPlayerMode = GameInstance->GetPlayerMode();
-	GameInstance->SetPlayerMode(EPlayerMode::PM_VideoMode);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_VideoMode);
 
 	LoadedVideo->StartVideo();
 }
@@ -112,6 +109,18 @@ void UAoS_CinematicsManager::ResetAllVideos()
 	GetWatchedVideos().Empty();
 }
 
+void UAoS_CinematicsManager::LoadLevelOnVideoComplete(UAoS_MapData* InLevelToLoad, bool bAllowDelay, bool bShouldFade, FString InPlayerStartTag)
+{
+	UAoS_LevelManager* LevelManager = GameInstance->GetLevelManager();
+	if (IsValid(LevelManager))
+	{
+		GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+		DelayedLevelLoad.BindUObject(LevelManager, &UAoS_LevelManager::LoadLevel, InLevelToLoad, bAllowDelay, bShouldFade, InPlayerStartTag);
+		LoadedVideo->OnVideoEnded.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
+		LoadedVideo->OnVideoSkipped.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
+	}
+}
+
 ULevelSequencePlayer* UAoS_CinematicsManager::GetCurrentCinematic() const
 {
 	return CurrentCinematic;
@@ -130,11 +139,17 @@ TArray<UAoS_VideoDataAsset*> UAoS_CinematicsManager::GetWatchedVideos()
 	return  GameInstance->WatchedVideosData->GetWatchedVideos();
 }
 
+void UAoS_CinematicsManager::ExecuteLoadLevelOnVideoComplete()
+{
+	DelayedLevelLoad.Execute();
+	DelayedLevelLoad.Unbind();
+}
+
 void UAoS_CinematicsManager::OnCinematicEnd()
 {
 	if(!IsValid(GameInstance)){return;}
 
-	GameInstance->SetPlayerMode(PreviousPlayerMode);
+	GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
 }
 
 void UAoS_CinematicsManager::DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade)
@@ -151,18 +166,25 @@ void UAoS_CinematicsManager::OnVideoEnded()
 	GameInstance->WatchedVideosData->AddToWatchedVideos(LoadedVideo);
 	if (LoadedVideo->bIsOpeningVideo)
 	{
-		GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);
+		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 	}
 	else
 	{
-		GameInstance->SetPlayerMode(PreviousPlayerMode);	
+		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
 }
 
 void UAoS_CinematicsManager::OnVideoSkipped()
 {
 	if(!IsValid(GameInstance)){return;}
-	
-	GameInstance->SetPlayerMode(PreviousPlayerMode);
+	EPlayerMode PreviousPlayerMode = GameInstance->GetPreviousPlayerMode();
+	if(PreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
+	{
+		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
+	}
+	else
+	{
+		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+	}
 }
 	

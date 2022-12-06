@@ -65,7 +65,7 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay,
 	bLevelHasLoaded = false;
 	
 	OnBeginLevelLoad.Broadcast(InLevelToLoad, bLoadShouldFade);
-	GameInstance->SetPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_LevelLoadingMode);
 
 	if (GetWorld() != InLevelToLoad->Map.Get())
 	{
@@ -156,22 +156,21 @@ void UAoS_LevelManager::LevelLoaded()
 	CurrentLevel = LevelToLoad;
 	if (CurrentLevel->MapType == EMapType::MT_Menu)
 	{
-		GameInstance->SetPlayerMode(EPlayerMode::PM_MainMenuMode);
+		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_MainMenuMode);
 	}
 	else
 	{
-		if (LevelToLoad->HasOpeningVideo())
+		if (LevelToLoad->HasOpeningVideo() && !LevelToLoad->OpeningVideoHasPlayed())
 		{
 			UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
 			if (IsValid(CinematicsManager))
 			{
 				CinematicsManager->PlayVideo(LevelToLoad->GetOpeningVideo(), false);
-				GameInstance->SetPlayerMode(EPlayerMode::PM_VideoMode);
 			}
 		}
 		else
 		{
-			GameInstance->SetPlayerMode(EPlayerMode::PM_ExplorationMode);	
+			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
 		}
 	}
 	

@@ -96,14 +96,12 @@ protected:
 	void PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera);
 
 	UFUNCTION()
-	void OnPlayerModeChanged(EPlayerMode InPlayerMode);
+	void OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode);
 
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UMediaSoundComponent* MediaSoundComponent;
-
-	EPlayerMode PreviousPlayerMode;
 	
 	FTimerHandle CameraBlendHandle;
 	FTimerDelegate CameraBlendDelegate;

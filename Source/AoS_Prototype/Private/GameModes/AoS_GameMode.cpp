@@ -23,10 +23,10 @@ void AAoS_GameMode::InitGame(const FString& MapName, const FString& Options, FSt
 	Super::InitGame(MapName, Options, ErrorMessage);
 
 	
+	
 	if (IsValid(GameInstance))
 	{
 		GameInstance->OnInitGame.Broadcast();
-		GameInstance->SetGameMode(this);
 	}	
 }
 

@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResetAllVideos();
 
+	UFUNCTION(BlueprintCallable)
+	void LoadLevelOnVideoComplete(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true,  FString InPlayerStartTag = FString(TEXT("NickSpawn")));
+
 	UFUNCTION(BlueprintPure)
 	ULevelSequencePlayer* GetCurrentCinematic() const;
 	UFUNCTION(BlueprintPure)
@@ -54,9 +57,11 @@ private:
 	ULevelSequencePlayer* CurrentCinematic;
 	UPROPERTY()
 	UAoS_VideoDataAsset* LoadedVideo;
-	
-	EPlayerMode PreviousPlayerMode;
-	
+
+	FSimpleDelegate DelayedLevelLoad;
+
+	UFUNCTION()
+	void ExecuteLoadLevelOnVideoComplete();
 	UFUNCTION()
 	void OnCinematicEnd();
 	UFUNCTION()

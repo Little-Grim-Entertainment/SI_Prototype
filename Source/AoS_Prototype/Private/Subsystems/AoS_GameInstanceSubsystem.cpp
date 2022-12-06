@@ -37,7 +37,7 @@ void UAoS_GameInstanceSubsystem::OnGameModeBeginPlay()
 
 }
 
-void UAoS_GameInstanceSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode)
+void UAoS_GameInstanceSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
 {
 	
 }
