@@ -42,7 +42,7 @@ void UAoS_CinematicsManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicT
 	}
 
 	CurrentCinematic->OnFinished.AddDynamic(this, &ThisClass::OnCinematicEnded);
-	CurrentCinematic->OnStop.AddDynamic(this, &ThisClass::OnCinematicSkipped);
+	CurrentCinematic->OnPause.AddDynamic(this, &ThisClass::OnCinematicSkipped);
 
 	CurrentCinematic->Play();
 

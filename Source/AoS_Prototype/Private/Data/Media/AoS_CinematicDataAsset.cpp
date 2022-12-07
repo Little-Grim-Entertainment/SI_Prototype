@@ -29,6 +29,7 @@ void UAoS_CinematicDataAsset::SkipMedia()
 	bHasPlayed = false;
 	bWasSkipped = true;
 	
+	CinematicPlayer->Pause();
 	CinematicPlayer->Stop();
 		
 	ClearDelegates();
