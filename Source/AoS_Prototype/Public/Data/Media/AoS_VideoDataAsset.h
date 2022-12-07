@@ -39,11 +39,12 @@ public:
 	virtual void StartMedia() override;
 	virtual void SkipMedia() override;
 
+protected:
+
+	virtual void ClearDelegates() override;
+
 private:
 
 	UFUNCTION()
 	void OnVideoEnd();
-
-	void ClearDelegates();
-
 };

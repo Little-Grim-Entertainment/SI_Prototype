@@ -7,6 +7,7 @@
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Cases/AoS_CaseManager.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
+#include "Data/Media/AoS_CinematicDataAsset.h"
 
 UAoS_CheatManager::UAoS_CheatManager()
 {
@@ -44,11 +45,27 @@ void UAoS_CheatManager::CheatResetPlayedVideos()
 	}
 }
 
+void UAoS_CheatManager::CheatResetPlayedCinematics()
+{
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
+	{
+		CinematicsManager->ResetAllCinematics();
+	}
+}
+
 void UAoS_CheatManager::CheatSkipVideo()
 {
 	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
 		CinematicsManager->GetLoadedVideo()->SkipMedia();
+	}
+}
+
+void UAoS_CheatManager::CheatSkipCinematic()
+{
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
+	{
+		CinematicsManager->GetLoadedCinematic()->SkipMedia();
 	}
 }
 

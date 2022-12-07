@@ -30,7 +30,11 @@ public:
 	UFUNCTION(exec)
 	void CheatResetPlayedVideos();
 	UFUNCTION(exec)
+	void CheatResetPlayedCinematics();
+	UFUNCTION(exec)
 	void CheatSkipVideo();
+	UFUNCTION(exec)
+	void CheatSkipCinematic();
 
 protected:
 

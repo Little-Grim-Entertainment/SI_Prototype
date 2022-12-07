@@ -32,3 +32,7 @@ void UAoS_MediaDataAsset::ResetMediaDefaults()
 	bHasPlayed = false;
 	bWasSkipped = false;	
 }
+
+void UAoS_MediaDataAsset::ClearDelegates()
+{
+}

@@ -45,6 +45,8 @@ void UAoS_VideoDataAsset::OnVideoEnd()
 
 void UAoS_VideoDataAsset::ClearDelegates()
 {
+	Super::ClearDelegates();
+
 	MediaPlayer->OnMediaOpened.Clear();
 	MediaPlayer->OnEndReached.Clear();
 	MediaPlayer->OnMediaClosed.Clear();

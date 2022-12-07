@@ -46,4 +46,6 @@ protected:
 	bool bHasPlayed = false;
 	UPROPERTY(EditAnywhere, Category = "Media")
 	bool bWasSkipped = false;
+
+	virtual void ClearDelegates();
 };

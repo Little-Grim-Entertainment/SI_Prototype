@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "AoS_WatchedMedia.generated.h"
 
+class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
 
 UCLASS()
@@ -17,12 +18,18 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Videos")
 	void AddToWatchedVideos(UAoS_VideoDataAsset* InVideoToAdd);
+	UFUNCTION(BlueprintCallable, Category = "Cinematics")
+	void AddToWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToAdd);
 	
 	UFUNCTION(BlueprintPure, Category = "Videos")
-	TArray<UAoS_VideoDataAsset*>& GetWatchedVideos();	
+	TArray<UAoS_VideoDataAsset*>& GetWatchedVideos();
+	UFUNCTION(BlueprintPure, Category = "Cinematics")
+	TArray<UAoS_CinematicDataAsset*>& GetWatchedCinematics();
 	
 private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Videos")
 	TArray<UAoS_VideoDataAsset*> WatchedVideos;
+	UPROPERTY(VisibleAnywhere, Category = "Videos")
+	TArray<UAoS_CinematicDataAsset*> WatchedCinematics;
 };
