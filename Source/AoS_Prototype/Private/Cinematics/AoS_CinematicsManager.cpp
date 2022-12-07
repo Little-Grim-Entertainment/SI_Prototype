@@ -201,7 +201,7 @@ void UAoS_CinematicsManager::OnCinematicEnded()
 	if(!IsValid(GameInstance)){return;}
 
 	GameInstance->WatchedMediaData->AddToWatchedCinematics(LoadedCinematic);
-	if (LoadedVideo->bIsOpeningMedia)
+	if (LoadedCinematic->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 	}
