@@ -17,7 +17,9 @@ UDialogueSession::UDialogueSession()
 
     Name = "DialogueSession";
 
+#if WITH_EDITORONLY_DATA
     bCanBeCyclical = true;
+#endif
 }
 
 void UDialogueSession::StartDialogue(FText CharacterName, UDialogueSessionNode* SaveNode, int32 StartingAnger)
