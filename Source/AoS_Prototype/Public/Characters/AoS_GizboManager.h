@@ -17,9 +17,11 @@ class AOS_PROTOTYPE_API UAoS_GizboManager : public UAoS_GameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Gizbo")
 	void SpawnGizbo();
+	UFUNCTION()
+	void SetGizboStartTag(FString InStartTag);
 	
 protected:
 
@@ -31,4 +33,6 @@ private:
 	AAoS_GizboController* AoS_GizboController;
 	UPROPERTY()
 	AAoS_Gizbo* GizboCharacter;
+
+	FString GizboStartTag;
 };

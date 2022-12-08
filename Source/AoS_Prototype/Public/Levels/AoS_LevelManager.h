@@ -38,7 +38,7 @@ public:
 	FOnMapTypeChanged OnMapTypeChanged;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true,  FString InPlayerStartTag = FString(TEXT("NickSpawn")));
+	void LoadLevel(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	TArray<FString> GetMapNames();
 	UFUNCTION(BlueprintCallable, Category = "Levels")
@@ -67,10 +67,11 @@ protected:
 	virtual void OnPlayerStart() override;
 
 private:
-		
-	float LevelLoadDelay;
-	bool bLoadShouldFade = true;
+
 	bool bLevelHasLoaded = false;
+	bool bLoadShouldFade = false;
+	
+	float LevelLoadDelay;
 
 	UPROPERTY()
 	UAoS_MapData* LevelToLoad;
@@ -81,15 +82,11 @@ private:
 	UPROPERTY()
 	EMapType CurrentMapType;
 
-	FString PlayerStartTag;
-
-
 	FTimerHandle LoadDelayHandle;
+	FTimerDelegate LoadDelayDelegate;
+	
 	FTimerHandle UnloadDelayHandle;
 	FTimerHandle PersistentLevelLoadTimerHandle;
-
-	UFUNCTION()
-	void ExecuteLevelLoad();
 
 	UAoS_MapData* GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel);
 };

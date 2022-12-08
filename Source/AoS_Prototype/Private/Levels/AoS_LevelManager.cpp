@@ -3,6 +3,7 @@
 
 #include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.h"
+#include "Characters/AoS_GizboManager.h"
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "Data/Maps/AoS_MapList.h"
@@ -54,28 +55,35 @@ void UAoS_LevelManager::OnPlayerStart()
 	
 }
 
-void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay, bool bShouldFade, FString InPlayerStartTag)
+void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
 	if (!InLevelToLoad) {return;}
-	
-	bLoadShouldFade = bShouldFade;
-	PlayerStartTag = InPlayerStartTag;
-	LevelToLoad = InLevelToLoad;
-	LevelLoadDelay = GameInstance->LevelLoadDelay;
-	bLevelHasLoaded = false;
-	
-	OnBeginLevelLoad.Broadcast(InLevelToLoad, bLoadShouldFade);
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_LevelLoadingMode);
 
+	LevelToLoad = InLevelToLoad;
+	bLoadShouldFade = bShouldFade;
+
+	UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>();
+	if(IsValid(GizboManager))
+	{
+		GizboManager->SetGizboStartTag(InPlayerStartTag + "Gizbo");
+	}
+	
+	OnBeginLevelLoad.Broadcast(InLevelToLoad, bShouldFade);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+	
 	if (GetWorld() != InLevelToLoad->Map.Get())
 	{
 		if (bAllowDelay)
 		{
-			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, this, &UAoS_LevelManager::ExecuteLevelLoad, LevelLoadDelay);
+			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevel, InLevelToLoad, InPlayerStartTag, false, bShouldFade);
+			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, LevelLoadDelay, false);
 		}
 		else
 		{
-			ExecuteLevelLoad();
+			if (IsValid(InLevelToLoad))
+			{
+				UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),InLevelToLoad->Map, true, InPlayerStartTag);
+			}
 		}
 	}
 }
@@ -135,14 +143,6 @@ FString UAoS_LevelManager::GetCurrentMapName() const
 bool UAoS_LevelManager::GetLevelHasLoaded() const
 {
 	return bLevelHasLoaded;
-}
-
-void UAoS_LevelManager::ExecuteLevelLoad()
-{
-	if (IsValid(LevelToLoad))
-	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelToLoad->Map, true, PlayerStartTag);
-	}
 }
 
 void UAoS_LevelManager::LevelLoaded()

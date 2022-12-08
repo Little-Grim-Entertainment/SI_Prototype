@@ -36,16 +36,18 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	virtual void OnBeginOverlap(AAoS_Nick* InNickActor);
+	UFUNCTION()
+	virtual void OnEndOverlap(AAoS_Nick* InNickActor);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 private:
 
-	UFUNCTION()
-	void OnBeginOverlap(AAoS_Nick* InNickActor);
-	UFUNCTION()
-	void OnEndOverlap(AAoS_Nick* InNickActor);
+
 
 	UFUNCTION()
 	virtual UWidgetComponent* GetInteractionIconComponent_Implementation() override;
