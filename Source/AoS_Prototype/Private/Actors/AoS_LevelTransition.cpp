@@ -52,7 +52,7 @@ void AAoS_LevelTransition::OnInteract_Implementation(AActor* Caller)
 				CinematicsManager->LoadLevelOnVideoComplete(MapToLoad, NickPlayerStartTag);
 				return;
 			}
-			if (!OutroVideo->bCanRepeat && OutroVideo->GetMediaHasPlayed())
+			if (!OutroVideo->bCanRepeat && !OutroVideo->GetMediaHasPlayed())
 			{
 				CinematicsManager->PlayVideo(OutroVideo);
 				CinematicsManager->LoadLevelOnVideoComplete(MapToLoad, NickPlayerStartTag);
@@ -69,7 +69,7 @@ void AAoS_LevelTransition::OnInteract_Implementation(AActor* Caller)
 				CinematicsManager->LoadLevelOnCinematicComplete(MapToLoad, NickPlayerStartTag);
 				return;
 			}
-			if (!OutroCinematic->bCanRepeat && OutroCinematic->GetMediaHasPlayed())
+			if (!OutroCinematic->bCanRepeat && !OutroCinematic->GetMediaHasPlayed())
 			{
 				CinematicsManager->PlayCinematic(OutroCinematic);
 				CinematicsManager->LoadLevelOnCinematicComplete(MapToLoad, NickPlayerStartTag);
