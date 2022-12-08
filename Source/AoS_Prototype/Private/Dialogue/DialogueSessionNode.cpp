@@ -1,6 +1,7 @@
 
 #include "Dialogue/DialogueSessionNode.h"
 #include "Dialogue/DialogueSession.h"
+#include "Data/Characters/AoS_CharacterData.h"
 
 #define LOCTEXT_NAMESPACE "DialogueSessionNode"
 
@@ -11,38 +12,25 @@ UDialogueSessionNode::UDialogueSessionNode()
 
     ContextMenuName = LOCTEXT("ConextMenuName", "Dialogue Session Node");
 #endif
+
+}
+
+UDialogueSessionNode::~UDialogueSessionNode()
+{
 }
 
 #if WITH_EDITOR
 
 FText UDialogueSessionNode::GetNodeTitle() const
 {
-    return Paragraph.IsEmpty() ? LOCTEXT("EmptyParagraph", "(Empty paragraph)") : Paragraph;
+    // TO DO: Change to display only first 10 (or so) letters of dialogue
+    return Dialogue.IsEmpty() ? LOCTEXT("EmptyParagraph", "(Empty paragraph)") : Dialogue;
 }
 
 void UDialogueSessionNode::SetNodeTitle(const FText& NewTitle)
 {
-    Paragraph = NewTitle;
+    Dialogue = NewTitle;
 }
-
-FLinearColor UDialogueSessionNode::GetBackgroundColor() const
-{
-    UDialogueSession* CurrGraph = Cast<UDialogueSession>(GetGraph());
-
-    if (CurrGraph == nullptr)
-        return Super::GetBackgroundColor();
-
-    switch (DialoguerPostion)
-    {
-    case EDialoguerPostion::Left:
-        return CurrGraph->LeftDialoguerBgColor;
-    case EDialoguerPostion::Right:
-        return CurrGraph->RightDialoguerBgColor;
-    default:
-        return FLinearColor::Black;
-    }
-}
-
 #endif
 
 #undef LOCTEXT_NAMESPACE

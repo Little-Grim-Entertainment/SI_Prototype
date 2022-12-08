@@ -7,6 +7,7 @@
 #include "AoS_CinematicsManager.generated.h"
 
 
+class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
 class UAoS_MapData;
 class UMediaTexture;
@@ -23,10 +24,15 @@ class AOS_PROTOTYPE_API UAoS_CinematicsManager : public UAoS_WorldSubsystem
 public:
 	
 	UFUNCTION(BlueprintCallable)
-	void PlayCinematic(ULevelSequence* LevelSequenceToPlay, bool bAutoPlay = false, int32 Loop = 0, float PlayRate = 1.0f, float StartOffset = 0.0f, bool bRandomStartTime = false, bool bRestoreState = false, bool bDisableMovementInput = false, bool bDisableLookInput = false, bool bHidePlayer = false, bool bHideHud = false, bool bDisableCameraCuts = false, bool bPauseAtEnd = false);
+	void PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay);
 	UFUNCTION(BlueprintCallable)
 	void PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat, float InVolume = 1.0f);
 
+	UFUNCTION(BlueprintCallable)
+	void ResetCinematicByName(FString InCinematicName);
+	UFUNCTION(BlueprintCallable)
+	void ResetAllCinematics();
+	
 	UFUNCTION(BlueprintCallable)
 	void ResetVideoByName(FString InVideoName);
 	UFUNCTION(BlueprintCallable)
@@ -36,7 +42,9 @@ public:
 	void LoadLevelOnVideoComplete(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true,  FString InPlayerStartTag = FString(TEXT("NickSpawn")));
 
 	UFUNCTION(BlueprintPure)
-	ULevelSequencePlayer* GetCurrentCinematic() const;
+	TArray<UAoS_CinematicDataAsset*> GetWatchedCinematics();
+	UFUNCTION(BlueprintPure)
+	UAoS_CinematicDataAsset* GetLoadedCinematic() const;
 	UFUNCTION(BlueprintPure)
 	UAoS_VideoDataAsset* GetLoadedVideo() const;
 	UFUNCTION(BlueprintPure)
@@ -47,6 +55,11 @@ public:
 	UFUNCTION()
 	void OnVideoEnded();
 
+	UFUNCTION()
+	void OnCinematicSkipped();	
+	UFUNCTION()
+	void OnCinematicEnded();
+
 protected:
 
 	virtual void OnGameModeBeginPlay() override;
@@ -54,7 +67,7 @@ protected:
 private:
 
 	UPROPERTY()
-	ULevelSequencePlayer* CurrentCinematic;
+	UAoS_CinematicDataAsset* LoadedCinematic;	
 	UPROPERTY()
 	UAoS_VideoDataAsset* LoadedVideo;
 
@@ -63,8 +76,8 @@ private:
 	UFUNCTION()
 	void ExecuteLoadLevelOnVideoComplete();
 	UFUNCTION()
-	void OnCinematicEnd();
-	UFUNCTION()
 	void DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade);
+	UFUNCTION()
+	void DelayedCinematicPlay(UAoS_MapData* LoadedLevel, bool bShouldFade);
 	
 };

@@ -2,12 +2,14 @@
 
 
 #include "Components/Scene/AoS_InteractableComponent.h"
+
 #include "Characters/AoS_Nick.h"
 #include "Components/WidgetComponent.h"
 #include "Interfaces/AoS_InteractInterface.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "UI/AoS_InteractionIcon.h"
 #include "UI/AoS_InteractionPrompt.h"
+#include "UI/AoS_UIManager.h"
 
 UAoS_InteractableComponent::UAoS_InteractableComponent()
 {
@@ -47,6 +49,15 @@ void UAoS_InteractableComponent::OnEndOverlap(UPrimitiveComponent* OverlappedCom
 {
 	if (PlayerCharacter)
 	{
+		UAoS_UIManager* UIManager = Cast<UAoS_UIManager>(GetWorld()->GetGameInstance()->GetSubsystem<UAoS_UIManager>());
+		if (IsValid(UIManager))
+		{
+			UAoS_InteractionWidget* InteractableWidget = Cast<UAoS_InteractionWidget>(InteractionPrompt->GetWidget());
+			if (IsValid(InteractableWidget))
+			{
+				UIManager->RemoveActiveInteractionWidget(InteractableWidget);
+			}
+		}
 		PlayerController->SetInteractableActor(nullptr);
 		OnPlayerEndOverlap.Broadcast(PlayerCharacter);
 		PlayerCharacter = nullptr;

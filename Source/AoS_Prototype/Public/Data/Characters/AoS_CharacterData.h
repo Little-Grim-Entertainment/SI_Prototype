@@ -7,17 +7,27 @@
 #include "Engine/DataAsset.h"
 #include "AoS_CharacterData.generated.h"
 
-class UDlgDialogue;
+class UDialogueSession;
+class UDialogueSessionNode;
 class UAoS_Case;
 class UAoS_Part;
 
+USTRUCT(BlueprintType)
 struct FAoS_DialogueData
 {
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
 	UAoS_Case* Case;
+	UPROPERTY(EditAnywhere)
 	UAoS_Part* Part;
-	int32 Subpart;
-	int32 AngerLevel;
-	UDlgDialogue* RelevantDialogue;
+	UPROPERTY(EditAnywhere)
+	UDialogueSession* RelevantDialogue;
+
+	// --- Saved info --- //
+	UPROPERTY(EditAnywhere)
+	int32 AngerLevel = 0;
+	UDialogueSessionNode* SavedNode = nullptr;
 };
 
 
@@ -29,13 +39,14 @@ class AOS_PROTOTYPE_API UAoS_CharacterData : public UDataAsset
 public:
 
 	UAoS_CharacterData();
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterDetails")
 	FText CharacterName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterDetails")
 	TSubclassOf<AAoS_Character> CharacterClass;
 	bool IsCharacterActive;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DialogueData")
 	FAoS_DialogueData CurrentDialogueData;
 
 private:
