@@ -6,10 +6,19 @@
 #include "DialogueSessionNode.generated.h"
 
 UENUM(BlueprintType)
-enum class EDialoguerPostion : uint8
+enum class EEmotion : uint8
 {
-    Left,
-    Right
+    Neutral,
+    Anger,
+    Fear,
+    Disgust,
+    Contempt,
+    Joy,
+    Sadness,
+    Surprise,
+    Cocky,
+    Thoughtful,
+    Nervous
 };
 
 UCLASS(Blueprintable)
@@ -18,18 +27,26 @@ class UDialogueSessionNode : public UGenericGraphNode
     GENERATED_BODY()
 public:
     UDialogueSessionNode();
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DialogueSession")
-    FText Paragraph;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DialogueSession")
-    EDialoguerPostion DialoguerPostion;
+    ~UDialogueSessionNode();
 
 #if WITH_EDITOR
     virtual FText GetNodeTitle() const override;
 
     virtual void SetNodeTitle(const FText& NewTitle) override;
-
-    virtual FLinearColor GetBackgroundColor() const override;
 #endif
+
+    UFUNCTION(BlueprintCallable)
+    FText GetDialogueText() const { return Dialogue; }
+
+    UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
+    bool bIsDefaultStartingNode;
+    UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
+    bool bIsNickSpeaking;
+
+private:
+
+    UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
+    FText Dialogue;
+    UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
+    EEmotion RelatedEmotion;
 };
