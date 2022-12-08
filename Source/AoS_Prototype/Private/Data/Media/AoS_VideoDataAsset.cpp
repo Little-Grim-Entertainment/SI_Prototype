@@ -21,7 +21,7 @@ void UAoS_VideoDataAsset::SkipMedia()
 {
 	Super::SkipMedia();
 
-	if (!bIsPlaying) {return;}
+ 	if (!bIsPlaying) {return;}
 	bIsPlaying = false;
 	bHasPlayed = false;
 	bWasSkipped = true;

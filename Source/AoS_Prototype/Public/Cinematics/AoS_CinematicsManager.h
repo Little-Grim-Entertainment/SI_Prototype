@@ -26,7 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay);
 	UFUNCTION(BlueprintCallable)
-	void PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat, float InVolume = 1.0f);
+	void PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat = false, float InVolume = 1.0f);
 
 	UFUNCTION(BlueprintCallable)
 	void ResetCinematicByName(FString InCinematicName);
@@ -39,7 +39,9 @@ public:
 	void ResetAllVideos();
 
 	UFUNCTION(BlueprintCallable)
-	void LoadLevelOnVideoComplete(UAoS_MapData* InLevelToLoad, bool bAllowDelay = true, bool bShouldFade = true,  FString InPlayerStartTag = FString(TEXT("NickSpawn")));
+	void LoadLevelOnVideoComplete(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	UFUNCTION(BlueprintCallable)
+	void LoadLevelOnCinematicComplete(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
 
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_CinematicDataAsset*> GetWatchedCinematics();
@@ -75,6 +77,8 @@ private:
 
 	UFUNCTION()
 	void ExecuteLoadLevelOnVideoComplete();
+	UFUNCTION()
+	void ExecuteLoadLevelOnCinematicComplete();
 	UFUNCTION()
 	void DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade);
 	UFUNCTION()
