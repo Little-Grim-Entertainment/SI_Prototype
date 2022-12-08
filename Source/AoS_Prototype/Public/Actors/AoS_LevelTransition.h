@@ -18,8 +18,6 @@ class AOS_PROTOTYPE_API AAoS_LevelTransition : public AAoS_InteractableActor
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
-	FString PlayerStartTag;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
 	UAoS_MapData* MapToLoad;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
 	UAoS_VideoDataAsset* OutroVideo;

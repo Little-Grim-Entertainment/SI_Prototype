@@ -70,8 +70,6 @@ private:
 
 	bool bLevelHasLoaded = false;
 	bool bLoadShouldFade = false;
-	
-	float LevelLoadDelay;
 
 	UPROPERTY()
 	UAoS_MapData* LevelToLoad;
@@ -88,5 +86,8 @@ private:
 	FTimerHandle UnloadDelayHandle;
 	FTimerHandle PersistentLevelLoadTimerHandle;
 
+	UFUNCTION()
+	void ExecuteDelayedLevelLoad();
+	
 	UAoS_MapData* GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel);
 };

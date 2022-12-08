@@ -65,7 +65,9 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayer
 	UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>();
 	if(IsValid(GizboManager))
 	{
-		GizboManager->SetGizboStartTag(InPlayerStartTag + "Gizbo");
+		FString GizboStartTag = InPlayerStartTag;
+		GizboStartTag = UKismetStringLibrary::Replace(GizboStartTag, "Nick_", "Gizbo_");
+		GizboManager->SetGizboStartTag(GizboStartTag);
 	}
 	
 	OnBeginLevelLoad.Broadcast(InLevelToLoad, bShouldFade);
@@ -76,7 +78,7 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayer
 		if (bAllowDelay)
 		{
 			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevel, InLevelToLoad, InPlayerStartTag, false, bShouldFade);
-			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, LevelLoadDelay, false);
+			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameInstance->LevelLoadDelay, false);
 		}
 		else
 		{
@@ -179,6 +181,10 @@ void UAoS_LevelManager::LevelLoaded()
 }
 
 
+void UAoS_LevelManager::ExecuteDelayedLevelLoad()
+{
+	
+}
 
 UAoS_MapData* UAoS_LevelManager::GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel)
 {
