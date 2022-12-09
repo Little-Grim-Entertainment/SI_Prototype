@@ -8,7 +8,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Data/Characters/AoS_NickCharacterData.h"
-#include "UI/AoS_HUD.h"
+#include "Data/Maps/AoS_MapData.h"
+#include "Levels/AoS_LevelManager.h"
 
 AAoS_Nick::AAoS_Nick()
 {
@@ -50,9 +51,12 @@ void AAoS_Nick::BeginPlay()
 
 	if (!IsValid(NickCharacterData)) {return;}
 	
-	FString MapName = GetWorld()->GetMapName();
+	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
+	if (!IsValid(LevelManager)){return;}
 	
-	if (MapName == "M_NicksOffice")
+	FString MapName = LevelManager->GetCurrentMap()->GetName();
+	
+	if (MapName == "DA_NicksOffice")
 	{
 		GetMesh()->SetSkeletalMesh(NickCharacterData->GetClothingMeshFromName(FName(TEXT("NoJacketNick"))));
 	}
