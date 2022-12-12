@@ -97,13 +97,14 @@ void UDialogueSession::ExitDialogue()
 }
 
 // As of now (11/26/22), this only updates the current node in the graph; doesn't change text anywhere
-void UDialogueSession::SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck)
+void UDialogueSession::SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck, FText TextToCheck)
 {
     if (!CheckCurrentNode(TEXT("CurrentNode not set in dialogue!")))
     {
         return;
     }
 
+    // TO DO: Add text and item options
     UDialogueSessionEdge* NewEdge = FindEdgeOfType(Type, true);
 
     if (!NewEdge)

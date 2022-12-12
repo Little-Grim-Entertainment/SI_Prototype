@@ -96,6 +96,12 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			RemoveMainMenu();
 			break;
 		}
+		case EPlayerMode::PM_DialogueMode:
+		case EPlayerMode::PM_InterrogationMode:
+		{
+			HideDialogueBox();
+			break;
+		}
 		default:
 		{
 			break;
@@ -142,6 +148,12 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			{
 				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Visible);
 			}
+			break;
+		}
+		case EPlayerMode::PM_DialogueMode:
+		case EPlayerMode::PM_InterrogationMode:
+		{
+			DisplayDialogueBox();
 			break;
 		}
 		default:
@@ -314,6 +326,13 @@ void UAoS_UIManager::DisplayDialogueBox()
 	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())){return;}
 	
 	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UAoS_UIManager::HideDialogueBox()
+{
+	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())) { return; }
+
+	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UAoS_UIManager::HideActiveInteractionWidgets()
