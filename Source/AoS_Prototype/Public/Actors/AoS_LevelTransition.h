@@ -15,7 +15,13 @@ class AOS_PROTOTYPE_API AAoS_LevelTransition : public AAoS_InteractableActor
 {
 	GENERATED_BODY()
 
+	/** Normal editor sprite. */
+	UPROPERTY()
+	TObjectPtr<UBillboardComponent> MapSprite;
+	
 public:
+
+	AAoS_LevelTransition();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
 	UAoS_MapData* MapToLoad;
@@ -29,5 +35,4 @@ protected:
 	virtual void OnBeginOverlap(AAoS_Nick* InNickActor) override;
 	virtual void OnEndOverlap(AAoS_Nick* InNickActor) override;
 	virtual void OnInteract_Implementation(AActor* Caller) override;
-	
 };

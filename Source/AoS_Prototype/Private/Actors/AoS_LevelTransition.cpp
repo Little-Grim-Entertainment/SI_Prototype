@@ -2,7 +2,9 @@
 
 
 #include "Actors/AoS_LevelTransition.h"
-
+#include "Engine/Texture2D.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Components/BillboardComponent.h"
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Maps/AoS_MapData.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
@@ -10,6 +12,51 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Levels/AoS_LevelManager.h"
 
+
+AAoS_LevelTransition::AAoS_LevelTransition()
+{
+
+MapSprite = CreateEditorOnlyDefaultSubobject<UBillboardComponent>(TEXT("Sprite"));
+
+#if WITH_EDITORONLY_DATA
+
+	if (!IsRunningCommandlet())
+	{
+		// Structure to hold one-time initialization
+		struct FConstructorStatics
+		{
+			ConstructorHelpers::FObjectFinderOptional<UTexture2D> LevelTransitionTextureObject;
+			FName ID_LevelTransition;
+			FText NAME_LevelTransition;
+			FName ID_Navigation;
+			FText NAME_Navigation;
+			FConstructorStatics()
+				: LevelTransitionTextureObject(TEXT("Texture2D'/Game/AoS/UI/Interaction/Textures/StreetSign/S_TravelStreetSign.S_TravelStreetSign'"))
+				, ID_LevelTransition(TEXT("PlayerStart"))
+				, NAME_LevelTransition(NSLOCTEXT("SpriteCategory", "LevelTransition", "Level Transition"))
+				, ID_Navigation(TEXT("Navigation"))
+				, NAME_Navigation(NSLOCTEXT("SpriteCategory", "Navigation", "Navigation"))
+			{
+			}
+		};
+		static FConstructorStatics ConstructorStatics;
+
+		if (MapSprite)
+		{
+			MapSprite->Sprite = ConstructorStatics.LevelTransitionTextureObject.Get();
+			MapSprite->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+			MapSprite->bHiddenInGame = true;
+			MapSprite->SpriteInfo.Category = ConstructorStatics.ID_LevelTransition;
+			MapSprite->SpriteInfo.DisplayName = ConstructorStatics.NAME_LevelTransition;
+			MapSprite->SetupAttachment(RootComponent);
+			MapSprite->SetUsingAbsoluteScale(true);
+			MapSprite->bIsScreenSizeScaled = true;
+		}
+	}
+
+	bIsSpatiallyLoaded = false;
+#endif // WITH_EDITORONLY_DATA
+}
 
 void AAoS_LevelTransition::OnBeginOverlap(AAoS_Nick* InNickActor)
 {
