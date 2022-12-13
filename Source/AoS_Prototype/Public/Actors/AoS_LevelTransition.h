@@ -6,6 +6,7 @@
 #include "Actors/AoS_InteractableActor.h"
 #include "AoS_LevelTransition.generated.h"
 
+class UBillboardComponent;
 class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
 class UAoS_MapData;
@@ -17,7 +18,7 @@ class AOS_PROTOTYPE_API AAoS_LevelTransition : public AAoS_InteractableActor
 
 	/** Normal editor sprite. */
 	UPROPERTY()
-	TObjectPtr<UBillboardComponent> MapSprite;
+	UBillboardComponent* MapSprite;
 	
 public:
 

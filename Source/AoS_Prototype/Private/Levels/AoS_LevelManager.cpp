@@ -61,6 +61,7 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayer
 
 	LevelToLoad = InLevelToLoad;
 	bLoadShouldFade = bShouldFade;
+	bLevelHasLoaded = false;
 
 	UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>();
 	if(IsValid(GizboManager))

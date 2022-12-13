@@ -9,6 +9,8 @@
 class UAoS_NickCharacterData;
 class USpringArmComponent;
 class UCameraComponent;
+class UAoS_LevelManager;
+class UAoS_MapData;
 
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_Nick : public AAoS_Character
@@ -29,8 +31,13 @@ private:
 	UCameraComponent* FollowCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* ObservationCamera;
+
+	UAoS_LevelManager* LevelManager;
 		
 	// ================== FUNCTIONS ==================
+
+	UFUNCTION()
+	void OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade = false);
 public:
 
 

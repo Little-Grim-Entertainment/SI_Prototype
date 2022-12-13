@@ -2,11 +2,12 @@
 
 
 #include "Characters/AoS_Nick.h"
+
+#include "AoS_GameInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Data/Characters/AoS_NickCharacterData.h"
 #include "Data/Maps/AoS_MapData.h"
 #include "Levels/AoS_LevelManager.h"
@@ -49,12 +50,34 @@ void AAoS_Nick::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!IsValid(NickCharacterData)) {return;}
-	
-	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	if (!IsValid(GameInstance)) {return;}
+
+	LevelManager = GameInstance->GetLevelManager();
 	if (!IsValid(LevelManager)){return;}
+
+	if(LevelManager->GetLevelHasLoaded())
+	{
+		OnLevelLoaded(LevelManager->GetCurrentMap());
+	}
+	else
+	{
+		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelLoaded);	
+	}
+}
+
+void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
+{
+	FString MapName;
 	
-	FString MapName = LevelManager->GetCurrentMap()->GetName();
+	if (LoadedLevel)
+	{
+		MapName = LoadedLevel->GetName();
+	}
+	else
+	{
+		MapName = "DA_MainMenu";
+	}
 	
 	if (MapName == "DA_NicksOffice")
 	{
