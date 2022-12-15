@@ -8,7 +8,6 @@
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
-#include "Levels/AoS_LevelManager.h"
 
 AAoS_GameMode::AAoS_GameMode()
 {

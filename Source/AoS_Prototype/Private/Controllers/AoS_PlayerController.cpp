@@ -4,25 +4,18 @@
 #include "Controllers/AoS_PlayerController.h"
 
 #include "AoS_GameInstance.h"
-#include "Actors/AoS_InteractableActor.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/AoS_Nick.h"
-#include "Cinematics/AoS_CinematicsManager.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "GameModes/AoS_GameMode.h"
 #include "Interfaces/AoS_InteractInterface.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
-#include "UI/AoS_HUD.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-
+	
 	MediaSoundComponent = CreateDefaultSubobject<UMediaSoundComponent>(TEXT("MediaSoundComponent"));
 	MediaSoundComponent->SetupAttachment(RootComponent);
 }
