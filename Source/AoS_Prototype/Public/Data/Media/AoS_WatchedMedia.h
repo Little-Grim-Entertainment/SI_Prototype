@@ -20,6 +20,12 @@ public:
 	void AddToWatchedVideos(UAoS_VideoDataAsset* InVideoToAdd);
 	UFUNCTION(BlueprintCallable, Category = "Cinematics")
 	void AddToWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToAdd);
+
+	UFUNCTION(BlueprintCallable, Category = "Videos")
+	void RemoveFromWatchedVideos(UAoS_VideoDataAsset* InVideoToRemove);
+	UFUNCTION(BlueprintCallable, Category = "Cinematics")
+	void RemoveFromWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToRemove);
+		
 	
 	UFUNCTION(BlueprintPure, Category = "Videos")
 	TArray<UAoS_VideoDataAsset*>& GetWatchedVideos();

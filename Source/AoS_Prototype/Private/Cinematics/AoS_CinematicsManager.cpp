@@ -203,6 +203,8 @@ void UAoS_CinematicsManager::ExecuteLoadLevelOnCinematicComplete()
 void UAoS_CinematicsManager::OnCinematicSkipped()
 {
 	if(!IsValid(GameInstance)){return;}
+
+	GameInstance->WatchedMediaData->AddToWatchedCinematics(LoadedCinematic);
 	if(LoadedCinematic->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
@@ -260,7 +262,8 @@ void UAoS_CinematicsManager::OnVideoEnded()
 void UAoS_CinematicsManager::OnVideoSkipped()
 {
 	if(!IsValid(GameInstance)){return;}
-	
+
+	GameInstance->WatchedMediaData->AddToWatchedVideos(LoadedVideo);
 	if(LoadedVideo->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	

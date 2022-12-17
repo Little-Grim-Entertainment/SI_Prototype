@@ -10,6 +10,8 @@ class UAoS_CaseManager;
 class UAoS_CharacterData;
 class UAoS_Objective;
 
+
+
 UCLASS(BlueprintType)
 class AOS_PROTOTYPE_API UAoS_Part : public UDataAsset
 {

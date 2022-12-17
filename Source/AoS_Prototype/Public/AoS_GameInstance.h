@@ -79,7 +79,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Levels")
 	UAoS_MapList* MapList;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Media")
 	UAoS_WatchedMedia* WatchedMediaData;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")

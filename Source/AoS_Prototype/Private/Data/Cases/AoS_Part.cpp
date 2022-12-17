@@ -2,9 +2,10 @@
 
 
 #include "Data/Cases/AoS_Part.h"
+
 #include "Data/Cases/AoS_Objective.h"
-#include "Data/Characters/AoS_CharacterData.h"
 #include "Data/Cases/AoS_CaseManager.h"
+
 
 UAoS_Part::UAoS_Part()
 {

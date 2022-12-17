@@ -23,7 +23,7 @@ void UAoS_VideoDataAsset::SkipMedia()
 
  	if (!bIsPlaying) {return;}
 	bIsPlaying = false;
-	bHasPlayed = false;
+	bHasPlayed = true;
 	bWasSkipped = true;
 	
 	MediaPlayer->Close();

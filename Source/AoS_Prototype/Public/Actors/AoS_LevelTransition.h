@@ -26,10 +26,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
 	UAoS_MapData* MapToLoad;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
-	UAoS_VideoDataAsset* OutroVideo;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
-	UAoS_CinematicDataAsset* OutroCinematic;
 	
 protected:
 

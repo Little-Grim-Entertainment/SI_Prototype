@@ -58,7 +58,19 @@ void UAoS_LevelManager::OnPlayerStart()
 void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
 	if (!InLevelToLoad) {return;}
-
+	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
+	
+	if (CurrentLevel->HasOutroVideo() && !CurrentLevel->OutroVideoHasPlayed())
+	{
+		UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+		if (IsValid(CinematicsManager))
+		{
+			CinematicsManager->PlayVideo(CurrentLevel->GetOutroVideo(), false);
+			CinematicsManager->LoadLevelOnVideoComplete(InLevelToLoad, InPlayerStartTag, bAllowDelay, bShouldFade);
+			return;
+		}
+	}
+	
 	LevelToLoad = InLevelToLoad;
 	bLoadShouldFade = bShouldFade;
 	bLevelHasLoaded = false;
@@ -163,12 +175,12 @@ void UAoS_LevelManager::LevelLoaded()
 	}
 	else
 	{
-		if (LevelToLoad->HasOpeningVideo() && !LevelToLoad->OpeningVideoHasPlayed())
+		if (LevelToLoad->HasIntroVideo() && !LevelToLoad->IntroVideoHasPlayed())
 		{
 			UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
 			if (IsValid(CinematicsManager))
 			{
-				CinematicsManager->PlayVideo(LevelToLoad->GetOpeningVideo(), false);
+				CinematicsManager->PlayVideo(LevelToLoad->GetIntroVideo(), false);
 			}
 		}
 		else

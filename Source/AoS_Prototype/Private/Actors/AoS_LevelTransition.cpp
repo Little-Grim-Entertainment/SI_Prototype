@@ -76,56 +76,11 @@ void AAoS_LevelTransition::OnInteract_Implementation(AActor* Caller)
 	
 	if (!IsValid(MapToLoad)){return;}
 
-	if (IsValid(OutroVideo) && (IsValid(OutroCinematic)))
-	{
-		// print error
-		return;
-	}
-
 	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
 	if (!IsValid(LevelManager)) {return;}
 
 	FString NickPlayerStartTag = LevelManager->GetCurrentMap()->GetName();
 	NickPlayerStartTag = UKismetStringLibrary::Replace(NickPlayerStartTag, "DA_", "Nick_");
 
-	UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
-	if(IsValid(CinematicsManager))
-	{
-		if (IsValid(OutroVideo))
-		{
-			if (OutroVideo->bCanRepeat)
-			{
-				CinematicsManager->PlayVideo(OutroVideo);
-				CinematicsManager->LoadLevelOnVideoComplete(MapToLoad, NickPlayerStartTag);
-				return;
-			}
-			if (!OutroVideo->bCanRepeat && !OutroVideo->GetMediaHasPlayed())
-			{
-				CinematicsManager->PlayVideo(OutroVideo);
-				CinematicsManager->LoadLevelOnVideoComplete(MapToLoad, NickPlayerStartTag);
-				return;
-			}
-			LevelManager->LoadLevel(MapToLoad, NickPlayerStartTag);	
-			return;
-		}
-		if (IsValid(OutroCinematic))
-		{
-			if (OutroCinematic->bCanRepeat)
-			{
-				CinematicsManager->PlayCinematic(OutroCinematic);
-				CinematicsManager->LoadLevelOnCinematicComplete(MapToLoad, NickPlayerStartTag);
-				return;
-			}
-			if (!OutroCinematic->bCanRepeat && !OutroCinematic->GetMediaHasPlayed())
-			{
-				CinematicsManager->PlayCinematic(OutroCinematic);
-				CinematicsManager->LoadLevelOnCinematicComplete(MapToLoad, NickPlayerStartTag);
-				return;
-			}
-			LevelManager->LoadLevel(MapToLoad, NickPlayerStartTag);
-			return;
-		}
-
-		LevelManager->LoadLevel(MapToLoad, NickPlayerStartTag);	
-	}
+	LevelManager->LoadLevel(MapToLoad, NickPlayerStartTag);	
 }
