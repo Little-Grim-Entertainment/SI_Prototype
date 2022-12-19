@@ -59,7 +59,7 @@ void AAoS_Nick::PostInitializeComponents()
 	if (IsValid(FollowCamera))
 	{
 		ObservationCameraActor = Cast<ACameraActor>(ObservationCamera->GetChildActor());
-		FollowCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
+		ObservationCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
 	}
 }
 
