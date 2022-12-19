@@ -4,6 +4,7 @@
 #include "Characters/AoS_Nick.h"
 
 #include "AoS_GameInstance.h"
+#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -35,14 +36,31 @@ AAoS_Nick::AAoS_Nick()
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	FollowCamera->SetChildActorClass(ACameraActor::StaticClass());
+	//FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	//Create an observation camera
-	ObservationCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ObservationCamera"));
+	ObservationCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("ObservationCamera"));
 	ObservationCamera->SetupAttachment(RootComponent);
-	
+	ObservationCamera->SetChildActorClass(ACameraActor::StaticClass());
+}
+
+void AAoS_Nick::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (IsValid(FollowCamera))
+	{
+		FollowCameraActor = Cast<ACameraActor>(FollowCamera->GetChildActor());
+		FollowCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
+	}
+	if (IsValid(FollowCamera))
+	{
+		ObservationCameraActor = Cast<ACameraActor>(ObservationCamera->GetChildActor());
+		FollowCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
+	}
 }
 
 
@@ -65,6 +83,7 @@ void AAoS_Nick::BeginPlay()
 		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelLoaded);	
 	}
 }
+
 
 void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 {

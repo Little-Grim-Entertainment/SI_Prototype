@@ -67,7 +67,14 @@ void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Nick = Cast<AAoS_Nick>(GetPawn()); 
+	Nick = Cast<AAoS_Nick>(GetPawn());
+	if (IsValid(Nick))
+	{
+		if (IsValid(Nick->GetFollowCameraActor()))
+		{
+			SetViewTarget(Nick->GetFollowCameraActor());
+		}
+	}
 }
 
 void AAoS_PlayerController::Tick(float DeltaSeconds)
@@ -250,21 +257,6 @@ void AAoS_PlayerController::RequestEnterObservation()
 {
 	bObservationMode = !bObservationMode;
 
-	UCameraComponent* FollowCameraComponent = Nick->GetFollowCamera();
-	UCameraComponent* ObservationCameraComponent = Nick->GetObservationCamera();
-
-	const FVector FollowCamLocation = FollowCameraComponent->GetComponentLocation();
-	const FRotator FollowCamRotation = FollowCameraComponent->GetComponentRotation();
-
-	FVector ObservationCamLocation = ObservationCameraComponent->GetComponentLocation();
-	const FRotator ObservationCamRotation = ObservationCameraComponent->GetComponentRotation();
-
-	FVector ForwardVector = Nick->GetFollowCamera()->GetForwardVector();
-	ObservationCamLocation *= ForwardVector;
-	
-	ACameraActor* FollowCameraActor = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), FollowCamLocation, FollowCamRotation);
-	ACameraActor* ObservationCameraActor = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), ObservationCamLocation, ObservationCamRotation);
-	
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 
 	float CameraTransitionTime = 0.25f;
@@ -276,18 +268,15 @@ void AAoS_PlayerController::RequestEnterObservation()
 	if(bObservationMode)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ObservationMode);
-		SetViewTarget(FollowCameraActor);
-		SetViewTargetWithBlend(ObservationCameraActor, CameraTransitionTime);
+		SetViewTargetWithBlend(Nick->GetObservationCameraActor(), CameraTransitionTime);
 	}
 	else
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
-		SetViewTarget(ObservationCameraActor);
-		SetViewTargetWithBlend(FollowCameraActor, CameraTransitionTime);
+		SetViewTargetWithBlend(Nick->GetFollowCameraActor(), CameraTransitionTime);
 	}
 
-	CameraBlendDelegate = FTimerDelegate::CreateUObject(this, &AAoS_PlayerController::PostCameraBlend, FollowCameraActor, ObservationCameraActor);
-	
+	CameraBlendDelegate = FTimerDelegate::CreateUObject(this, &AAoS_PlayerController::PostCameraBlend, Nick->GetFollowCameraActor(), Nick->GetObservationCameraActor());
 	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, CameraBlendDelegate, CameraTransitionTime, false);
 }
 
@@ -298,14 +287,8 @@ void AAoS_PlayerController::RequestObserveObject()
 
 void AAoS_PlayerController::PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera)
 {
-	Nick->GetFollowCamera()->SetActive(!bObservationMode);
-	Nick->GetObservationCamera()->SetActive(bObservationMode);
-	
 	Nick->bUseControllerRotationPitch = bObservationMode;
 	Nick->bUseControllerRotationYaw = bObservationMode;
-
-	InFollowCamera->Destroy();
-	InObservationCamera->Destroy();
 
 	EnableInput(this);
 }

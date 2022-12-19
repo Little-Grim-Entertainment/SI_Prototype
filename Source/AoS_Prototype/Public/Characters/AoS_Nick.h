@@ -28,10 +28,17 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
+	UChildActorComponent* FollowCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* ObservationCamera;
+	UChildActorComponent* ObservationCamera;
 
+	UPROPERTY()
+	ACameraActor* FollowCameraActor;
+	UPROPERTY()
+	ACameraActor* ObservationCameraActor;
+	
+	
+	UPROPERTY()
 	UAoS_LevelManager* LevelManager;
 		
 	// ================== FUNCTIONS ==================
@@ -47,12 +54,16 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE UChildActorComponent* GetFollowCamera() const { return FollowCamera; }
 	/** Returns ObservationCamera subobject **/
-	FORCEINLINE UCameraComponent* GetObservationCamera() const { return ObservationCamera; }
-
+	FORCEINLINE UChildActorComponent* GetObservationCamera() const { return ObservationCamera; }
+	/** Returns FollowCamera Actor **/
+	FORCEINLINE ACameraActor* GetFollowCameraActor() const { return FollowCameraActor; }
+	/** Returns ObservationCamera Actor **/
+	FORCEINLINE ACameraActor* GetObservationCameraActor() const { return ObservationCameraActor; }
 	
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 };
