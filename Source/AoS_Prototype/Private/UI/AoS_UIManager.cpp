@@ -86,6 +86,14 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			}
 			break;
 		}
+		case EPlayerMode::PM_ObservationMode:
+		{
+			if (IsValid(PlayerHUD))
+			{
+				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Hidden);
+			}
+			break;
+		}
 		case EPlayerMode::PM_VideoMode:
 		{
 			RemoveMoviePlayerWidget();

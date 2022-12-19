@@ -15,6 +15,7 @@ class UMediaSoundComponent;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCameraSetup);
 
 enum class EPlayerMode : uint8;
 
@@ -70,6 +71,9 @@ public:
 	FOnInteractableActorAdded OnInteractableActorAdded;
 	FOnInteractableActorRemoved OnInteractableActorRemoved;
 
+	UPROPERTY(BlueprintAssignable, Category = "PlayerCamera")
+	FOnCameraSetup OnCameraSetup;
+
 	// ================== FUNCTIONS ==================
 
 	UFUNCTION(BlueprintImplementableEvent)	
@@ -80,6 +84,8 @@ public:
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
+	UFUNCTION(BlueprintNativeEvent)
+	void PostCameraSetup();
 
 	UFUNCTION(BlueprintPure)
 	UMediaSoundComponent* GetMediaSoundComponent() const;
@@ -99,6 +105,8 @@ protected:
 	void RequestInteract();
 	void RequestEnterObservation();
 	void RequestObserveObject();
+
+	void SetupPlayerCamera();
 
 	void PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera);
 

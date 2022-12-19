@@ -66,13 +66,21 @@ void AAoS_PlayerController::SetupInputComponent()
 void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	OnCameraSetup.AddDynamic(this, &ThisClass::PostCameraSetup);
+	SetupPlayerCamera();
+}
 
+
+void AAoS_PlayerController::SetupPlayerCamera()
+{
 	Nick = Cast<AAoS_Nick>(GetPawn());
 	if (IsValid(Nick))
 	{
 		if (IsValid(Nick->GetFollowCameraActor()))
 		{
 			SetViewTarget(Nick->GetFollowCameraActor());
+			OnCameraSetup.Broadcast();
 		}
 	}
 }
@@ -307,6 +315,11 @@ void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 {
 	ObservableActor = InObservableActor;
+}
+
+void AAoS_PlayerController::PostCameraSetup_Implementation()
+{
+	
 }
 
 UMediaSoundComponent* AAoS_PlayerController::GetMediaSoundComponent() const
