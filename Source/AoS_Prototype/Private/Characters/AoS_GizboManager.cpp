@@ -16,6 +16,11 @@ void UAoS_GizboManager::SpawnGizbo()
 {
 	if (!GameInstance->GetGameMode()->GizboCDA) {return;}
 	if (!GameInstance->GetGameMode()->GizboCDA->CharacterClass){return;}
+
+	if (GizboStartTag == "")
+	{
+		GizboStartTag = "Gizbo_DefaultSpawn";
+	}
 	
 	if (const APlayerStart* GizboStart = GameInstance->GetGameMode()->GetPlayerStart(GizboStartTag))
 	{
