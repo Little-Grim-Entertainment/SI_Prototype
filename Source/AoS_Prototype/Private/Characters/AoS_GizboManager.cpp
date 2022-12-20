@@ -33,12 +33,11 @@ void UAoS_GizboManager::SpawnGizbo()
 		}
 	}
 
-	/*
-	if (!AoS_GizboController)
+	//TODO: Check / modify this if update to NPCController does not work as intended
+	if (!AoS_GizboController && GizboCharacter)
 	{
-		AoS_GizboController = Cast<AAoS_GizboController>(GetFirstLocalPlayerController());
+		AoS_GizboController = Cast<AAoS_GizboController>(GizboCharacter->GetController());
 	}
-	*/
 
 	if (AoS_GizboController)
 	{

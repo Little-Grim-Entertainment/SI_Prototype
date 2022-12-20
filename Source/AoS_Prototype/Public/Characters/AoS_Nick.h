@@ -9,6 +9,7 @@
 class UAoS_NickCharacterData;
 class USpringArmComponent;
 class UCameraComponent;
+class UAoS_AIPerceptionStimuliSource;
 
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_Nick : public AAoS_Character
@@ -23,12 +24,14 @@ public:
 	
 private:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* ObservationCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UAoS_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
 		
 	// ================== FUNCTIONS ==================
 public:
@@ -43,7 +46,8 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	/** Returns ObservationCamera subobject **/
 	FORCEINLINE UCameraComponent* GetObservationCamera() const { return ObservationCamera; }
-
+	/** Returns PerceptionStimuliSourceComponent subobject **/
+	FORCEINLINE UAoS_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
 	
 protected:
 

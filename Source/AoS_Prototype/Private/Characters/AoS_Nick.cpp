@@ -2,12 +2,16 @@
 
 
 #include "Characters/AoS_Nick.h"
+
+#include "AI/AoS_AIPerceptionStimuliSource.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Data/Characters/AoS_NickCharacterData.h"
+#include "Perception/AISense_Hearing.h"
+#include "Perception/AISense_Sight.h"
 #include "UI/AoS_HUD.h"
 
 AAoS_Nick::AAoS_Nick()
@@ -41,6 +45,10 @@ AAoS_Nick::AAoS_Nick()
 	ObservationCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ObservationCamera"));
 	ObservationCamera->SetupAttachment(RootComponent);
 	
+	// Create an AI Perception Stimuli Source component
+	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAoS_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
+	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
+	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
 }
 
 

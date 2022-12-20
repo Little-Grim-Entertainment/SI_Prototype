@@ -20,13 +20,13 @@ class AOS_PROTOTYPE_API AAoS_NPC_Interactable : public AAoS_NPC, public IAoS_Int
 	class UCameraComponent* NPC_Cam;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* NickCam;
-	UPROPERTY()
-	class AAoS_NPCController_Interactable* AIController;
 	
 public:
 		
 	AAoS_NPC_Interactable();
 
+	UPROPERTY()
+	class AAoS_NPCController_Interactable* AIController;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USceneComponent* NickPosition;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
