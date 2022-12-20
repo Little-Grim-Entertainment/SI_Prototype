@@ -45,6 +45,10 @@ AAoS_Nick::AAoS_Nick()
 	ObservationCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("ObservationCamera"));
 	ObservationCamera->SetupAttachment(RootComponent);
 	ObservationCamera->SetChildActorClass(ACameraActor::StaticClass());
+
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAoS_Nick::OnBeginOverlapCameraActor);
+	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AAoS_Nick::OnEndOverlapCameraActor);
 }
 
 void AAoS_Nick::PostInitializeComponents()
@@ -62,7 +66,6 @@ void AAoS_Nick::PostInitializeComponents()
 		ObservationCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
 	}
 }
-
 
 void AAoS_Nick::BeginPlay()
 {
@@ -105,6 +108,24 @@ void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 	else
 	{
 		GetMesh()->SetSkeletalMesh(NickCharacterData->GetClothingMeshFromName(FName(TEXT("JacketNick"))));
+	}
+}
+
+void AAoS_Nick::OnBeginOverlapCameraActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(ACameraActor::StaticClass()))
+	{
+		GetMesh()->SetVisibility(false);
+	}
+}
+
+void AAoS_Nick::OnEndOverlapCameraActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor->IsA(ACameraActor::StaticClass()))
+	{
+		GetMesh()->SetVisibility(true);
 	}
 }
 
