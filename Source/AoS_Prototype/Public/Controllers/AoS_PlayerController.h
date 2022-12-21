@@ -103,7 +103,7 @@ protected:
 	void RequestTurnRight(const FInputActionValue& ActionValue);
 	void RequestLookUp(const FInputActionValue& ActionValue);
 	void RequestInteract();
-	void RequestEnterObservation();
+	void RequestToggleObservation();
 	void RequestObserveObject();
 
 	void SetupPlayerCamera();

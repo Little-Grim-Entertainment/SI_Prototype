@@ -26,10 +26,14 @@ public:
 	UFUNCTION(exec)
 	void CheatPauseWorldTimer(bool bShouldPause);
 	UFUNCTION(exec)
+
+	// Case Manager Cheats
 	void CheatResetCase(FString CaseToResetName);
 	UFUNCTION(exec)
 	void CheatResetPlayedVideos();
 	UFUNCTION(exec)
+
+	// Cinematic Manager Cheats
 	void CheatResetPlayedCinematics();
 	UFUNCTION(exec)
 	void CheatSkipVideo();

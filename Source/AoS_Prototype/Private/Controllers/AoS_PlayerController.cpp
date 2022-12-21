@@ -47,7 +47,7 @@ void AAoS_PlayerController::SetupInputComponent()
 
 	// Action Bindings
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("Interact"), ETriggerEvent::Started, this, &ThisClass::RequestInteract);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestEnterObservation);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
 
 	// Axis Bindings
@@ -92,9 +92,9 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 	if(bObservationMode)
 	{
 		FHitResult HitResult;
-		ObservationStart = Nick->GetObservationCamera()->GetComponentLocation();
-		ObservationEnd = Nick->GetObservationCamera()->GetComponentLocation() + Nick->GetObservationCamera()->GetForwardVector() * ObservationDistance;
-		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECC_Pawn);
+		ObservationStart = Nick->GetObservationCameraActor()->GetActorLocation();
+		ObservationEnd = Nick->GetObservationCameraActor()->GetActorLocation() + Nick->GetObservationCameraActor()->GetActorForwardVector() * ObservationDistance;
+		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECC_Visibility, FCollisionQueryParams(FName(TEXT("ObservationTrace")), true, this));
 		if(HitResult.GetActor())
 		{
 			AActor* HitActor = HitResult.GetActor();
@@ -243,15 +243,8 @@ void AAoS_PlayerController::RequestTurnRight(const FInputActionValue& ActionValu
 void AAoS_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {return;}
-
-	if(ObservableActor)
-	{
-		if (const IAoS_InteractInterface* InterfaceActor = Cast<IAoS_InteractInterface>(ObservableActor))
-		{
-			InterfaceActor->Execute_OnObserved(Cast<UObject>(ObservableActor), ObservableActor);
-		}
-	}
-	else if(InteractableActor)
+	
+	if(InteractableActor)
 	{
 		if (const IAoS_InteractInterface* InterfaceActor = Cast<IAoS_InteractInterface>(InteractableActor))
 		{
@@ -261,7 +254,7 @@ void AAoS_PlayerController::RequestInteract()
 	}
 }
 
-void AAoS_PlayerController::RequestEnterObservation()
+void AAoS_PlayerController::RequestToggleObservation()
 {
 	bObservationMode = !bObservationMode;
 
@@ -290,8 +283,15 @@ void AAoS_PlayerController::RequestEnterObservation()
 
 void AAoS_PlayerController::RequestObserveObject()
 {
-	
+	if(ObservableActor)
+	{
+		if (const IAoS_InteractInterface* InterfaceActor = Cast<IAoS_InteractInterface>(ObservableActor))
+		{
+			InterfaceActor->Execute_OnObserved(Cast<UObject>(ObservableActor), ObservableActor);
+		}
+	}
 }
+
 
 void AAoS_PlayerController::PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera)
 {
