@@ -40,7 +40,6 @@ private:
 	UPROPERTY()
 	ACameraActor* ObservationCameraActor;
 	
-	
 	UPROPERTY()
 	UAoS_LevelManager* LevelManager;
 		

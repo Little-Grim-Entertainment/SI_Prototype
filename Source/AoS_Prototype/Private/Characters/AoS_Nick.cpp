@@ -99,6 +99,8 @@ void AAoS_Nick::BeginPlay()
 
 void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 {
+	if (!IsValid(NickCharacterData)) {return;}
+
 	FString MapName;
 	
 	if (LoadedLevel)
