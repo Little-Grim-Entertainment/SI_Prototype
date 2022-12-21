@@ -25,7 +25,7 @@ public:
 
     // --- FUNCTIONS TO CALL FOR CHANGING DIALOGUE STATE --- //
     // UObject should be replaced by the type of selectable objects later on
-    void SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck = nullptr);
+    void SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck = nullptr, FText TextToCheck = FText());
 
     // Functions that determine which buttons should be displayed
     bool HasEdgeOfType(EEdgeType Type);

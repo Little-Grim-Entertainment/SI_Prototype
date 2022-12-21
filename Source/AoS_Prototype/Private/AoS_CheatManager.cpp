@@ -57,7 +57,10 @@ void UAoS_CheatManager::CheatSkipVideo()
 {
 	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		CinematicsManager->GetLoadedVideo()->SkipMedia();
+		if (IsValid(CinematicsManager->GetLoadedVideo()))
+		{
+			CinematicsManager->GetLoadedVideo()->SkipMedia();	
+		}
 	}
 }
 
@@ -65,7 +68,10 @@ void UAoS_CheatManager::CheatSkipCinematic()
 {
 	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		CinematicsManager->GetLoadedCinematic()->SkipMedia();
+		if (IsValid(CinematicsManager->GetLoadedCinematic()))
+		{
+			CinematicsManager->GetLoadedCinematic()->SkipMedia();
+		}
 	}
 }
 

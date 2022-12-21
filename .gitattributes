@@ -1,2 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+#UE file types
+#.uasset filter=lfs diff=lfs merge=lfs -text
+#.umap filter=lfs diff = lfs merge=lfs -text
+
+#Raw Content types
+*.mp4 filter=lfs diff=lfs merge=lfs -text

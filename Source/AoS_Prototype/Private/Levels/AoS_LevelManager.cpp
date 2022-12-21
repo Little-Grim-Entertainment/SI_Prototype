@@ -3,6 +3,7 @@
 
 #include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.h"
+#include "Characters/AoS_GizboManager.h"
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "Data/Maps/AoS_MapList.h"
@@ -54,28 +55,50 @@ void UAoS_LevelManager::OnPlayerStart()
 	
 }
 
-void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad, bool bAllowDelay, bool bShouldFade, FString InPlayerStartTag)
+void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
 	if (!InLevelToLoad) {return;}
+	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
 	
-	bLoadShouldFade = bShouldFade;
-	PlayerStartTag = InPlayerStartTag;
+	if (CurrentLevel->HasOutroVideo() && !CurrentLevel->OutroVideoHasPlayed())
+	{
+		UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+		if (IsValid(CinematicsManager))
+		{
+			CinematicsManager->PlayVideo(CurrentLevel->GetOutroVideo(), false);
+			CinematicsManager->LoadLevelOnVideoComplete(InLevelToLoad, InPlayerStartTag, bAllowDelay, bShouldFade);
+			return;
+		}
+	}
+	
 	LevelToLoad = InLevelToLoad;
-	LevelLoadDelay = GameInstance->LevelLoadDelay;
+	bLoadShouldFade = bShouldFade;
 	bLevelHasLoaded = false;
-	
-	OnBeginLevelLoad.Broadcast(InLevelToLoad, bLoadShouldFade);
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_LevelLoadingMode);
 
+	UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>();
+	if(IsValid(GizboManager))
+	{
+		FString GizboStartTag = InPlayerStartTag;
+		GizboStartTag = UKismetStringLibrary::Replace(GizboStartTag, "Nick_", "Gizbo_");
+		GizboManager->SetGizboStartTag(GizboStartTag);
+	}
+	
+	OnBeginLevelLoad.Broadcast(InLevelToLoad, bShouldFade);
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+	
 	if (GetWorld() != InLevelToLoad->Map.Get())
 	{
 		if (bAllowDelay)
 		{
-			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, this, &UAoS_LevelManager::ExecuteLevelLoad, LevelLoadDelay);
+			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevel, InLevelToLoad, InPlayerStartTag, false, bShouldFade);
+			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameInstance->LevelLoadDelay, false);
 		}
 		else
 		{
-			ExecuteLevelLoad();
+			if (IsValid(InLevelToLoad))
+			{
+				UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),InLevelToLoad->Map, true, InPlayerStartTag);
+			}
 		}
 	}
 }
@@ -137,14 +160,6 @@ bool UAoS_LevelManager::GetLevelHasLoaded() const
 	return bLevelHasLoaded;
 }
 
-void UAoS_LevelManager::ExecuteLevelLoad()
-{
-	if (IsValid(LevelToLoad))
-	{
-		UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelToLoad->Map, true, PlayerStartTag);
-	}
-}
-
 void UAoS_LevelManager::LevelLoaded()
 {
 	if(!IsValid(LevelToLoad))
@@ -160,12 +175,12 @@ void UAoS_LevelManager::LevelLoaded()
 	}
 	else
 	{
-		if (LevelToLoad->HasOpeningVideo() && !LevelToLoad->OpeningVideoHasPlayed())
+		if (LevelToLoad->HasIntroVideo() && !LevelToLoad->IntroVideoHasPlayed())
 		{
 			UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
 			if (IsValid(CinematicsManager))
 			{
-				CinematicsManager->PlayVideo(LevelToLoad->GetOpeningVideo(), false);
+				CinematicsManager->PlayVideo(LevelToLoad->GetIntroVideo(), false);
 			}
 		}
 		else
@@ -179,6 +194,10 @@ void UAoS_LevelManager::LevelLoaded()
 }
 
 
+void UAoS_LevelManager::ExecuteDelayedLevelLoad()
+{
+	
+}
 
 UAoS_MapData* UAoS_LevelManager::GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel)
 {

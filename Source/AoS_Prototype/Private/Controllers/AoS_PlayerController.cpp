@@ -4,34 +4,33 @@
 #include "Controllers/AoS_PlayerController.h"
 
 #include "AoS_GameInstance.h"
-#include "Actors/AoS_InteractableActor.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/AoS_Nick.h"
-#include "Cinematics/AoS_CinematicsManager.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "GameModes/AoS_GameMode.h"
+#include "Components/Actor/AoS_EnhancedInputComponent.h"
 #include "Interfaces/AoS_InteractInterface.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
-#include "UI/AoS_HUD.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputSubsystemInterface.h"
+#include "InputAction.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-
+	
 	MediaSoundComponent = CreateDefaultSubobject<UMediaSoundComponent>(TEXT("MediaSoundComponent"));
 	MediaSoundComponent->SetupAttachment(RootComponent);
+
+	EnhancedInputSettings = CreateDefaultSubobject<UAoS_EnhancedInputComponent>(TEXT("EnhancedInputSettings"));
 }
 
 void AAoS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	// Set up gameplay key bindings
+	/*// Old Input System
 	check(InputComponent);
 
 	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
@@ -39,8 +38,24 @@ void AAoS_PlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
 	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
-	InputComponent->BindAxis("LookUpRate", this, &AAoS_PlayerController::RequestLookUp);
+	InputComponent->BindAxis("LookUpRate", this, &AAoS_PlayerController::RequestLookUp);*/
 
+	// Enhanced Input System
+	
+	UAoS_EnhancedInputComponent* EnhancedInputComponent = Cast<UAoS_EnhancedInputComponent>(InputComponent);
+	if (!IsValid(EnhancedInputComponent)) {return;}
+
+	// Action Bindings
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("Interact"), ETriggerEvent::Started, this, &ThisClass::RequestInteract);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestEnterObservation);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
+
+	// Axis Bindings
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveForward"), ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveRight"),  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("TurnRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("LookUpRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
+	
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (IsValid(GameInstance))
 	{
@@ -51,8 +66,23 @@ void AAoS_PlayerController::SetupInputComponent()
 void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	OnCameraSetup.AddDynamic(this, &ThisClass::PostCameraSetup);
+	SetupPlayerCamera();
+}
 
-	Nick = Cast<AAoS_Nick>(GetPawn()); 
+
+void AAoS_PlayerController::SetupPlayerCamera()
+{
+	Nick = Cast<AAoS_Nick>(GetPawn());
+	if (IsValid(Nick))
+	{
+		if (IsValid(Nick->GetFollowCameraActor()))
+		{
+			SetViewTarget(Nick->GetFollowCameraActor());
+			OnCameraSetup.Broadcast();
+		}
+	}
 }
 
 void AAoS_PlayerController::Tick(float DeltaSeconds)
@@ -102,9 +132,65 @@ void AAoS_PlayerController::PostInitializeComponents()
 	}
 }
 
-void AAoS_PlayerController::RequestMoveForward(float Value)
+void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode)
+{
+
+	switch (InPreviousPlayerMode)
+	{
+	case EPlayerMode::PM_VideoMode:
+		{
+			if (InPlayerMode != EPlayerMode::PM_LevelLoadingMode)
+			{
+				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
+			}
+			break;	
+		}
+	default:
+		{
+			break;
+		}
+	}
+	
+	switch (InPlayerMode)
+	{
+	case EPlayerMode::PM_ExplorationMode:
+		{
+			if (InPreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
+			{
+				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
+			}
+			break;
+		}
+	case EPlayerMode::PM_VideoMode:
+		{
+			PlayerCameraManager->StartCameraFade(0, 1, .2, FLinearColor::Black, false, true);
+			break;	
+		}
+	default:
+		{
+			break;
+		}
+	}
+
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	if (!IsValid(EnhancedInputLocalPlayerSubsystem)) {return;}
+
+	const UInputMappingContext* PreviousMappingContext = EnhancedInputSettings->GetPlayerModeInputMappingContext(InPreviousPlayerMode);
+	EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(PreviousMappingContext);
+	EnhancedInputLocalPlayerSubsystem->ClearAllMappings();
+
+	const UInputMappingContext* NewMappingContext = EnhancedInputSettings->GetPlayerModeInputMappingContext(InPlayerMode);
+
+	EnhancedInputLocalPlayerSubsystem->AddMappingContext(NewMappingContext, 0);
+}
+
+
+void AAoS_PlayerController::RequestMoveForward(const FInputActionValue& ActionValue)
 {
 	if  (!bPlayerCanMove || !GetPawn()) return;
+
+	const float Value = ActionValue.Get<FInputActionValue::Axis1D>();
+	
 	if ((Value != 0.0f))
 	{
 		// find out which way is forward
@@ -117,9 +203,12 @@ void AAoS_PlayerController::RequestMoveForward(float Value)
 	}
 }
 
-void AAoS_PlayerController::RequestMoveRight(float Value)
+void AAoS_PlayerController::RequestMoveRight(const FInputActionValue& ActionValue)
 {
 	if  (!bPlayerCanMove || !GetPawn()) return;
+
+	const float Value = ActionValue.Get<FInputActionValue::Axis1D>();
+
 	if ((Value != 0.0f))
 	{
 		// find out which way is right
@@ -133,15 +222,21 @@ void AAoS_PlayerController::RequestMoveRight(float Value)
 	}
 }
 
-void AAoS_PlayerController::RequestLookUp(float AxisValue)
+void AAoS_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 {
 	if  (!bPlayerCanTurn || !GetPawn()) return;
+
+	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
+
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AAoS_PlayerController::RequestTurnRight(float AxisValue)
+void AAoS_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue)
 {
 	if  (!bPlayerCanTurn || !GetPawn()) return;
+
+	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
+
 	AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
@@ -166,25 +261,10 @@ void AAoS_PlayerController::RequestInteract()
 	}
 }
 
-void AAoS_PlayerController::RequestObservation()
+void AAoS_PlayerController::RequestEnterObservation()
 {
 	bObservationMode = !bObservationMode;
 
-	UCameraComponent* FollowCameraComponent = Nick->GetFollowCamera();
-	UCameraComponent* ObservationCameraComponent = Nick->GetObservationCamera();
-
-	const FVector FollowCamLocation = FollowCameraComponent->GetComponentLocation();
-	const FRotator FollowCamRotation = FollowCameraComponent->GetComponentRotation();
-
-	FVector ObservationCamLocation = ObservationCameraComponent->GetComponentLocation();
-	const FRotator ObservationCamRotation = ObservationCameraComponent->GetComponentRotation();
-
-	FVector ForwardVector = Nick->GetFollowCamera()->GetForwardVector();
-	ObservationCamLocation *= ForwardVector;
-	
-	ACameraActor* FollowCameraActor = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), FollowCamLocation, FollowCamRotation);
-	ACameraActor* ObservationCameraActor = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), ObservationCamLocation, ObservationCamRotation);
-	
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 
 	float CameraTransitionTime = 0.25f;
@@ -196,79 +276,29 @@ void AAoS_PlayerController::RequestObservation()
 	if(bObservationMode)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ObservationMode);
-		LockPlayerMovement(true, false);
-		SetViewTarget(FollowCameraActor);
-		SetViewTargetWithBlend(ObservationCameraActor, CameraTransitionTime);
+		SetViewTargetWithBlend(Nick->GetObservationCameraActor(), CameraTransitionTime);
 	}
 	else
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
-		LockPlayerMovement(false, false);
-		SetViewTarget(ObservationCameraActor);
-		SetViewTargetWithBlend(FollowCameraActor, CameraTransitionTime);
+		SetViewTargetWithBlend(Nick->GetFollowCameraActor(), CameraTransitionTime);
 	}
 
-	CameraBlendDelegate = FTimerDelegate::CreateUObject(this, &AAoS_PlayerController::PostCameraBlend, FollowCameraActor, ObservationCameraActor);
-	
+	CameraBlendDelegate = FTimerDelegate::CreateUObject(this, &AAoS_PlayerController::PostCameraBlend, Nick->GetFollowCameraActor(), Nick->GetObservationCameraActor());
 	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, CameraBlendDelegate, CameraTransitionTime, false);
+}
+
+void AAoS_PlayerController::RequestObserveObject()
+{
+	
 }
 
 void AAoS_PlayerController::PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera)
 {
-	Nick->GetFollowCamera()->SetActive(!bObservationMode);
-	Nick->GetObservationCamera()->SetActive(bObservationMode);
-	
 	Nick->bUseControllerRotationPitch = bObservationMode;
 	Nick->bUseControllerRotationYaw = bObservationMode;
 
-	InFollowCamera->Destroy();
-	InObservationCamera->Destroy();
-
 	EnableInput(this);
-}
-
-void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode)
-{
-
-	switch (InPreviousPlayerMode)
-	{
-	case EPlayerMode::PM_VideoMode:
-		{
-			if (InPlayerMode != EPlayerMode::PM_LevelLoadingMode)
-			{
-				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
-			}
-			break;	
-		}
-	default:
-		{
-			break;
-		}
-	}
-	
-	switch (InPlayerMode)
-	{
-		case EPlayerMode::PM_ExplorationMode:
-		{
-			if (InPreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
-			{
-				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
-			}
-			LockPlayerMovement(false, false);
-			break;
-		}
-		case EPlayerMode::PM_VideoMode:
-		{
-			PlayerCameraManager->StartCameraFade(0, 1, .2, FLinearColor::Black, false, true);
-			LockPlayerMovement(true, true);
-			break;	
-		}
-		default:
-		{
-			LockPlayerMovement(true, true);
-			break;
-		}
-	}
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
@@ -285,6 +315,11 @@ void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 {
 	ObservableActor = InObservableActor;
+}
+
+void AAoS_PlayerController::PostCameraSetup_Implementation()
+{
+	
 }
 
 UMediaSoundComponent* AAoS_PlayerController::GetMediaSoundComponent() const

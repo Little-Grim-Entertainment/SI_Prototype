@@ -8,7 +8,6 @@
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
-#include "Levels/AoS_LevelManager.h"
 
 AAoS_GameMode::AAoS_GameMode()
 {
@@ -37,7 +36,7 @@ void AAoS_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* Ne
 	FString PlayerStartTag = UKismetStringLibrary::GetSubstring(OptionsString, 1, OptionsString.Len() - 1);
 	if (PlayerStartTag == FString(""))
 	{
-		PlayerStartTag = FString("NickSpawn");
+		PlayerStartTag = "Nick_DefaultSpawn";
 	}
 	
 	AActor* PlayerStart = FindPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStartTag);

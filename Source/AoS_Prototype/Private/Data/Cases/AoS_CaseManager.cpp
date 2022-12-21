@@ -18,10 +18,7 @@ void UAoS_CaseManager::OnGameInstanceInit()
 
 void UAoS_CaseManager::AcceptCase(UAoS_Case* CaseToAccept)
 {
-	if (!CaseToAccept)
-	{
-		return;
-	}
+	if (!IsValid(CaseToAccept)) { return; }
 	
 	if (!AcceptedCases.Contains(CaseToAccept))
 	{

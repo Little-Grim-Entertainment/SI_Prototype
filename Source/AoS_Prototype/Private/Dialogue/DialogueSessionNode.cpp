@@ -5,6 +5,8 @@
 
 #define LOCTEXT_NAMESPACE "DialogueSessionNode"
 
+#define NUM_CHARS_SHOWN 15
+
 UDialogueSessionNode::UDialogueSessionNode()
 {
 #if WITH_EDITORONLY_DATA
@@ -24,7 +26,7 @@ UDialogueSessionNode::~UDialogueSessionNode()
 FText UDialogueSessionNode::GetNodeTitle() const
 {
     // TO DO: Change to display only first 10 (or so) letters of dialogue
-    return Dialogue.IsEmpty() ? LOCTEXT("EmptyParagraph", "(Empty paragraph)") : Dialogue;
+    return Dialogue.IsEmpty() ? LOCTEXT("", "") : FText::FromString(Dialogue.ToString().Mid(0, NUM_CHARS_SHOWN));
 }
 
 void UDialogueSessionNode::SetNodeTitle(const FText& NewTitle)

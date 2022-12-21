@@ -4,15 +4,18 @@
 #include "Characters/AoS_Nick.h"
 
 #include "AI/AoS_AIPerceptionStimuliSource.h"
+#include "AoS_GameInstance.h"
+#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "Data/Characters/AoS_NickCharacterData.h"
 #include "Perception/AISense_Hearing.h"
 #include "Perception/AISense_Sight.h"
 #include "UI/AoS_HUD.h"
+#include "Data/Maps/AoS_MapData.h"
+#include "Levels/AoS_LevelManager.h"
 
 AAoS_Nick::AAoS_Nick()
 {
@@ -37,18 +40,36 @@ AAoS_Nick::AAoS_Nick()
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	FollowCamera->SetChildActorClass(ACameraActor::StaticClass());
+	//FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	//Create an observation camera
-	ObservationCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ObservationCamera"));
+	ObservationCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("ObservationCamera"));
 	ObservationCamera->SetupAttachment(RootComponent);
 	
 	// Create an AI Perception Stimuli Source component
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAoS_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
+	ObservationCamera->SetChildActorClass(ACameraActor::StaticClass());
+}
+
+void AAoS_Nick::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (IsValid(FollowCamera))
+	{
+		FollowCameraActor = Cast<ACameraActor>(FollowCamera->GetChildActor());
+		FollowCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
+	}
+	if (IsValid(FollowCamera))
+	{
+		ObservationCameraActor = Cast<ACameraActor>(ObservationCamera->GetChildActor());
+		ObservationCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
+	}
 }
 
 
@@ -56,11 +77,37 @@ void AAoS_Nick::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!IsValid(NickCharacterData)) {return;}
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	if (!IsValid(GameInstance)) {return;}
+
+	LevelManager = GameInstance->GetLevelManager();
+	if (!IsValid(LevelManager)){return;}
+
+	if(LevelManager->GetLevelHasLoaded())
+	{
+		OnLevelLoaded(LevelManager->GetCurrentMap());
+	}
+	else
+	{
+		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelLoaded);	
+	}
+}
+
+
+void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
+{
+	FString MapName;
 	
-	FString MapName = GetWorld()->GetMapName();
+	if (LoadedLevel)
+	{
+		MapName = LoadedLevel->GetName();
+	}
+	else
+	{
+		MapName = "DA_MainMenu";
+	}
 	
-	if (MapName == "M_NicksOffice")
+	if (MapName == "DA_NicksOffice")
 	{
 		GetMesh()->SetSkeletalMesh(NickCharacterData->GetClothingMeshFromName(FName(TEXT("NoJacketNick"))));
 	}

@@ -16,8 +16,13 @@ void UAoS_GizboManager::SpawnGizbo()
 {
 	if (!GameInstance->GetGameMode()->GizboCDA) {return;}
 	if (!GameInstance->GetGameMode()->GizboCDA->CharacterClass){return;}
+
+	if (GizboStartTag == "")
+	{
+		GizboStartTag = "Gizbo_DefaultSpawn";
+	}
 	
-	if (const APlayerStart* GizboStart = GameInstance->GetGameMode()->GetPlayerStart("GizboSpawn"))
+	if (const APlayerStart* GizboStart = GameInstance->GetGameMode()->GetPlayerStart(GizboStartTag))
 	{
 		FVector GizboLocation = FVector(GizboStart->GetActorLocation().X, GizboStart->GetActorLocation().Y, GizboStart->GetActorLocation().Z - 50);
 		
@@ -43,6 +48,11 @@ void UAoS_GizboManager::SpawnGizbo()
 	{
 		AoS_GizboController->Possess(GizboCharacter);
 	}
+}
+
+void UAoS_GizboManager::SetGizboStartTag(FString InStartTag)
+{
+	GizboStartTag = InStartTag;
 }
 
 void UAoS_GizboManager::OnGameModeBeginPlay()

@@ -11,6 +11,10 @@ class ULevelSequencePlayer;
 class ALevelSequenceActor;
 class ULevelSequence;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCinematicStart);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCinematicSkipped);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCinematicEnd);
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_CinematicDataAsset : public UAoS_MediaDataAsset
 {
@@ -27,6 +31,13 @@ public:
 	ALevelSequenceActor* LevelSequenceActor;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cinematics")
 	ULevelSequencePlayer* CinematicPlayer;
+
+	UPROPERTY(BlueprintAssignable, Category = "Cinematics")
+	FOnCinematicStart OnCinematicStart;
+	UPROPERTY(BlueprintAssignable, Category = "Cinematics")
+	FOnCinematicSkipped OnCinematicSkipped;
+	UPROPERTY(BlueprintAssignable, Category = "Cinematics")
+	FOnCinematicEnd OnCinematicEnded;
 
 	virtual void StartMedia() override;
 	virtual void SkipMedia() override;

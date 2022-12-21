@@ -88,6 +88,7 @@ protected:
 	virtual void OnGameModeBeginPlay() override;
 
 	void DisplayDialogueBox();
+	void HideDialogueBox();
 	void HideActiveInteractionWidgets();
 	void LoadingScreenFadeDelay();
 

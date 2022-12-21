@@ -86,6 +86,14 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			}
 			break;
 		}
+		case EPlayerMode::PM_ObservationMode:
+		{
+			if (IsValid(PlayerHUD))
+			{
+				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Hidden);
+			}
+			break;
+		}
 		case EPlayerMode::PM_VideoMode:
 		{
 			RemoveMoviePlayerWidget();
@@ -94,6 +102,12 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 		case EPlayerMode::PM_MainMenuMode:
 		{
 			RemoveMainMenu();
+			break;
+		}
+		case EPlayerMode::PM_DialogueMode:
+		case EPlayerMode::PM_InterrogationMode:
+		{
+			HideDialogueBox();
 			break;
 		}
 		default:
@@ -142,6 +156,12 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			{
 				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Visible);
 			}
+			break;
+		}
+		case EPlayerMode::PM_DialogueMode:
+		case EPlayerMode::PM_InterrogationMode:
+		{
+			DisplayDialogueBox();
 			break;
 		}
 		default:
@@ -314,6 +334,13 @@ void UAoS_UIManager::DisplayDialogueBox()
 	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())){return;}
 	
 	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UAoS_UIManager::HideDialogueBox()
+{
+	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())) { return; }
+
+	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UAoS_UIManager::HideActiveInteractionWidgets()

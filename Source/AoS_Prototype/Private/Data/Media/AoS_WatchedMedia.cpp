@@ -20,6 +20,26 @@ void UAoS_WatchedMedia::AddToWatchedCinematics(UAoS_CinematicDataAsset* InCinema
 	WatchedCinematics.AddUnique(InCinematicToAdd);
 }
 
+void UAoS_WatchedMedia::RemoveFromWatchedVideos(UAoS_VideoDataAsset* InVideoToRemove)
+{
+	if (!InVideoToRemove) {return;}
+
+	if (WatchedVideos.Contains(InVideoToRemove))
+	{
+		WatchedVideos.Remove(InVideoToRemove);
+	}
+}
+
+void UAoS_WatchedMedia::RemoveFromWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToRemove)
+{
+	if (!InCinematicToRemove) {return;}
+
+	if (WatchedCinematics.Contains(InCinematicToRemove))
+	{
+		WatchedCinematics.Remove(InCinematicToRemove);
+	}
+}
+
 TArray<UAoS_VideoDataAsset*>& UAoS_WatchedMedia::GetWatchedVideos()
 {
 	return WatchedVideos;

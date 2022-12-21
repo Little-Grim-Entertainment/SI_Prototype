@@ -10,6 +10,8 @@ class UAoS_NickCharacterData;
 class USpringArmComponent;
 class UCameraComponent;
 class UAoS_AIPerceptionStimuliSource;
+class UAoS_LevelManager;
+class UAoS_MapData;
 
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_Nick : public AAoS_Character
@@ -32,8 +34,24 @@ private:
 	UCameraComponent* ObservationCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAoS_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UChildActorComponent* FollowCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UChildActorComponent* ObservationCamera;
+
+	UPROPERTY()
+	ACameraActor* FollowCameraActor;
+	UPROPERTY()
+	ACameraActor* ObservationCameraActor;
+	
+	
+	UPROPERTY()
+	UAoS_LevelManager* LevelManager;
 		
 	// ================== FUNCTIONS ==================
+
+	UFUNCTION()
+	void OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade = false);
 public:
 
 
@@ -43,13 +61,19 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE UChildActorComponent* GetFollowCamera() const { return FollowCamera; }
 	/** Returns ObservationCamera subobject **/
 	FORCEINLINE UCameraComponent* GetObservationCamera() const { return ObservationCamera; }
 	/** Returns PerceptionStimuliSourceComponent subobject **/
 	FORCEINLINE UAoS_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
+	FORCEINLINE UChildActorComponent* GetObservationCamera() const { return ObservationCamera; }
+	/** Returns FollowCamera Actor **/
+	FORCEINLINE ACameraActor* GetFollowCameraActor() const { return FollowCameraActor; }
+	/** Returns ObservationCamera Actor **/
+	FORCEINLINE ACameraActor* GetObservationCameraActor() const { return ObservationCameraActor; }
 	
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 };

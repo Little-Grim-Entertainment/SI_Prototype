@@ -35,6 +35,8 @@ public:
 	void OnItemOptionSelected(UObject* RelatedItem = nullptr);
 	void OnInterrogationPressed();
 
+	void SetupBindings();
+
 	// --- Functions to determine which buttons should be available in the UI --- //
 
 	bool HasNextOption();

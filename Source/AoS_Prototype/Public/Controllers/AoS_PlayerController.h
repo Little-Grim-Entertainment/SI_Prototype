@@ -5,13 +5,17 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/Actor/AoS_LineTraces.h"
+#include "InputActionValue.h"
 #include "AoS_PlayerController.generated.h"
 
 
+class UAoS_EnhancedInputComponent;
 class UMediaSoundComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCameraSetup);
 
 enum class EPlayerMode : uint8;
 
@@ -59,10 +63,16 @@ public:
 	float BaseLookUpRate;
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractPressed OnInteractPressed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	UAoS_EnhancedInputComponent* EnhancedInputSettings;
 	
 	
 	FOnInteractableActorAdded OnInteractableActorAdded;
 	FOnInteractableActorRemoved OnInteractableActorRemoved;
+
+	UPROPERTY(BlueprintAssignable, Category = "PlayerCamera")
+	FOnCameraSetup OnCameraSetup;
 
 	// ================== FUNCTIONS ==================
 
@@ -74,6 +84,8 @@ public:
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
+	UFUNCTION(BlueprintNativeEvent)
+	void PostCameraSetup();
 
 	UFUNCTION(BlueprintPure)
 	UMediaSoundComponent* GetMediaSoundComponent() const;
@@ -86,12 +98,15 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PostInitializeComponents() override;
 	
-	void RequestMoveForward(float Value);
-	void RequestMoveRight(float Value);
-	void RequestTurnRight(float AxisValue);
-	void RequestLookUp(float AxisValue);
+	void RequestMoveForward(const FInputActionValue& ActionValue);
+	void RequestMoveRight(const FInputActionValue& ActionValue);
+	void RequestTurnRight(const FInputActionValue& ActionValue);
+	void RequestLookUp(const FInputActionValue& ActionValue);
 	void RequestInteract();
-	void RequestObservation();
+	void RequestEnterObservation();
+	void RequestObserveObject();
+
+	void SetupPlayerCamera();
 
 	void PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera);
 
