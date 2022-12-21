@@ -52,7 +52,6 @@ void UAoS_LevelManager::OnPlayerStart()
 	{
 		PlayerController->PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
 	}
-	
 }
 
 void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)

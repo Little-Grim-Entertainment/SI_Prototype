@@ -10,6 +10,7 @@
 
 UAoS_MusicManager::UAoS_MusicManager()
 {
+	bMusicIsPlaying = false;
 	bMusicIsPaused = false;
 	bMusicHasIntro = false;
 	MusicTimeAtPause = 0.f;
@@ -80,7 +81,8 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(USoundBase* MetaSoundSou
 		{
 			BackgroundMusic->Play();
 		}
-		
+		OnBackgroundMusicStarted.Broadcast();
+		bMusicIsPlaying = true;
 		return BackgroundMusic;
 	}
 	return nullptr;
@@ -112,6 +114,7 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(USoundBase*
 		{
 			BackgroundMusic->Play();
 		}
+		OnBackgroundMusicStarted.Broadcast();
 		return BackgroundMusic;
 	}
 	return nullptr;
@@ -129,9 +132,12 @@ void UAoS_MusicManager::PauseMusicWithFade()
 	MusicPitchAtPause = BackgroundMusic->PitchMultiplier;
 
 	bMusicIsPaused = true;
+	OnBackgroundMusicPaused.Broadcast();
+
 	GetWorld()->GetTimerManager().PauseTimer(MusicTimecode);
 	
 	StopBackgroundMusic(true, 0);
+	
 }
 
 void UAoS_MusicManager::ResumeMusicWithFade()
@@ -169,6 +175,8 @@ void UAoS_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLe
 		if (!bMusicIsPaused)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(MusicTimecode);
+			OnBackgroundMusicStopped.Broadcast();
 		}
+		bMusicIsPlaying = false;
 	}
 }

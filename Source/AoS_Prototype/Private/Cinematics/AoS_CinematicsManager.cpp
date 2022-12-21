@@ -48,6 +48,7 @@ void UAoS_CinematicsManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicT
 
 	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
 	LoadedCinematic->StartMedia();
+	OnCinematicBeginPlay.Broadcast(LoadedCinematic);
 }
 
 void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat, float InVolume)
@@ -86,6 +87,7 @@ void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool 
 
 	// Note: Playing the actual video file happens in the widget blueprint
 	LoadedVideo->StartMedia();
+	OnVideoBeginPlay.Broadcast(LoadedVideo);
 }
 
 void UAoS_CinematicsManager::ResetCinematicByName(FString InCinematicName)
@@ -213,6 +215,7 @@ void UAoS_CinematicsManager::OnCinematicSkipped()
 	{
 		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
+	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
 void UAoS_CinematicsManager::OnCinematicEnded()
@@ -228,6 +231,7 @@ void UAoS_CinematicsManager::OnCinematicEnded()
 	{
 		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
+	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
 void UAoS_CinematicsManager::DelayedCinematicPlay(UAoS_MapData* LoadedLevel, bool bShouldFade)
@@ -257,6 +261,7 @@ void UAoS_CinematicsManager::OnVideoEnded()
 	{
 		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
+	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
 
 void UAoS_CinematicsManager::OnVideoSkipped()
@@ -272,5 +277,6 @@ void UAoS_CinematicsManager::OnVideoSkipped()
 	{
 		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
+	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
 	

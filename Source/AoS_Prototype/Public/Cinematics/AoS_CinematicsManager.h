@@ -16,12 +16,27 @@ class UMediaPlayer;
 class ULevelSequence;
 class ULevelSequencePlayer;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVideoBeginPlay, UAoS_VideoDataAsset*, PlayedVideo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVideoEndPlay, UAoS_VideoDataAsset*, EndedVideo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCinematicBeginPlay, UAoS_CinematicDataAsset*, PlayedCinematic);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCinematicEndPlay, UAoS_CinematicDataAsset*, EndedCinematic);
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_CinematicsManager : public UAoS_WorldSubsystem
 {
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintAssignable)
+	FOnVideoBeginPlay OnVideoBeginPlay;
+	UPROPERTY(BlueprintAssignable)
+	FOnVideoEndPlay OnVideoEndPlay;
+	UPROPERTY(BlueprintAssignable)
+	FOnCinematicBeginPlay OnCinematicBeginPlay;
+	UPROPERTY(BlueprintAssignable)
+	FOnCinematicEndPlay OnCinematicEndPlay;
+	
 	
 	UFUNCTION(BlueprintCallable)
 	void PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay);
