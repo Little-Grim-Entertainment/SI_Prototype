@@ -9,9 +9,12 @@
 class UAoS_NickCharacterData;
 class USpringArmComponent;
 class UCameraComponent;
+<<<<<<< HEAD
 class UAoS_AIPerceptionStimuliSource;
+=======
 class UAoS_LevelManager;
 class UAoS_MapData;
+>>>>>>> cce4cdcfa9286d95bddaf46848769a82dd2c851b
 
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_Nick : public AAoS_Character
@@ -28,12 +31,14 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
+<<<<<<< HEAD
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* ObservationCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAoS_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
+=======
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UChildActorComponent* FollowCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -47,6 +52,7 @@ private:
 	
 	UPROPERTY()
 	UAoS_LevelManager* LevelManager;
+>>>>>>> cce4cdcfa9286d95bddaf46848769a82dd2c851b
 		
 	// ================== FUNCTIONS ==================
 
@@ -63,14 +69,17 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE UChildActorComponent* GetFollowCamera() const { return FollowCamera; }
 	/** Returns ObservationCamera subobject **/
+<<<<<<< HEAD
 	FORCEINLINE UCameraComponent* GetObservationCamera() const { return ObservationCamera; }
 	/** Returns PerceptionStimuliSourceComponent subobject **/
 	FORCEINLINE UAoS_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
+=======
 	FORCEINLINE UChildActorComponent* GetObservationCamera() const { return ObservationCamera; }
 	/** Returns FollowCamera Actor **/
 	FORCEINLINE ACameraActor* GetFollowCameraActor() const { return FollowCameraActor; }
 	/** Returns ObservationCamera Actor **/
 	FORCEINLINE ACameraActor* GetObservationCameraActor() const { return ObservationCameraActor; }
+>>>>>>> cce4cdcfa9286d95bddaf46848769a82dd2c851b
 	
 protected:
 

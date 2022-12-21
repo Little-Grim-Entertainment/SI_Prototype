@@ -3,19 +3,25 @@
 
 #include "Characters/AoS_Nick.h"
 
+<<<<<<< HEAD
 #include "AI/AoS_AIPerceptionStimuliSource.h"
+=======
 #include "AoS_GameInstance.h"
 #include "Camera/CameraActor.h"
+>>>>>>> cce4cdcfa9286d95bddaf46848769a82dd2c851b
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Data/Characters/AoS_NickCharacterData.h"
+<<<<<<< HEAD
 #include "Perception/AISense_Hearing.h"
 #include "Perception/AISense_Sight.h"
 #include "UI/AoS_HUD.h"
+=======
 #include "Data/Maps/AoS_MapData.h"
 #include "Levels/AoS_LevelManager.h"
+>>>>>>> cce4cdcfa9286d95bddaf46848769a82dd2c851b
 
 AAoS_Nick::AAoS_Nick()
 {
@@ -48,11 +54,13 @@ AAoS_Nick::AAoS_Nick()
 	//Create an observation camera
 	ObservationCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("ObservationCamera"));
 	ObservationCamera->SetupAttachment(RootComponent);
+<<<<<<< HEAD
 	
 	// Create an AI Perception Stimuli Source component
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAoS_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
+=======
 	ObservationCamera->SetChildActorClass(ACameraActor::StaticClass());
 }
 
@@ -70,6 +78,7 @@ void AAoS_Nick::PostInitializeComponents()
 		ObservationCameraActor = Cast<ACameraActor>(ObservationCamera->GetChildActor());
 		ObservationCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
 	}
+>>>>>>> cce4cdcfa9286d95bddaf46848769a82dd2c851b
 }
 
 
