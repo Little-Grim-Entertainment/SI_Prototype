@@ -9,6 +9,7 @@
 class UAoS_NickCharacterData;
 class USpringArmComponent;
 class UCameraComponent;
+class UBoxComponent;
 class UAoS_AIPerceptionStimuliSource;
 class UAoS_LevelManager;
 class UAoS_MapData;
@@ -34,6 +35,8 @@ private:
 	UChildActorComponent* FollowCamera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UChildActorComponent* ObservationCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* FollowCameraCollision;
 
 	UPROPERTY()
 	ACameraActor* FollowCameraActor;
@@ -47,13 +50,11 @@ private:
 
 	UFUNCTION()
 	void OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade = false);
-
-	//begin overlap for checking collision with camera actor
 	UFUNCTION()
-	void OnBeginOverlapCameraActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	//end overlap for checking collision with camera actor
+	void OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
-	void OnEndOverlapCameraActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
 public:
 
 

@@ -263,8 +263,8 @@ void AAoS_PlayerController::RequestToggleObservation()
 	float CameraTransitionTime = 0.25f;
 
 	DisableInput(this);
-	SetControlRotation(FRotator(0, Nick->GetActorRotation().Yaw, 0));
-	Nick->SetActorRotation(FRotator(0., Nick->GetActorRotation().Yaw, 0));
+	//SetControlRotation(FRotator(0, Nick->GetActorRotation().Yaw, 0));
+	//Nick->SetActorRotation(FRotator(0., Nick->GetActorRotation().Yaw, 0));
 	
 	if(bObservationMode)
 	{
@@ -276,6 +276,7 @@ void AAoS_PlayerController::RequestToggleObservation()
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 		SetViewTargetWithBlend(Nick->GetFollowCameraActor(), CameraTransitionTime);
 	}
+	Nick->GetMesh()->SetVisibility(!bObservationMode);
 
 	CameraBlendDelegate = FTimerDelegate::CreateUObject(this, &AAoS_PlayerController::PostCameraBlend, Nick->GetFollowCameraActor(), Nick->GetObservationCameraActor());
 	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, CameraBlendDelegate, CameraTransitionTime, false);
@@ -298,6 +299,9 @@ void AAoS_PlayerController::PostCameraBlend(ACameraActor* InFollowCamera, ACamer
 	Nick->bUseControllerRotationPitch = bObservationMode;
 	Nick->bUseControllerRotationYaw = bObservationMode;
 
+	SetControlRotation(FRotator(0, Nick->GetActorRotation().Yaw, 0));
+	Nick->SetActorRotation(FRotator(0., Nick->GetActorRotation().Yaw, 0));
+	
 	EnableInput(this);
 }
 

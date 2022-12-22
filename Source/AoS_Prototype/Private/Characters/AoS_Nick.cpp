@@ -7,6 +7,7 @@
 #include "AoS_GameInstance.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -48,16 +49,16 @@ AAoS_Nick::AAoS_Nick()
 	//Create an observation camera
 	ObservationCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("ObservationCamera"));
 	ObservationCamera->SetupAttachment(RootComponent);
+
+	//Create FollowCameraCollision
+	FollowCameraCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("FollowCameraCollision"));
+	FollowCameraCollision->SetupAttachment(FollowCamera);
 	
 	// Create an AI Perception Stimuli Source component
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAoS_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
 	ObservationCamera->SetChildActorClass(ACameraActor::StaticClass());
-
-
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAoS_Nick::OnBeginOverlapCameraActor);
-	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AAoS_Nick::OnEndOverlapCameraActor);
 }
 
 void AAoS_Nick::PostInitializeComponents()
@@ -74,6 +75,9 @@ void AAoS_Nick::PostInitializeComponents()
 		ObservationCameraActor = Cast<ACameraActor>(ObservationCamera->GetChildActor());
 		ObservationCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
 	}
+	
+	FollowCameraCollision->OnComponentBeginOverlap.AddDynamic(this, &AAoS_Nick::OnCameraCollisionBeginOverlap);
+	FollowCameraCollision->OnComponentEndOverlap.AddDynamic(this, &AAoS_Nick::OnCameraCollisionEndOverlap);
 }
 
 void AAoS_Nick::BeginPlay()
@@ -122,22 +126,27 @@ void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 	}
 }
 
-void AAoS_Nick::OnBeginOverlapCameraActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void AAoS_Nick::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(ACameraActor::StaticClass()))
+	if(OtherComp == GetMesh())
 	{
+		TArray<USceneComponent*> Meshes;
 		GetMesh()->SetVisibility(false);
+		GetMesh()->GetChildrenComponents(true, Meshes);
+
+		for (USceneComponent* _Mesh : Meshes)
+		{
+			_Mesh->SetVisibility(false);
+		}
 	}
 }
 
-void AAoS_Nick::OnEndOverlapCameraActor(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AAoS_Nick::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->IsA(ACameraActor::StaticClass()))
+	if(OtherComp == GetMesh())
 	{
 		GetMesh()->SetVisibility(true);
 	}
 }
-
-
