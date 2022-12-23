@@ -20,6 +20,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "UI/AoS_MoviePlayerWidget.h"
 #include "UI/AoS_InteractionWidget.h"
+#include "UI/AoS_CaseTitleCard.h"
 
 
 #include "Controllers/AoS_PlayerController.h"
@@ -104,7 +105,6 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			RemoveMainMenu();
 			break;
 		}
-		case EPlayerMode::PM_DialogueMode:
 		case EPlayerMode::PM_InterrogationMode:
 		{
 			HideDialogueBox();
@@ -159,9 +159,16 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			break;
 		}
 		case EPlayerMode::PM_DialogueMode:
+		{
+			break;
+		}
 		case EPlayerMode::PM_InterrogationMode:
 		{
 			DisplayDialogueBox();
+			break;
+		}
+		case EPlayerMode::PM_TitleCardMode:
+		{
 			break;
 		}
 		default:
@@ -215,6 +222,26 @@ void UAoS_UIManager::RemoveMoviePlayerWidget()
 	
 	MoviePlayerWidget->OnVideoStopped();
 	MoviePlayerWidget = nullptr;
+}
+
+void UAoS_UIManager::CreateCaseTitleCard(UAoS_Case* InCase, bool bShouldFadeIn)
+{
+	if (!IsValid(InCase)) {return;}
+
+	CaseTitleCardWidget = CreateWidget<UAoS_CaseTitleCard>(GetWorld()->GetFirstPlayerController(), InCase->TitleCardWidget);
+	if (IsValid(CaseTitleCardWidget))
+	{
+		CaseTitleCardWidget->AddToViewport();
+		CaseTitleCardWidget->ShowTitleCard(InCase->CaseName, InCase->TitleCardBackground, InCase->TitleCardMusic, InCase->TitleCardLength, bShouldFadeIn);
+	}
+}
+
+void UAoS_UIManager::RemoveCaseTitleCard()
+{
+	CaseTitleCardWidget->RemoveFromParent();
+	CaseTitleCardWidget = nullptr;
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
+	GameInstance->GetCaseManager()->OnCaseTitleCardComplete.Broadcast();
 }
 
 void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
@@ -365,7 +392,16 @@ void UAoS_UIManager::LoadingScreenFadeDelay()
 
 void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
 {
+	if (!IsValid(AcceptedCase)) {return;}
 	
+	if (IsValid(AcceptedCase->TitleCardWidget))
+	{
+		CreateCaseTitleCard(AcceptedCase, GameInstance->GetPreviousPlayerMode() == EPlayerMode::PM_ExplorationMode);
+		if (IsValid(CaseTitleCardWidget))
+		{
+			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_TitleCardMode);
+		}
+	}
 }
 
 void UAoS_UIManager::OnCaseActivated(UAoS_Case* ActivatedCase)

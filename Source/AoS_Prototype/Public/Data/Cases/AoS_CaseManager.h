@@ -20,6 +20,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPartComplete, UAoS_Part*, Complet
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveActivated, UAoS_Objective*, ActivatedObjective);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveComplete, UAoS_Objective*, CompletedObjective);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCaseTitleCardComplete);
+
+
 // This system is responsible for handling the receiving, completing, and updating of cases
 
 UCLASS()
@@ -47,6 +50,9 @@ public:
 	FOnObjectiveActivated OnObjectiveActivated;	
 	UPROPERTY(BlueprintAssignable)
 	FOnObjectiveComplete OnObjectiveComplete;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCaseTitleCardComplete OnCaseTitleCardComplete;
 
 	UFUNCTION(BlueprintCallable)
 	void AcceptCase(UAoS_Case* CaseToAccept);

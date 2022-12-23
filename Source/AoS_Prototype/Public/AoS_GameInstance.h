@@ -35,6 +35,7 @@ enum class EPlayerMode : uint8
 	PM_LevelLoadingMode		UMETA(DisplayName = "LevelLoadingMode"),
 	PM_CinematicMode		UMETA(DisplayName = "CinematicMode"),
 	PM_VideoMode			UMETA(DisplayName = "VideoMode"),
+	PM_TitleCardMode		UMETA(DisplayName = "VideoMode"),
 	PM_DialogueMode			UMETA(DisplayName = "DialogueMode"),
 	PM_ObservationMode		UMETA(DisplayName = "ObservationMode"),
 	PM_InspectionMode		UMETA(DisplayName = "InspectionMode"),

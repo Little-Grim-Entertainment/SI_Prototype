@@ -19,6 +19,7 @@ class AAoS_PlayerController;
 class UAoS_HUD;
 class UAoS_UserWidget;
 class UAoS_MapData;
+class UAoS_CaseTitleCard;
 
 enum class EPlayerMode : uint8;
 
@@ -43,6 +44,10 @@ public:
 	void CreateMoviePlayerWidget();
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveMoviePlayerWidget();
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void CreateCaseTitleCard(UAoS_Case* InCase, bool bShouldFadeIn = false);
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveCaseTitleCard();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateMainMenu();
@@ -107,6 +112,8 @@ private:
 	UAoS_UserWidget* MainMenu;
 	UPROPERTY()
 	UAoS_MoviePlayerWidget* MoviePlayerWidget;
+	UPROPERTY()
+	UAoS_CaseTitleCard* CaseTitleCardWidget;
 	UPROPERTY()
 	TArray<UAoS_InteractionWidget*> ActiveInteractionWidgets;
 
