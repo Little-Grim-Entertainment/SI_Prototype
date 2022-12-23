@@ -37,13 +37,15 @@ void AAoS_NPCController::OnPossess(APawn* InPawn)
 		UE_LOG(LogAoSAI, Error, TEXT("%s AoS_NPCController::OnPossess PossessedNPC is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
-	
 	UBehaviorTree* MainTree = PossessedNPC->GetMainTree();
+#if WITH_EDITORONLY_DATA
 	if (!IsValid(MainTree) || !IsValid(MainTree->BTGraph))
 	{
 		UE_LOG(LogAoSAI, Error, TEXT("%s : AoS_NPCController::OnPossess MainTree is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
+#endif
+	
 
 	if (!IsValid(PerceptionComp))
 	{
