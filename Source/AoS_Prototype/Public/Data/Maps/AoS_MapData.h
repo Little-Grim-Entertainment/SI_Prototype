@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "AoS_GlobalStructs.h"
 #include "AoS_MapData.generated.h"
 
+class UAoS_MusicManager;
 class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
 
@@ -32,20 +34,28 @@ public:
 	EMapType MapType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
 	TSoftObjectPtr<UWorld> Map;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
 	UAoS_VideoDataAsset* IntroVideo;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
 	UAoS_VideoDataAsset* OutroVideo;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
 	UAoS_CinematicDataAsset* IntroCinematic;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
 	UAoS_CinematicDataAsset* OutroCinematic;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
+	FMusicSettings BackgroundMusicSettings;
 
 	
 	UFUNCTION()
 	void SetStreamingLevelRef(ULevelStreaming* StreamingLevelToSet);
 	UFUNCTION()
 	ULevelStreaming* GetStreamingLevelRef() const {return StreamingLevelRef;}
+
+	// Music Functionns
+	UFUNCTION(BlueprintCallable, Category = "Music")
+	void PlayLevelBackgroundMusic(UAoS_MusicManager* InMusicManager);
 	
 	// Video Functions
 	

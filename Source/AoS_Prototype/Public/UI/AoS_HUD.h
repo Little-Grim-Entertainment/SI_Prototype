@@ -29,15 +29,20 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void OnObjectiveComplete(UAoS_Objective* CompletedObjective);
-	void OnObjectiveComplete_Implementation(UAoS_Objective* CompletedObjective);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "HUD")
+	void ShowCaseAcceptedWidget();
 
 protected:
 
-	UPROPERTY(meta=(BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UAoS_DialogueBox* DialogueBox;
 
-	UPROPERTY(meta=(BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UAoS_UserWidget* Reticle;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	UAoS_UserWidget* CaseAcceptedWidget;
 	
 private:
 

@@ -45,6 +45,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveMoviePlayerWidget();
 	UFUNCTION(BlueprintCallable, Category = "UI")
+	void ShowCaseTitleCard();
+	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateCaseTitleCard(UAoS_Case* InCase, bool bShouldFadeIn = false);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveCaseTitleCard();
@@ -119,5 +121,7 @@ private:
 
 	FTimerHandle LoadingScreenFadeDelayHandle;
 	FTimerDelegate LoadingScreenFadeDelayDelegate;
+
+	FSimpleDelegate TitleCardDelayDelegate;
 	
 };

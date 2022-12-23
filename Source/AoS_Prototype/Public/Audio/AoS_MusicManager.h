@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AoS_GlobalStructs.h"
 #include "Subsystems/AoS_WorldSubsystem.h"
 #include "AoS_MusicManager.generated.h"
 
 class UCurveFloat;
+class UAoS_MapData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicPaused);
@@ -32,9 +34,9 @@ public:
 	FOnBackgroundMusicPaused OnBackgroundMusicStopped;
 	
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayBackgroundMusic(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier = 1.f, float PitchMultiplier = 1.f, float StartTime = 0.f, bool bShouldFade = false);
+	UAudioComponent* PlayBackgroundMusic(FMusicSettings InMusicSettings);
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayBackgroundMusicLoopWithIntro(USoundBase* MetaSoundSource, USoundBase* MusicToPlay, float VolumeMultiplier = 1.f, float PitchMultiplier = 1.f, float StartTime = 0.f, float LoopStart = 0.f, bool bShouldFade = false);
+	UAudioComponent* PlayBackgroundMusicLoopWithIntro(FMusicSettings InMusicSettings);
 	UFUNCTION(BlueprintCallable, Category = "Music")
 	void PauseMusicWithFade();
 	UFUNCTION(BlueprintCallable, Category = "Music")
@@ -48,9 +50,17 @@ public:
 
 protected:
 
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode) override;
 
+	UFUNCTION()
+	void OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade);
+	UFUNCTION()
+	void OnLevelUnloaded(UAoS_MapData* UnloadedLevel);
+
 private:
+	
+	FMusicSettings CurrentMusicSettings;
 	
 	UPROPERTY()
 	UAudioComponent* BackgroundMusic;

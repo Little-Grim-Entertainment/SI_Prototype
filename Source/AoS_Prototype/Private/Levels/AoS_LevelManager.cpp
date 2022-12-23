@@ -96,6 +96,11 @@ void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayer
 		{
 			if (IsValid(InLevelToLoad))
 			{
+				
+				if (IsValid(CurrentLevel))
+				{
+					OnLevelUnloaded.Broadcast(CurrentLevel);
+				}
 				UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),InLevelToLoad->Map, true, InPlayerStartTag);
 			}
 		}

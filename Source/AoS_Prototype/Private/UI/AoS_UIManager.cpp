@@ -224,6 +224,18 @@ void UAoS_UIManager::RemoveMoviePlayerWidget()
 	MoviePlayerWidget = nullptr;
 }
 
+void UAoS_UIManager::ShowCaseTitleCard()
+{
+	if (!TitleCardDelayDelegate.IsBound()) {return;}
+	
+	TitleCardDelayDelegate.Execute();
+	if (IsValid(CaseTitleCardWidget))
+	{
+		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_TitleCardMode);
+	}
+	TitleCardDelayDelegate.Unbind();
+}
+
 void UAoS_UIManager::CreateCaseTitleCard(UAoS_Case* InCase, bool bShouldFadeIn)
 {
 	if (!IsValid(InCase)) {return;}
@@ -392,15 +404,12 @@ void UAoS_UIManager::LoadingScreenFadeDelay()
 
 void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
 {
-	if (!IsValid(AcceptedCase)) {return;}
+	if (!IsValid(AcceptedCase) || !IsValid(PlayerHUD)) {return;}
 	
 	if (IsValid(AcceptedCase->TitleCardWidget))
 	{
-		CreateCaseTitleCard(AcceptedCase, GameInstance->GetPreviousPlayerMode() == EPlayerMode::PM_ExplorationMode);
-		if (IsValid(CaseTitleCardWidget))
-		{
-			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_TitleCardMode);
-		}
+		PlayerHUD->ShowCaseAcceptedWidget();
+		TitleCardDelayDelegate.BindUObject(this, &ThisClass::CreateCaseTitleCard, AcceptedCase, GameInstance->GetPreviousPlayerMode() == EPlayerMode::PM_ExplorationMode);
 	}
 }
 

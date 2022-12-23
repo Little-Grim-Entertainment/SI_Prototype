@@ -8,6 +8,10 @@
 UAoS_HUD::UAoS_HUD()
 {
 	bBindingsSetup = false;
+	if (IsValid(CaseAcceptedWidget))
+	{
+		CaseAcceptedWidget->SetRenderOpacity(0.0f);
+	}
 }
 
 UAoS_DialogueBox* UAoS_HUD::GetDialogueBox() const

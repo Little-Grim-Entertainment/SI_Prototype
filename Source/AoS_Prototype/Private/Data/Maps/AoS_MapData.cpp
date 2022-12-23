@@ -3,9 +3,24 @@
 
 #include "Data/Maps/AoS_MapData.h"
 
+#include "Audio/AoS_MusicManager.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 
+
+void UAoS_MapData::PlayLevelBackgroundMusic(UAoS_MusicManager* InMusicManager)
+{
+	if (!IsValid(InMusicManager)) {return;}
+	
+	if (BackgroundMusicSettings.bHasIntro)
+	{
+		InMusicManager->PlayBackgroundMusicLoopWithIntro(BackgroundMusicSettings);
+	}
+	else
+	{
+		InMusicManager->PlayBackgroundMusic(BackgroundMusicSettings);
+	}
+}
 
 void UAoS_MapData::SetIntroVideo(UAoS_VideoDataAsset* InIntroVideo)
 {
