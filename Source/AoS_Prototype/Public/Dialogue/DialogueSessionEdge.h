@@ -20,7 +20,8 @@ enum class EEdgeType : uint8
     ItemOption,
     SetNewStartNode,
     AngerIncrease,
-
+    ChooseAlternateDialogue, // sets a bool in the dialogue session node to use the alternate dialogue instead
+    UpdatePart // for updating the part of the case, should send this info to the case manager to deal with
 };
 
 

@@ -58,6 +58,11 @@ void UDialogueSession::ResetDialogue()
     for (auto& NodeToCheck : AllNodes)
     {
         UDialogueSessionNode* TempNode = Cast<UDialogueSessionNode>(NodeToCheck);
+        // reset so that default dialogue is used
+        if (TempNode)
+        {
+            TempNode->bUseAlternateDialogue = false;
+        }
         if (TempNode && TempNode->bIsDefaultStartingNode)
         {
             if (CurrentNode)
@@ -113,11 +118,24 @@ void UDialogueSession::SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck, FT
         return;
     }
 
-    if (Type == EEdgeType::AngerIncrease)
+    // Update information for the graph depending on the type of edge
+    switch (Type)
     {
+    case(EEdgeType::SetNewStartNode):
+        NodeToSave = Cast<UDialogueSessionNode>(NewEdge->EndNode);
+        break;
+    case(EEdgeType::AngerIncrease):
         CurrentAngerLevel++;
+        break;
+    case(EEdgeType::ChooseAlternateDialogue):
+        Cast<UDialogueSessionNode>(NewEdge->EndNode)->bUseAlternateDialogue = true;
+        break;
+    case(EEdgeType::UpdatePart):
+        // tell case manager to update the part 
+        break;
     }
 
+    // in case of anger increase, check if the dialogue should end
     if (CurrentAngerLevel < MAX_ANGER)
     {
         UpdateCurrentNode(Cast<UDialogueSessionNode>(NewEdge->EndNode));
@@ -127,22 +145,16 @@ void UDialogueSession::SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck, FT
         // deal with anger reaching max
 
     }
+
 }
 
-// Sets CurrentNode to the new node and checks if there should vbe 
+// Sets CurrentNode to the new node and checks for error
 void UDialogueSession::UpdateCurrentNode(UDialogueSessionNode* NewNode)
 {
     CurrentNode = NewNode;
     if (!CheckCurrentNode(TEXT("Next node in the dialogue graph unable to be converted to type UDialogueSessionNode.")))
     {
         return;
-    }
-
-    UDialogueSessionEdge* SaveEdge = FindEdgeOfType(EEdgeType::SetNewStartNode, true);
-
-    if (SaveEdge && Cast<UDialogueSessionNode>(SaveEdge->EndNode))
-    {
-        NodeToSave = Cast<UDialogueSessionNode>(SaveEdge->EndNode);
     }
 }
 

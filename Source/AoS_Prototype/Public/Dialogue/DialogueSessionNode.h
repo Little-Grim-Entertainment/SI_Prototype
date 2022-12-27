@@ -43,10 +43,17 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
     bool bIsNickSpeaking;
 
+    // used behind the scenes (i.e. not exposed to the editor)
+    bool bUseAlternateDialogue = false;
+
 private:
 
     UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
     FText Dialogue;
     UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
     EEmotion RelatedEmotion;
+    // May not be applicable
+    UPROPERTY(EditDefaultsOnly, Category = "DialogueOptions")
+    FText AlternateDialogue;
+
 };
