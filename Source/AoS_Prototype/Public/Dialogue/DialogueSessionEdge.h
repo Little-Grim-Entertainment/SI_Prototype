@@ -6,6 +6,10 @@
 #include "DialogueSessionEdge.generated.h"
 
 
+// --- WARNING --- //
+// MAY BREAK CURRENT DIALOGUE SESSIONS IN UPROJECT IF THIS IS MODIFIED!!
+
+// TO DO: Add UpdatePart (with delegate) and GetAlternateDialogue
 UENUM(BlueprintType)
 enum class EEdgeType : uint8
 {
@@ -15,7 +19,8 @@ enum class EEdgeType : uint8
     TextOption,
     ItemOption,
     SetNewStartNode,
-    AngerIncrease
+    AngerIncrease,
+
 };
 
 
