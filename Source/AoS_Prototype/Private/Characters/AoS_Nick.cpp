@@ -147,6 +147,13 @@ void AAoS_Nick::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedCompo
 {
 	if(OtherComp == GetMesh())
 	{
+		TArray<USceneComponent*> Meshes;
 		GetMesh()->SetVisibility(true);
+		GetMesh()->GetChildrenComponents(true, Meshes);
+
+		for (USceneComponent* _Mesh : Meshes)
+		{
+			_Mesh->SetVisibility(true);
+		}
 	}
 }

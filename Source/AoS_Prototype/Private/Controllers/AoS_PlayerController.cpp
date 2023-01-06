@@ -229,6 +229,8 @@ void AAoS_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
 
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+
+	
 }
 
 void AAoS_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue)
