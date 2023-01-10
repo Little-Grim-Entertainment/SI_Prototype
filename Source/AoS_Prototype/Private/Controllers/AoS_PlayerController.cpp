@@ -228,8 +228,6 @@ void AAoS_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 
 	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Controller Pitch: %f"), GetControlRotation().Pitch));
-
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 
 	
