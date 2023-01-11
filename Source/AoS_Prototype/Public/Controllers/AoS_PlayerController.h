@@ -108,7 +108,7 @@ protected:
 
 	void SetupPlayerCamera();
 
-	void PostCameraBlend(ACameraActor* InFollowCamera, ACameraActor* InObservationCamera);
+	void PostCameraBlend();
 
 	UFUNCTION()
 	void OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode);
@@ -119,5 +119,4 @@ private:
 	UMediaSoundComponent* MediaSoundComponent;
 	
 	FTimerHandle CameraBlendHandle;
-	FTimerDelegate CameraBlendDelegate;
 };

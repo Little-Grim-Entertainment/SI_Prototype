@@ -80,6 +80,18 @@ void AAoS_Nick::PostInitializeComponents()
 	FollowCameraCollision->OnComponentEndOverlap.AddDynamic(this, &AAoS_Nick::OnCameraCollisionEndOverlap);
 }
 
+void AAoS_Nick::HideMeshes(bool Value)
+{
+	TArray<USceneComponent*> Meshes;
+	GetMesh()->SetVisibility(Value);
+	GetMesh()->GetChildrenComponents(true, Meshes);
+
+	for (USceneComponent* _Mesh : Meshes)
+	{
+		_Mesh->SetVisibility(Value);
+	}
+}
+
 void AAoS_Nick::BeginPlay()
 {
 	Super::BeginPlay();
@@ -131,14 +143,7 @@ void AAoS_Nick::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedCom
 {
 	if(OtherComp == GetMesh())
 	{
-		TArray<USceneComponent*> Meshes;
-		GetMesh()->SetVisibility(false);
-		GetMesh()->GetChildrenComponents(true, Meshes);
-
-		for (USceneComponent* _Mesh : Meshes)
-		{
-			_Mesh->SetVisibility(false);
-		}
+		HideMeshes(true);
 	}
 }
 
@@ -147,13 +152,6 @@ void AAoS_Nick::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedCompo
 {
 	if(OtherComp == GetMesh())
 	{
-		TArray<USceneComponent*> Meshes;
-		GetMesh()->SetVisibility(true);
-		GetMesh()->GetChildrenComponents(true, Meshes);
-
-		for (USceneComponent* _Mesh : Meshes)
-		{
-			_Mesh->SetVisibility(true);
-		}
+		HideMeshes(false);
 	}
 }

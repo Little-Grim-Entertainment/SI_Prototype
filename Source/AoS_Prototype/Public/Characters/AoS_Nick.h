@@ -74,6 +74,8 @@ public:
 	/** Returns PerceptionStimuliSourceComponent subobject **/
 	FORCEINLINE UAoS_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
 
+	/** Turn off visibility of Nick's meshes **/
+	void HideMeshes(bool Value);
 	
 protected:
 	virtual void BeginPlay() override;
