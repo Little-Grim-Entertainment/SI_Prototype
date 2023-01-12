@@ -7,6 +7,7 @@
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_UIManager.generated.h"
 
+class UAoS_SkipWidget;
 class UAoS_InteractionWidget;
 class UAoS_InteractionPrompt;
 class UMediaPlayer;
@@ -55,6 +56,11 @@ public:
 	void CreateMainMenu();
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveMainMenu();
+
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	UAoS_SkipWidget* CreateSkipWidget();
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveSkipWidget();
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
@@ -88,6 +94,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	TArray<UAoS_InteractionWidget*>& GetActiveInteractionWidgets();
 
+	UFUNCTION(BlueprintPure, Category = "Media")
+	UAoS_MoviePlayerWidget* GetMoviePlayerWidget() const;
+
 protected:
 
 	virtual void OnGameInstanceInit() override;
@@ -112,6 +121,8 @@ private:
 	UAoS_HUD* PlayerHUD;
 	UPROPERTY()
 	UAoS_UserWidget* MainMenu;
+	UPROPERTY()
+	UAoS_SkipWidget* SkipWidget;
 	UPROPERTY()
 	UAoS_MoviePlayerWidget* MoviePlayerWidget;
 	UPROPERTY()

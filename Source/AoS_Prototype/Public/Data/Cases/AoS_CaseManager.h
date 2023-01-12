@@ -101,6 +101,9 @@ private:
 	void ObjectiveCompleted(UAoS_Objective* CompletedObjective);
 	void PartCompleted(UAoS_Part* CompletedPart);
 	void CaseCompleted(UAoS_Case* CompletedCase);
+	void SkipVideoRequested();
+	void SkipVideoCanceled();
+	void SkipVideoComplete(); 
 
 	
 	bool CheckForCompletedPart();

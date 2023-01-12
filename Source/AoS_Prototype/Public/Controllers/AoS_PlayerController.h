@@ -105,7 +105,7 @@ protected:
 	void RequestInteract();
 	void RequestToggleObservation();
 	void RequestObserveObject();
-
+	void RequestSkipCinematic();
 	void SetupPlayerCamera();
 
 	void PostCameraBlend();

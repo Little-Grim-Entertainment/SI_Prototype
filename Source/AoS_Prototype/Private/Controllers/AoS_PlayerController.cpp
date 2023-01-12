@@ -13,6 +13,11 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
+#include "Cinematics/AoS_CinematicsManager.h"
+#include "Data/Media/AoS_VideoDataAsset.h"
+#include "Data/Media/AoS_CinematicDataAsset.h"
+
+
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
@@ -49,7 +54,8 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("Interact"), ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
-
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("SkipCinematic"), ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
+	
 	// Axis Bindings
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveForward"), ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveRight"),  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
@@ -293,6 +299,21 @@ void AAoS_PlayerController::RequestObserveObject()
 	}
 }
 
+void AAoS_PlayerController::RequestSkipCinematic()
+{
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
+	{
+		if (IsValid(CinematicsManager->GetLoadedVideo()))
+		{
+			CinematicsManager->GetLoadedVideo()->SkipMedia();	
+		}
+		else if (IsValid(CinematicsManager->GetLoadedCinematic()))
+		{
+			CinematicsManager->GetLoadedCinematic()->SkipMedia();
+		}
+	}
+	
+}
 
 void AAoS_PlayerController::PostCameraBlend()
 {

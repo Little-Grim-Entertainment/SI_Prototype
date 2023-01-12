@@ -43,5 +43,5 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UMediaPlayer* CurrentMediaPlayer;
 	UPROPERTY(BlueprintReadOnly)
-	UMediaSource* CurrentMediaSource;	
+	UMediaSource* CurrentMediaSource;
 };

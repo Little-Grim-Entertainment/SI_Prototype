@@ -21,6 +21,7 @@
 #include "UI/AoS_MoviePlayerWidget.h"
 #include "UI/AoS_InteractionWidget.h"
 #include "UI/AoS_CaseTitleCard.h"
+#include "UI/AoS_SkipWidget.h"
 
 
 #include "Controllers/AoS_PlayerController.h"
@@ -294,6 +295,26 @@ void UAoS_UIManager::RemoveMainMenu()
 	MainMenu->RemoveFromParent();
 }
 
+UAoS_SkipWidget* UAoS_UIManager::CreateSkipWidget()
+{
+	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!IsValid(PlayerController) || !IsValid(GameInstance->GetGameMode())){return nullptr;}
+	
+	SkipWidget = CreateWidget<UAoS_SkipWidget>(PlayerController,  GameInstance->GetGameMode()->SkipWidget);
+	if (IsValid(SkipWidget))
+	{
+		SkipWidget->AddToViewport();
+	}
+	return SkipWidget;
+}
+
+void UAoS_UIManager::RemoveSkipWidget()
+{
+	if (!IsValid(SkipWidget)){return;}
+	
+	SkipWidget->RemoveFromParent();
+}
+
 void UAoS_UIManager::SetMenuMode(bool bInMenu, UAoS_UserWidget* WidgetToFocus)
 {
 	if(!IsValid(PlayerController))
@@ -446,6 +467,11 @@ void UAoS_UIManager::OnObjectiveCompleted(UAoS_Objective* CompletedObjective)
 TArray<UAoS_InteractionWidget*>& UAoS_UIManager::GetActiveInteractionWidgets()
 {
 	return ActiveInteractionWidgets;
+}
+
+UAoS_MoviePlayerWidget* UAoS_UIManager::GetMoviePlayerWidget() const
+{
+	return MoviePlayerWidget;
 }
 
 
