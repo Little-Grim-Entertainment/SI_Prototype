@@ -141,17 +141,17 @@ void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 void AAoS_Nick::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	/*if(OtherComp == GetMesh())
+	if(OtherComp == GetMesh())
 	{
-		HideMeshes(true);
-	}*/
+		HideMeshes(false);
+	}
 }
 
 void AAoS_Nick::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	/*if(OtherComp == GetMesh())
+	if(OtherComp == GetMesh())
 	{
-		HideMeshes(false);
-	}*/
+		HideMeshes(true);
+	}
 }

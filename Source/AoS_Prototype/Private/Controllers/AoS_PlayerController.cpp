@@ -13,10 +13,11 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
+#include "Cameras/AoS_PlayerCameraManager.h"
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
-
+#include "GameFramework/SpringArmComponent.h"
 
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -274,12 +275,18 @@ void AAoS_PlayerController::RequestToggleObservation()
 	
 	if(bObservationMode)
 	{
+		Cast<AAoS_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMin = -89;
+		Cast<AAoS_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMax = 89;
 		Nick->SetActorRotation(FRotator(0., Nick->GetFollowCameraActor()->GetActorRotation().Yaw, 0));
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ObservationMode);
 		SetViewTargetWithBlend(Nick->GetObservationCameraActor(), CameraTransitionTime);
 	}
 	else
 	{
+		Cast<AAoS_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMin = -60;
+		Cast<AAoS_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMax = 20;
+		Nick->SetActorRotation(FRotator(0, Nick->GetActorRotation().Yaw, Nick->GetActorRotation().Roll));
+		SetControlRotation(FRotator(Nick->GetActorRotation()));
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 		SetViewTargetWithBlend(Nick->GetFollowCameraActor(), CameraTransitionTime);
 	}
