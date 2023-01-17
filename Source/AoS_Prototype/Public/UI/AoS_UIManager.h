@@ -96,6 +96,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Media")
 	UAoS_MoviePlayerWidget* GetMoviePlayerWidget() const;
+	UFUNCTION(BlueprintPure, Category = "PlayerHUD")
+	UAoS_HUD* GetPlayerHUD();
 
 protected:
 

@@ -19,6 +19,18 @@ UAoS_CharacterData* UAoS_CharacterManager::GetActiveCharacterData(FText Characte
 	return nullptr;
 }
 
+bool UAoS_CharacterManager::GetIsActiveCharacter(UAoS_CharacterData* InCharacterData)
+{
+	for (UAoS_CharacterData* CurrentCharacterData : ActiveCharactersData)
+	{
+		if (InCharacterData == CurrentCharacterData)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void UAoS_CharacterManager::OnPartActivated(UAoS_Part* ActivatedPart)
 {
 	

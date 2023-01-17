@@ -11,6 +11,7 @@ class UDialogueSession;
 class UDialogueSessionNode;
 class UAoS_Case;
 class UAoS_Part;
+class UAoS_CaseManager;
 
 USTRUCT(BlueprintType)
 struct FAoS_DialogueData
@@ -18,11 +19,14 @@ struct FAoS_DialogueData
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	UAoS_Case* Case;
+	bool bIsDefaultDialogue = true;
+	
+	UPROPERTY(EditAnywhere, meta=(EditCondition="!bIsDefaultDialogue", EditConditionHides))
+	UAoS_Case* Case = nullptr;
+	UPROPERTY(EditAnywhere, meta=(EditCondition="!bIsDefaultDialogue", EditConditionHides))
+	UAoS_Part* Part = nullptr;
 	UPROPERTY(EditAnywhere)
-	UAoS_Part* Part;
-	UPROPERTY(EditAnywhere)
-	UDialogueSession* RelevantDialogue;
+	UDialogueSession* RelevantDialogue = nullptr;
 
 	// --- Saved info --- //
 	UPROPERTY(EditAnywhere)
@@ -47,7 +51,11 @@ public:
 	bool IsCharacterActive;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DialogueData")
-	FAoS_DialogueData CurrentDialogueData;
+	FAoS_DialogueData DefaultDialogueData;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DialogueData")
+	TArray<FAoS_DialogueData> CaseDialogueData;
+	UFUNCTION(BlueprintPure, Category = "DialogueData")
+	FAoS_DialogueData& GetCurrentDialogueData(UAoS_CaseManager* CaseManager);
 
 private:
 

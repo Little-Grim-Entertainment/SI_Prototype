@@ -18,6 +18,7 @@ public:
 
 	// returns nullptr if character's name is not found in the list
 	UAoS_CharacterData* GetActiveCharacterData(FText CharacterName);
+	bool GetIsActiveCharacter(UAoS_CharacterData* InCharacterData);
 
 protected:
 

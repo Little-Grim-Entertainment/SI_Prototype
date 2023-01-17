@@ -8,6 +8,7 @@
 
 class UButton;
 class UTextBlock;
+class UAoS_DialogueManager;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNextClickedDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNextHoveredDelegate);
@@ -33,6 +34,13 @@ public:
 	FText GetCurrentSpeaker() const;
 	UFUNCTION(BlueprintCallable)
 	FText GetCurrentDialogue() const;
+	UFUNCTION(BlueprintCallable)
+	void RefreshDialogueBox();
+
+	UFUNCTION()
+	void OnNextClicked();
+	UFUNCTION()
+	void OnPreviousClicked();
 
 	FOnNextClickedDelegate& GetOnNextClickedDelegate();
 	FOnNextHoveredDelegate& GetOnNextHoveredDelegate();
@@ -52,7 +60,7 @@ protected:
 	UButton* BTN_Next;
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UButton* BTN_Previous;
-
+	
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
@@ -69,18 +77,18 @@ private:
 	FOnPreviousHoveredDelegate OnPreviousHoveredDelegate;
 	FOnPreviousUnhoveredDelegate OnPreviousUnhoveredDelegate;
 
-	UFUNCTION()
-	void OnNextClicked();
+
 	UFUNCTION()
 	void OnNextHovered();
 	UFUNCTION()
 	void OnNextUnhovered();
-
-	UFUNCTION()
-	void OnPreviousClicked();
+	
 	UFUNCTION()
 	void OnPreviousHovered();
 	UFUNCTION()
 	void OnPreviousUnhovered();
+
+	void ShowNextButton(UAoS_DialogueManager* InDialogueManager);
+	void ShowPreviousButton(UAoS_DialogueManager* InDialogueManager);
 
 };

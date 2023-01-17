@@ -17,7 +17,12 @@
 #include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
+#include "Dialogue/AoS_DialogueManager.h"
+#include "Dialogue/DialogueSession.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UI/AoS_DialogueBox.h"
+#include "UI/AoS_HUD.h"
+#include "UI/AoS_UIManager.h"
 
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -56,6 +61,10 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("SkipCinematic"), ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("NextDialogue"), ETriggerEvent::Triggered, this, &ThisClass::RequestNextDialogue);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("PreviousDialogue"), ETriggerEvent::Triggered, this, &ThisClass::RequestPreviousDialogue);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ExitDialogue"), ETriggerEvent::Triggered, this, &ThisClass::RequestExitDialogue);
+
 	
 	// Axis Bindings
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveForward"), ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
@@ -320,6 +329,40 @@ void AAoS_PlayerController::RequestSkipCinematic()
 		}
 	}
 	
+}
+
+void AAoS_PlayerController::RequestNextDialogue()
+{
+	UAoS_UIManager* UIManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_UIManager>();
+	UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>();
+	if (UIManager && DialogueManager)
+	{
+		if (DialogueManager->HasNextOption())
+		{
+			UIManager->GetPlayerHUD()->GetDialogueBox()->OnNextClicked();
+		}
+	}
+}
+
+void AAoS_PlayerController::RequestPreviousDialogue()
+{
+	UAoS_UIManager* UIManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_UIManager>();
+	UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>();
+	if (UIManager && DialogueManager)
+	{
+		if (DialogueManager->HasPreviousOption())
+		{
+			UIManager->GetPlayerHUD()->GetDialogueBox()->OnPreviousClicked();
+		}
+	}
+}
+
+void AAoS_PlayerController::RequestExitDialogue()
+{
+	if (UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>())
+	{
+		DialogueManager->GetCurrentDialogue()->ExitDialogue();
+	}
 }
 
 void AAoS_PlayerController::PostCameraBlend()

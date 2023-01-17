@@ -10,6 +10,7 @@ class UAoS_CharacterData;
 class UDialogueSessionNode;
 class UDialogueSessionEdge;
 class UAoS_DialogueManager;
+class UAoS_CaseManager;
 
 UCLASS(Blueprintable)
 class AOS_PROTOTYPE_API UDialogueSession : public UGenericGraph
@@ -34,7 +35,7 @@ public:
 
     // If SavedNode of CharacterData is not null, just sets CurrentNode equal to it
     // Otherwise, it searches for the default starting node
-    void StartDialogue(FText CharacterName, UDialogueSessionNode* SaveNode, int32 StartingAnger);
+    void StartDialogue(UAoS_CharacterData* InCharacterData, UAoS_DialogueManager* InDialogueManager, UAoS_CaseManager* InCaseManager);
 
     // Sets CurrentNode and NodeToSave to the default start node
     // Sets CurrentAngerLevel = 0
@@ -49,6 +50,10 @@ public:
     UFUNCTION(BlueprintCallable)
     FText GetText() const;
 
+    // Should update CharacterData
+    // Only time that CharacterData gets updated
+    void ExitDialogue();
+
 
 private:
 
@@ -60,10 +65,7 @@ private:
     int32 CurrentAngerLevel = 0;
 
     FText CharacterDisplayName;
-
-    // Should update CharacterData
-    // Only time that CharacterData gets updated
-    void ExitDialogue();
+    
     // Used every time that CurrentNode is update to check whether there is a new saved node
     void UpdateCurrentNode(UDialogueSessionNode* NewNode);
     // Used to make sure the current node is valid; otherwise, relevant errors are printed

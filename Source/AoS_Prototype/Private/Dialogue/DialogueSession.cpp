@@ -3,6 +3,7 @@
 #include "Dialogue/DialogueSessionNode.h"
 #include "Dialogue/DialogueSessionEdge.h"
 #include "Dialogue/AoS_DialogueManager.h"
+#include "Data/Cases/AoS_CaseManager.h"
 #include "Data/Characters/AoS_CharacterData.h"
 
 #define LOCTEXT_NAMESPACE "DialogueSession"
@@ -22,25 +23,23 @@ UDialogueSession::UDialogueSession()
 #endif
 }
 
-void UDialogueSession::StartDialogue(FText CharacterName, UDialogueSessionNode* SaveNode, int32 StartingAnger)
+void UDialogueSession::StartDialogue(UAoS_CharacterData* InCharacterData, UAoS_DialogueManager* InDialogueManager,  UAoS_CaseManager* InCaseManager)
 {
-    if (GetWorld())
+    DialogueManagerRef = InDialogueManager;
+    if (!DialogueManagerRef)
     {
-        DialogueManagerRef = GetWorld()->GetSubsystem<UAoS_DialogueManager>();
-        if (!DialogueManagerRef)
-        {
-            UE_LOG(LogTemp, Error, TEXT("Can't find reference to the DialogueManager."));
-        }
+        UE_LOG(LogTemp, Error, TEXT("Can't find reference to the DialogueManager."));
     }
-
-    CharacterDisplayName = CharacterName;
+    
+    CharacterDisplayName = InCharacterData->CharacterName;
 
     // if a node is saved in CurrentDialogueData, then start with the saved info
-    if (SaveNode)
+    if (!IsValid(InCaseManager)) {return;}
+    if (InCharacterData->GetCurrentDialogueData(InCaseManager).SavedNode)
     {
-        CurrentNode = SaveNode;
-        NodeToSave = SaveNode;
-        CurrentAngerLevel = StartingAnger;
+        CurrentNode = InCharacterData->GetCurrentDialogueData(InCaseManager).SavedNode;
+        NodeToSave = InCharacterData->GetCurrentDialogueData(InCaseManager).SavedNode;
+        CurrentAngerLevel = InCharacterData->GetCurrentDialogueData(InCaseManager).AngerLevel;
     }
     else
     {
@@ -143,9 +142,7 @@ void UDialogueSession::SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck, FT
     else
     {
         // deal with anger reaching max
-
     }
-
 }
 
 // Sets CurrentNode to the new node and checks for error
@@ -162,14 +159,20 @@ FText UDialogueSession::GetName() const
 {
     if (!CurrentNode)
     {
-        return FText();
+        return FText::FromString("Error: CurrentNode Not Found");
     }
+    
     return CurrentNode->bIsNickSpeaking ? FText::FromString(FString(NICK_DISPLAY_NAME)) : CharacterDisplayName;
 }
 
 FText UDialogueSession::GetText() const
 {
-    return CurrentNode ? CurrentNode->GetDialogueText() : FText();
+    if (!CurrentNode)
+    {
+        return FText::FromString("Error: CurrentNode Not Found");
+    }
+    
+    return CurrentNode ? CurrentNode->GetDialogueText() : FText::FromString("Error: No Dialogue Found");
 }
 
 bool UDialogueSession::HasEdgeOfType(EEdgeType Type)

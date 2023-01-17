@@ -30,6 +30,16 @@
 #include "MediaAssets/Public/MediaPlayer.h"
 
 
+#if !UE_BUILD_SHIPPING
+static TAutoConsoleVariable<int32> CvarDisableTitleCard(
+	TEXT("CheatDisableTitleCards"),
+	0,
+	TEXT("Disables the titles cards after accepting a case.\n")
+	TEXT("<=0: enabled\n")
+	TEXT("  1: disabled\n"),
+	ECVF_Scalability | ECVF_RenderThreadSafe);
+#endif
+
 UAoS_UIManager::UAoS_UIManager()
 {
 
@@ -96,6 +106,11 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			}
 			break;
 		}
+		case EPlayerMode::PM_DialogueMode:
+			{
+				HideDialogueBox();
+				break;
+			}
 		case EPlayerMode::PM_VideoMode:
 		{
 			RemoveMoviePlayerWidget();
@@ -161,11 +176,12 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 		}
 		case EPlayerMode::PM_DialogueMode:
 		{
+			CreatePlayerHUD();
+			DisplayDialogueBox();
 			break;
 		}
 		case EPlayerMode::PM_InterrogationMode:
 		{
-			DisplayDialogueBox();
 			break;
 		}
 		case EPlayerMode::PM_TitleCardMode:
@@ -227,7 +243,7 @@ void UAoS_UIManager::RemoveMoviePlayerWidget()
 
 void UAoS_UIManager::ShowCaseTitleCard()
 {
-	if (!TitleCardDelayDelegate.IsBound()) {return;}
+	if (!TitleCardDelayDelegate.IsBound() || CvarDisableTitleCard.GetValueOnGameThread() == 1) {return;}
 	
 	TitleCardDelayDelegate.Execute();
 	if (IsValid(CaseTitleCardWidget))
@@ -392,7 +408,8 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 void UAoS_UIManager::DisplayDialogueBox()
 {
 	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())){return;}
-	
+
+	PlayerHUD->GetDialogueBox()->RefreshDialogueBox();
 	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
 }
 
@@ -472,6 +489,11 @@ TArray<UAoS_InteractionWidget*>& UAoS_UIManager::GetActiveInteractionWidgets()
 UAoS_MoviePlayerWidget* UAoS_UIManager::GetMoviePlayerWidget() const
 {
 	return MoviePlayerWidget;
+}
+
+UAoS_HUD* UAoS_UIManager::GetPlayerHUD()
+{
+	return PlayerHUD;
 }
 
 

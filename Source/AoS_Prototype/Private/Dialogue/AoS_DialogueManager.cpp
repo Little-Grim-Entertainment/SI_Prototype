@@ -4,12 +4,13 @@
 #include "Dialogue/AoS_DialogueManager.h"
 #include "AoS_GameInstance.h"
 #include "Characters/AoS_CharacterManager.h"
+#include "Data/Cases/AoS_CaseManager.h"
 #include "Data/Characters/AoS_CharacterData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Dialogue/DialogueSession.h"
 
 
-void UAoS_DialogueManager::StartDialogue(FText CharacterName)
+void UAoS_DialogueManager::StartDialogue(UAoS_CharacterData* InCharacterData)
 {
 	// TO DO: Get GameInstance
 	if (!IsValid(GameInstance)) return;
@@ -17,31 +18,37 @@ void UAoS_DialogueManager::StartDialogue(FText CharacterName)
 	if (!IsValid(CharacterManager))
 	{
 		UE_LOG(LogTemp, Error, TEXT("CharacterManager not found!"));
-		StartDefaultDialogue(CharacterName);
+		StartDefaultDialogue(InCharacterData);
 		return;
 	}
 
 	// TO DO: need a function that updates the dialogue on the character
-	CurrentCharacterData = CharacterManager->GetActiveCharacterData(CharacterName);
-	if (!CurrentCharacterData || !CurrentCharacterData->CurrentDialogueData.RelevantDialogue)
+    UAoS_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_CaseManager>();
+	if (!IsValid(CaseManager)) {return;}
+	CurrentCharacterData = InCharacterData;
+	if (!CurrentCharacterData || !CurrentCharacterData->GetCurrentDialogueData(CaseManager).RelevantDialogue)
 	{
-		StartDefaultDialogue(CharacterName);
+		StartDefaultDialogue(CurrentCharacterData);
 		return;
 	}
 
+	CurrentDialogue = CurrentCharacterData->GetCurrentDialogueData(CaseManager).RelevantDialogue;
+	CurrentDialogue->StartDialogue(CurrentCharacterData, this, CaseManager);
 	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
-	CurrentDialogue = CurrentCharacterData->CurrentDialogueData.RelevantDialogue;
-	CurrentDialogue->StartDialogue(CharacterName, CurrentCharacterData->CurrentDialogueData.SavedNode, CurrentCharacterData->CurrentDialogueData.AngerLevel);
 }
 
 void UAoS_DialogueManager::ExitDialogue(UDialogueSessionNode* NewSaveNode, int32 NewAngerLevel)
 {
 	check(CurrentCharacterData);
-	CurrentCharacterData->CurrentDialogueData.AngerLevel = NewAngerLevel;
-	CurrentCharacterData->CurrentDialogueData.SavedNode = NewSaveNode;
+    UAoS_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_CaseManager>();
+	if (!IsValid(CaseManager)) {return;}
+	CurrentCharacterData->GetCurrentDialogueData(CaseManager).AngerLevel = NewAngerLevel;
+	CurrentCharacterData->GetCurrentDialogueData(CaseManager).SavedNode = NewSaveNode;
 
 	CurrentDialogue = nullptr;
 	CurrentCharacterData = nullptr;
+
+	GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
 }
 
 void UAoS_DialogueManager::OnNextPressed()
@@ -80,7 +87,7 @@ void UAoS_DialogueManager::OnItemOptionSelected(UObject* RelatedItem)
 }
 
 
-void UAoS_DialogueManager::StartDefaultDialogue(FText CharacterName)
+void UAoS_DialogueManager::StartDefaultDialogue(UAoS_CharacterData* InCharacterData)
 {
 	// TO DO: find default dialogue
 
@@ -91,6 +98,11 @@ void UAoS_DialogueManager::StartDefaultDialogue(FText CharacterName)
 void UAoS_DialogueManager::OnInterrogationPressed()
 {
 	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_InterrogationMode);
+}
+
+UDialogueSession* UAoS_DialogueManager::GetCurrentDialogue()
+{
+	return CurrentDialogue;
 }
 
 void UAoS_DialogueManager::SetupBindings()

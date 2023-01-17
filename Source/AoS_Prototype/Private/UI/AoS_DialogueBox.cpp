@@ -5,7 +5,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Dialogue/AoS_DialogueManager.h"
-
+#include "Dialogue/DialogueSession.h"
 
 void UAoS_DialogueBox::NativeConstruct()
 {
@@ -15,14 +15,24 @@ void UAoS_DialogueBox::NativeConstruct()
 
 	UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>();
 	if (!IsValid(DialogueManager)){return;}
-	
-	BTN_Next->OnClicked.AddDynamic(this, &ThisClass::OnNextClicked);
-	BTN_Next->OnHovered.AddDynamic(this, &ThisClass::OnNextHovered);
-	BTN_Next->OnUnhovered.AddDynamic(this, &ThisClass::OnNextUnhovered);
 
-	BTN_Previous->OnClicked.AddDynamic(this, &ThisClass::OnPreviousClicked);
-	BTN_Previous->OnHovered.AddDynamic(this, &ThisClass::OnPreviousHovered);
-	BTN_Previous->OnUnhovered.AddDynamic(this, &ThisClass::OnPreviousUnhovered);
+	BTN_Next->SetVisibility(ESlateVisibility::Hidden);
+	BTN_Previous->SetVisibility(ESlateVisibility::Hidden);
+
+	if (DialogueManager->HasNextOption())
+	{
+		BTN_Next->SetVisibility(ESlateVisibility::Visible);
+		BTN_Next->OnClicked.AddDynamic(this, &ThisClass::OnNextClicked);
+		BTN_Next->OnHovered.AddDynamic(this, &ThisClass::OnNextHovered);
+		BTN_Next->OnUnhovered.AddDynamic(this, &ThisClass::OnNextUnhovered);
+	}
+	if (DialogueManager->HasPreviousOption())
+	{
+		BTN_Previous->SetVisibility(ESlateVisibility::Visible);
+		BTN_Previous->OnClicked.AddDynamic(this, &ThisClass::OnPreviousClicked);
+		BTN_Previous->OnHovered.AddDynamic(this, &ThisClass::OnPreviousHovered);
+		BTN_Previous->OnUnhovered.AddDynamic(this, &ThisClass::OnPreviousUnhovered);
+	}
 
 	//OnNextClickedDelegate.AddDynamic(DialogueManager, &UAoS_DialogueManager::OnNextPressed);
 	//OnPreviousClickedDelegate.AddDynamic(DialogueManager, &UAoS_DialogueManager::OnPreviousPressed);
@@ -51,8 +61,20 @@ void UAoS_DialogueBox::SetCharacterDialogue(FText InCharacterDialogue)
 {
 	if (!IsValid(TXT_CharacterDialogue)){return;}
 	
-	TXT_CharacterName->SetText(InCharacterDialogue);
+	TXT_CharacterDialogue->SetText(InCharacterDialogue);
 	CurrentDialogue = InCharacterDialogue;
+}
+
+
+void UAoS_DialogueBox::RefreshDialogueBox()
+{
+	UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>();
+	if (!IsValid(DialogueManager)){return;}
+
+	SetCharacterDialogue(DialogueManager->GetCurrentDialogue()->GetText());
+	SetCharacterName(DialogueManager->GetCurrentDialogue()->GetName());
+	ShowNextButton(DialogueManager);
+	ShowPreviousButton(DialogueManager);
 }
 
 FText UAoS_DialogueBox::GetCurrentSpeaker() const
@@ -97,6 +119,12 @@ FOnPreviousUnhoveredDelegate& UAoS_DialogueBox::GetOnPreviousUnhoveredDelegate()
 
 void UAoS_DialogueBox::OnNextClicked()
 {
+	UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>();
+	if (!IsValid(DialogueManager)) {return;}
+
+	DialogueManager->OnNextPressed();
+	RefreshDialogueBox();
+		
 	OnNextClickedDelegate.Broadcast();
 }
 
@@ -112,6 +140,12 @@ void UAoS_DialogueBox::OnNextUnhovered()
 
 void UAoS_DialogueBox::OnPreviousClicked()
 {
+	UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>();
+	if (!IsValid(DialogueManager)) {return;}
+
+	DialogueManager->OnPreviousPressed();
+	RefreshDialogueBox();
+		
 	OnPreviousClickedDelegate.Broadcast();
 }
 
@@ -123,5 +157,29 @@ void UAoS_DialogueBox::OnPreviousHovered()
 void UAoS_DialogueBox::OnPreviousUnhovered()
 {
 	OnPreviousUnhoveredDelegate.Broadcast();
+}
+
+void UAoS_DialogueBox::ShowNextButton(UAoS_DialogueManager* InDialogueManager)
+{
+	if (InDialogueManager->HasNextOption())
+	{
+		BTN_Next->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		BTN_Next->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void UAoS_DialogueBox::ShowPreviousButton(UAoS_DialogueManager* InDialogueManager)
+{
+	if (InDialogueManager->HasPressOption())
+	{
+		BTN_Previous->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		BTN_Previous->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 

@@ -106,8 +106,11 @@ protected:
 	void RequestToggleObservation();
 	void RequestObserveObject();
 	void RequestSkipCinematic();
+	void RequestNextDialogue();
+	void RequestPreviousDialogue();
+	void RequestExitDialogue();
+	
 	void SetupPlayerCamera();
-
 	void PostCameraBlend();
 
 	UFUNCTION()
