@@ -8,6 +8,10 @@
 #include "AoS_UserWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFadeOutComplete);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNativeConstructionComplete);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNativePreConstructionComplete);
+
+
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_UserWidget : public UUserWidget
@@ -23,6 +27,10 @@ public:
 	UAoS_UIProjectDefaults* UIProjectDefaults;
 	UPROPERTY(BlueprintCallable)
 	FOnFadeOutComplete OnFadeOutComplete;
+	UPROPERTY(BlueprintAssignable)
+	FOnNativeConstructionComplete OnNativeConstructionComplete;
+	UPROPERTY(BlueprintAssignable)
+	FOnNativePreConstructionComplete OnNativePreConstructionComplete;
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void FadeInWidget();
@@ -33,6 +41,7 @@ public:
 
 protected:
 
+	virtual void NativeConstruct() override;
 	virtual void NativePreConstruct() override;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)

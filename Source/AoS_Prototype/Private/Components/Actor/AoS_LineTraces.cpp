@@ -36,7 +36,7 @@ void UAoS_LineTraces::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (bEnableInteractableSearch)
+	/*if (bEnableInteractableSearch)
 	{
 		AActor* InteractableActor = SearchForInteractableActor();
 		if (InteractableActor && !bInteractableFound)
@@ -54,7 +54,7 @@ void UAoS_LineTraces::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	{
 		PlayerController->SetInteractableActor(nullptr);
 		bInteractableFound = false;
-	}
+	}*/
 }
 
 // Interactable Actor Search

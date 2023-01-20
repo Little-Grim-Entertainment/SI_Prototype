@@ -57,6 +57,34 @@ void AAoS_NPC_Interactable::OnEndOverlap(AAoS_Nick* InNickActor)
 	InteractableComponent->HideInteractionPromptWidget();
 }
 
+void AAoS_NPC_Interactable::OnInteract_Implementation(AActor* Caller)
+{
+	IAoS_InteractInterface::OnInteract_Implementation(Caller);
+
+	if (IsValid(InteractionPrompt))
+	{
+		UAoS_InteractionPrompt* InteractionPromptWidget = Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
+		if (IsValid(InteractionPromptWidget))
+		{
+			InteractionPromptWidget->HideWidget();
+		}
+	}
+}
+
+void AAoS_NPC_Interactable::OnInteractEnd_Implementation(AActor* Caller)
+{
+	IAoS_InteractInterface::OnInteractEnd_Implementation(Caller);
+	
+	if (IsValid(InteractionPrompt))
+	{
+		UAoS_InteractionPrompt* InteractionPromptWidget = Cast<UAoS_InteractionPrompt>(InteractionPrompt->GetWidget());
+		if (IsValid(InteractionPromptWidget))
+		{
+			InteractionPromptWidget->ShowWidget();
+		}
+	}
+}
+
 UWidgetComponent* AAoS_NPC_Interactable::GetInteractionIconComponent_Implementation()
 {
 	return InteractionIcon;

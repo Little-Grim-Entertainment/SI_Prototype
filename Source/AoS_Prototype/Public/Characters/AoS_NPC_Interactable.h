@@ -46,10 +46,14 @@ protected:
 	void OnBeginOverlap(AAoS_Nick* InNickActor);
 	UFUNCTION()
 	void OnEndOverlap(AAoS_Nick* InNickActor);
-	
+	UFUNCTION()
+	virtual void OnInteract_Implementation(AActor* Caller) override;
+	UFUNCTION()
+	virtual void OnInteractEnd_Implementation(AActor* Caller) override;
 	UFUNCTION()
 	virtual UWidgetComponent* GetInteractionIconComponent_Implementation() override;
 	UFUNCTION()
 	virtual UWidgetComponent* GetInteractionPromptComponent_Implementation() override;
+	
 	
 };

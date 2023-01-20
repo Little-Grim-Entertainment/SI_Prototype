@@ -61,9 +61,9 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("SkipCinematic"), ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("NextDialogue"), ETriggerEvent::Triggered, this, &ThisClass::RequestNextDialogue);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("PreviousDialogue"), ETriggerEvent::Triggered, this, &ThisClass::RequestPreviousDialogue);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ExitDialogue"), ETriggerEvent::Triggered, this, &ThisClass::RequestExitDialogue);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("NextDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("PreviousDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ExitDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
 
 	
 	// Axis Bindings
@@ -362,6 +362,13 @@ void AAoS_PlayerController::RequestExitDialogue()
 	if (UAoS_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<UAoS_DialogueManager>())
 	{
 		DialogueManager->GetCurrentDialogue()->ExitDialogue();
+	}
+	if (InteractableActor)
+	{
+		if (const IAoS_InteractInterface* InterfaceActor = Cast<IAoS_InteractInterface>(InteractableActor))
+		{
+			InterfaceActor->Execute_OnInteractEnd(Cast<UObject>(InteractableActor), InteractableActor);
+		}
 	}
 }
 

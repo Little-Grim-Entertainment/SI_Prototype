@@ -9,10 +9,17 @@ void UAoS_UserWidget::FadeOutComplete()
 	GetWorld()->GetFirstPlayerController()->SetPause(false);
 }
 
+void UAoS_UserWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	OnNativeConstructionComplete.Broadcast();
+}
+
 void UAoS_UserWidget::NativePreConstruct()
 {
 	SetDefaults();
 	Super::NativePreConstruct();
+	OnNativePreConstructionComplete.Broadcast();
 }
 
 FColorDefaults UAoS_UserWidget::GetAllColors()
