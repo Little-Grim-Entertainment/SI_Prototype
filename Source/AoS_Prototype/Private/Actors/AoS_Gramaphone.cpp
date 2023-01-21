@@ -20,7 +20,10 @@ void AAoS_Gramaphone::OnGramaphoneMenuConstructed()
 {
 	for (UAoS_AlbumWidget* CurrentAlbumWidget : GramaphoneMenu->GetAlbumWidgets())
 	{
-		CurrentAlbumWidget->OnAlbumSelected.AddDynamic(this, &ThisClass::OnAlbumSelected);
+		if (!CurrentAlbumWidget->OnAlbumSelected.IsBound())
+		{
+			CurrentAlbumWidget->OnAlbumSelected.AddDynamic(this, &ThisClass::OnAlbumSelected);
+		}
 		if (!GramaphoneMenu->BTN_Stop->OnClicked.IsBound())
 		{
 			GramaphoneMenu->BTN_Stop->OnClicked.AddDynamic(this, &ThisClass::AAoS_Gramaphone::OnAlbumPlayStopped);
@@ -39,15 +42,25 @@ void AAoS_Gramaphone::CreateGramaphoneMenu()
 {
 	AAoS_PlayerController* PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (!IsValid(PlayerController) || !IsValid(GramaphoneMenu_Class)){return;}
-	
-	GramaphoneMenu = CreateWidget<UAoS_GramaphoneMenu>(PlayerController, GramaphoneMenu_Class);
-	if (IsValid(GramaphoneMenu))
+
+	if (!IsValid(GramaphoneMenu))
 	{
-		GramaphoneMenu->OnNativeConstructionComplete.AddDynamic(this, &ThisClass::AAoS_Gramaphone::OnGramaphoneMenuConstructed);
-		GramaphoneMenu->SetCurrentAlbumDetails(CurrentAlbumDetails);
-		GramaphoneMenu->SetIsAlbumPlaying(MusicComponent->IsPlaying());
-		GramaphoneMenu->AddToViewport();
+		GramaphoneMenu = CreateWidget<UAoS_GramaphoneMenu>(PlayerController, GramaphoneMenu_Class);
+		if (IsValid(GramaphoneMenu))
+		{
+			GramaphoneMenu->OnNativeConstructionComplete.AddDynamic(this, &ThisClass::AAoS_Gramaphone::OnGramaphoneMenuConstructed);
+			GramaphoneMenu->SetCurrentAlbumDetails(CurrentAlbumDetails);
+			GramaphoneMenu->SetIsAlbumPlaying(MusicComponent->IsPlaying());
+			GramaphoneMenu->AddToViewport();
+		}
 	}
+	else
+	{
+			GramaphoneMenu->SetCurrentAlbumDetails(CurrentAlbumDetails);
+			GramaphoneMenu->SetIsAlbumPlaying(MusicComponent->IsPlaying());
+			GramaphoneMenu->AddToViewport();
+	}
+
 }
 
 void AAoS_Gramaphone::OnAlbumSelected_Implementation(UAoS_AlbumWidget* SelectedAlbumWidget)

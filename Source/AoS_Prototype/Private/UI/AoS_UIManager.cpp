@@ -243,7 +243,10 @@ void UAoS_UIManager::RemoveMoviePlayerWidget()
 
 void UAoS_UIManager::ShowCaseTitleCard()
 {
-	if (!TitleCardDelayDelegate.IsBound() || CvarDisableTitleCard.GetValueOnGameThread() == 1) {return;}
+	if (!TitleCardDelayDelegate.IsBound()){return;}
+#if !UE_BUILD_SHIPPING
+	if (CvarDisableTitleCard.GetValueOnGameThread() == 1) {return;}
+#endif
 	
 	TitleCardDelayDelegate.Execute();
 	if (IsValid(CaseTitleCardWidget))
