@@ -18,6 +18,7 @@ void UAoS_CinematicDataAsset::StartMedia()
 	bHasPlayed = false;
 	bWasSkipped = false;
 
+	OnCinematicStart.Broadcast();
 }
 
 void UAoS_CinematicDataAsset::SkipMedia()
@@ -31,6 +32,8 @@ void UAoS_CinematicDataAsset::SkipMedia()
 	
 	CinematicPlayer->Pause();
 	CinematicPlayer->Stop();
+
+	OnCinematicSkipped.Broadcast();
 		
 	ClearDelegates();
 }
@@ -50,5 +53,7 @@ void UAoS_CinematicDataAsset::OnCinematicEnd()
 	bHasPlayed = true;
 	bWasSkipped = false;	
 
+	OnCinematicEnded.Broadcast();
+	
 	ClearDelegates();
 }

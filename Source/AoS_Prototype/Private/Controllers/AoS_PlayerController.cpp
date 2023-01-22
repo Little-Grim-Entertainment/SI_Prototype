@@ -153,7 +153,7 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlaye
 
 	switch (InPreviousPlayerMode)
 	{
-	case EPlayerMode::PM_VideoMode:
+		case EPlayerMode::PM_VideoMode:
 		{
 			if (InPlayerMode != EPlayerMode::PM_LevelLoadingMode)
 			{
@@ -161,7 +161,7 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlaye
 			}
 			break;	
 		}
-	default:
+		default:
 		{
 			break;
 		}
@@ -169,7 +169,7 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlaye
 	
 	switch (InPlayerMode)
 	{
-	case EPlayerMode::PM_ExplorationMode:
+		case EPlayerMode::PM_ExplorationMode:
 		{
 			if (InPreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
 			{
@@ -177,12 +177,20 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlaye
 			}
 			break;
 		}
-	case EPlayerMode::PM_VideoMode:
+		case EPlayerMode::PM_CinematicMode:
+			{
+				if (InPreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
+				{
+					PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
+				}
+				break;
+			}
+		case EPlayerMode::PM_VideoMode:
 		{
 			PlayerCameraManager->StartCameraFade(0, 1, .2, FLinearColor::Black, false, true);
 			break;	
 		}
-	default:
+		default:
 		{
 			break;
 		}

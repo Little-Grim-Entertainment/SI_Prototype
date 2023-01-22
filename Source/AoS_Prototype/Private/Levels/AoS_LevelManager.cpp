@@ -187,6 +187,14 @@ void UAoS_LevelManager::LevelLoaded()
 				CinematicsManager->PlayVideo(LevelToLoad->GetIntroVideo(), false);
 			}
 		}
+		else if (LevelToLoad->HasIntroCinematic() && !LevelToLoad->IntroCinematicHasPlayed())
+		{
+			UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+			if (IsValid(CinematicsManager))
+			{
+				CinematicsManager->PlayCinematic(LevelToLoad->GetIntroCinematic());
+			}
+		}
 		else
 		{
 			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
