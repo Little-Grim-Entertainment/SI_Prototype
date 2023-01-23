@@ -161,6 +161,12 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlaye
 			}
 			break;	
 		}
+		case EPlayerMode::PM_CinematicMode:
+		{
+			if (!IsValid(Nick)) {break;}
+			SetViewTargetWithBlend(Nick->GetFollowCamera()->GetChildActor());
+			break;
+		}
 		default:
 		{
 			break;

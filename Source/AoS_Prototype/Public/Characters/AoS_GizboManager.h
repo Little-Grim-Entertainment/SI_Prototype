@@ -22,6 +22,11 @@ public:
 	void SpawnGizbo();
 	UFUNCTION()
 	void SetGizboStartTag(FString InStartTag);
+	UFUNCTION(BlueprintPure, Category = "Gizbo")
+	AAoS_Gizbo* GetGizbo();
+	UFUNCTION(BlueprintCallable, Category = "Gizbo")
+	void ShowGizbo(bool bShouldHide);
+	
 	
 protected:
 

@@ -55,6 +55,17 @@ void UAoS_GizboManager::SetGizboStartTag(FString InStartTag)
 	GizboStartTag = InStartTag;
 }
 
+AAoS_Gizbo* UAoS_GizboManager::GetGizbo()
+{
+	return GizboCharacter;
+}
+
+void UAoS_GizboManager::ShowGizbo(bool bShouldHide)
+{
+	if (!IsValid(GizboCharacter)) {return;}
+	GizboCharacter->SetActorHiddenInGame(bShouldHide);
+}
+
 void UAoS_GizboManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
