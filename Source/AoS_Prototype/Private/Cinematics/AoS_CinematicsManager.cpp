@@ -29,8 +29,6 @@ void UAoS_CinematicsManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicT
 	if (InCinematicToPlay->GetMediaHasPlayed() && !InCinematicToPlay->bCanRepeat) {return;}
 	
 	InCinematicToPlay->CinematicPlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(this, InCinematicToPlay->LevelSequence, InCinematicToPlay->PlaybackSettings, InCinematicToPlay->LevelSequenceActor);
-	ULevelSequencePlayer* CurrentCinematic = InCinematicToPlay->CinematicPlayer;
-
 	LoadedCinematic = InCinematicToPlay;
 
 	if(!IsValid(GameInstance) || !IsValid(InCinematicToPlay->CinematicPlayer)){return;}
@@ -41,13 +39,12 @@ void UAoS_CinematicsManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicT
 		return;
 	}
 
-	CurrentCinematic->OnFinished.AddDynamic(this, &ThisClass::OnCinematicEnded);
-	CurrentCinematic->OnPause.AddDynamic(this, &ThisClass::OnCinematicSkipped);
+	LoadedCinematic->CinematicPlayer->OnFinished.AddDynamic(this, &ThisClass::OnCinematicEnded);
+	LoadedCinematic->CinematicPlayer->OnPause.AddDynamic(this, &ThisClass::OnCinematicSkipped);
 
-	CurrentCinematic->Play();
-
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
 	LoadedCinematic->StartMedia();
+	
+	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
 	OnCinematicBeginPlay.Broadcast(LoadedCinematic);
 }
 
@@ -105,11 +102,11 @@ void UAoS_CinematicsManager::ResetCinematicByName(FString InCinematicName)
 void UAoS_CinematicsManager::ResetAllCinematics()
 {
 	if (GetWatchedCinematics().Num() <= 0){return;}
-	for (UAoS_VideoDataAsset* CurrentVideo : GetWatchedVideos())
+	for (UAoS_CinematicDataAsset* CurrentCinematic : GetWatchedCinematics())
 	{
-		if (IsValid(CurrentVideo))
+		if (IsValid(CurrentCinematic))
 		{
-			CurrentVideo->ResetMediaDefaults();
+			CurrentCinematic->ResetMediaDefaults();
 		}
 	}
 	GetWatchedCinematics().Empty();

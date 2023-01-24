@@ -34,7 +34,7 @@ void UAoS_CaseManager::AcceptCase(UAoS_Case* CaseToAccept)
 
 void UAoS_CaseManager::SetActiveCase(UAoS_Case* CaseToSet)
 {
-	if (!CaseToSet)
+	if (!CaseToSet || CaseToSet == ActiveCase)
 	{
 		return;
 	}

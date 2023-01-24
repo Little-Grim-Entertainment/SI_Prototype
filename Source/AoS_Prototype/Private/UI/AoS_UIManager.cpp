@@ -148,6 +148,8 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 		}
 		case EPlayerMode::PM_CinematicMode:
 		{
+			HideActiveInteractionWidgets();
+			DisplayLoadingScreen(false, false);
 			SetMenuMode(false);
 			break;	
 		}
