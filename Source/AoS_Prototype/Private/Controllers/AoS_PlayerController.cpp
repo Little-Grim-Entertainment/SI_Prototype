@@ -14,7 +14,9 @@
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
 #include "Cameras/AoS_PlayerCameraManager.h"
+#include "Characters/AoS_GizboManager.h"
 #include "Cinematics/AoS_CinematicsManager.h"
+#include "Controllers/AoS_GizboController.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
 #include "Dialogue/AoS_DialogueManager.h"
@@ -64,6 +66,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("NextDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("PreviousDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ExitDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboFollowTemp"), ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
 
 	
 	// Axis Bindings
@@ -383,6 +386,14 @@ void AAoS_PlayerController::RequestExitDialogue()
 		{
 			InterfaceActor->Execute_OnInteractEnd(Cast<UObject>(InteractableActor), InteractableActor);
 		}
+	}
+}
+
+void AAoS_PlayerController::RequestGizboFollowTemp()
+{
+	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
+	{
+		GizboManager->GetGizboController()->ToggleFollow();
 	}
 }
 

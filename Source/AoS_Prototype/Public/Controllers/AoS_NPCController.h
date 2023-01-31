@@ -32,6 +32,7 @@ protected:
 	virtual void UpdateBehaviorTree();
 	virtual void ConfigurePerception();
 	virtual void SetSeenTarget(AActor* Actor);
+	virtual void SetLostTarget();
 	//TODO: Will need to add support for AI Perception Teams, if we want NPCs to belong to specific factions, and have interactions between each other.
 
 	UFUNCTION()

@@ -37,16 +37,15 @@ void UAoS_GizboManager::SpawnGizbo()
 			GizboCharacter->SetActorRotation(GizboStart->GetActorRotation());
 		}
 	}
-
-	//TODO: Check / modify this if update to NPCController does not work as intended
-	if (!AoS_GizboController && GizboCharacter)
+	
+	if (!GizboController && GizboCharacter)
 	{
-		AoS_GizboController = Cast<AAoS_GizboController>(GizboCharacter->GetController());
+		GizboController = Cast<AAoS_GizboController>(GizboCharacter->GetController());
 	}
 
-	if (AoS_GizboController)
+	if (GizboController)
 	{
-		AoS_GizboController->Possess(GizboCharacter);
+		GizboController->Possess(GizboCharacter);
 	}
 }
 
@@ -58,6 +57,11 @@ void UAoS_GizboManager::SetGizboStartTag(FString InStartTag)
 AAoS_Gizbo* UAoS_GizboManager::GetGizbo()
 {
 	return GizboCharacter;
+}
+
+AAoS_GizboController* UAoS_GizboManager::GetGizboController()
+{
+	return GizboController;
 }
 
 void UAoS_GizboManager::ShowGizbo(bool bShouldHide)

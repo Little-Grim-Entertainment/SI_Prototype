@@ -26,7 +26,8 @@ public:
 	AAoS_Gizbo* GetGizbo();
 	UFUNCTION(BlueprintCallable, Category = "Gizbo")
 	void ShowGizbo(bool bShouldHide);
-	
+	UFUNCTION(BlueprintPure, Category = "Gizbo")
+	AAoS_GizboController* GetGizboController();
 	
 protected:
 
@@ -35,7 +36,7 @@ protected:
 private:
 
 	UPROPERTY()
-	AAoS_GizboController* AoS_GizboController;
+	AAoS_GizboController* GizboController;
 	UPROPERTY()
 	AAoS_Gizbo* GizboCharacter;
 

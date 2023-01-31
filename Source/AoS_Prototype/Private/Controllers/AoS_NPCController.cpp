@@ -37,15 +37,22 @@ void AAoS_NPCController::OnPossess(APawn* InPawn)
 		UE_LOG(LogAoSAI, Error, TEXT("%s AoS_NPCController::OnPossess PossessedNPC is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
+	
 	UBehaviorTree* MainTree = PossessedNPC->GetMainTree();
-#if WITH_EDITORONLY_DATA
-	if (!IsValid(MainTree) || !IsValid(MainTree->BTGraph))
+
+	if (!IsValid(MainTree))
 	{
 		UE_LOG(LogAoSAI, Error, TEXT("%s : AoS_NPCController::OnPossess MainTree is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
+
+#if WITH_EDITORONLY_DATA
+	if (!IsValid(MainTree->BTGraph))
+	{
+		UE_LOG(LogAoSAI, Error, TEXT("%s : AoS_NPCController::OnPossess MainTree->BTGraph is not valid"), *GetNameSafe(InPawn));
+		return;
+	}
 #endif
-	
 
 	if (!IsValid(PerceptionComp))
 	{
@@ -74,6 +81,7 @@ void AAoS_NPCController::OnPossess(APawn* InPawn)
 	// Only possess once all checks have passed.
 	Super::OnPossess(InPawn);
 
+	PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_PerformingMainAction);
 	PerceptionComp->Activate(true);
 	RunBehaviorTree(MainTree);
 	//TODO: Ask NPC to set blackboard values etc.
@@ -121,6 +129,15 @@ void AAoS_NPCController::SetSeenTarget(AActor* Actor)
 	}
 }
 
+void AAoS_NPCController::SetLostTarget()
+{
+	if (Blackboard)
+	{
+		Blackboard->SetValueAsObject(BlackboardTargetKey, nullptr);
+		Blackboard->SetValueAsBool(BlackboardCanSeeTargetKey, false);
+	}
+}
+
 void AAoS_NPCController::ConfigurePerception()
 {
 	//TODO: Play around with / discuss values with Jeff, Manuel etc.
@@ -158,9 +175,7 @@ void AAoS_NPCController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus St
 		{
 			case 0: //Sight
 				{
-					//TODO: Test only. Amend later.
-					SetSeenTarget(Actor);
-					PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_MovingToTarget);
+					//TODO: Implement
 					break;
 				}
 			case 1: //Hearing
