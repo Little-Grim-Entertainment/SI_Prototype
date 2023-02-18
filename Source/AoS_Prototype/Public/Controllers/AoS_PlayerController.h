@@ -110,6 +110,7 @@ protected:
 	void RequestPreviousDialogue();
 	void RequestExitDialogue();
 	void RequestGizboFollowTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestGizboMoveToTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	
 	void SetupPlayerCamera();
 	void PostCameraBlend();

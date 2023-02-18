@@ -18,6 +18,7 @@ public:
 	AAoS_GizboController();
 
 	void ToggleFollow();
+	void ToggleMoveTo();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -42,4 +43,5 @@ protected:
 	
 private:
 	bool bCanFollow = true;
+	bool bCanMoveTo = false;
 };

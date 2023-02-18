@@ -67,7 +67,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("PreviousDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ExitDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboFollowTemp"), ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
-
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboMoveToTemp"), ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
 	
 	// Axis Bindings
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveForward"), ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
@@ -394,6 +394,14 @@ void AAoS_PlayerController::RequestGizboFollowTemp()
 	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 	{
 		GizboManager->GetGizboController()->ToggleFollow();
+	}
+}
+
+void AAoS_PlayerController::RequestGizboMoveToTemp()
+{
+	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
+	{
+		GizboManager->GetGizboController()->ToggleMoveTo();
 	}
 }
 

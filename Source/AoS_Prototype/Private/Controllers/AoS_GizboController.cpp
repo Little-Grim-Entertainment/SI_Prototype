@@ -12,7 +12,7 @@
 
 AAoS_GizboController::AAoS_GizboController() : AAoS_NPCController_Interactable()
 {
-	
+	ConfigurePerception();
 }
 
 void AAoS_GizboController::BeginPlay()
@@ -94,6 +94,31 @@ void AAoS_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus 
 					}
 			}
 		}
+		else
+		{
+			switch (Stimulus.Type)
+			{
+				case 0: //Sight
+					{
+						//TODO: Amend accordingly
+						if (bCanMoveTo)
+						{
+							SetSeenTarget(Actor);
+						}
+						break;
+					}
+				case 1: //Hearing
+					{
+						//TODO: Implement
+						break;
+					}
+				default:
+					{
+						//TODO: Implement
+						break;
+					}
+			}
+		}
 
 		UpdateBehaviorTree();
 	}
@@ -117,6 +142,29 @@ void AAoS_GizboController::ToggleFollow()
 		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_PerformingMainAction);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Follow Action Enabled")));
 		UE_LOG(LogAoSAI, Log, TEXT("%s : AoS_GizboController::ToggleFollow Follow Action Enabled"), *GetNameSafe(GetPawn()));
+	}
+
+	UpdateBehaviorTree();
+}
+
+void AAoS_GizboController::ToggleMoveTo()
+{
+	bCanMoveTo = !bCanMoveTo;
+
+	if (!bCanMoveTo && PossessedNPC->IsMovingToTarget())
+	{
+		// Stop Gizbo from moving to a target
+		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_Nothing);
+		SetLostTarget();
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: MoveTo Action Disabled")));
+		UE_LOG(LogAoSAI, Log, TEXT("%s : AoS_GizboController::ToggleMoveTo MoveTo Action Disabled"), *GetNameSafe(GetPawn()));
+	}
+	else
+	{
+		// Allow Gizbo to move to a target
+		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_MovingToTarget);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: MoveTo Action Enabled")));
+		UE_LOG(LogAoSAI, Log, TEXT("%s : AoS_GizboController::ToggleMoveTo MoveTo Action Enabled"), *GetNameSafe(GetPawn()));
 	}
 
 	UpdateBehaviorTree();
