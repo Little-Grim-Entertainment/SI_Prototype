@@ -13,6 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
+#include "Actors/MoveToIndicator.h"
 #include "Cameras/AoS_PlayerCameraManager.h"
 #include "Characters/AoS_GizboManager.h"
 #include "Cinematics/AoS_CinematicsManager.h"
@@ -25,6 +26,7 @@
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UIManager.h"
+#include "Actors/MoveToIndicator.h"
 
 
 AAoS_PlayerController::AAoS_PlayerController()
@@ -146,7 +148,7 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 		if(HitResult.GetActor())
 		{
 			FVector HitLocation = HitResult.ImpactPoint;
-			MoveToActor->SetActorLocation(HitLocation + FVector(0, 0, 30));
+			MoveToActor->SetActorLocation(HitLocation);
 		}
 	}
 }
@@ -423,6 +425,9 @@ void AAoS_PlayerController::RequestGizboMoveToConfirm()
 {
 	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 	{
+		bMoveToMarker = false;
+		Cast<AMoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
+		MoveToActor = nullptr;
 		GizboManager->GetGizboController()->ToggleMoveTo();
 	}
 }
