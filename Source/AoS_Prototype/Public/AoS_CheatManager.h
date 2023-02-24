@@ -18,6 +18,10 @@ public:
 	
 	UAoS_CheatManager();
 
+	// Global Cheats
+	UFUNCTION(exec)
+	void CheatEnableColor(bool bShouldEnable);
+	
 	// World Manager Cheats
 	UFUNCTION(exec)
 	void CheatSetTimeStamp(FString Day, int32 Hour, int32 Minutes, FString AMPM);
