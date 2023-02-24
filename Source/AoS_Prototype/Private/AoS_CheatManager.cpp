@@ -8,9 +8,24 @@
 #include "Data/Cases/AoS_CaseManager.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
+#include "Kismet/GameplayStatics.h"
 
 UAoS_CheatManager::UAoS_CheatManager()
 {
+}
+
+void UAoS_CheatManager::CheatEnableColor(bool bShouldEnable)
+{
+	if (!bShouldEnable)
+	{
+		const FLatentActionInfo LatentActionInfo;
+		UGameplayStatics::LoadStreamLevel(this, FName(TEXT("M_PostProcess")), true, true, LatentActionInfo);
+	}
+	else
+	{
+		const FLatentActionInfo LatentActionInfo;
+		UGameplayStatics::UnloadStreamLevel(this, FName(TEXT("M_PostProcess")), LatentActionInfo, false);
+	}
 }
 
 void UAoS_CheatManager::InitCheatManager()
