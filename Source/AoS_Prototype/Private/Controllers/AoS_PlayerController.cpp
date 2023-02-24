@@ -142,7 +142,7 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 		FHitResult HitResult;
 		FVector Start = Nick->GetFollowCameraActor()->GetActorLocation();
 		FVector End = Nick->GetFollowCameraActor()->GetActorLocation() + Nick->GetFollowCameraActor()->GetActorForwardVector() * 10000;
-		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_WorldStatic);
+		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel2);
 		if(HitResult.GetActor())
 		{
 			FVector HitLocation = HitResult.ImpactPoint;
