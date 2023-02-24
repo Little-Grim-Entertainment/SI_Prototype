@@ -68,6 +68,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ExitDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboFollowTemp"), ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboMoveToTemp"), ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboMoveToConfirm"), ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToConfirm); 
 	
 	// Axis Bindings
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveForward"), ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
@@ -134,6 +135,18 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 		{
 			ObservableActor = nullptr;
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
+		}
+	}
+	if(bMoveToMarker)
+	{
+		FHitResult HitResult;
+		FVector Start = Nick->GetFollowCameraActor()->GetActorLocation();
+		FVector End = Nick->GetFollowCameraActor()->GetActorLocation() + Nick->GetFollowCameraActor()->GetActorForwardVector() * 10000;
+		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_WorldStatic);
+		if(HitResult.GetActor())
+		{
+			FVector HitLocation = HitResult.ImpactPoint;
+			MoveToActor->SetActorLocation(HitLocation + FVector(0, 0, 30));
 		}
 	}
 }
@@ -398,6 +411,15 @@ void AAoS_PlayerController::RequestGizboFollowTemp()
 }
 
 void AAoS_PlayerController::RequestGizboMoveToTemp()
+{
+	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
+	{
+		MoveToActor = SpawnMoveToMarker();
+		bMoveToMarker = true;
+	}
+}
+
+void AAoS_PlayerController::RequestGizboMoveToConfirm()
 {
 	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 	{

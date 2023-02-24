@@ -35,6 +35,8 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 	UAoS_HUD* PlayerHUD;
 	UPROPERTY()
 	AAoS_Nick* Nick = nullptr;
+	UPROPERTY()
+	AActor* MoveToActor;
 	
 	bool bPlayerCanMove = true;
 	bool bPlayerCanTurn = true;
@@ -42,6 +44,7 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 protected:
 
 	bool bObservationMode = false;
+	bool bMoveToMarker = false;
 	
 	float ObservationDistance = 1000.;
 
@@ -86,12 +89,13 @@ public:
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintNativeEvent)
 	void PostCameraSetup();
+	UFUNCTION(BlueprintImplementableEvent)
+	AActor* SpawnMoveToMarker();
 
 	UFUNCTION(BlueprintPure)
 	UMediaSoundComponent* GetMediaSoundComponent() const;
 	
 protected:
-
 	// Player Input Functions
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
@@ -111,6 +115,7 @@ protected:
 	void RequestExitDialogue();
 	void RequestGizboFollowTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestGizboMoveToConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	
 	void SetupPlayerCamera();
 	void PostCameraBlend();
