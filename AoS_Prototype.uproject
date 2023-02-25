@@ -64,6 +64,10 @@
 		{
 			"Name": "RiderLink",
 			"Enabled": false
+		},
+		{
+			"Name": "TDxUnrealEditor",
+			"Enabled": true
 		}
 	]
 }
