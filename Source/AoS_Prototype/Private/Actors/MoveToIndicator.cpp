@@ -3,7 +3,7 @@
 
 #include "Actors/MoveToIndicator.h"
 
-#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "AI/AoS_AIPerceptionStimuliSource.h"
 #include "Perception/AISense_Sight.h"
 
 // Sets default values
@@ -12,7 +12,7 @@ AMoveToIndicator::AMoveToIndicator()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
+	StimuliSource = CreateDefaultSubobject<UAoS_AIPerceptionStimuliSource>(TEXT("StimuliSource"));
 }
 
 // Called when the game starts or when spawned
@@ -24,7 +24,7 @@ void AMoveToIndicator::BeginPlay()
 
 void AMoveToIndicator::SetPerceptionStimuliSource()
 {
-	StimuliSource->RegisterForSense(TSubclassOf<UAISense_Sight>());
+	StimuliSource->RegisterSense(UAISense_Sight::StaticClass());
 }
 
 // Called every frame

@@ -17,7 +17,9 @@ class AOS_PROTOTYPE_API AAoS_GizboController : public AAoS_NPCController_Interac
 public:
 	AAoS_GizboController();
 
+	UFUNCTION(BlueprintCallable, Category = "AI")
 	void ToggleFollow();
+	UFUNCTION(BlueprintCallable, Category = "AI") //TODO: Possibly remove these specifiers later if not needed
 	void ToggleMoveTo();
 	
 protected:

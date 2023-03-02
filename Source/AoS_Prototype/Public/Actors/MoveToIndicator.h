@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "MoveToIndicator.generated.h"
 
-class UAIPerceptionStimuliSourceComponent;
+class UAoS_AIPerceptionStimuliSource;
 
 UCLASS()
 class AOS_PROTOTYPE_API AMoveToIndicator : public APawn
@@ -20,7 +20,7 @@ public:
 private:
 
 	UPROPERTY(VisibleAnywhere)
-	UAIPerceptionStimuliSourceComponent* StimuliSource;
+	UAoS_AIPerceptionStimuliSource* StimuliSource;
 
 protected:
 	// Called when the game starts or when spawned
