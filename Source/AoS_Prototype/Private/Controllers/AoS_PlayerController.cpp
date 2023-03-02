@@ -423,12 +423,26 @@ void AAoS_PlayerController::RequestGizboMoveToTemp()
 
 void AAoS_PlayerController::RequestGizboMoveToConfirm()
 {
-	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
+	if(bMoveToMarker)
+	{
+		if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
+		{
+			bMoveToMarker = false;
+			Cast<AMoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
+			MoveToActor = nullptr;
+			GizboManager->GetGizboController()->ToggleMoveTo();
+		}
+	}
+		
+}
+
+void AAoS_PlayerController::RequestGizboMoveToCancel()
+{
+	if(bMoveToMarker)
 	{
 		bMoveToMarker = false;
-		Cast<AMoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
+		MoveToActor->Destroy();
 		MoveToActor = nullptr;
-		GizboManager->GetGizboController()->ToggleMoveTo();
 	}
 }
 
