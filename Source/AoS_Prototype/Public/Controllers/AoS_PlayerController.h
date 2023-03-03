@@ -16,6 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AA
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCameraSetup);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPostCameraSetup, AActor*, InNewViewTarget);
 
 enum class EPlayerMode : uint8;
 
@@ -76,6 +77,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "PlayerCamera")
 	FOnCameraSetup OnCameraSetup;
+	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "PlayerCamera")
+	FOnPostCameraSetup OnPostCameraSetup;
 
 	// ================== FUNCTIONS ==================
 
@@ -113,6 +116,9 @@ protected:
 	void RequestNextDialogue();
 	void RequestPreviousDialogue();
 	void RequestExitDialogue();
+	void RequestToggleSystemMenu();
+
+	// Gizbo
 	void RequestGizboFollowTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented

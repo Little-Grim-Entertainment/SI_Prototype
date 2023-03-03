@@ -41,6 +41,7 @@ enum class EPlayerMode : uint8
 	PM_InspectionMode		UMETA(DisplayName = "InspectionMode"),
 	PM_InterrogationMode	UMETA(DisplayName = "InterrogationMode"),
 	PM_GameMenuMode			UMETA(DisplayName = "GameMenuMode"),
+	PM_SystemMenuMode		UMETA(DisplayName = "SystemMenuMode"),
 	PM_VendorMode			UMETA(DisplayName = "VendorMode"),
 };
 

@@ -45,16 +45,6 @@ void AAoS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	/*// Old Input System
-	check(InputComponent);
-
-	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
-	InputComponent->BindAction("ObservationMode", IE_Pressed,this, &AAoS_PlayerController::RequestObservation);
-	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
-	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
-	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
-	InputComponent->BindAxis("LookUpRate", this, &AAoS_PlayerController::RequestLookUp);*/
-
 	// Enhanced Input System
 	
 	UAoS_EnhancedInputComponent* EnhancedInputComponent = Cast<UAoS_EnhancedInputComponent>(InputComponent);
@@ -63,6 +53,7 @@ void AAoS_PlayerController::SetupInputComponent()
 	// Action Bindings
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("Interact"), ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
+	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleSystemMenu"), ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("SkipCinematic"), ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("NextDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
@@ -401,6 +392,15 @@ void AAoS_PlayerController::RequestExitDialogue()
 		{
 			InterfaceActor->Execute_OnInteractEnd(Cast<UObject>(InteractableActor), InteractableActor);
 		}
+	}
+}
+
+void AAoS_PlayerController::RequestToggleSystemMenu()
+{
+	UAoS_UIManager* UIManager = GetGameInstance()->GetSubsystem<UAoS_UIManager>();
+	if (IsValid(UIManager))
+	{
+		UIManager->ToggleSystemMenu();
 	}
 }
 
