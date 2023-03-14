@@ -90,9 +90,9 @@ public:
 	float LevelLoadDelay = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
-	float AudioFadeInDuration = .5f;
+	float GlobalFadeInDuration = .5f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
-	float AudioFadeOutDuration = .5f;
+	float GlobalFadeOutDuration = .5f;
 	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;
