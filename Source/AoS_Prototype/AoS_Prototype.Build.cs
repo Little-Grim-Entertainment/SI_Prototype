@@ -9,6 +9,6 @@ public class AoS_Prototype : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] { "GenericGraphRuntime" });
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AIModule", "NavigationSystem", "Slate", "SlateCore", "MoviePlayer", "UMG", "LevelSequence", "MovieScene", "MediaAssets" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AIModule", "NavigationSystem", "GameplayTasks", "Slate", "SlateCore", "MoviePlayer", "UMG", "LevelSequence", "MovieScene", "MediaAssets" });
 	}
 }

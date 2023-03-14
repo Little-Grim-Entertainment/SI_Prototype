@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "MoveToIndicator.generated.h"
+#include "AoS_MoveToIndicator.generated.h"
 
 class UAoS_AIPerceptionStimuliSource;
 
 UCLASS()
-class AOS_PROTOTYPE_API AMoveToIndicator : public APawn
+class AOS_PROTOTYPE_API AAoS_MoveToIndicator : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AMoveToIndicator();
+	AAoS_MoveToIndicator();
 
 private:
 

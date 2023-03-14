@@ -21,6 +21,8 @@ public:
 	void ToggleFollow();
 	UFUNCTION(BlueprintCallable, Category = "AI") //TODO: Possibly remove these specifiers later if not needed
 	void ToggleMoveTo();
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	void ToggleWait();
 	
 protected:
 	virtual void BeginPlay() override;

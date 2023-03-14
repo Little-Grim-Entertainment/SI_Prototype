@@ -28,6 +28,8 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
+	bool UpdateMoveToIndicatorPosition() const;
+	
 	UPROPERTY()
 	AActor* InteractableActor;
 	UPROPERTY()
@@ -80,6 +82,9 @@ public:
 	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "PlayerCamera")
 	FOnPostCameraSetup OnPostCameraSetup;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
+	float AdaptableActionMaximumRadius = 2000.0f;
+
 	// ================== FUNCTIONS ==================
 
 	UFUNCTION(BlueprintImplementableEvent)	
@@ -122,7 +127,7 @@ protected:
 	void RequestGizboFollowTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboMoveToCancel();
+	void RequestGizboMoveToCancel(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	
 	void SetupPlayerCamera();
 	void PostCameraBlend();

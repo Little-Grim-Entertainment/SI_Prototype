@@ -35,8 +35,8 @@ void AAoS_GizboController::ConfigurePerception()
 	//TODO: Play around with / discuss values with Jeff, Manuel etc.
 	if (SightConfig)
 	{
-		SightConfig->SightRadius = 5000.0f;
-		SightConfig->LoseSightRadius = SightConfig->SightRadius + 1000.0f;
+		SightConfig->SightRadius = 2000.0f;
+		SightConfig->LoseSightRadius = SightConfig->SightRadius + 500.0f;
 		SightConfig->PeripheralVisionAngleDegrees = 90.0f;
 		SightConfig->DetectionByAffiliation.bDetectEnemies = true;
 		SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
@@ -46,7 +46,7 @@ void AAoS_GizboController::ConfigurePerception()
 
 	if (HearingConfig)
 	{
-		HearingConfig->HearingRange = 5000.0f;
+		HearingConfig->HearingRange = 2000.0f;
 		HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 		HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 		HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
@@ -79,6 +79,7 @@ void AAoS_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus 
 						if (bCanFollow)
 						{
 							SetSeenTarget(Actor);
+							UpdateBehaviorTree();
 						}
 						break;
 					}
@@ -104,6 +105,7 @@ void AAoS_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus 
 						if (bCanMoveTo)
 						{
 							SetSeenTarget(Actor);
+							UpdateBehaviorTree();
 						}
 						break;
 					}
@@ -119,8 +121,6 @@ void AAoS_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus 
 					}
 			}
 		}
-
-		UpdateBehaviorTree();
 	}
 }
 
@@ -143,8 +143,7 @@ void AAoS_GizboController::ToggleFollow()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Follow Action Enabled")));
 		UE_LOG(LogAoSAI, Log, TEXT("%s : AoS_GizboController::ToggleFollow Follow Action Enabled"), *GetNameSafe(GetPawn()));
 	}
-
-	SetLostTarget();
+	
 	UpdateBehaviorTree();
 }
 
@@ -166,6 +165,22 @@ void AAoS_GizboController::ToggleMoveTo()
 		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_MovingToTarget);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: MoveTo Action Enabled")));
 		UE_LOG(LogAoSAI, Log, TEXT("%s : AoS_GizboController::ToggleMoveTo MoveTo Action Enabled"), *GetNameSafe(GetPawn()));
+	}
+	
+	UpdateBehaviorTree();
+}
+
+void AAoS_GizboController::ToggleWait()
+{
+	bCanFollow = false;
+	bCanMoveTo = false;
+
+	if (!PossessedNPC->IsDoingNothing())
+	{
+		// Make Gizbo wait for further action
+		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_Nothing);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Waiting Action Enabled")));
+		UE_LOG(LogAoSAI, Log, TEXT("%s : AoS_GizboController::ToggleWait Waiting Action Enabled"), *GetNameSafe(GetPawn()));
 	}
 
 	SetLostTarget();

@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Actors/MoveToIndicator.h"
+#include "Actors/AoS_MoveToIndicator.h"
 
 #include "AI/AoS_AIPerceptionStimuliSource.h"
 #include "Perception/AISense_Sight.h"
 
 // Sets default values
-AMoveToIndicator::AMoveToIndicator()
+AAoS_MoveToIndicator::AAoS_MoveToIndicator()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,26 +16,26 @@ AMoveToIndicator::AMoveToIndicator()
 }
 
 // Called when the game starts or when spawned
-void AMoveToIndicator::BeginPlay()
+void AAoS_MoveToIndicator::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-void AMoveToIndicator::SetPerceptionStimuliSource()
+void AAoS_MoveToIndicator::SetPerceptionStimuliSource()
 {
 	StimuliSource->RegisterSense(UAISense_Sight::StaticClass());
 }
 
 // Called every frame
-void AMoveToIndicator::Tick(float DeltaTime)
+void AAoS_MoveToIndicator::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
 // Called to bind functionality to input
-void AMoveToIndicator::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AAoS_MoveToIndicator::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 

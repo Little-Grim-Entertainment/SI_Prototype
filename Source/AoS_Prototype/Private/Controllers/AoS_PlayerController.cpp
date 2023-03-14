@@ -13,7 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
-#include "Actors/MoveToIndicator.h"
+#include "Actors/AoS_MoveToIndicator.h"
 #include "Cameras/AoS_PlayerCameraManager.h"
 #include "Characters/AoS_GizboManager.h"
 #include "Cinematics/AoS_CinematicsManager.h"
@@ -26,8 +26,7 @@
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UIManager.h"
-#include "Actors/MoveToIndicator.h"
-
+#include "Kismet/KismetMathLibrary.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
@@ -102,46 +101,88 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if(bObservationMode)
+	if (bObservationMode)
 	{
 		FHitResult HitResult;
 		ObservationStart = Nick->GetObservationCameraActor()->GetActorLocation();
 		ObservationEnd = Nick->GetObservationCameraActor()->GetActorLocation() + Nick->GetObservationCameraActor()->GetActorForwardVector() * ObservationDistance;
 		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECC_Visibility, FCollisionQueryParams(FName(TEXT("ObservationTrace")), true, this));
-		if(HitResult.GetActor())
+		
+		if (HitResult.GetActor())
 		{
 			AActor* HitActor = HitResult.GetActor();
 			const bool bObservable = HitActor->ActorHasTag(FName(TEXT("Observable")));
 			
-			if(bObservable && HitActor != ObservableActor)
+			if (bObservable && HitActor != ObservableActor)
 			{
 				ObservableActor = HitActor;
 				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("On"));
 			}
-			else if(!bObservable && ObservableActor)
+			else if (!bObservable && ObservableActor)
 			{
 				ObservableActor = nullptr;
 				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
 			}
 		}
-		else if(ObservableActor)
+		else if (ObservableActor)
 		{
 			ObservableActor = nullptr;
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
 		}
 	}
-	if(bMoveToMarker)
+	
+	UpdateMoveToIndicatorPosition();
+}
+
+bool AAoS_PlayerController::UpdateMoveToIndicatorPosition() const
+{
+	//TODO: Should this functionality be moved into the AoS_MoveToIndicator class?
+	if (bMoveToMarker)
 	{
 		FHitResult HitResult;
 		FVector Start = Nick->GetFollowCameraActor()->GetActorLocation();
 		FVector End = Nick->GetFollowCameraActor()->GetActorLocation() + Nick->GetFollowCameraActor()->GetActorForwardVector() * 10000;
 		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel2);
-		if(HitResult.GetActor())
+
+		//TODO: Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
+		if (HitResult.GetActor())
 		{
 			FVector HitLocation = HitResult.ImpactPoint;
-			MoveToActor->SetActorLocation(HitLocation);
+
+			// Check whether the 'Move To' indicator is within a specific radius
+			double Distance = (HitLocation - Nick->GetActorLocation()).Length();
+			
+			if (Distance < AdaptableActionMaximumRadius)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
+				return MoveToActor->SetActorLocation(HitLocation);
+			}
+
+			// Keep the 'Move To' actor confined to the bounds of a circle, with radius AdaptableActionMaximumRadius
+			// See https://gamedev.stackexchange.com/questions/9607/moving-an-object-in-a-circular-path and
+			// https://www.euclideanspace.com/maths/geometry/trig/inverse/index.htm and
+			// https://forums.unrealengine.com/t/how-to-get-an-angle-between-2-vectors/280850
+
+			//TODO: Requires further tuning, to make sure that the rotation is correct.
+			//When the 'MoveTo' actor currently hits the boundary, it causes the indicator to jump away from where it was previously aligned.
+			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Nick->GetFollowCameraActor()->GetActorLocation(), HitLocation);
+			double NickArcTan = atan2(Nick->GetFollowCameraActor()->GetActorLocation().Y, Nick->GetFollowCameraActor()->GetActorLocation().X);
+			double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
+			double Angle = MoveToArcTan - NickArcTan;
+				
+			float Cosine = cos(Angle);
+			float Sine = sin(Angle);
+				
+			HitLocation.X = Nick->GetActorLocation().X + Cosine * AdaptableActionMaximumRadius;
+			HitLocation.Y = Nick->GetActorLocation().Y + Sine * AdaptableActionMaximumRadius;
+			Distance = (HitLocation - Nick->GetActorLocation()).Length();
+				
+			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
+			return MoveToActor->SetActorLocation(HitLocation);
 		}
 	}
+
+	return bMoveToMarker;
 }
 
 void AAoS_PlayerController::PostInitializeComponents()
@@ -418,19 +459,32 @@ void AAoS_PlayerController::RequestGizboMoveToTemp()
 	{
 		MoveToActor = SpawnMoveToMarker();
 		bMoveToMarker = true;
+		GizboManager->GetGizboController()->ToggleWait();
 	}
 }
 
 void AAoS_PlayerController::RequestGizboMoveToConfirm()
 {
-	if(bMoveToMarker)
+	if (bMoveToMarker)
 	{
 		if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 		{
 			bMoveToMarker = false;
-			Cast<AMoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
+			Cast<AAoS_MoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
 			MoveToActor = nullptr;
 			GizboManager->GetGizboController()->ToggleMoveTo();
+
+			//TODO: Replace current marker, with a new one in the same location (in an attempt to bypass Perception woes)
+			/*FVector MarkerLocation = MoveToActor->GetActorLocation();
+			bMoveToMarker = false;
+			MoveToActor->Destroy();
+			MoveToActor = nullptr;
+
+			MoveToActor = SpawnMoveToMarker();
+			MoveToActor->SetActorLocation(MarkerLocation);
+			Cast<AAoS_MoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
+			MoveToActor = nullptr;
+			GizboManager->GetGizboController()->ToggleMoveTo();*/
 		}
 	}
 		
@@ -438,7 +492,7 @@ void AAoS_PlayerController::RequestGizboMoveToConfirm()
 
 void AAoS_PlayerController::RequestGizboMoveToCancel()
 {
-	if(bMoveToMarker)
+	if (bMoveToMarker)
 	{
 		bMoveToMarker = false;
 		MoveToActor->Destroy();
