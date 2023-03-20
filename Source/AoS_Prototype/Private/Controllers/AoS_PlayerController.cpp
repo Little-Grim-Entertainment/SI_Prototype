@@ -90,6 +90,8 @@ void AAoS_PlayerController::Tick(float DeltaSeconds)
 
 bool AAoS_PlayerController::UpdateMoveToIndicatorPosition() const
 {
+	if(!IsValid(Nick)) {return false;}
+	
 	//TODO: Should this functionality be moved into the AoS_MoveToIndicator class?
 	if (bMoveToMarker)
 	{
