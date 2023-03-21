@@ -100,13 +100,13 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	UMediaSoundComponent* GetMediaSoundComponent() const;
-	
+
 protected:
 	// Player Input Functions
-	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PostInitializeComponents() override;
+	virtual void SetupInputComponent() override;
 	
 	void RequestMoveForward(const FInputActionValue& ActionValue);
 	void RequestMoveRight(const FInputActionValue& ActionValue);

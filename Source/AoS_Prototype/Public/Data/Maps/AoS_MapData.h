@@ -45,7 +45,7 @@ public:
 	UAoS_CinematicDataAsset* OutroCinematic;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
-	FMusicSettings BackgroundMusicSettings;
+	FAoS_MusicSettings BackgroundMusicSettings;
 
 	
 	UFUNCTION()

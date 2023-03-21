@@ -14,6 +14,7 @@ class UAoS_CharacterData;
 class UAoS_LevelManager;
 class UAoS_HUD;
 class UAoS_SkipWidget;
+class UAoS_InputConfig;
 
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_GameMode : public AGameMode
@@ -34,7 +35,9 @@ public:
 	TSubclassOf<UAoS_MoviePlayerWidget> MoviePlayerWidget;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_SkipWidget> SkipWidget;
-	
+
+	UPROPERTY(EditAnywhere, Category = "InputConfig")
+	UAoS_InputConfig* InputConfig;
 	UPROPERTY(EditAnywhere, Category = "CharacterData")
 	UAoS_CharacterData* NickSpadeCDA;
 	UPROPERTY(EditAnywhere, Category = "CharacterData")

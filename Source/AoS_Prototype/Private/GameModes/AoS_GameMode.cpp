@@ -5,6 +5,7 @@
 
 #include "AoS_GameInstance.h"
 #include "Data/Characters/AoS_CharacterData.h"
+#include "Data/Input/AoS_InputConfig.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"

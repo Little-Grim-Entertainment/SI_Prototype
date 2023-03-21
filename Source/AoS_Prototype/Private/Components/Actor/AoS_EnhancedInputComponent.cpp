@@ -2,8 +2,8 @@
 
 
 #include "Components/Actor/AoS_EnhancedInputComponent.h"
-#include "InputAction.h"
 #include "InputMappingContext.h"
+#include "InputAction.h"
 
 UInputMappingContext* UAoS_EnhancedInputComponent::GetPlayerModeInputMappingContext(EPlayerMode InPlayerMode)
 {
@@ -14,6 +14,7 @@ UInputMappingContext* UAoS_EnhancedInputComponent::GetPlayerModeInputMappingCont
 			return CurrentPlayerModeMapping.MappingContext;
 		}
 	}
+	
 	return nullptr;
 }
 
@@ -40,3 +41,6 @@ UInputAction* UAoS_EnhancedInputComponent::GetAxisInput(FString InInputName)
 	}
 	return nullptr;
 }
+
+
+

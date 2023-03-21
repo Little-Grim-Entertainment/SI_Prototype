@@ -4,10 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
+#include "Data/Input/AoS_InputConfig.h"
+#include "AoS_Types.h"
+
 #include "AoS_EnhancedInputComponent.generated.h"
 
 enum class EPlayerMode : uint8;
 class UInputMappingContext;
+class UInputAction;
 
 USTRUCT(BlueprintType)
 struct FPlayerModeInputMapping
@@ -26,7 +30,6 @@ struct FPlayerModeInputMapping
 	TMap<FString, UInputAction*> AxisInputs;
 };
 
-
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_EnhancedInputComponent : public UEnhancedInputComponent
 {
@@ -43,5 +46,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs", meta=(TitleProperty="{AssociatedPlayerMode} Mapping"))
 	TArray<FPlayerModeInputMapping> PlayerModeInputMappings;
-	
+
+	template<class UserClass, typename FuncType>
+	void BindInputByTag(const UAoS_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent InTriggerEvent, UserClass* InObject, FuncType InFunc);
 };
+
+template <class UserClass, typename FuncType>
+void UAoS_EnhancedInputComponent::BindInputByTag(const UAoS_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent InTriggerEvent, UserClass* InObject, FuncType InFunc)
+{
+	check(InInputConfig);
+	const UInputAction* InputAction = InInputConfig->GetInputActionByTag(InInputTag);
+	if (InputAction != nullptr)
+	{
+		BindAction(InputAction, InTriggerEvent, InObject, InFunc);
+	}
+}

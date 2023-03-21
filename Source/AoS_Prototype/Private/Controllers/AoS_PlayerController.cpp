@@ -23,10 +23,13 @@
 #include "Dialogue/AoS_DialogueManager.h"
 #include "Dialogue/DialogueSession.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameModes/AoS_GameMode.h"
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UIManager.h"
+#include "Data/Input/AoS_InputConfig.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "AoS_NativeGameplayTagLibrary.h"
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
@@ -44,29 +47,31 @@ void AAoS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	// Enhanced Input System
-	
+	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());	
 	UAoS_EnhancedInputComponent* EnhancedInputComponent = Cast<UAoS_EnhancedInputComponent>(InputComponent);
-	if (!IsValid(EnhancedInputComponent)) {return;}
+	if (!IsValid(EnhancedInputComponent) || !IsValid(GameMode)) {return;}
 
+	const UAoS_InputConfig* InputConfig = GameMode->InputConfig;
+	if (!IsValid(InputConfig)) {return;}
+	
 	// Action Bindings
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("Interact"), ETriggerEvent::Started, this, &ThisClass::RequestInteract);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleSystemMenu"), ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("SkipCinematic"), ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("NextDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("PreviousDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ExitDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboFollowTemp"), ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboMoveToTemp"), ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("GizboMoveToConfirm"), ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToConfirm); 
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_ObserveObject, ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Media_Skip, ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToConfirm); 
 	
 	// Axis Bindings
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveForward"), ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveRight"),  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("TurnRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("LookUpRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Axis_1D_MoveRight,  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
 	
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (IsValid(GameInstance))

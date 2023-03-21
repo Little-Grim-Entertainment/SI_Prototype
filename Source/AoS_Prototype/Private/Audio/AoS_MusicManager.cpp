@@ -92,7 +92,7 @@ void UAoS_MusicManager::OnLevelUnloaded(UAoS_MapData* UnloadedLevel)
 }
 
 
-UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FMusicSettings InMusicSettings)
+UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FAoS_MusicSettings InMusicSettings)
 {
 	BackgroundMusic = UGameplayStatics::CreateSound2D(GameInstance, InMusicSettings.MetaSoundSource, InMusicSettings.VolumeMultiplier, InMusicSettings.PitchMultiplier, InMusicSettings.StartTime, nullptr, true);	
 
@@ -127,7 +127,7 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FMusicSettings InMusicSe
 	return nullptr;
 }
 
-UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(FMusicSettings InMusicSettings)
+UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(FAoS_MusicSettings InMusicSettings)
 {
 	BackgroundMusic = UGameplayStatics::CreateSound2D(GameInstance, InMusicSettings.MetaSoundSource, InMusicSettings.VolumeMultiplier, InMusicSettings.PitchMultiplier, InMusicSettings.StartTime, nullptr, true);
 

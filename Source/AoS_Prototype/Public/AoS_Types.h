@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "AoS_Types.generated.h"
 
 class USoundBase;
+class UInputAction;
 
 USTRUCT(BlueprintType)
-struct FMusicSettings
+struct FAoS_MusicSettings
 {
 	GENERATED_BODY()
 
@@ -34,4 +36,16 @@ struct FMusicSettings
 	float FadeInDuration = 5.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music", meta=(EditCondition="!bUseGlobalFadeSettings", EditConditionHides))
 	float FadeOutDuration = 5.0f;
+};
+
+USTRUCT(BlueprintType)
+struct FAoS_InputAction
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	const UInputAction* InputAction; 
+
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Input"))
+	FGameplayTag InputTag;
 };

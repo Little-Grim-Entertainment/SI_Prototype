@@ -34,9 +34,9 @@ public:
 	FOnBackgroundMusicPaused OnBackgroundMusicStopped;
 	
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayBackgroundMusic(FMusicSettings InMusicSettings);
+	UAudioComponent* PlayBackgroundMusic(FAoS_MusicSettings InMusicSettings);
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayBackgroundMusicLoopWithIntro(FMusicSettings InMusicSettings);
+	UAudioComponent* PlayBackgroundMusicLoopWithIntro(FAoS_MusicSettings InMusicSettings);
 	UFUNCTION(BlueprintCallable, Category = "Music")
 	void PauseMusicWithFade();
 	UFUNCTION(BlueprintCallable, Category = "Music")
@@ -60,7 +60,7 @@ protected:
 
 private:
 	
-	FMusicSettings CurrentMusicSettings;
+	FAoS_MusicSettings CurrentMusicSettings;
 	
 	UPROPERTY()
 	UAudioComponent* BackgroundMusic;
