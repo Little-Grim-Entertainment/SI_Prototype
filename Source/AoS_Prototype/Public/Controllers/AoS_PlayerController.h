@@ -95,8 +95,6 @@ public:
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
-	UFUNCTION(BlueprintNativeEvent)
-	void PostCameraSetup();
 	UFUNCTION(BlueprintImplementableEvent)
 	AActor* SpawnMoveToMarker();
 
@@ -129,9 +127,6 @@ protected:
 	void RequestGizboMoveToConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToCancel(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	
-	void SetupPlayerCamera();
-	void PostCameraBlend();
-
 	UFUNCTION()
 	void OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode);
 

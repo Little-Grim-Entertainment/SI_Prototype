@@ -78,64 +78,20 @@ void AAoS_PlayerController::SetupInputComponent()
 void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	OnCameraSetup.AddDynamic(this, &ThisClass::PostCameraSetup);
-	SetupPlayerCamera();
 }
 
-
-void AAoS_PlayerController::SetupPlayerCamera()
-{
-	Nick = Cast<AAoS_Nick>(GetPawn());
-	if (IsValid(Nick))
-	{
-		if (IsValid(Nick->GetFollowCameraActor()))
-		{
-			SetViewTarget(Nick->GetFollowCameraActor());
-			OnCameraSetup.Broadcast();
-		}
-	}
-}
 
 void AAoS_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	if (bObservationMode)
-	{
-		FHitResult HitResult;
-		ObservationStart = Nick->GetObservationCameraActor()->GetActorLocation();
-		ObservationEnd = Nick->GetObservationCameraActor()->GetActorLocation() + Nick->GetObservationCameraActor()->GetActorForwardVector() * ObservationDistance;
-		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECC_Visibility, FCollisionQueryParams(FName(TEXT("ObservationTrace")), true, this));
 		
-		if (HitResult.GetActor())
-		{
-			AActor* HitActor = HitResult.GetActor();
-			const bool bObservable = HitActor->ActorHasTag(FName(TEXT("Observable")));
-			
-			if (bObservable && HitActor != ObservableActor)
-			{
-				ObservableActor = HitActor;
-				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("On"));
-			}
-			else if (!bObservable && ObservableActor)
-			{
-				ObservableActor = nullptr;
-				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
-			}
-		}
-		else if (ObservableActor)
-		{
-			ObservableActor = nullptr;
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
-		}
-	}
-	
 	UpdateMoveToIndicatorPosition();
 }
 
 bool AAoS_PlayerController::UpdateMoveToIndicatorPosition() const
 {
+	if(!IsValid(Nick)) {return false;}
+	
 	//TODO: Should this functionality be moved into the AoS_MoveToIndicator class?
 	if (bMoveToMarker)
 	{
@@ -214,7 +170,6 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlaye
 		case EPlayerMode::PM_CinematicMode:
 		{
 			if (!IsValid(Nick)) {break;}
-			SetViewTargetWithBlend(Nick->GetFollowCamera()->GetChildActor());
 			break;
 		}
 		default:
@@ -309,8 +264,6 @@ void AAoS_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
 	
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-
-	
 }
 
 void AAoS_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue)
@@ -338,7 +291,7 @@ void AAoS_PlayerController::RequestInteract()
 
 void AAoS_PlayerController::RequestToggleObservation()
 {
-	bObservationMode = !bObservationMode;
+	/*bObservationMode = !bObservationMode;
 
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 
@@ -365,7 +318,7 @@ void AAoS_PlayerController::RequestToggleObservation()
 	}
 	Nick->HideMeshes(!bObservationMode);
 
-	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, this, &AAoS_PlayerController::PostCameraBlend, CameraTransitionTime, false);
+	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, this, &AAoS_PlayerController::PostCameraBlend, CameraTransitionTime, false);*/
 }
 
 void AAoS_PlayerController::RequestObserveObject()
@@ -500,17 +453,6 @@ void AAoS_PlayerController::RequestGizboMoveToCancel()
 	}
 }
 
-void AAoS_PlayerController::PostCameraBlend()
-{
-	Nick->bUseControllerRotationPitch = bObservationMode;
-	Nick->bUseControllerRotationYaw = bObservationMode;
-
-	SetControlRotation(FRotator(0, Nick->GetActorRotation().Yaw, 0));
-	Nick->SetActorRotation(FRotator(0., Nick->GetActorRotation().Yaw, 0));
-	
-	EnableInput(this);
-}
-
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
 {
 	bPlayerCanMove = !bLockMovement;
@@ -525,11 +467,6 @@ void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 {
 	ObservableActor = InObservableActor;
-}
-
-void AAoS_PlayerController::PostCameraSetup_Implementation()
-{
-	
 }
 
 UMediaSoundComponent* AAoS_PlayerController::GetMediaSoundComponent() const

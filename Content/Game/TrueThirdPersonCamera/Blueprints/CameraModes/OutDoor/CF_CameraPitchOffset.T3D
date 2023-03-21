@@ -1,0 +1,8 @@
+Begin Object Class=/Script/Engine.CurveFloat Name="CF_CameraPitchOffset"
+   Begin Object Class=/Script/Engine.AssetImportData Name="AssetImportData"
+   End Object
+   Begin Object Name="AssetImportData"
+   End Object
+   FloatCurve=(Keys=((Time=-22.500000,Value=-16.875000),(Time=22.500000,Value=16.875000)))
+   AssetImportData=AssetImportData'"AssetImportData"'
+End Object

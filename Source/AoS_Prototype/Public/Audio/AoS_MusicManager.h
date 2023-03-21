@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AoS_GlobalStructs.h"
+#include "AoS_Types.h"
 #include "Subsystems/AoS_WorldSubsystem.h"
 #include "AoS_MusicManager.generated.h"
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AoS_GlobalStructs.generated.h"
+#include "AoS_Types.generated.h"
 
 class USoundBase;
 
