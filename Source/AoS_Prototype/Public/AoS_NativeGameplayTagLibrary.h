@@ -12,18 +12,15 @@ namespace AoS_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Game_State_Playing);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Game_State_Paused);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Game_State_Loading);
-<<<<<<< Updated upstream
-	
+
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_State_Exploration);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_State_Observation);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_State_Menu);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_State_Media);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_State_Dialogue);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_State_Interrogation);
-	
-=======
 
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_Mode);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_Mode_Exploration);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Player_Mode_Observation);
@@ -51,7 +48,6 @@ namespace AoS_NativeGameplayTagLibrary
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Menu);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Menu_Type);
->>>>>>> Stashed changes
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Menu_Type_Main);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Menu_Type_System);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Menu_Type_Game);
