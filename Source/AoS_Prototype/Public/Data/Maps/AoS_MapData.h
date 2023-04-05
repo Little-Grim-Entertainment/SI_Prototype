@@ -5,21 +5,12 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "AoS_Types.h"
+#include "GameplayTagContainer.h"
 #include "AoS_MapData.generated.h"
 
 class UAoS_MusicManager;
 class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
-
-UENUM(BlueprintType)
-enum class EMapType : uint8
-{
-	MT_Persistent	UMETA(DisplayName = "Persistent"),
-	MT_Menu			UMETA(DisplayName = "Menu"),
-	MT_Interior     UMETA(DisplayName = "Interior"),
-	MT_Exterior     UMETA(DisplayName = "Exterior"),
-	MT_None			UMETA(DisplayName = "NONE")
-};
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_MapData : public UDataAsset
@@ -30,23 +21,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
 	FString MapName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
-	EMapType MapType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails", meta=(Categories = "Map"))
+	FGameplayTag MapTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails", meta=(Categories = "Map.Type"))
+	FGameplayTag MapType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
 	TSoftObjectPtr<UWorld> Map;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
-	UAoS_VideoDataAsset* IntroVideo;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
-	UAoS_VideoDataAsset* OutroVideo;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
-	UAoS_CinematicDataAsset* IntroCinematic;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Media")
-	UAoS_CinematicDataAsset* OutroCinematic;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
 	FAoS_MusicSettings BackgroundMusicSettings;
-
 	
 	UFUNCTION()
 	void SetStreamingLevelRef(ULevelStreaming* StreamingLevelToSet);

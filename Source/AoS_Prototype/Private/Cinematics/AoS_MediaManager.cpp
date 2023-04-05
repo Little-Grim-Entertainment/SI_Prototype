@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Cinematics/AoS_CinematicsManager.h"
+#include "Media/AoS_MediaManager.h"
 
 #include "AoS_GameInstance.h"
+#include "GameplayTagContainer.h"
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
@@ -13,20 +14,49 @@
 #include "MediaAssets/Public/MediaPlayer.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
-#include "Data/Media/AoS_WatchedMedia.h"
 
-
-void UAoS_CinematicsManager::OnGameModeBeginPlay()
+void UAoS_MediaManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
-
 	
 }
 
-void UAoS_CinematicsManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay)
+void UAoS_MediaManager::PlayMedia(UAoS_MediaDataAsset* InMediaToPlay, FAoS_MediaSettings& InMediaSettings)
+{
+	UAoS_CinematicDataAsset* CinematicDataAsset = Cast<UAoS_CinematicDataAsset>(InMediaToPlay);
+		
+	if (IsValid(CinematicDataAsset))
+	{
+		if (FAoS_CinematicSettings* CinematicSettings = static_cast<FAoS_CinematicSettings*>(&InMediaSettings))
+		{
+			PlayCinematic(CinematicDataAsset, *CinematicSettings);
+		}
+		else
+		{
+			PlayCinematic(CinematicDataAsset);
+		}
+		return;
+	}
+
+	UAoS_VideoDataAsset* VideoDataAsset = Cast<UAoS_VideoDataAsset>(InMediaToPlay);
+	
+	if (IsValid(VideoDataAsset))
+	{
+		if (const FAoS_VideoSettings* VideoSettings = static_cast<FAoS_VideoSettings*>(&InMediaSettings))
+		{
+			PlayVideo(VideoDataAsset, *VideoSettings);
+		}
+		else
+		{
+			PlayVideo(VideoDataAsset);
+		}
+	}
+}
+
+void UAoS_MediaManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay, FAoS_CinematicSettings InCinematicSettings)
 {
 	if (!IsValid(InCinematicToPlay)) {return;}
-	if (InCinematicToPlay->GetMediaHasPlayed() && !InCinematicToPlay->bCanRepeat) {return;}
+	if (HasMediaPlayed(InCinematicToPlay) && !InCinematicToPlay->bCanRepeat) {return;}
 	
 	InCinematicToPlay->CinematicPlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(this, InCinematicToPlay->LevelSequence, InCinematicToPlay->PlaybackSettings, InCinematicToPlay->LevelSequenceActor);
 	LoadedCinematic = InCinematicToPlay;
@@ -35,33 +65,38 @@ void UAoS_CinematicsManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicT
 
 	if (!GameInstance->GetLevelManager()->GetLevelHasLoaded())
 	{
+		if (DelayedCinematicDelegate.IsBound()){DelayedCinematicDelegate.Unbind();}
+		
+		DelayedCinematicDelegate.BindUObject(this, &ThisClass::PlayCinematic, InCinematicToPlay, InCinematicSettings);
 		GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedCinematicPlay);
 		return;
 	}
 
 	LoadedCinematic->CinematicPlayer->OnFinished.AddDynamic(this, &ThisClass::OnCinematicEnded);
 	LoadedCinematic->CinematicPlayer->OnPause.AddDynamic(this, &ThisClass::OnCinematicSkipped);
-
-	LoadedCinematic->StartMedia();
+	LoadedCinematic->CinematicPlayer->Play();
 	
 	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
 	OnCinematicBeginPlay.Broadcast(LoadedCinematic);
 }
 
-void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat, float InVolume)
+void UAoS_MediaManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, FAoS_VideoSettings InVideoSettings)
 {
 	if (!IsValid(InVideoToPlay)){return;}
-	if (InVideoToPlay->GetMediaHasPlayed() && !bShouldRepeat) {return;}
+	if (HasMediaPlayed(InVideoToPlay) && !InVideoSettings.bShouldRepeat) {return;}
 	
 	LoadedVideo = InVideoToPlay;
 
 	if (!IsValid(GameInstance) || !IsValid(LoadedVideo)){return;}
 
-	LoadedVideo->bCanRepeat = bShouldRepeat;
-	LoadedVideo->MediaPlayer->SetNativeVolume(InVolume);
+	LoadedVideo->bCanRepeat = InVideoSettings.bShouldRepeat;
+	LoadedVideo->MediaPlayer->SetNativeVolume(InVideoSettings.Volume);
 	
 	if (!GameInstance->GetLevelManager()->GetLevelHasLoaded())
 	{
+		if (DelayedVideoDelegate.IsBound()){DelayedVideoDelegate.Unbind();}
+		
+		DelayedVideoDelegate.BindUObject(this, &ThisClass::PlayVideo, InVideoToPlay, InVideoSettings);
 		GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedVideoPlay);
 		return;
 	}
@@ -76,134 +111,152 @@ void UAoS_CinematicsManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool 
 	{
 		PlayerController->GetMediaSoundComponent()->SetMediaPlayer(LoadedVideo->MediaPlayer);
 	}
-	
-	LoadedVideo->OnVideoEnded.AddDynamic(this, &ThisClass::UAoS_CinematicsManager::OnVideoEnded);
-	LoadedVideo->OnVideoSkipped.AddDynamic(this, &ThisClass::UAoS_CinematicsManager::OnVideoSkipped);
+
+	LoadedVideo->MediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::UAoS_MediaManager::OnVideoEnded);
+	LoadedVideo->MediaPlayer->OnMediaClosed.AddDynamic(this, &ThisClass::UAoS_MediaManager::OnVideoSkipped);
 
 	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_VideoMode);
 
 	// Note: Playing the actual video file happens in the widget blueprint
-	LoadedVideo->StartMedia();
+	LoadedVideo->MediaPlayer->Play();
 	OnVideoBeginPlay.Broadcast(LoadedVideo);
 }
 
-void UAoS_CinematicsManager::ResetCinematicByName(FString InCinematicName)
+void UAoS_MediaManager::SkipMedia(UAoS_MediaDataAsset* InMediaToSkip)
+{
+	if(const UAoS_CinematicDataAsset* CinematicDataAsset = Cast<UAoS_CinematicDataAsset>(InMediaToSkip))
+	{
+		CinematicDataAsset->CinematicPlayer->Stop();
+	}
+	if(const UAoS_VideoDataAsset* VideoDataAsset = Cast<UAoS_VideoDataAsset>(InMediaToSkip))
+	{
+		VideoDataAsset->MediaPlayer->Close();
+	}
+}
+
+void UAoS_MediaManager::ResetCinematicByTag(FGameplayTag InCinematicTag)
 {
 	if (GetWatchedCinematics().Num() <= 0){return;}
-	for (UAoS_VideoDataAsset* CurrentVideo : GetWatchedVideos())
+	for (UAoS_CinematicDataAsset* CurrentCinematic : WatchedCinematics)
 	{
-		if(IsValid(CurrentVideo) && CurrentVideo->MediaName == InCinematicName)
+		if(IsValid(CurrentCinematic) && CurrentCinematic->MediaTag == InCinematicTag)
 		{
-			CurrentVideo->ResetMediaDefaults();
+			RemoveFromWatchedCinematics(CurrentCinematic);
 		}
 	}
 }
 
-void UAoS_CinematicsManager::ResetAllCinematics()
+void UAoS_MediaManager::ResetAllCinematics()
 {
 	if (GetWatchedCinematics().Num() <= 0){return;}
-	for (UAoS_CinematicDataAsset* CurrentCinematic : GetWatchedCinematics())
-	{
-		if (IsValid(CurrentCinematic))
-		{
-			CurrentCinematic->ResetMediaDefaults();
-		}
-	}
+
 	GetWatchedCinematics().Empty();
 }
 
-void UAoS_CinematicsManager::ResetVideoByName(FString InVideoName)
+void UAoS_MediaManager::ResetVideoByTag(FGameplayTag InVideoTag)
 {
 	if (GetWatchedVideos().Num() <= 0){return;}
 	for (UAoS_VideoDataAsset* CurrentVideo : GetWatchedVideos())
 	{
-		if(IsValid(CurrentVideo) && CurrentVideo->MediaName == InVideoName)
+		if(IsValid(CurrentVideo) && CurrentVideo->MediaTag == InVideoTag)
 		{
-			CurrentVideo->ResetMediaDefaults();
+			RemoveFromWatchedVideos(CurrentVideo);
 		}
 	}
 }
 
-void UAoS_CinematicsManager::ResetAllVideos()
+void UAoS_MediaManager::ResetAllVideos()
 {
 	if (GetWatchedVideos().Num() <= 0){return;}
-	for (UAoS_VideoDataAsset* CurrentVideo : GetWatchedVideos())
-	{
-		if (IsValid(CurrentVideo))
-		{
-			CurrentVideo->ResetMediaDefaults();
-		}
-	}
+
 	GetWatchedVideos().Empty();
 }
 
-void UAoS_CinematicsManager::LoadLevelOnVideoComplete(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+void UAoS_MediaManager::AddToWatchedVideos(UAoS_VideoDataAsset* InVideoToAdd)
 {
-	UAoS_LevelManager* LevelManager = GameInstance->GetLevelManager();
-	if (IsValid(LevelManager))
+	if (!InVideoToAdd) {return;}
+	
+	WatchedVideos.AddUnique(InVideoToAdd);
+}
+
+void UAoS_MediaManager::AddToWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToAdd)
+{
+	if (!InCinematicToAdd) {return;}
+	
+	WatchedCinematics.AddUnique(InCinematicToAdd);
+}
+
+void UAoS_MediaManager::RemoveFromWatchedVideos(UAoS_VideoDataAsset* InVideoToRemove)
+{
+	if (!InVideoToRemove) {return;}
+
+	if (WatchedVideos.Contains(InVideoToRemove))
 	{
-		GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
-		DelayedLevelLoad.BindUObject(LevelManager, &UAoS_LevelManager::LoadLevel, InLevelToLoad, InPlayerStartTag, bAllowDelay, bShouldFade);
-		LoadedVideo->OnVideoEnded.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
-		LoadedVideo->OnVideoSkipped.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
+		WatchedVideos.Remove(InVideoToRemove);
 	}
 }
 
-void UAoS_CinematicsManager::LoadLevelOnCinematicComplete(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+void UAoS_MediaManager::RemoveFromWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToRemove)
 {
-	UAoS_LevelManager* LevelManager = GameInstance->GetLevelManager();
-	if (IsValid(LevelManager))
+	if (!InCinematicToRemove) {return;}
+
+	if (WatchedCinematics.Contains(InCinematicToRemove))
 	{
-		GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
-		DelayedLevelLoad.BindUObject(LevelManager, &UAoS_LevelManager::LoadLevel, InLevelToLoad, InPlayerStartTag, bAllowDelay, bShouldFade);
-		LoadedCinematic->OnCinematicEnded.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);
-		LoadedCinematic->OnCinematicSkipped.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);
+		WatchedCinematics.Remove(InCinematicToRemove);
 	}
 }
 
-TArray<UAoS_CinematicDataAsset*> UAoS_CinematicsManager::GetWatchedCinematics()
+bool UAoS_MediaManager::HasMediaPlayed(UAoS_MediaDataAsset* InMediaDataAsset)
 {
-	TArray<UAoS_CinematicDataAsset*> EmptyArray;
-	if (!IsValid(GameInstance) || !GameInstance->WatchedMediaData) {return EmptyArray;}
+	if (const UAoS_CinematicDataAsset* CinematicDataAsset = Cast<UAoS_CinematicDataAsset>(InMediaDataAsset))
+	{
+		for (const UAoS_CinematicDataAsset* CurrentWatchedCinematic : WatchedCinematics)
+		{
+			if (CurrentWatchedCinematic == CinematicDataAsset)
+			{
+				return true;
+			}
+		}
+	}
+	else if (const UAoS_VideoDataAsset* VideoDataAsset = Cast<UAoS_VideoDataAsset>(InMediaDataAsset))
+	{
+		for (const UAoS_VideoDataAsset* CurrentWatchedVideo : WatchedVideos)
+		{
+			if (CurrentWatchedVideo == VideoDataAsset)
+			{
+				return true;
+			}
+		}
+	}
 
-	return  GameInstance->WatchedMediaData->GetWatchedCinematics();
+	return false;
 }
 
-UAoS_CinematicDataAsset* UAoS_CinematicsManager::GetLoadedCinematic() const
+TArray<UAoS_CinematicDataAsset*> UAoS_MediaManager::GetWatchedCinematics()
+{
+	return WatchedCinematics;
+}
+
+UAoS_CinematicDataAsset* UAoS_MediaManager::GetLoadedCinematic() const
 {
 	return LoadedCinematic;
 }
 
-UAoS_VideoDataAsset* UAoS_CinematicsManager::GetLoadedVideo() const
+UAoS_VideoDataAsset* UAoS_MediaManager::GetLoadedVideo() const
 {
 	return LoadedVideo;
 }
 
-TArray<UAoS_VideoDataAsset*> UAoS_CinematicsManager::GetWatchedVideos()
+TArray<UAoS_VideoDataAsset*> UAoS_MediaManager::GetWatchedVideos()
 {
-	TArray<UAoS_VideoDataAsset*> EmptyArray;
-	if (!IsValid(GameInstance) || !GameInstance->WatchedMediaData) {return EmptyArray;}
-
-	return  GameInstance->WatchedMediaData->GetWatchedVideos();
+	return WatchedVideos;
 }
 
-void UAoS_CinematicsManager::ExecuteLoadLevelOnVideoComplete()
-{
-	DelayedLevelLoad.Execute();
-	DelayedLevelLoad.Unbind();
-}
-
-void UAoS_CinematicsManager::ExecuteLoadLevelOnCinematicComplete()
-{
-	DelayedLevelLoad.Execute();
-	DelayedLevelLoad.Unbind();
-}
-
-void UAoS_CinematicsManager::OnCinematicSkipped()
+void UAoS_MediaManager::OnCinematicSkipped()
 {
 	if(!IsValid(GameInstance)){return;}
 
-	GameInstance->WatchedMediaData->AddToWatchedCinematics(LoadedCinematic);
+	AddToWatchedCinematics(LoadedCinematic);
 	if(LoadedCinematic->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
@@ -215,11 +268,11 @@ void UAoS_CinematicsManager::OnCinematicSkipped()
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
-void UAoS_CinematicsManager::OnCinematicEnded()
+void UAoS_MediaManager::OnCinematicEnded()
 {
 	if(!IsValid(GameInstance)){return;}
 
-	GameInstance->WatchedMediaData->AddToWatchedCinematics(LoadedCinematic);
+	AddToWatchedCinematics(LoadedCinematic);
 	if (LoadedCinematic->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
@@ -231,25 +284,25 @@ void UAoS_CinematicsManager::OnCinematicEnded()
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
-void UAoS_CinematicsManager::DelayedCinematicPlay(UAoS_MapData* LoadedLevel, bool bShouldFade)
+void UAoS_MediaManager::DelayedCinematicPlay(UAoS_MapData* LoadedLevel, bool bShouldFade)
 {
 	if(!IsValid(LoadedCinematic)){return;}
 	
-	PlayCinematic(LoadedCinematic);
+	DelayedCinematicDelegate.Execute();
 }
 
-void UAoS_CinematicsManager::DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade)
+void UAoS_MediaManager::DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade)
 {
 	if(!IsValid(LoadedVideo)){return;}
 	
-	PlayVideo(LoadedVideo, LoadedVideo->bCanRepeat, LoadedVideo->MediaPlayer->NativeAudioOut);
+	PlayVideo(LoadedVideo);
 }
 
-void UAoS_CinematicsManager::OnVideoEnded()
+void UAoS_MediaManager::OnVideoEnded()
 {
 	if(!IsValid(GameInstance)){return;}
 
-	GameInstance->WatchedMediaData->AddToWatchedVideos(LoadedVideo);
+	AddToWatchedVideos(LoadedVideo);
 	if (LoadedVideo->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
@@ -261,11 +314,11 @@ void UAoS_CinematicsManager::OnVideoEnded()
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
 
-void UAoS_CinematicsManager::OnVideoSkipped()
+void UAoS_MediaManager::OnVideoSkipped()
 {
 	if(!IsValid(GameInstance)){return;}
 
-	GameInstance->WatchedMediaData->AddToWatchedVideos(LoadedVideo);
+	AddToWatchedVideos(LoadedVideo);
 	if(LoadedVideo->bIsOpeningMedia)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	

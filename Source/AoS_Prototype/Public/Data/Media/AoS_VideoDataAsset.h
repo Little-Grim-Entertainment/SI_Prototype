@@ -10,10 +10,6 @@ class UMediaTexture;
 class UMediaSource;
 class UMediaPlayer;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVideoStart);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVideoSkipped);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVideoEnd);
-
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_VideoDataAsset : public UAoS_MediaDataAsset
 {
@@ -27,24 +23,4 @@ public:
 	UMediaSource* MediaSource;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos")
 	UMediaTexture* MediaTexture;
-	
-
-	UPROPERTY(BlueprintAssignable, Category = "Videos")
-	FOnVideoStart OnVideoStarted;
-	UPROPERTY(BlueprintAssignable, Category = "Videos")
-	FOnVideoSkipped OnVideoSkipped;
-	UPROPERTY(BlueprintAssignable, Category = "Videos")
-	FOnVideoEnd OnVideoEnded;
-
-	virtual void StartMedia() override;
-	virtual void SkipMedia() override;
-
-protected:
-
-	virtual void ClearDelegates() override;
-
-private:
-
-	UFUNCTION()
-	void OnVideoEnd();
 };

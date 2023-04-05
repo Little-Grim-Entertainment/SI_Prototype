@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
+#include "AoS_Types.h"
 #include "AoS_LevelManager.generated.h"
 
-enum class EMapType : uint8;
-
+class UAoS_MediaDataAsset;
+class UAoS_CinematicDataAsset;
+class UAoS_VideoDataAsset;
 class UAoS_UIManager;
 class UAoS_MapData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBeginLevelLoad, UAoS_MapData*, LoadingLevel, bool, bShouldFade);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelLoaded, UAoS_MapData*, LoadedLevel, bool, bShouldFade);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, UAoS_MapData*, UnloadedLevel);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMapTypeChanged, EMapType, NewMapType);
-
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_LevelManager : public UAoS_GameInstanceSubsystem
@@ -34,31 +34,40 @@ public:
 	FOnLevelLoaded OnLevelLoaded;
 	UPROPERTY(BlueprintAssignable, Category = "Levels")
 	FOnLevelUnloaded OnLevelUnloaded;
-	UPROPERTY(BlueprintAssignable, Category = "MapData")
-	FOnMapTypeChanged OnMapTypeChanged;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevel(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelByTag(const FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	TArray<FString> GetMapNames();
-	UFUNCTION(BlueprintCallable, Category = "Levels")
-	UAoS_MapData* GetMapFromName(FString MapName);
-	UFUNCTION(BlueprintCallable, Category = "Levels")
-	EMapType GetCurrentMapType() const;
+	void LoadLevelOnMediaComplete(const FAoS_MapState& InLevelToLoad, UAoS_MediaDataAsset* InMediaToPlay, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+
+	void LoadLevelOnCinematicComplete(const FAoS_MapState& InLevelToLoad, const UAoS_CinematicDataAsset* InCinematicToPlay, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelOnVideoComplete(const FAoS_MapState& InLevelToLoad, const UAoS_VideoDataAsset* InVideoToPlay, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	
+	void ExecuteLoadLevelOnVideoComplete();
+	void ExecuteLoadLevelOnCinematicComplete();
+	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	UAoS_MapData* GetCurrentMap() const;
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	FString GetCurrentMapName() const;
-	UFUNCTION(BlueprintCallable, Category = "Levels")
 	bool GetLevelHasLoaded() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	FAoS_MapState& GetMapStateByTag(const FGameplayTag InMapTag);
+
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	const TArray<FAoS_MapState>& GetAllMapStates() const;
 	
-	UFUNCTION(BlueprintCallable)
-    void UpdateMapType(EMapType InMapType);
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	TArray<FString>& GetMapNames();
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	FAoS_MapState& GetMapStateFromName(FString InMapName);
 	
 	UFUNCTION()
 	void LevelLoaded();
 
-	UAoS_MapData* GetCurrentLoadedLevel() const {return CurrentLevel;}
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	FAoS_MapState& GetCurrentLoadedMapState() const;
 
 protected:
 	
@@ -66,28 +75,24 @@ protected:
 	virtual void OnGameModeBeginPlay() override;
 	virtual void OnPlayerStart() override;
 
+	virtual void InitializeMapStates();
+
 private:
 
 	bool bLevelHasLoaded = false;
 	bool bLoadShouldFade = false;
 
-	UPROPERTY()
-	UAoS_MapData* LevelToLoad;
-	UPROPERTY()
-	UAoS_MapData* CurrentLevel;
+	FAoS_MapState* LevelStateToLoad;
+	FAoS_MapState* LoadedMapState;
+
 	UPROPERTY()
 	UAoS_MapData* MainMenu;
-	UPROPERTY()
-	EMapType CurrentMapType;
 
+	TArray<FAoS_MapState> MapStates;
+	
 	FTimerHandle LoadDelayHandle;
 	FTimerDelegate LoadDelayDelegate;
 	
 	FTimerHandle UnloadDelayHandle;
 	FTimerHandle PersistentLevelLoadTimerHandle;
-
-	UFUNCTION()
-	void ExecuteDelayedLevelLoad();
-	
-	UAoS_MapData* GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel);
 };

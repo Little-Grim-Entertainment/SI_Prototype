@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/AoS_WorldSubsystem.h"
-#include "AoS_CinematicsManager.generated.h"
+#include "Media/AoS_MediaTypes.h"
+
+#include "AoS_MediaManager.generated.h"
 
 
+class UAoS_MediaDataAsset;
 class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
 class UAoS_MapData;
@@ -22,7 +25,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCinematicBeginPlay, UAoS_Cinemati
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCinematicEndPlay, UAoS_CinematicDataAsset*, EndedCinematic);
 
 UCLASS()
-class AOS_PROTOTYPE_API UAoS_CinematicsManager : public UAoS_WorldSubsystem
+class AOS_PROTOTYPE_API UAoS_MediaManager : public UAoS_WorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -36,28 +39,40 @@ public:
 	FOnCinematicBeginPlay OnCinematicBeginPlay;
 	UPROPERTY(BlueprintAssignable)
 	FOnCinematicEndPlay OnCinematicEndPlay;
-	
-	
-	UFUNCTION(BlueprintCallable)
-	void PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay);
-	UFUNCTION(BlueprintCallable)
-	void PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, bool bShouldRepeat = false, float InVolume = 1.0f);
 
 	UFUNCTION(BlueprintCallable)
-	void ResetCinematicByName(FString InCinematicName);
+	void PlayMedia(UAoS_MediaDataAsset* InMediaToPlay, FAoS_MediaSettings& InMediaSettings);
+	UFUNCTION(BlueprintCallable)
+	void PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay, FAoS_CinematicSettings InCinematicSettings = FAoS_CinematicSettings());
+	UFUNCTION(BlueprintCallable)
+	void PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, FAoS_VideoSettings InVideoSettings = FAoS_VideoSettings());
+
+	UFUNCTION(BlueprintCallable)
+	void SkipMedia(UAoS_MediaDataAsset* InMediaToSkip);
+	
+	UFUNCTION(BlueprintCallable)
+	void ResetCinematicByTag(FGameplayTag InCinematicTag);
 	UFUNCTION(BlueprintCallable)
 	void ResetAllCinematics();
 	
 	UFUNCTION(BlueprintCallable)
-	void ResetVideoByName(FString InVideoName);
+	void ResetVideoByTag(FGameplayTag InVideoTag);
 	UFUNCTION(BlueprintCallable)
 	void ResetAllVideos();
+	
+	UFUNCTION(BlueprintCallable, Category = "Videos")
+	void AddToWatchedVideos(UAoS_VideoDataAsset* InVideoToAdd);
+	UFUNCTION(BlueprintCallable, Category = "Cinematics")
+	void AddToWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToAdd);
+	
+	UFUNCTION(BlueprintCallable, Category = "Videos")
+	void RemoveFromWatchedVideos(UAoS_VideoDataAsset* InVideoToRemove);
+	UFUNCTION(BlueprintCallable, Category = "Cinematics")
+	void RemoveFromWatchedCinematics(UAoS_CinematicDataAsset* InCinematicToRemove);
 
-	UFUNCTION(BlueprintCallable)
-	void LoadLevelOnVideoComplete(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
-	UFUNCTION(BlueprintCallable)
-	void LoadLevelOnCinematicComplete(UAoS_MapData* InLevelToLoad, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
-
+	UFUNCTION(BlueprintPure)
+	bool HasMediaPlayed(UAoS_MediaDataAsset* InMediaDataAsset);
+	
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_CinematicDataAsset*> GetWatchedCinematics();
 	UFUNCTION(BlueprintPure)
@@ -87,13 +102,16 @@ private:
 	UAoS_CinematicDataAsset* LoadedCinematic;	
 	UPROPERTY()
 	UAoS_VideoDataAsset* LoadedVideo;
+	
+	UPROPERTY()
+	TArray<UAoS_VideoDataAsset*> WatchedVideos;
 
-	FSimpleDelegate DelayedLevelLoad;
+	UPROPERTY()
+	TArray<UAoS_CinematicDataAsset*> WatchedCinematics;
 
-	UFUNCTION()
-	void ExecuteLoadLevelOnVideoComplete();
-	UFUNCTION()
-	void ExecuteLoadLevelOnCinematicComplete();
+	FSimpleDelegate DelayedCinematicDelegate;
+	FSimpleDelegate DelayedVideoDelegate;
+
 	UFUNCTION()
 	void DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade);
 	UFUNCTION()

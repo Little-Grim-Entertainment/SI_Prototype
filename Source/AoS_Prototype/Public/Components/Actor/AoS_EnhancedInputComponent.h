@@ -38,9 +38,9 @@ class AOS_PROTOTYPE_API UAoS_EnhancedInputComponent : public UEnhancedInputCompo
 public:
 
 	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
-	UInputAction* GetActionInput(FString InInputName);
+	const UInputAction* GetActionInput(FString InInputName) const;
 	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
-	UInputAction* GetAxisInput(FString InInputName);
+	const UInputAction* GetAxisInput(FString InInputName) const;
 	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
 	UInputMappingContext* GetPlayerModeInputMappingContext(EPlayerMode InPlayerMode);
 
@@ -56,7 +56,7 @@ void UAoS_EnhancedInputComponent::BindInputByTag(const UAoS_InputConfig* InInput
 {
 	check(InInputConfig);
 	const UInputAction* InputAction = InInputConfig->GetInputActionByTag(InInputTag);
-	if (InputAction != nullptr)
+	if (IsValid(InputAction))
 	{
 		BindAction(InputAction, InTriggerEvent, InObject, InFunc);
 	}

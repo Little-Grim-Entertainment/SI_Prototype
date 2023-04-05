@@ -19,14 +19,64 @@ const UInputAction* UAoS_InputConfig::GetInputActionByTag(const FGameplayTag& In
 	{
 		for (FAoS_InputAction CurrentInputAction : CurrentInputActionArray)
 		{
-			if (CurrentInputAction.InputTag == InInputTag)
+			if (CurrentInputAction.GetInputTag() == InInputTag)
 			{
-				return CurrentInputAction.InputAction;
+				return CurrentInputAction.GetInputAction();
 			}
 		}
 	}
 
 	return nullptr;
+}
+
+const UInputMappingContext* UAoS_InputConfig::GetInputMappingByTag(const FGameplayTag& InAssociatedPlayerModeTag, const FGameplayTag& InSecondaryTag) const
+{
+	TArray<FAoS_InputMapping> MatchedMappings;
+
+	if (!InAssociatedPlayerModeTag.IsValid()) {return nullptr;}
+	
+	for (FAoS_InputMapping CurrentInputMapping: InputMappings)
+	{
+		if(CurrentInputMapping.GetAssociatedPlayerModeTag() == InAssociatedPlayerModeTag)
+		{
+			MatchedMappings.AddUnique(CurrentInputMapping);
+		}
+	}
+	
+	if (MatchedMappings.Num() > 1)
+	{
+		if (!InSecondaryTag.IsValid())
+		{
+			for (const FAoS_InputMapping CurrentInputMapping : MatchedMappings)
+			{
+				if(CurrentInputMapping.IsDefaultMappingForMode())
+				{
+					return CurrentInputMapping.GetInputMappingContext();
+				}
+			}
+		}
+		else
+		{
+			for (FAoS_InputMapping CurrentInputMapping : MatchedMappings)
+			{
+				if(CurrentInputMapping.GetSecondaryTag() == InSecondaryTag)
+				{
+					return CurrentInputMapping.GetInputMappingContext();
+				}
+			}
+		}
+	}
+	else if(MatchedMappings.Num() == 1)
+	{
+		return MatchedMappings[0].GetInputMappingContext();
+	}
+
+	return nullptr;
+}
+
+const TArray<FAoS_InputMapping>& UAoS_InputConfig::GetInputMappings()
+{
+	return InputMappings;
 }
 
 const TArray<FAoS_InputAction>& UAoS_InputConfig::GetBasicInputActions()

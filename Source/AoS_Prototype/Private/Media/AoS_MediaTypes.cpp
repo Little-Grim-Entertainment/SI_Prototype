@@ -3,11 +3,8 @@
 
 #include "Media/AoS_MediaTypes.h"
 
-
-AoS_MediaTypes::AoS_MediaTypes()
-{
-}
-
-AoS_MediaTypes::~AoS_MediaTypes()
+FAoS_VideoSettings::FAoS_VideoSettings(bool bInShouldRepeat, float InVolume) :
+	bShouldRepeat(bInShouldRepeat),
+	Volume(InVolume)
 {
 }

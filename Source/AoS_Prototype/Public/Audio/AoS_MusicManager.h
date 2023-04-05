@@ -32,6 +32,9 @@ public:
 	FOnBackgroundMusicPaused OnBackgroundMusicPaused;
 	UPROPERTY(BlueprintAssignable)
 	FOnBackgroundMusicPaused OnBackgroundMusicStopped;
+
+	UFUNCTION(BlueprintCallable, Category = "Music")
+	UAudioComponent* PlayLevelBackgroundMusic(FAoS_MapState& InMapState);
 	
 	UFUNCTION(BlueprintCallable, Category = "Music")
 	UAudioComponent* PlayBackgroundMusic(FAoS_MusicSettings InMusicSettings);

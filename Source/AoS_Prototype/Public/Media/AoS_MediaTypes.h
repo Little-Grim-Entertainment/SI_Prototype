@@ -3,13 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AoS_MediaTypes.generated.h"
 
-/**
- * 
- */
-class AOS_PROTOTYPE_API AoS_MediaTypes
+USTRUCT(BlueprintType)
+struct FAoS_MediaSettings
 {
-public:
-	AoS_MediaTypes();
-	~AoS_MediaTypes();
+	GENERATED_BODY()
+	
+	FAoS_MediaSettings() {}
+};
+
+USTRUCT(BlueprintType)
+struct FAoS_VideoSettings : public FAoS_MediaSettings
+{
+	GENERATED_BODY()
+
+	FAoS_VideoSettings(bool bInShouldRepeat = false, float InVolume = 1.0f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bShouldRepeat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Volume;
+};
+
+USTRUCT(BlueprintType)
+struct FAoS_CinematicSettings : public FAoS_MediaSettings
+{
+	GENERATED_BODY()
+
+	FAoS_CinematicSettings() {}
 };
