@@ -12,13 +12,13 @@ namespace AoS_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Game_State_Loading, "Game.State.Loading")
 
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player, "Player")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_Mode, "Player.Mode")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_Mode_Exploration, "Player.Mode.Exploration")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_Mode_Observation, "Player.Mode.Observation")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_Mode_Menu, "Player.Mode.Menu")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_Mode_Media, "Player.Mode.Media")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_Mode_Dialogue, "Player.Mode.Dialogue")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_Mode_Interrogation, "Player.Mode.Interrogation")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State, "Player.State")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Exploration, "Player.State.Exploration")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Observation, "Player.State.Observation")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Menu, "Player.State.Menu")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Media, "Player.State.Media")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Dialogue, "Player.State.Dialogue")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Interrogation, "Player.State.Interrogation")
 
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Input, "Input")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Input_Action, "Input.Action")
@@ -46,7 +46,7 @@ namespace AoS_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type_System, "UI.Menu.Type.System")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type_Game, "UI.Menu.Type.Game")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type_Vendor, "UI.Menu.Type.Vendor")
-	
+
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media, "Media")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Type, "Media.Type")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Type_Cinematic, "Media.Type.Cinematic")
