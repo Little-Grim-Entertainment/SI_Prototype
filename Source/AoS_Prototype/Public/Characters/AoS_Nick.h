@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/AoS_Character.h"
+#include "AoS_Types.h"
 #include "AoS_Nick.generated.h"
 
 class UATPCCameraComponent;

@@ -6,7 +6,7 @@
 
 // Subsystems
 #include "Data/Cases/AoS_CaseManager.h"
-#include "Cinematics/AoS_CinematicsManager.h"
+#include "Media/AoS_MediaManager.h"
 
 // Case Data
 #include "Data/Cases/AoS_Case.h"
@@ -42,7 +42,7 @@ static TAutoConsoleVariable<int32> CvarDisableTitleCard(
 
 UAoS_UIManager::UAoS_UIManager()
 {
-
+	
 }
 
 void UAoS_UIManager::OnGameInstanceInit()
@@ -230,12 +230,12 @@ void UAoS_UIManager::CreateMoviePlayerWidget()
 	MoviePlayerWidget =	CreateWidget<UAoS_MoviePlayerWidget>(GameInstance, GameInstance->GetGameMode()->MoviePlayerWidget);
 	if (IsValid(MoviePlayerWidget))
 	{
-		const UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
-		if (IsValid(CinematicsManager) && IsValid(CinematicsManager->GetLoadedVideo()))
+		const UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>();
+		if (IsValid(MediaManager) && IsValid(MediaManager->GetLoadedVideo()))
 		{
-			MoviePlayerWidget->SetMediaTexture(CinematicsManager->GetLoadedVideo()->MediaTexture);
-			MoviePlayerWidget->SetMediaPlayer(CinematicsManager->GetLoadedVideo()->MediaPlayer);
-			MoviePlayerWidget->SetMediaSource(CinematicsManager->GetLoadedVideo()->MediaSource);
+			MoviePlayerWidget->SetMediaTexture(MediaManager->GetLoadedVideo()->MediaTexture);
+			MoviePlayerWidget->SetMediaPlayer(MediaManager->GetLoadedVideo()->MediaPlayer);
+			MoviePlayerWidget->SetMediaSource(MediaManager->GetLoadedVideo()->MediaSource);
 			MoviePlayerWidget->AddToViewport();
 			MoviePlayerWidget->PlayVideo();
 		}
@@ -416,18 +416,19 @@ void UAoS_UIManager::RemoveActiveInteractionWidget(UAoS_InteractionWidget* InInt
 
 void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 {
-	if (!IsValid(GameInstance)){return;}
+	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());
+	if (!IsValid(GameMode)){return;}
 	
 	if (bShouldDisplay)
 	{
-		if (GameInstance->LoadingScreens.Num() > 0)
+		if (GameMode->LoadingScreens.Num() > 0)
 		{
-			const int32 RandNumb = FMath::RandRange(0, GameInstance->LoadingScreens.Num() - 1);
-			if (const TSubclassOf<UAoS_UserWidget> SelectedLoadingScreen = GameInstance->LoadingScreens[RandNumb])
+			const int32 RandNumb = FMath::RandRange(0, GameMode->LoadingScreens.Num() - 1);
+			if (const TSubclassOf<UAoS_UserWidget> SelectedLoadingScreen = GameMode->LoadingScreens[RandNumb])
 			{
 				LoadingScreen = Cast<UAoS_UserWidget>(CreateWidget(GetWorld()->GetFirstPlayerController(), SelectedLoadingScreen));
 				
-				if (IsValid(LoadingScreen))
+				if (IsValid(LoadingScreen) && IsValid(GameInstance))
 				{
 					GameInstance->GetGameViewportClient()->AddViewportWidgetContent(LoadingScreen->TakeWidget());
 					SetMenuMode(false, LoadingScreen);

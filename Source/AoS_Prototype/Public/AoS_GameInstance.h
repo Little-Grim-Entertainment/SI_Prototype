@@ -75,14 +75,6 @@ public:
 	FOnGameModeBeginPlay OnGameModeBeginPlay;
 	UPROPERTY(BlueprintAssignable, Category = "MapData")
 	FOnInitGame OnInitGame;
-
-	UPROPERTY(EditAnywhere, Category = "Loading")
-	TArray<TSubclassOf<UAoS_UserWidget>> LoadingScreens;
-
-	UPROPERTY(EditAnywhere, Category = "Levels")
-	UAoS_MapList* MapList;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Media")
-	UAoS_WatchedMedia* WatchedMediaData;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
 	float TimeModifier = 10.0f;

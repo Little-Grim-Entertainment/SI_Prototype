@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
 #include "AoS_Objective.generated.h"
 
@@ -21,7 +22,7 @@ struct FLevelMediaAssignment
 	bool bHasCinematics;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
-	UAoS_MapData* AssociatedLevel;
+	FGameplayTag AssociatedLevelTag;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos", meta=(EditCondition="bHasVideos", EditConditionHides))
 	UAoS_VideoDataAsset* IntroVideo;

@@ -6,8 +6,6 @@
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_WorldManager.generated.h"
 
-enum class EMapType : uint8;
-
 class AAoS_SunLight;
 class AAoS_SkySphere;
 class UAoS_MapData;
@@ -81,8 +79,6 @@ public:
 
 	UFUNCTION()
 	void SetSkySphere(AAoS_SkySphere* SkySphereToSet);
-	UFUNCTION()
-	void OnMapTypeChange(EMapType InMapType);
 	UFUNCTION()
 	void OnLevelFinishLoad(UAoS_MapData* LoadedLevel, bool bShouldFade);
 
