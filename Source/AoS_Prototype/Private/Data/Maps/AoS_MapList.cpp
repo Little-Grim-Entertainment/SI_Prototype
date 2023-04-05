@@ -11,35 +11,22 @@ UAoS_MapList::UAoS_MapList()
 TArray<UAoS_MapData*> UAoS_MapList::GetAllMaps()
 {
 	TArray<UAoS_MapData*> AllMaps;
-	if (!MenuMaps.IsEmpty())
+	for (UAoS_MapData* CurrentMap : MenuMaps)
 	{
-		for (UAoS_MapData* CurrentMap : MenuMaps)
-		{
-			AllMaps.AddUnique(CurrentMap);
-		}	
+		AllMaps.AddUnique(CurrentMap);
 	}
-	if (!NovaLuxDistrictInteriorMaps.IsEmpty())
+	for (UAoS_MapData* CurrentMap : NovaLuxDistrictInteriorMaps)
 	{
-		for (UAoS_MapData* CurrentMap : NovaLuxDistrictInteriorMaps)
-		{
-			AllMaps.AddUnique(CurrentMap);
-		}
+		AllMaps.AddUnique(CurrentMap);
 	}
-	if (!NovaLuxDistrictExteriorMaps.IsEmpty())
+	for (UAoS_MapData* CurrentMap : NovaLuxDistrictExteriorMaps)
 	{
-		for (UAoS_MapData* CurrentMap : NovaLuxDistrictExteriorMaps)
-		{
-			AllMaps.AddUnique(CurrentMap);
-		}
+		AllMaps.AddUnique(CurrentMap);
 	}
-	if (!TestMaps.IsEmpty())
+	for (UAoS_MapData* CurrentMap : TestMaps)
 	{
-		for (UAoS_MapData* CurrentMap : TestMaps)
-		{
-			AllMaps.AddUnique(CurrentMap);
-		}
+		AllMaps.AddUnique(CurrentMap);
 	}
-	
 	return AllMaps;
 }
 

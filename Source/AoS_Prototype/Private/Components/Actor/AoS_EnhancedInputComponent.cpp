@@ -7,7 +7,7 @@
 
 UInputMappingContext* UAoS_EnhancedInputComponent::GetPlayerModeInputMappingContext(EPlayerMode InPlayerMode)
 {
-	for (const FPlayerModeInputMapping CurrentPlayerModeMapping : PlayerModeInputMappings)
+	for (FPlayerModeInputMapping CurrentPlayerModeMapping : PlayerModeInputMappings)
 	{
 		if (InPlayerMode == CurrentPlayerModeMapping.AssociatedPlayerMode)
 		{
@@ -17,7 +17,7 @@ UInputMappingContext* UAoS_EnhancedInputComponent::GetPlayerModeInputMappingCont
 	return nullptr;
 }
 
-const UInputAction* UAoS_EnhancedInputComponent::GetActionInput(FString InInputName) const
+UInputAction* UAoS_EnhancedInputComponent::GetActionInput(FString InInputName)
 {
 	for (FPlayerModeInputMapping CurrentMapping : PlayerModeInputMappings)
 	{
@@ -29,7 +29,7 @@ const UInputAction* UAoS_EnhancedInputComponent::GetActionInput(FString InInputN
 	return nullptr;
 }
 
-const UInputAction* UAoS_EnhancedInputComponent::GetAxisInput(FString InInputName) const
+UInputAction* UAoS_EnhancedInputComponent::GetAxisInput(FString InInputName)
 {
 	for (FPlayerModeInputMapping CurrentMapping : PlayerModeInputMappings)
 	{

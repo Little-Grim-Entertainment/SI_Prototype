@@ -16,7 +16,7 @@
 #include "Actors/AoS_MoveToIndicator.h"
 #include "Cameras/AoS_PlayerCameraManager.h"
 #include "Characters/AoS_GizboManager.h"
-#include "Media/AoS_MediaManager.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 #include "Controllers/AoS_GizboController.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
@@ -27,8 +27,6 @@
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UIManager.h"
 #include "Kismet/KismetMathLibrary.h"
-
-using namespace AoS_NativeGameplayTagLibrary;
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
@@ -69,23 +67,6 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveRight"),  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("TurnRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("LookUpRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_ObserveObject, ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Media_Skip, ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToConfirm); 
-	
-	// Axis Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Axis_1D_MoveRight,  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
 	
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (IsValid(GameInstance))
@@ -353,15 +334,15 @@ void AAoS_PlayerController::RequestObserveObject()
 
 void AAoS_PlayerController::RequestSkipCinematic()
 {
-	if (UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>())
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		if (IsValid(MediaManager->GetLoadedVideo()))
+		if (IsValid(CinematicsManager->GetLoadedVideo()))
 		{
-			MediaManager->SkipMedia(MediaManager->GetLoadedVideo());	
+			CinematicsManager->GetLoadedVideo()->SkipMedia();	
 		}
-		else if (IsValid(MediaManager->GetLoadedCinematic()))
+		else if (IsValid(CinematicsManager->GetLoadedCinematic()))
 		{
-			MediaManager->SkipMedia(MediaManager->GetLoadedCinematic());
+			CinematicsManager->GetLoadedCinematic()->SkipMedia();
 		}
 	}
 	

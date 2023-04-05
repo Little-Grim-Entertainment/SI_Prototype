@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Actors/AoS_InteractableActor.h"
 #include "AoS_LevelTransition.generated.h"
 
@@ -25,8 +24,8 @@ public:
 
 	AAoS_LevelTransition();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels", meta =(Categories = "Map.Title"))
-	FGameplayTag MapToLoadTag;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
+	UAoS_MapData* MapToLoad;
 	
 protected:
 

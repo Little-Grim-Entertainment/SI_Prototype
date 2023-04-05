@@ -3,24 +3,15 @@
 
 #include "Levels/AoS_LevelManager.h"
 #include "AoS_GameInstance.h"
-#include "LevelSequencePlayer.h"
-#include "Levels/AoS_MapGameplayTagLibrary.h"
 #include "Characters/AoS_GizboManager.h"
-#include "Media/AoS_MediaManager.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 #include "Controllers/AoS_PlayerController.h"
 #include "Data/Maps/AoS_MapList.h"
-#include "Data/Media/AoS_VideoDataAsset.h"
-#include "Data/Media/AoS_MediaDataAsset.h"
-#include "GameModes/AoS_GameMode.h"
 #include "Data/Maps/AoS_MapData.h"
-#include "Data/Media/AoS_CinematicDataAsset.h"
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
-#include "MediaPlayer.h"
 
-
-using namespace AoS_MapGameplayTagLibrary;
 
 UAoS_LevelManager::UAoS_LevelManager()
 {
@@ -32,9 +23,17 @@ void UAoS_LevelManager::OnInitGame()
 {
 	Super::OnInitGame();
 
-	// MainMenu has been loaded at this point
+	UWorld* World = GetWorld();
+	if (!World){return;}
 	
-	InitializeMapStates();
+	FString MapName = World->GetName();
+	MapName = UKismetStringLibrary::Replace(MapName, "M_", "DA_");
+	UAoS_MapData* StartingMap = GetMapFromName(MapName);
+	
+	if (IsValid(StartingMap))
+	{
+		LevelToLoad = StartingMap;
+	}
 }
 
 void UAoS_LevelManager::OnGameModeBeginPlay()
@@ -48,46 +47,30 @@ void UAoS_LevelManager::OnPlayerStart()
 {
 	Super::OnPlayerStart();
 
-	const AAoS_PlayerController* PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+	AAoS_PlayerController* PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (IsValid(PlayerController))
 	{
 		PlayerController->PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
 	}
 }
 
-void UAoS_LevelManager::InitializeMapStates()
+void UAoS_LevelManager::LoadLevel(UAoS_MapData* InLevelToLoad,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
-	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());
-	if (!IsValid(GameMode)) {return;}
-	if (!IsValid(GameMode->MapList)) {return;}
-	
-	TArray<UAoS_MapData*> AllMaps = GameMode->MapList->GetAllMaps();
-	
-	for (UAoS_MapData* CurrentMapData : AllMaps)
-	{
-		if (!IsValid(CurrentMapData)) {continue;}
-
-		MapStates.Add(FAoS_MapState(CurrentMapData));
-	}
-}
-
-void UAoS_LevelManager::LoadLevelByTag(const FGameplayTag InLevelToLoadTag,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
-{
-	FAoS_MapState& MapStateToLoad = GetMapStateByTag(InLevelToLoadTag);
-	
-	if (!MapStateToLoad.GetMapData()) {return;}
+	if (!InLevelToLoad) {return;}
 	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
-
-	UAoS_MediaManager* MediaManager =  GetWorld()->GetSubsystem<UAoS_MediaManager>();
-	if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
+	
+	if (CurrentLevel->HasOutroVideo() && !CurrentLevel->OutroVideoHasPlayed())
 	{
-		MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
-		LoadLevelOnMediaComplete(MapStateToLoad, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
-
-		return;
+		UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+		if (IsValid(CinematicsManager))
+		{
+			CinematicsManager->PlayVideo(CurrentLevel->GetOutroVideo(), false);
+			CinematicsManager->LoadLevelOnVideoComplete(InLevelToLoad, InPlayerStartTag, bAllowDelay, bShouldFade);
+			return;
+		}
 	}
 	
-	LevelStateToLoad = &MapStateToLoad;
+	LevelToLoad = InLevelToLoad;
 	bLoadShouldFade = bShouldFade;
 	bLevelHasLoaded = false;
 
@@ -99,81 +82,81 @@ void UAoS_LevelManager::LoadLevelByTag(const FGameplayTag InLevelToLoadTag,  FSt
 		GizboManager->SetGizboStartTag(GizboStartTag);
 	}
 	
-	OnBeginLevelLoad.Broadcast(MapStateToLoad.GetMapData(), bShouldFade);
+	OnBeginLevelLoad.Broadcast(InLevelToLoad, bShouldFade);
 	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_LevelLoadingMode);
 	
-	if (GetWorld() != MapStateToLoad.GetMapData()->Map.Get())
+	if (GetWorld() != InLevelToLoad->Map.Get())
 	{
 		if (bAllowDelay)
 		{
-			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevelByTag, MapStateToLoad.GetMapData()->MapTag, InPlayerStartTag, false, bShouldFade);
+			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevel, InLevelToLoad, InPlayerStartTag, false, bShouldFade);
 			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameInstance->LevelLoadDelay, false);
 		}
 		else
 		{
-			if (IsValid(MapStateToLoad.GetMapData()))
+			if (IsValid(InLevelToLoad))
 			{
 				
-				if (LoadedMapState->IsStateValid())
+				if (IsValid(CurrentLevel))
 				{
-					OnLevelUnloaded.Broadcast(LoadedMapState->GetMapData());
+					OnLevelUnloaded.Broadcast(CurrentLevel);
 				}
-				
-				UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelStateToLoad->GetMapData()->Map, true, InPlayerStartTag);
+				UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),InLevelToLoad->Map, true, InPlayerStartTag);
 			}
 		}
 	}
 }
 
-void UAoS_LevelManager::LoadLevelOnMediaComplete(const FAoS_MapState& InLevelToLoad, UAoS_MediaDataAsset* InMediaToPlay, FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+TArray<FString> UAoS_LevelManager::GetMapNames()
 {
-	if (const UAoS_CinematicDataAsset* CinematicDataAsset = Cast<UAoS_CinematicDataAsset>(InMediaToPlay))
+	TArray<FString> MapNames;
+
+	if (!GameInstance->MapList)
 	{
-		LoadLevelOnCinematicComplete(InLevelToLoad, CinematicDataAsset, InPlayerStartTag, bAllowDelay, bShouldFade);
+		const FString NoMaps = "Map List Not Found.";
+		MapNames.Add(NoMaps);
 	}
-	else if (const UAoS_VideoDataAsset* VideoDataAsset = Cast<UAoS_VideoDataAsset>(InMediaToPlay))
+	else
 	{
-		LoadLevelOnVideoComplete(InLevelToLoad, VideoDataAsset, InPlayerStartTag, bAllowDelay, bShouldFade);
+		if (GameInstance->MapList->GetAllMaps().Num() > 0)
+		{
+			for (const TSoftObjectPtr<UWorld> CurrentMap : GameInstance->MapList->GetAllMaps())
+			{
+				MapNames.AddUnique(CurrentMap.GetAssetName());
+			}
+		}
 	}
+
+	return MapNames;
 }
 
-void UAoS_LevelManager::LoadLevelOnVideoComplete(const FAoS_MapState& InLevelToLoad, const UAoS_VideoDataAsset* InVideoToPlay, FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+UAoS_MapData* UAoS_LevelManager::GetMapFromName(FString MapName)
 {
-	GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
-
-	const FGameplayTag& LevelToLoadTag = InLevelToLoad.GetMapData()->MapTag;
-	
-	LoadDelayDelegate.BindUObject(this, &UAoS_LevelManager::LoadLevelByTag, LevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade);
-	InVideoToPlay->MediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
-	InVideoToPlay->MediaPlayer->OnMediaClosed.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
+	if (!GameInstance) {return nullptr;}
+	for (UAoS_MapData* CurrentMap : GameInstance->MapList->GetAllMaps())
+	{
+		if (MapName == CurrentMap->GetName())
+		{
+			return CurrentMap;
+		}
+	}
+	return nullptr;
 }
 
-void UAoS_LevelManager::LoadLevelOnCinematicComplete(const FAoS_MapState& InLevelToLoad, const UAoS_CinematicDataAsset* InCinematicToPlay, FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+EMapType UAoS_LevelManager::GetCurrentMapType() const
 {
-	GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
-
-	const FGameplayTag& LevelToLoadTag = InLevelToLoad.GetMapData()->MapTag;
-
-	LoadDelayDelegate.BindUObject(this, &UAoS_LevelManager::LoadLevelByTag, LevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade);
-	InCinematicToPlay->CinematicPlayer->OnFinished.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);
-	InCinematicToPlay->CinematicPlayer->OnStop.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);
-}
-
-void UAoS_LevelManager::ExecuteLoadLevelOnVideoComplete()
-{
-	LoadDelayDelegate.Execute();
-	LoadDelayDelegate.Unbind();
-}
-
-void UAoS_LevelManager::ExecuteLoadLevelOnCinematicComplete()
-{
-	LoadDelayDelegate.Execute();
-	LoadDelayDelegate.Unbind();
+	return CurrentMapType;
 }
 
 UAoS_MapData* UAoS_LevelManager::GetCurrentMap() const
 {
-	return LoadedMapState->GetMapData();
+	return CurrentLevel;
+}
+
+FString UAoS_LevelManager::GetCurrentMapName() const
+{
+	if (!IsValid(CurrentLevel)) {return "";}
+	return CurrentLevel->MapName;
 }
 
 bool UAoS_LevelManager::GetLevelHasLoaded() const
@@ -181,74 +164,36 @@ bool UAoS_LevelManager::GetLevelHasLoaded() const
 	return bLevelHasLoaded;
 }
 
-FAoS_MapState& UAoS_LevelManager::GetMapStateByTag(const FGameplayTag InMapTag)
-{
-	static FAoS_MapState TempMapState = FAoS_MapState(nullptr);
-	
-	for (FAoS_MapState& CurrentMapState : MapStates)
-	{
-		const UAoS_MapData* CurrentMapData = CurrentMapState.GetMapData();
-		if (!IsValid(CurrentMapData)) {return TempMapState;}
-		
-		if(CurrentMapState.GetMapData()->MapTag == InMapTag)
-		{
-			return CurrentMapState;
-		}
-	}
-
-	return TempMapState;
-}
-
-const TArray<FAoS_MapState>& UAoS_LevelManager::GetAllMapStates() const
-{
-	return MapStates;		
-}
-
-TArray<FString>& UAoS_LevelManager::GetMapNames()
-{
-	static TArray<FString> MapNames;
-	for (const FAoS_MapState& CurrentMapState : MapStates)
-	{
-		MapNames.AddUnique(CurrentMapState.GetMapData()->MapName);
-	}
-	
-	return MapNames;
-}
-
-FAoS_MapState& UAoS_LevelManager::GetMapStateFromName(FString InMapName)
-{
-	for (FAoS_MapState& CurrentMapState : MapStates)
-	{
-		if (CurrentMapState.GetMapData()->MapName == InMapName)
-		{
-			return CurrentMapState;
-		}
-	}
-	
-	static FAoS_MapState EmptyMapState;
-	return EmptyMapState;
-}
-
-
 void UAoS_LevelManager::LevelLoaded()
 {
-	if(LevelStateToLoad == nullptr)
+	if(!IsValid(LevelToLoad))
 	{
 		OnInitGame();
-		if(LevelStateToLoad == nullptr){return;}
+		if(!IsValid(LevelToLoad)){return;}
 	}
 	
-	LoadedMapState = LevelStateToLoad;
-	if (LoadedMapState->GetMapData()->MapType == AOSTag_Map_Type_Menu)
+	CurrentLevel = LevelToLoad;
+	if (CurrentLevel->MapType == EMapType::MT_Menu)
 	{
 		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_MainMenuMode);
 	}
 	else
 	{
-		UAoS_MediaManager* MediaManager =  GetWorld()->GetSubsystem<UAoS_MediaManager>();
-		if (IsValid(MediaManager) && LoadedMapState->HasIntroMedia() && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedIntroMedia()))
+		if (LevelToLoad->HasIntroVideo() && !LevelToLoad->IntroVideoHasPlayed())
 		{
-			MediaManager->PlayMedia(LoadedMapState->GetLoadedIntroMedia(), LoadedMapState->GetOutroSettings());
+			UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+			if (IsValid(CinematicsManager))
+			{
+				CinematicsManager->PlayVideo(LevelToLoad->GetIntroVideo(), false);
+			}
+		}
+		else if (LevelToLoad->HasIntroCinematic() && !LevelToLoad->IntroCinematicHasPlayed())
+		{
+			UAoS_CinematicsManager* CinematicsManager =  GetWorld()->GetSubsystem<UAoS_CinematicsManager>();
+			if (IsValid(CinematicsManager))
+			{
+				CinematicsManager->PlayCinematic(LevelToLoad->GetIntroCinematic());
+			}
 		}
 		else
 		{
@@ -257,10 +202,33 @@ void UAoS_LevelManager::LevelLoaded()
 	}
 	
 	bLevelHasLoaded = true;
-	OnLevelLoaded.Broadcast(LoadedMapState->GetMapData(), bLoadShouldFade);
+	OnLevelLoaded.Broadcast(CurrentLevel, bLoadShouldFade);
 }
 
-FAoS_MapState& UAoS_LevelManager::GetCurrentLoadedMapState() const
+
+void UAoS_LevelManager::ExecuteDelayedLevelLoad()
 {
-	return *LoadedMapState;
+	
+}
+
+UAoS_MapData* UAoS_LevelManager::GetMapDataFromStreamingLevel(ULevelStreaming* InStreamingLevel)
+{
+	for (UAoS_MapData* CurrentMapData : GameInstance->MapList->GetAllMaps())
+	{
+		if (CurrentMapData->Map.GetAssetName() == InStreamingLevel->GetWorldAsset().GetAssetName())
+		{
+			CurrentMapData->SetStreamingLevelRef(InStreamingLevel);
+			return CurrentMapData;
+		}
+	}
+	return nullptr;
+}
+
+void UAoS_LevelManager::UpdateMapType(EMapType InMapType)
+{
+	if (InMapType != CurrentMapType)
+	{
+		CurrentMapType = InMapType;
+		OnMapTypeChanged.Broadcast(InMapType);
+	}
 }

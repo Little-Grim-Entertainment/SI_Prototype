@@ -81,13 +81,9 @@ void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMo
 
 void UAoS_MusicManager::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 {
-	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
+	if (!LoadedLevel) {return;}
 
-	if (!IsValid(LoadedLevel) || !IsValid(LevelManager)) {return;}
-
-	FAoS_MapState& LoadedMapState = LevelManager->GetMapStateByTag(LoadedLevel->MapTag);
-	
-	PlayLevelBackgroundMusic(LoadedMapState);
+	LoadedLevel->PlayLevelBackgroundMusic(this);
 }
 
 void UAoS_MusicManager::OnLevelUnloaded(UAoS_MapData* UnloadedLevel)
@@ -97,19 +93,6 @@ void UAoS_MusicManager::OnLevelUnloaded(UAoS_MapData* UnloadedLevel)
 
 
 UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FMusicSettings InMusicSettings)
-UAudioComponent* UAoS_MusicManager::PlayLevelBackgroundMusic(FAoS_MapState& InMapState)
-{
-	if (!InMapState.IsStateValid() || IsValid(InMapState.GetMapData())){return nullptr;}
-	
-	if(InMapState.GetMapData()->BackgroundMusicSettings.bHasIntro)
-	{
-		return  PlayBackgroundMusicLoopWithIntro(InMapState.GetMapData()->BackgroundMusicSettings);
-	}
-
-	return PlayBackgroundMusic(InMapState.GetMapData()->BackgroundMusicSettings);
-}
-
-UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FAoS_MusicSettings InMusicSettings)
 {
 	BackgroundMusic = UGameplayStatics::CreateSound2D(GameInstance, InMusicSettings.MetaSoundSource, InMusicSettings.VolumeMultiplier, InMusicSettings.PitchMultiplier, InMusicSettings.StartTime, nullptr, true);	
 

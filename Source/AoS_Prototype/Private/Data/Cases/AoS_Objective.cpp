@@ -7,9 +7,7 @@
 #include "Data/Maps/AoS_MapData.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
-#include "AoS_Types.h"
-#include "Levels/AoS_LevelManager.h"
-#include "Media/AoS_MediaManager.h"
+#include "Data/Media/AoS_WatchedMedia.h"
 
 UAoS_Objective::UAoS_Objective()
 {
@@ -45,34 +43,28 @@ void UAoS_Objective::SetObjectiveIsActive(bool bObjectiveIsActive)
 
 void UAoS_Objective::SetMediaLevelAssignments()
 {
-	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
-	if (!IsValid(LevelManager)) {return;}
-	
 	for (const FLevelMediaAssignment CurrentMediaAssignment : LevelMediaAssignments)
 	{
-		FAoS_MapState& CurrentMapState = LevelManager->GetMapStateByTag(CurrentMediaAssignment.AssociatedLevelTag);
-		if  (!CurrentMapState.IsStateValid()) {continue;}
-		
 		if (CurrentMediaAssignment.bHasVideos)
 		{
-			if (IsValid(CurrentMediaAssignment.IntroVideo))
+			if (CurrentMediaAssignment.IntroVideo)
 			{
-				CurrentMapState.LoadIntroMedia(CurrentMediaAssignment.IntroVideo);
+				CurrentMediaAssignment.AssociatedLevel->SetIntroVideo(CurrentMediaAssignment.IntroVideo);
 			}
-			if (IsValid(CurrentMediaAssignment.OutroVideo))
+			if (CurrentMediaAssignment.OutroVideo)
 			{
-				CurrentMapState.LoadOutroMedia(CurrentMediaAssignment.OutroVideo);
+				CurrentMediaAssignment.AssociatedLevel->SetOutroVideo(CurrentMediaAssignment.OutroVideo);
 			}
 		}
 		else if (CurrentMediaAssignment.bHasCinematics)
 		{
-			if (IsValid(CurrentMediaAssignment.IntroCinematic))
+			if (CurrentMediaAssignment.IntroCinematic)
 			{
-				CurrentMapState.LoadIntroMedia(CurrentMediaAssignment.IntroCinematic);
+				CurrentMediaAssignment.AssociatedLevel->SetIntroCinematic(CurrentMediaAssignment.IntroCinematic);
 			}
-			if (IsValid(CurrentMediaAssignment.OutroCinematic))
+			if (CurrentMediaAssignment.OutroCinematic)
 			{
-				CurrentMapState.LoadOutroMedia(CurrentMediaAssignment.OutroCinematic);
+				CurrentMediaAssignment.AssociatedLevel->SetOutroCinematic(CurrentMediaAssignment.OutroCinematic);
 			}
 		}
 	}
@@ -80,45 +72,63 @@ void UAoS_Objective::SetMediaLevelAssignments()
 
 void UAoS_Objective::ClearMediaLevelAssignments()
 {
-	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
-	if (!IsValid(LevelManager)) {return;}
-	
 	for (const FLevelMediaAssignment CurrentMediaAssignment : LevelMediaAssignments)
 	{
-		FAoS_MapState& CurrentMapState = LevelManager->GetMapStateByTag(CurrentMediaAssignment.AssociatedLevelTag);
-
-		CurrentMapState.UnLoadIntroMedia();
-		CurrentMapState.UnLoadOutroMedia();
+		if (CurrentMediaAssignment.bHasVideos)
+		{
+			CurrentMediaAssignment.AssociatedLevel->ClearIntroVideo();
+			CurrentMediaAssignment.AssociatedLevel->ClearOutroVideo();
+		}
+		else if (CurrentMediaAssignment.bHasCinematics)
+		{
+			CurrentMediaAssignment.AssociatedLevel->ClearIntroCinematic();
+			CurrentMediaAssignment.AssociatedLevel->ClearOutroCinematic();
+		}
 	}
 }
 
 void UAoS_Objective::ResetMediaLevelAssignments()
 {
-	UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>();
-	if (!IsValid(MediaManager)) {return;}
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	
 	for (const FLevelMediaAssignment CurrentMediaAssignment : LevelMediaAssignments)
 	{
 		if (CurrentMediaAssignment.bHasVideos)
 		{
-			if (IsValid(CurrentMediaAssignment.IntroVideo))
+			if (CurrentMediaAssignment.IntroVideo)
 			{
-				MediaManager->RemoveFromWatchedVideos(CurrentMediaAssignment.IntroVideo);
+				CurrentMediaAssignment.IntroVideo->ResetMediaDefaults();
+				if (IsValid(GameInstance) && GameInstance->WatchedMediaData)
+				{
+					GameInstance->WatchedMediaData->RemoveFromWatchedVideos(CurrentMediaAssignment.IntroVideo);
+				}
 			}
-			if (IsValid(CurrentMediaAssignment.OutroVideo))
+			if (CurrentMediaAssignment.OutroVideo)
 			{
-				MediaManager->RemoveFromWatchedVideos(CurrentMediaAssignment.OutroVideo);
+				CurrentMediaAssignment.OutroVideo->ResetMediaDefaults();
+				if (IsValid(GameInstance) && GameInstance->WatchedMediaData)
+				{
+					GameInstance->WatchedMediaData->RemoveFromWatchedVideos(CurrentMediaAssignment.OutroVideo);
+				}
 			}
 		}
 		else if (CurrentMediaAssignment.bHasCinematics)
 		{
-			if (IsValid(CurrentMediaAssignment.IntroCinematic))
+			if (CurrentMediaAssignment.IntroCinematic)
 			{
-				MediaManager->RemoveFromWatchedCinematics(CurrentMediaAssignment.IntroCinematic);
+				CurrentMediaAssignment.IntroCinematic->ResetMediaDefaults();
+				if (IsValid(GameInstance) && GameInstance->WatchedMediaData)
+				{
+					GameInstance->WatchedMediaData->RemoveFromWatchedCinematics(CurrentMediaAssignment.IntroCinematic);
+				}
 			}
-			if (IsValid(CurrentMediaAssignment.OutroCinematic))
+			if (CurrentMediaAssignment.OutroCinematic)
 			{
-				MediaManager->RemoveFromWatchedCinematics(CurrentMediaAssignment.OutroCinematic);
+				CurrentMediaAssignment.OutroCinematic->ResetMediaDefaults();
+				if (IsValid(GameInstance) && GameInstance->WatchedMediaData)
+				{
+					GameInstance->WatchedMediaData->RemoveFromWatchedCinematics(CurrentMediaAssignment.OutroCinematic);
+				}
 			}
 		}
 	}

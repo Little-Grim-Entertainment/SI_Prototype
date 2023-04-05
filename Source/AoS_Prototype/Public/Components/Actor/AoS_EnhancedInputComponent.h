@@ -35,9 +35,9 @@ class AOS_PROTOTYPE_API UAoS_EnhancedInputComponent : public UEnhancedInputCompo
 public:
 
 	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
-	const UInputAction* GetActionInput(FString InInputName) const;
+	UInputAction* GetActionInput(FString InInputName);
 	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
-	const UInputAction* GetAxisInput(FString InInputName) const;
+	UInputAction* GetAxisInput(FString InInputName);
 	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
 	UInputMappingContext* GetPlayerModeInputMappingContext(EPlayerMode InPlayerMode);
 
@@ -45,17 +45,3 @@ public:
 	TArray<FPlayerModeInputMapping> PlayerModeInputMappings;
 	
 };
-<<<<<<< Updated upstream
-=======
-
-template <class UserClass, typename FuncType>
-void UAoS_EnhancedInputComponent::BindInputByTag(const UAoS_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent InTriggerEvent, UserClass* InObject, FuncType InFunc)
-{
-	check(InInputConfig);
-	const UInputAction* InputAction = InInputConfig->GetInputActionByTag(InInputTag);
-	if (IsValid(InputAction))
-	{
-		BindAction(InputAction, InTriggerEvent, InObject, InFunc);
-	}
-}
->>>>>>> Stashed changes

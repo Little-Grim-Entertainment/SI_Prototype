@@ -5,7 +5,7 @@
 #include "Engine/Texture2D.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/BillboardComponent.h"
-#include "Media/AoS_MediaManager.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Maps/AoS_MapData.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
@@ -74,7 +74,7 @@ void AAoS_LevelTransition::OnInteract_Implementation(AActor* Caller)
 {
 	Super::OnInteract_Implementation(Caller);
 	
-	if (!MapToLoadTag.IsValid()){return;}
+	if (!IsValid(MapToLoad)){return;}
 
 	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
 	if (!IsValid(LevelManager)) {return;}
@@ -82,5 +82,5 @@ void AAoS_LevelTransition::OnInteract_Implementation(AActor* Caller)
 	FString NickPlayerStartTag = LevelManager->GetCurrentMap()->GetName();
 	NickPlayerStartTag = UKismetStringLibrary::Replace(NickPlayerStartTag, "DA_", "Nick_");
 
-	LevelManager->LoadLevelByTag(MapToLoadTag, NickPlayerStartTag);	
+	LevelManager->LoadLevel(MapToLoad, NickPlayerStartTag);	
 }

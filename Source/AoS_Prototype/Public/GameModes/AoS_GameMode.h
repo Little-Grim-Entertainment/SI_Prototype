@@ -14,8 +14,6 @@ class UAoS_CharacterData;
 class UAoS_LevelManager;
 class UAoS_HUD;
 class UAoS_SkipWidget;
-class UAoS_InputConfig;
-class UAoS_MapList;
 
 UCLASS()
 class AOS_PROTOTYPE_API AAoS_GameMode : public AGameMode
@@ -26,29 +24,21 @@ public:
 
 	AAoS_GameMode();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_UserWidget> MainMenuClass;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_UserWidget> SystemMenuClass;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_HUD> PlayerHUD_Class;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_MoviePlayerWidget> MoviePlayerWidget;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_SkipWidget> SkipWidget;
 	
 	UPROPERTY(EditAnywhere, Category = "CharacterData")
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes)
-	TArray<TSubclassOf<UAoS_UserWidget>> LoadingScreens;
-
-	UPROPERTY(EditAnywhere, Category = Data)
-	UAoS_InputConfig* InputConfig;
-	UPROPERTY(EditAnywhere, Category = Data)
 	UAoS_CharacterData* NickSpadeCDA;
-	UPROPERTY(EditAnywhere, Category = Data)
+	UPROPERTY(EditAnywhere, Category = "CharacterData")
 	UAoS_CharacterData* GizboCDA;
-	UPROPERTY(EditAnywhere, Category = Data)
-	UAoS_MapList* MapList;
 	
 	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
 	APlayerStart* GetPlayerStart(FString InPlayerStartTag = FString(TEXT(""))) const;

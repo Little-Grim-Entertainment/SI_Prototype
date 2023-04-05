@@ -4,7 +4,7 @@
 #include "AoS_CheatManager.h"
 #include "World/AoS_WorldManager.h"
 #include "AoS_GameInstance.h"
-#include "Media/AoS_MediaManager.h"
+#include "Cinematics/AoS_CinematicsManager.h"
 #include "Data/Cases/AoS_CaseManager.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
@@ -54,38 +54,38 @@ void UAoS_CheatManager::CheatResetCase(FString CaseToResetName)
 
 void UAoS_CheatManager::CheatResetPlayedVideos()
 {
-	if (UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>())
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		MediaManager->ResetAllVideos();
+		CinematicsManager->ResetAllVideos();
 	}
 }
 
 void UAoS_CheatManager::CheatResetPlayedCinematics()
 {
-	if (UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>())
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		MediaManager->ResetAllCinematics();
+		CinematicsManager->ResetAllCinematics();
 	}
 }
 
 void UAoS_CheatManager::CheatSkipVideo()
 {
-	if (UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>())
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		if (IsValid(MediaManager->GetLoadedVideo()))
+		if (IsValid(CinematicsManager->GetLoadedVideo()))
 		{
-			MediaManager->SkipMedia(MediaManager->GetLoadedVideo());	
+			CinematicsManager->GetLoadedVideo()->SkipMedia();	
 		}
 	}
 }
 
 void UAoS_CheatManager::CheatSkipCinematic()
 {
-	if (UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>())
+	if (UAoS_CinematicsManager* CinematicsManager = GetWorld()->GetSubsystem<UAoS_CinematicsManager>())
 	{
-		if (IsValid(MediaManager->GetLoadedCinematic()))
+		if (IsValid(CinematicsManager->GetLoadedCinematic()))
 		{
-			MediaManager->SkipMedia(MediaManager->GetLoadedCinematic());
+			CinematicsManager->GetLoadedCinematic()->SkipMedia();
 		}
 	}
 }

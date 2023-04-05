@@ -43,8 +43,8 @@ void UAoS_WorldManager::OnGameInstanceInit()
 {
 	Super::OnGameInstanceInit();
 	
-	//GameInstance->GetLevelManager()->OnMapTypeChanged.AddDynamic(this, &ThisClass::OnMapTypeChange);
-	//GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelFinishLoad);
+	GameInstance->GetLevelManager()->OnMapTypeChanged.AddDynamic(this, &ThisClass::OnMapTypeChange);
+	GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelFinishLoad);
 
 	StartTimerByHandle(TimeOfDayHandle);
 	PauseTimerByHandle(TimeOfDayHandle, true);
@@ -55,6 +55,30 @@ void UAoS_WorldManager::SetSkySphere(AAoS_SkySphere* SkySphereToSet)
 	if (SkySphereToSet)
 	{
 		SkySphere = SkySphereToSet;
+	}
+}
+
+void UAoS_WorldManager::OnMapTypeChange(EMapType InMapType)
+{
+	switch (InMapType)
+	{
+		case EMapType::MT_Persistent:
+			PauseTimerByHandle(TimeOfDayHandle, true);
+			bRotateSun = false;
+		case EMapType::MT_Exterior:
+			PauseTimerByHandle(TimeOfDayHandle, false);
+			bRotateSun = true;
+			break;
+		case EMapType::MT_Interior:
+			PauseTimerByHandle(TimeOfDayHandle, false);
+			bRotateSun = false;
+			break;
+		case EMapType::MT_Menu:
+			PauseTimerByHandle(TimeOfDayHandle, true);
+			bRotateSun = false;
+			break;
+		default:
+			break;
 	}
 }
 

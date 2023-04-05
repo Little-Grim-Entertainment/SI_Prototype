@@ -70,7 +70,7 @@ void AAoS_Nick::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (!IsValid(GameInstance)) {return;}
 
 	LevelManager = GameInstance->GetLevelManager();
@@ -78,7 +78,7 @@ void AAoS_Nick::BeginPlay()
 
 	if(LevelManager->GetLevelHasLoaded())
 	{
-		OnLevelLoaded(LevelManager->GetCurrentLoadedMapState().GetMapData());
+		OnLevelLoaded(LevelManager->GetCurrentMap());
 	}
 	else
 	{
@@ -93,7 +93,7 @@ void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 
 	FString MapName;
 	
-	if (IsValid(LoadedLevel))
+	if (LoadedLevel)
 	{
 		MapName = LoadedLevel->GetName();
 	}
@@ -112,7 +112,8 @@ void AAoS_Nick::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 	}
 }
 
-void AAoS_Nick::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AAoS_Nick::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherComp == GetMesh())
 	{
@@ -120,7 +121,8 @@ void AAoS_Nick::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedCom
 	}
 }
 
-void AAoS_Nick::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AAoS_Nick::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if(OtherComp == GetMesh())
 	{
