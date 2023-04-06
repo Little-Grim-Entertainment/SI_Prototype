@@ -8,12 +8,22 @@
 #include "Data/Media/AoS_MediaDataAsset.h"
 
 
+void FAoS_GameplayTagContainer::SetParentTag(const FAoS_GameplayTag& InParentTag)
+{
+	ParentTag = InParentTag;
+}
+
+const FAoS_GameplayTag& FAoS_GameplayTagContainer::GetParentTag() const
+{
+	return ParentTag;
+}
+
 const UInputAction* FAoS_InputAction::GetInputAction() const
 {
 	return InputAction;
 }
 
-const FGameplayTag& FAoS_InputAction::GetInputTag() const
+const FAoS_GameplayTag& FAoS_InputAction::GetInputTag() const
 {
 	return InputTag;
 }
@@ -23,12 +33,12 @@ const UInputMappingContext* FAoS_InputMapping::GetInputMappingContext() const
 	return InputMappingContext;
 }
 
-const FGameplayTag& FAoS_InputMapping::GetAssociatedPlayerModeTag() const
+const FAoS_GameplayTag& FAoS_InputMapping::GetAssociatedPlayerModeTag() const
 {
 	return AssociatedPlayerModeTag;
 }
 
-const FGameplayTag& FAoS_InputMapping::GetSecondaryTag() const
+const FAoS_GameplayTag& FAoS_InputMapping::GetSecondaryTag() const
 {
 	return SecondaryTag;
 }
