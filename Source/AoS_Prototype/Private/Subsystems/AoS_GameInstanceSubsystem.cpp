@@ -3,7 +3,7 @@
 
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_GameInstance.h"
-#include "GameModes/AoS_GameMode.h"
+#include "AoS_GameplayTagManager.h"
 
 void UAoS_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -21,6 +21,14 @@ void UAoS_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection
 void UAoS_GameInstanceSubsystem::OnGameInstanceInit()
 {
 	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
+
+	if(Cast<UAoS_GameplayTagManager>(this)) {return;}
+
+	AoS_GameplayTagManager = GameInstance->GetSubsystem<UAoS_GameplayTagManager>();
+	if (!IsValid(AoS_GameplayTagManager)) {return;}
+
+	AoS_GameplayTagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
+	AoS_GameplayTagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);
 }
 
 void UAoS_GameInstanceSubsystem::OnInitGame()
@@ -41,3 +49,13 @@ void UAoS_GameInstanceSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode, 
 {
 	
 }
+
+void UAoS_GameInstanceSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+{
+}
+
+void UAoS_GameInstanceSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+{
+}
+
+
