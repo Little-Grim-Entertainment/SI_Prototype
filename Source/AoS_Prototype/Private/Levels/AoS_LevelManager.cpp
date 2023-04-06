@@ -24,8 +24,8 @@ using namespace AoS_MapGameplayTagLibrary;
 
 UAoS_LevelManager::UAoS_LevelManager()
 {
-	static ConstructorHelpers::FObjectFinder<UAoS_MapData> MainMenuAsset(TEXT("/Game/AoS/Maps/Menus/DA_MainMenu"));
-	MainMenu = MainMenuAsset.Object;
+	/*static ConstructorHelpers::FObjectFinder<UAoS_MapData> MainMenuAsset(TEXT("/Game/AoS/Maps/Menus/DA_MainMenu"));
+	MainMenu = MainMenuAsset.Object;*/
 }
 
 void UAoS_LevelManager::OnInitGame()
