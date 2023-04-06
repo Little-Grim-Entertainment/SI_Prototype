@@ -110,7 +110,7 @@ FGameplayTagContainer& UAoS_GameplayTagManager::GetContainerTypeByTag(const FGam
 	{
 		return GameStateTags;
 	}
-	if (HasParentTag(InGameplayTag, AoS_NativeGameplayTagLibrary::AOSTag_Player_Mode))
+	if (HasParentTag(InGameplayTag, AoS_NativeGameplayTagLibrary::AOSTag_Player_State))
 	{
 		return PlayerModeTags;
 	}
