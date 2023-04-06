@@ -6,22 +6,22 @@
 #include "GameplayTagContainer.h"
 #include "AoS_GameplayTagTypes.generated.h"
 
-USTRUCT(BlueprintType, meta = (HasNativeMake = "GameplayTags.BlueprintGameplayTagLibrary.MakeLiteralGameplayTag", HasNativeBreak = "GameplayTags.BlueprintGameplayTagLibrary.GetTagName", DisableSplitPin))
+USTRUCT(BlueprintType)
 struct FAoS_GameplayTag : public FGameplayTag
 {
 	GENERATED_BODY()
 	
 };
 
-USTRUCT(BlueprintType, meta = (HasNativeMake = "GameplayTags.BlueprintGameplayTagLibrary.MakeGameplayTagContainerFromArray", HasNativeBreak = "GameplayTags.BlueprintGameplayTagLibrary.BreakGameplayTagContainer"))
+USTRUCT(BlueprintType)
 struct FAoS_GameplayTagContainer : public FGameplayTagContainer
 {
 	GENERATED_BODY()
 
-	void SetParentTag(const FAoS_GameplayTag& InParentTag);
-	const FAoS_GameplayTag& GetParentTag() const;
+	void SetParentTag(const FGameplayTag& InParentTag);
+	const FGameplayTag& GetParentTag() const;
 	
 private:
 
-	FAoS_GameplayTag ParentTag;
+	FGameplayTag ParentTag;
 };

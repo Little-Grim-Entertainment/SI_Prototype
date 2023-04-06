@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
-#include "GameplayTagContainer.h"
+#include "AoS_GameplayTagTypes.h"
 #include "AoS_GameplayTagManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnTagAdded, const FGameplayTag& AddedTag);
@@ -21,7 +21,7 @@ public:
 	void RemoveTag(const FGameplayTag& InGameplayTag);
 	bool HasGameplayTag(const FGameplayTag& InGameplayTag);
 	bool HasParentTag(const FGameplayTag& InTagToCheck, const FGameplayTag& InParentTag) const;
-	TArray<FGameplayTagContainer>& GetAllTagContainers();
+	TArray<FAoS_GameplayTagContainer>& GetAllTagContainers();
 
 	FOnTagAdded& OnTagAdded();
 	FOnTagAdded& OnTagRemoved();
@@ -32,14 +32,14 @@ private:
 	FOnTagAdded OnTagAddedDelegate;
 	FOnTagRemoved OnTagRemovedDelegate;
 
-	FGameplayTagContainer& GetContainerTypeByTag(const FGameplayTag& InGameplayTag);
+	FAoS_GameplayTagContainer& GetContainerTypeByTag(const FGameplayTag& InGameplayTag);
 
-	bool CheckContainerForParentTag(const FGameplayTag& InParentTag, const FGameplayTagContainer& InContainerToCheck) const;
+	bool CheckContainerForParentTag(const FGameplayTag& InParentTag, const FAoS_GameplayTagContainer& InContainerToCheck) const;
 	
-	FGameplayTagContainer GameStateTags;
-	FGameplayTagContainer PlayerModeTags;
-	FGameplayTagContainer UITags;
-	FGameplayTagContainer LevelTags;
-	FGameplayTagContainer MediaTags;
-	FGameplayTagContainer CameraTags;
+	FAoS_GameplayTagContainer GameStateTags;
+	FAoS_GameplayTagContainer PlayerModeTags;
+	FAoS_GameplayTagContainer UITags;
+	FAoS_GameplayTagContainer LevelTags;
+	FAoS_GameplayTagContainer MediaTags;
+	FAoS_GameplayTagContainer CameraTags;
 };
