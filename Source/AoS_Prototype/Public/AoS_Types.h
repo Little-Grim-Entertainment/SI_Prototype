@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Data/Media/AoS_MediaDataAsset.h"
 #include "Media/AoS_MediaTypes.h"
+#include "AoS_GameplayTagTypes.h"
 #include "AoS_Types.generated.h"
 
 class USoundBase;
@@ -50,7 +50,7 @@ struct FAoS_InputAction
 	GENERATED_BODY()
 	
 	const UInputAction* GetInputAction() const;
-	const FGameplayTag& GetInputTag() const;
+	const FAoS_GameplayTag& GetInputTag() const;
 	
 private:
 	
@@ -58,7 +58,7 @@ private:
 	const UInputAction* InputAction = nullptr; 
 
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Input"))
-	FGameplayTag InputTag;
+	FAoS_GameplayTag InputTag;
 };
 
 USTRUCT(BlueprintType)
@@ -67,8 +67,8 @@ struct FAoS_InputMapping
 	GENERATED_BODY()
 
 	const UInputMappingContext* GetInputMappingContext() const;
-	const FGameplayTag& GetAssociatedPlayerModeTag() const;
-	const FGameplayTag& GetSecondaryTag() const;
+	const FAoS_GameplayTag& GetAssociatedPlayerModeTag() const;
+	const FAoS_GameplayTag& GetSecondaryTag() const;
 	bool IsDefaultMappingForMode() const;
 	
 	bool operator==(const FAoS_InputMapping& OtherInputMapping) const;
@@ -81,9 +81,9 @@ private:
 	UInputMappingContext* InputMappingContext = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (Categories = "Player.Mode"))
-	FGameplayTag AssociatedPlayerModeTag;
+	FAoS_GameplayTag AssociatedPlayerModeTag;
 	UPROPERTY(EditDefaultsOnly)
-	FGameplayTag SecondaryTag;
+	FAoS_GameplayTag SecondaryTag;
 
 	UPROPERTY(EditDefaultsOnly)
 	bool bIsDefaultMappingForMode = false;
