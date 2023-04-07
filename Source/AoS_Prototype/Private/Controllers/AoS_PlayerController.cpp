@@ -4,6 +4,7 @@
 #include "Controllers/AoS_PlayerController.h"
 
 #include "AoS_GameInstance.h"
+#include "AoS_GameplayTagManager.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/AoS_Nick.h"
@@ -23,7 +24,6 @@
 #include "Dialogue/AoS_DialogueManager.h"
 #include "Dialogue/DialogueSession.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GameModes/AoS_GameMode.h"
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UIManager.h"
@@ -49,31 +49,13 @@ void AAoS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());	
 	UAoS_EnhancedInputComponent* EnhancedInputComponent = Cast<UAoS_EnhancedInputComponent>(InputComponent);
-	if (!IsValid(EnhancedInputComponent) || !IsValid(GameMode)) {return;}
+	if (!IsValid(EnhancedInputComponent)){return;}
 
-	const UAoS_InputConfig* InputConfig = GameMode->InputConfig;
+	const UAoS_InputConfig* InputConfig = EnhancedInputComponent->GetInputConfig();
 	if (!IsValid(InputConfig)) {return;}
 	
-	// Action Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_ObserveObject, ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Media_Skip, ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,AoS_NativeGameplayTagLibrary::AOSTag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToConfirm); 
-	
 	// Axis Bindings
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveForward"), ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("MoveRight"),  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("TurnRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetAxisInput("LookUpRate"),  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
 	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
@@ -91,19 +73,12 @@ void AAoS_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Axis_1D_MoveRight,  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
 	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
 	EnhancedInputComponent->BindInputByTag(InputConfig,AOSTag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
-	
-	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
-	if (IsValid(GameInstance))
-	{
-		GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
-	}
 }
 
 void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
 
 void AAoS_PlayerController::Tick(float DeltaSeconds)
 {
@@ -172,77 +147,11 @@ void AAoS_PlayerController::PostInitializeComponents()
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetGameInstance());
 	if (!IsValid(GameInstance) || !IsValid(PlayerCameraManager)){return;}
 
-	if (GameInstance->GetPlayerMode() != EPlayerMode::PM_NONE)
+	/*if (GameInstance->GetPlayerMode() != EPlayerMode::PM_NONE)
 	{
 		PlayerCameraManager->StartCameraFade(0, 1, 0.001, FLinearColor::Black, false, true);
-	}
+	}*/
 }
-
-void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode)
-{
-
-	switch (InPreviousPlayerMode)
-	{
-		case EPlayerMode::PM_VideoMode:
-		{
-			if (InPlayerMode != EPlayerMode::PM_LevelLoadingMode)
-			{
-				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
-			}
-			break;	
-		}
-		case EPlayerMode::PM_CinematicMode:
-		{
-			if (!IsValid(Nick)) {break;}
-			break;
-		}
-		default:
-		{
-			break;
-		}
-	}
-	
-	switch (InPlayerMode)
-	{
-		case EPlayerMode::PM_ExplorationMode:
-		{
-			if (InPreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
-			{
-				PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
-			}
-			break;
-		}
-		case EPlayerMode::PM_CinematicMode:
-			{
-				if (InPreviousPlayerMode == EPlayerMode::PM_LevelLoadingMode)
-				{
-					PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, false);
-				}
-				break;
-			}
-		case EPlayerMode::PM_VideoMode:
-		{
-			PlayerCameraManager->StartCameraFade(0, 1, .2, FLinearColor::Black, false, true);
-			break;	
-		}
-		default:
-		{
-			break;
-		}
-	}
-
-	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	if (!IsValid(EnhancedInputLocalPlayerSubsystem)) {return;}
-
-	const UInputMappingContext* PreviousMappingContext = EnhancedInputSettings->GetPlayerModeInputMappingContext(InPreviousPlayerMode);
-	EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(PreviousMappingContext);
-	EnhancedInputLocalPlayerSubsystem->ClearAllMappings();
-
-	const UInputMappingContext* NewMappingContext = EnhancedInputSettings->GetPlayerModeInputMappingContext(InPlayerMode);
-
-	EnhancedInputLocalPlayerSubsystem->AddMappingContext(NewMappingContext, 0);
-}
-
 
 void AAoS_PlayerController::RequestMoveForward(const FInputActionValue& ActionValue)
 {
@@ -283,7 +192,7 @@ void AAoS_PlayerController::RequestMoveRight(const FInputActionValue& ActionValu
 
 void AAoS_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 {
-	if  (!bPlayerCanTurn || !GetPawn()) return;
+	if (!bPlayerCanTurn || !GetPawn()) return;
 
 	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
 	
@@ -307,7 +216,7 @@ void AAoS_PlayerController::RequestInteract()
 	{
 		if (const IAoS_InteractInterface* InterfaceActor = Cast<IAoS_InteractInterface>(InteractableActor))
 		{
-			InterfaceActor->Execute_OnInteract(Cast<UObject>(InteractableActor), InteractableActor);
+			InterfaceActor->Execute_OnInteract(InteractableActor, InteractableActor);
 			OnInteractPressed.Broadcast(InteractableActor, this);
 		}
 	}
@@ -343,6 +252,9 @@ void AAoS_PlayerController::RequestToggleObservation()
 	Nick->HideMeshes(!bObservationMode);
 
 	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, this, &AAoS_PlayerController::PostCameraBlend, CameraTransitionTime, false);*/
+
+	UAoS_GameplayTagManager* AOSTagManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GameplayTagManager>();
+	AOSTagManager->AddNewGameplayTag(AOSTag_Player_State_Observation);
 }
 
 void AAoS_PlayerController::RequestObserveObject()

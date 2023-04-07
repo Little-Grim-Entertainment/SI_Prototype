@@ -2,45 +2,13 @@
 
 
 #include "Components/Actor/AoS_EnhancedInputComponent.h"
-#include "InputMappingContext.h"
-#include "InputAction.h"
+#include "GameModes/AoS_GameMode.h"
 
-UInputMappingContext* UAoS_EnhancedInputComponent::GetPlayerModeInputMappingContext(EPlayerMode InPlayerMode)
+
+UAoS_InputConfig* UAoS_EnhancedInputComponent::GetInputConfig() const
 {
-	for (const FPlayerModeInputMapping CurrentPlayerModeMapping : PlayerModeInputMappings)
-	{
-		if (InPlayerMode == CurrentPlayerModeMapping.AssociatedPlayerMode)
-		{
-			return CurrentPlayerModeMapping.MappingContext;
-		}
-	}
-	
-	return nullptr;
+	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());
+	if (!IsValid(GameMode)) {return nullptr;}
+
+	return GameMode->InputConfig;
 }
-
-const UInputAction* UAoS_EnhancedInputComponent::GetActionInput(FString InInputName) const
-{
-	for (FPlayerModeInputMapping CurrentMapping : PlayerModeInputMappings)
-	{
-		if(CurrentMapping.ActionInputs.Contains(InInputName))
-		{
-			return *CurrentMapping.ActionInputs.Find(InInputName);
-		}
-	}
-	return nullptr;
-}
-
-const UInputAction* UAoS_EnhancedInputComponent::GetAxisInput(FString InInputName) const
-{
-	for (FPlayerModeInputMapping CurrentMapping : PlayerModeInputMappings)
-	{
-		if(CurrentMapping.AxisInputs.Contains(InInputName))
-		{
-			return *CurrentMapping.AxisInputs.Find(InInputName);
-		}
-	}
-	return nullptr;
-}
-
-
-

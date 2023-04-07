@@ -19,6 +19,7 @@ namespace AoS_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Media, "Player.State.Media")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Dialogue, "Player.State.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Interrogation, "Player.State.Interrogation")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Player_State_Inactive, "Player.State.Inactive")
 
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Input, "Input")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Input_Action, "Input.Action")
@@ -40,18 +41,22 @@ namespace AoS_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Input_Axis_1D_LookUpRate, "Input.Axis.1D.LookUpRate")
 	
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI, "UI")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_HUD, "UI.HUD")
+
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu, "UI.Menu")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type, "UI.Menu.Type")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type_Main, "UI.Menu.Type.Main")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type_System, "UI.Menu.Type.System")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type_Game, "UI.Menu.Type.Game")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Type_Vendor, "UI.Menu.Type.Vendor")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Map, "UI.Menu.Map")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_System, "UI.Menu.System")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Game, "UI.Menu.Game")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Menu_Vendor, "UI.Menu.Vendor")
+
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Screen, "UI.Screen")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Screen_Loading, "UI.Screen.Loading")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_UI_Screen_Video, "UI.Screen.Video")
 
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media, "Media")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Type, "Media.Type")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Type_Cinematic, "Media.Type.Cinematic")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Type_Video, "Media.Type.Video")
-	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Type_TitleCard, "Media.Type.TitleCard")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Cinematic, "Media.Cinematic")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_Video, "Media.Video")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Media_TitleCard, "Media.TitleCard")
 
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Camera, "Camera")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Camera_Mode, "Camera.Mode")

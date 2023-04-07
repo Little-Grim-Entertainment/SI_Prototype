@@ -9,26 +9,9 @@
 
 #include "AoS_EnhancedInputComponent.generated.h"
 
-enum class EPlayerMode : uint8;
 class UInputMappingContext;
 class UInputAction;
-
-USTRUCT(BlueprintType)
-struct FPlayerModeInputMapping
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EPlayerMode AssociatedPlayerMode;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UInputMappingContext* MappingContext;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<FString, UInputAction*> ActionInputs;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<FString, UInputAction*> AxisInputs;
-};
+class UAoS_InputConfig;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_EnhancedInputComponent : public UEnhancedInputComponent
@@ -37,16 +20,9 @@ class AOS_PROTOTYPE_API UAoS_EnhancedInputComponent : public UEnhancedInputCompo
 
 public:
 
-	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
-	const UInputAction* GetActionInput(FString InInputName) const;
-	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
-	const UInputAction* GetAxisInput(FString InInputName) const;
-	UFUNCTION(BlueprintPure, Category = "EnhancedInputs")
-	UInputMappingContext* GetPlayerModeInputMappingContext(EPlayerMode InPlayerMode);
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs", meta=(TitleProperty="{AssociatedPlayerMode} Mapping"))
-	TArray<FPlayerModeInputMapping> PlayerModeInputMappings;
-
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	UAoS_InputConfig* GetInputConfig() const;
+	
 	template<class UserClass, typename FuncType>
 	void BindInputByTag(const UAoS_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent InTriggerEvent, UserClass* InObject, FuncType InFunc);
 };

@@ -7,6 +7,8 @@
 // Subsystems
 #include "Data/Cases/AoS_CaseManager.h"
 #include "Media/AoS_MediaManager.h"
+#include "Levels/AoS_LevelManager.h"
+#include "AoS_PlayerManager.h"
 
 // Case Data
 #include "Data/Cases/AoS_Case.h"
@@ -14,6 +16,8 @@
 #include "Data/Cases/AoS_Objective.h"
 
 // UI
+#include "AoS_GameplayTagManager.h"
+#include "AoS_NativeGameplayTagLibrary.h"
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
@@ -25,6 +29,7 @@
 
 
 #include "Controllers/AoS_PlayerController.h"
+#include "Data/Maps/AoS_MenuMapData.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 #include "GameModes/AoS_GameMode.h"
 #include "MediaAssets/Public/MediaPlayer.h"
@@ -52,174 +57,102 @@ void UAoS_UIManager::OnGameInstanceInit()
 	BindCaseManagerDelegates();
 }
 
+void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+
+	InitializeDelegates();
+	InitializeDelegateMaps();
+}
+
 void UAoS_UIManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
 	
 }
 
-void UAoS_UIManager::BindCaseManagerDelegates()
+void UAoS_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
-	// Case Bindings
-	GameInstance->GetCaseManager()->OnCaseAccepted.AddDynamic(this, &ThisClass::OnCaseAccepted);
-	GameInstance->GetCaseManager()->OnCaseActivated.AddDynamic(this, &ThisClass::OnCaseActivated);
-	GameInstance->GetCaseManager()->OnCaseComplete.AddDynamic(this, &ThisClass::OnCaseCompleted);
+	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_UI)){return;}
 
-	// Part Bindings
-	GameInstance->GetCaseManager()->OnPartActivated.AddDynamic(this, &ThisClass::OnPartActivated);
-	GameInstance->GetCaseManager()->OnPartComplete.AddDynamic(this, &ThisClass::OnPartCompleted);
+	Super::OnGameplayTagAdded(InAddedTag);
 
-	// Objective Bindings
-	GameInstance->GetCaseManager()->OnObjectiveActivated.AddDynamic(this, &ThisClass::OnObjectiveActivated);
-	GameInstance->GetCaseManager()->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);
+	AddUIDelegateContainer.Find(InAddedTag)->Execute();
 }
 
-
-void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
+void UAoS_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
-	Super::OnPlayerModeChanged(NewPlayerMode, InPreviousPlayerMode);
+	if(!AoSTagManager->HasParentTag(InRemovedTag, AOSTag_UI)){return;}
 
-	switch (InPreviousPlayerMode)
-	{
-		case EPlayerMode::PM_ExplorationMode:
-		{
-			RemovePlayerHUD();
-			break;
-		}
-		case EPlayerMode::PM_LevelLoadingMode:
-		{
-			if(NewPlayerMode != EPlayerMode::PM_VideoMode)
-			{
-				DisplayLoadingScreen(false, true);
-			}
-			else
-			{
-				LoadingScreenFadeDelay();
-			}
-			break;
-		}
-		case EPlayerMode::PM_ObservationMode:
-		{
-			if (IsValid(PlayerHUD))
-			{
-				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Hidden);
-			}
-			break;
-		}
-		case EPlayerMode::PM_DialogueMode:
-			{
-				HideDialogueBox();
-				break;
-			}
-		case EPlayerMode::PM_VideoMode:
-		{
-			RemoveMoviePlayerWidget();
-			break;
-		}
-		case EPlayerMode::PM_MainMenuMode:
-		{
-			RemoveMainMenu();
-			break;
-		}
-		case EPlayerMode::PM_SystemMenuMode:
-		{
-			RemoveSystemMenu();
-			break;
-		}
-		case EPlayerMode::PM_InterrogationMode:
-		{
-			HideDialogueBox();
-			break;
-		}
-		default:
-		{
-			break;
-		}
-	}
-		
-	switch (NewPlayerMode)
-	{
-		case EPlayerMode::PM_ExplorationMode:
-		{
-			CreatePlayerHUD();
-			SetMenuMode(false);
-			break;
-		}
-		case EPlayerMode::PM_MainMenuMode:
-		{
-			CreateMainMenu();
-			SetMenuMode(true, MainMenu);
-			break;	
-		}
-		case EPlayerMode::PM_SystemMenuMode:
-		{
-			CreateSystemMenu();
-			SetMenuMode(true, SystemMenu);
-			break;	
-		}
-		case EPlayerMode::PM_CinematicMode:
-		{
-			HideActiveInteractionWidgets();
-			DisplayLoadingScreen(false, false);
-			SetMenuMode(false);
-			break;	
-		}
-		case EPlayerMode::PM_VideoMode:
-		{
-			HideActiveInteractionWidgets();
-			CreateMoviePlayerWidget();
-			DisplayLoadingScreen(false, false);
-			SetMenuMode(false, MoviePlayerWidget);
-			break;
-		}
-		case EPlayerMode::PM_LevelLoadingMode:
-		{
-			HideActiveInteractionWidgets();
-			DisplayLoadingScreen(true, true);
-			break;	
-		}
-		case EPlayerMode::PM_ObservationMode:
-		{
-			CreatePlayerHUD();
-			if (IsValid(PlayerHUD))
-			{
-				PlayerHUD->GetReticle()->SetVisibility(ESlateVisibility::Visible);
-			}
-			break;
-		}
-		case EPlayerMode::PM_DialogueMode:
-		{
-			CreatePlayerHUD();
-			DisplayDialogueBox();
-			break;
-		}
-		case EPlayerMode::PM_InterrogationMode:
-		{
-			break;
-		}
-		case EPlayerMode::PM_TitleCardMode:
-		{
-			break;
-		}
-		default:
-		{
-			CreatePlayerHUD();
-			SetMenuMode(false);
-			break;
-		}
-	}
+	Super::OnGameplayTagRemoved(InRemovedTag);
+
+	RemoveUIDelegateContainer.Find(InRemovedTag)->Execute();
+}
+
+void UAoS_UIManager::BindCaseManagerDelegates()
+{
+	UAoS_CaseManager* CaseManager = GameInstance->GetSubsystem<UAoS_CaseManager>();
+	if (!IsValid(CaseManager)) {return;}
+
+	// Case Bindings
+	CaseManager->OnCaseAccepted.AddDynamic(this, &ThisClass::OnCaseAccepted);
+	CaseManager->OnCaseActivated.AddDynamic(this, &ThisClass::OnCaseActivated);
+	CaseManager->OnCaseComplete.AddDynamic(this, &ThisClass::OnCaseCompleted);
+
+	// Part Bindings
+	CaseManager->OnPartActivated.AddDynamic(this, &ThisClass::OnPartActivated);
+	CaseManager->OnPartComplete.AddDynamic(this, &ThisClass::OnPartCompleted);
+
+	// Objective Bindings
+	CaseManager->OnObjectiveActivated.AddDynamic(this, &ThisClass::OnObjectiveActivated);
+	CaseManager->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);
+}
+
+void UAoS_UIManager::InitializeDelegates()
+{
+	Super::InitializeDelegates();
+	
+	AddMapMenuDelegate.BindUObject(this, &ThisClass::CreateMapMenu);
+	AddHUDDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
+	AddLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, true, true);
+	AddVideoScreenDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
+	AddSystemMenuDelegate.BindUObject(this, &ThisClass::CreateSystemMenu);
+
+	UAoS_UserWidget* UserWidgetHUD = Cast<UAoS_UserWidget>(PlayerHUD);
+	
+	RemoveMapMenuDelegate.BindUObject(this, &ThisClass::RemoveAOSWidget, MapMenu);
+	RemoveHUDDelegate.BindUObject(this, &ThisClass::RemoveAOSWidget, UserWidgetHUD);
+	RemoveLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, false, true);
+	RemoveVideoScreenDelegate.BindUObject(this, &ThisClass::RemoveMoviePlayerWidget);
+	RemoveSystemMenuDelegate.BindUObject(this, &ThisClass::RemoveAOSWidget, SystemMenu);
+}
+
+void UAoS_UIManager::InitializeDelegateMaps()
+{
+	Super::InitializeDelegateMaps();
+	
+	AddUIDelegateContainer.Add(AOSTag_UI_Menu_Game, AddGameMenuDelegate);
+	AddUIDelegateContainer.Add(AOSTag_UI_Menu_Map, AddMapMenuDelegate);
+	AddUIDelegateContainer.Add(AOSTag_UI_Menu_System, AddSystemMenuDelegate);
+	AddUIDelegateContainer.Add(AOSTag_UI_Menu_Vendor, AddVendorMenuDelegate);
+	AddUIDelegateContainer.Add(AOSTag_UI_HUD, AddHUDDelegate);
+	AddUIDelegateContainer.Add(AOSTag_UI_Screen_Loading, AddLoadingScreenDelegate);
+	AddUIDelegateContainer.Add(AOSTag_UI_Screen_Video, AddVideoScreenDelegate);
+	
+	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_Game, RemoveGameMenuDelegate);
+	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_Map, RemoveMapMenuDelegate);
+	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_System, RemoveSystemMenuDelegate);
+	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_Vendor, RemoveVendorMenuDelegate);
+	RemoveUIDelegateContainer.Add(AOSTag_UI_HUD, RemoveHUDDelegate);
+	RemoveUIDelegateContainer.Add(AOSTag_UI_Screen_Loading, RemoveLoadingScreenDelegate);
+	RemoveUIDelegateContainer.Add(AOSTag_UI_Screen_Video, RemoveVideoScreenDelegate);
 }
 
 void UAoS_UIManager::CreatePlayerHUD()
 {
-	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
-	
-	PlayerHUD =	CreateWidget<UAoS_HUD>(GameInstance, GameInstance->GetGameMode()->PlayerHUD_Class);
-	if (IsValid(PlayerHUD))
-	{
-		PlayerHUD->AddToViewport();
-	}
+	if (!IsValid(GameInstance->GetGameMode())){return;}
+
+	CreateAOSWidget(PlayerHUD, GameInstance->GetGameMode()->PlayerHUD_Class);
 }
 
 void UAoS_UIManager::CreateMoviePlayerWidget()
@@ -241,7 +174,6 @@ void UAoS_UIManager::CreateMoviePlayerWidget()
 		}
 		else
 		{
-			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 		}
 	}
 }
@@ -251,7 +183,7 @@ void UAoS_UIManager::RemoveMoviePlayerWidget()
 	if (!IsValid(MoviePlayerWidget)){return;}
 	
 	MoviePlayerWidget->OnVideoStopped();
-	MoviePlayerWidget = nullptr;
+	RemoveAOSWidget(MoviePlayerWidget);
 }
 
 void UAoS_UIManager::ShowCaseTitleCard()
@@ -264,7 +196,6 @@ void UAoS_UIManager::ShowCaseTitleCard()
 	TitleCardDelayDelegate.Execute();
 	if (IsValid(CaseTitleCardWidget))
 	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_TitleCardMode);
 	}
 	TitleCardDelayDelegate.Unbind();
 }
@@ -283,78 +214,60 @@ void UAoS_UIManager::CreateCaseTitleCard(UAoS_Case* InCase, bool bShouldFadeIn)
 
 void UAoS_UIManager::RemoveCaseTitleCard()
 {
-	CaseTitleCardWidget->RemoveFromParent();
-	CaseTitleCardWidget = nullptr;
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
-	GameInstance->GetCaseManager()->OnCaseTitleCardComplete.Broadcast();
-}
-
-void UAoS_UIManager::ShowPlayerHUD(bool bShouldShow)
-{
-	if (bShouldShow)
-	{
-		PlayerHUD->SetVisibility(ESlateVisibility::Visible);
-	}
-	else
-	{
-		PlayerHUD->SetVisibility(ESlateVisibility::Hidden);
-	}
-}
-
-void UAoS_UIManager::RemovePlayerHUD()
-{
-	if (!IsValid(PlayerHUD)){return;}
+	RemoveAOSWidget(CaseTitleCardWidget);
 	
-	PlayerHUD->RemoveFromParent();
+	const UAoS_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_CaseManager>();
+	if (!IsValid(CaseManager)) {return;}
+	
+	CaseManager->OnCaseTitleCardComplete.Broadcast();
 }
 
-void UAoS_UIManager::CreateMainMenu()
+void UAoS_UIManager::CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, TSubclassOf<UAoS_UserWidget> InWidgetClass)
 {
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(PlayerController) || !IsValid(GameInstance->GetGameMode())){return;}
+	if (!IsValid(PlayerController) || !IsValid(InWidgetClass)){return;}
 	
-	MainMenu =	CreateWidget<UAoS_UserWidget>(PlayerController,  GameInstance->GetGameMode()->MainMenuClass);
-	if (IsValid(MainMenu))
+	InWidgetPtr = CreateWidget<UAoS_UserWidget>(PlayerController, InWidgetClass);
+	if (IsValid(InWidgetPtr))
 	{
-		MainMenu->AddToViewport();
+		InWidgetPtr->AddToViewport();
+		SetMenuMode(true, InWidgetPtr);
 	}
 }
 
-void UAoS_UIManager::RemoveMainMenu()
+void UAoS_UIManager::RemoveAOSWidget(UAoS_UserWidget* InWidgetPtr)
 {
-	if (!IsValid(MainMenu)){return;}
+	if (!IsValid(InWidgetPtr)){return;}
 	
-	MainMenu->RemoveFromParent();
+	InWidgetPtr->RemoveFromParent();
+	InWidgetPtr = nullptr;
+}
+
+void UAoS_UIManager::CreateMapMenu()
+{
+	const UAoS_LevelManager* LevelManager = GameInstance->GetSubsystem<UAoS_LevelManager>();
+	if (!IsValid(LevelManager)){return;}
+
+	const UAoS_MenuMapData* MenuMapData = Cast<UAoS_MenuMapData>(LevelManager->GetCurrentMap());
+	if (!IsValid(MenuMapData) || !IsValid(MenuMapData->MapMenuWidgetClass)){return;}
+
+	CreateAOSWidget(MapMenu, MenuMapData->MapMenuWidgetClass);
 }
 
 void UAoS_UIManager::CreateSystemMenu()
 {
-	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(PlayerController) || !IsValid(GameInstance->GetGameMode())){return;}
-	
-	SystemMenu = CreateWidget<UAoS_UserWidget>(PlayerController, GameInstance->GetGameMode()->SystemMenuClass);
-	if (IsValid(SystemMenu))
-	{
-		SystemMenu->AddToViewport();
-	}
-}
+	if (!IsValid(GameInstance->GetGameMode())){return;}
 
-void UAoS_UIManager::RemoveSystemMenu()
-{
-	if (!IsValid(SystemMenu)){return;}
-	
-	SystemMenu->RemoveFromParent();
+	CreateAOSWidget(SystemMenu, GameInstance->GetGameMode()->SystemMenuClass);
 }
 
 void UAoS_UIManager::ToggleSystemMenu()
 {
 	if (!IsValid(SystemMenu))
 	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_SystemMenuMode);
 	}
 	else
 	{
-		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
 	}
 }
 
@@ -369,13 +282,6 @@ UAoS_SkipWidget* UAoS_UIManager::CreateSkipWidget()
 		SkipWidget->AddToViewport();
 	}
 	return SkipWidget;
-}
-
-void UAoS_UIManager::RemoveSkipWidget()
-{
-	if (!IsValid(SkipWidget)){return;}
-	
-	SkipWidget->RemoveFromParent();
 }
 
 void UAoS_UIManager::SetMenuMode(bool bInMenu, UAoS_UserWidget* WidgetToFocus)
@@ -495,7 +401,7 @@ void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
 	if (IsValid(AcceptedCase->TitleCardWidget))
 	{
 		PlayerHUD->ShowCaseAcceptedWidget();
-		TitleCardDelayDelegate.BindUObject(this, &ThisClass::CreateCaseTitleCard, AcceptedCase, GameInstance->GetPreviousPlayerMode() == EPlayerMode::PM_ExplorationMode);
+		//TitleCardDelayDelegate.BindUObject(this, &ThisClass::CreateCaseTitleCard, AcceptedCase, GameInstance->GetPreviousPlayerMode() == EPlayerMode::PM_ExplorationMode);
 	}
 }
 

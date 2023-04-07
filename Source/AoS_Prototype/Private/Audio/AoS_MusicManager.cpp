@@ -6,6 +6,7 @@
 #include "AudioDevice.h"
 #include "Components/AudioComponent.h"
 #include "Data/Maps/AoS_MapData.h"
+#include "GameModes/AoS_GameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Levels/AoS_LevelManager.h"
 
@@ -30,7 +31,7 @@ void UAoS_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
 
-	UAoS_LevelManager* LevelManager = GameInstance->GetLevelManager();
+	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
 	if (IsValid(LevelManager))
 	{
 		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelLoaded);
@@ -38,7 +39,7 @@ void UAoS_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 	}
 }
 
-void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
+/*void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
 {
 	Super::OnPlayerModeChanged(NewPlayerMode, InPreviousPlayerMode);
 	
@@ -77,7 +78,7 @@ void UAoS_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMo
 			break;
 		}
 	}
-}
+}*/
 
 void UAoS_MusicManager::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
 {
@@ -124,10 +125,13 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FAoS_MusicSettings InMus
 		BackgroundMusic->SetFloatParameter("Start Time", CurrentMusicSettings.StartTime);
 
 		GetWorld()->GetTimerManager().SetTimer(MusicTimecode, this, &ThisClass::TickMusicTimecode, 0.001f, true);
+
+		const AAoS_GameMode* GameMode = GameInstance->GetGameMode();
+		if (!IsValid(GameMode)) {return nullptr;}
 		
 		if (CurrentMusicSettings.bShouldFade)
 		{
-			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
+			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameMode->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
 			BackgroundMusic->FadeIn(FadeInDuration);
 		}
 		else
@@ -164,7 +168,10 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(FAoS_MusicS
 
 		if (CurrentMusicSettings.bShouldFade)
 		{
-			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
+			const AAoS_GameMode* GameMode = GameInstance->GetGameMode();
+			if (!IsValid(GameMode)) {return nullptr;}
+			
+			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameMode->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
 			BackgroundMusic->FadeIn(FadeInDuration);
 		}
 		else
@@ -185,8 +192,11 @@ void UAoS_MusicManager::PauseMusicWithFade()
 	{
 		return;
 	}
+	
+	const AAoS_GameMode* GameMode = GameInstance->GetGameMode();
+	if (!IsValid(GameMode)) {return;}
 
-	const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
+	const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameMode->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
 	
 	MusicTimeAtPause += FadeInDuration;
 	MusicVolumeAtPause = CurrentMusicSettings.VolumeMultiplier;
@@ -227,7 +237,10 @@ void UAoS_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLe
 	{
 		if (bShouldFade)
 		{
-			const float FadeOutDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeOutDuration : CurrentMusicSettings.FadeOutDuration;
+			const AAoS_GameMode* GameMode = GameInstance->GetGameMode();
+			if (!IsValid(GameMode)) {return;}
+			
+			const float FadeOutDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameMode->GlobalFadeOutDuration : CurrentMusicSettings.FadeOutDuration;
 			BackgroundMusic->FadeOut(FadeOutDuration, FadeVolumeLevel);
 		}
 		else

@@ -56,8 +56,6 @@ void AAoS_GameMode::BeginPlay()
 	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (!IsValid(GameInstance)){return;}
 
-	GameInstance->SetGameMode(this);
-
 	GameInstance->OnGameModeBeginPlay.Broadcast();
 }
 

@@ -6,7 +6,12 @@ public class AoS_Prototype : ModuleRules
 {
 	public AoS_Prototype(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PrivateDependencyModuleNames.AddRange(new string[] { "GenericGraphRuntime"});
+		PrivateDependencyModuleNames.AddRange(new string[] { 
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks",
+			"GenericGraphRuntime",
+		});
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] {
@@ -14,10 +19,7 @@ public class AoS_Prototype : ModuleRules
 			"AIModule",
 			"Core", 
 			"CoreUObject",
-			"Engine", 
-			"GameplayAbilities",
-			"GameplayTags",
-			"GameplayTasks", 
+			"Engine",
 			"InputCore",
 			"LevelSequence",
 			"MediaAssets",

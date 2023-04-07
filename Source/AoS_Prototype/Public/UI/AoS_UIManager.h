@@ -38,10 +38,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreatePlayerHUD();
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void ShowPlayerHUD(bool bShouldShow);
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void RemovePlayerHUD();
-	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateMoviePlayerWidget();
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveMoviePlayerWidget();
@@ -53,22 +49,21 @@ public:
 	void RemoveCaseTitleCard();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void CreateMainMenu();
+	void CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, TSubclassOf<UAoS_UserWidget> InWidgetClass);
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void RemoveMainMenu();
+	void RemoveAOSWidget(UAoS_UserWidget* InWidgetPtr);
+	
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void CreateMapMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateSystemMenu();
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void RemoveSystemMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void ToggleSystemMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	UAoS_SkipWidget* CreateSkipWidget();
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void RemoveSkipWidget();
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
@@ -110,9 +105,12 @@ public:
 protected:
 
 	virtual void OnGameInstanceInit() override;
-	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode) override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void OnGameModeBeginPlay() override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
 
+	
 	void DisplayDialogueBox();
 	void HideDialogueBox();
 	void HideActiveInteractionWidgets();
@@ -122,6 +120,8 @@ protected:
 private:
 
 	void BindCaseManagerDelegates();
+	virtual void InitializeDelegates() override;
+	virtual void InitializeDelegateMaps() override;
 	
 	UPROPERTY()
 	AAoS_PlayerController* PlayerController;
@@ -133,6 +133,8 @@ private:
 	UAoS_UserWidget* SystemMenu;
 	UPROPERTY()
 	UAoS_UserWidget* MainMenu;
+	UPROPERTY()
+	UAoS_UserWidget* MapMenu;
 	UPROPERTY()
 	UAoS_SkipWidget* SkipWidget;
 	UPROPERTY()
@@ -146,5 +148,26 @@ private:
 	FTimerDelegate LoadingScreenFadeDelayDelegate;
 
 	FSimpleDelegate TitleCardDelayDelegate;
+
+	TMap<FGameplayTag, FSimpleDelegate> AddUIDelegateContainer;
 	
+	FSimpleDelegate AddGameMenuDelegate;
+	FSimpleDelegate AddMapMenuDelegate;
+	FSimpleDelegate AddSystemMenuDelegate;
+	FSimpleDelegate AddVendorMenuDelegate;
+	FSimpleDelegate AddHUDDelegate;
+	FSimpleDelegate AddLoadingScreenDelegate;
+	FSimpleDelegate AddVideoScreenDelegate;
+
+
+	TMap<FGameplayTag, FSimpleDelegate> RemoveUIDelegateContainer;
+
+	FSimpleDelegate RemoveGameMenuDelegate;
+	FSimpleDelegate RemoveMapMenuDelegate;
+	FSimpleDelegate RemoveSystemMenuDelegate;
+	FSimpleDelegate RemoveVendorMenuDelegate;
+	FSimpleDelegate RemoveHUDDelegate;
+	FSimpleDelegate RemoveLoadingScreenDelegate;
+	FSimpleDelegate RemoveVideoScreenDelegate;
+
 };

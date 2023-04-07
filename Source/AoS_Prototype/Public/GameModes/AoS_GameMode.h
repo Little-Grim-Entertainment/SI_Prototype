@@ -47,6 +47,16 @@ public:
 	UAoS_CharacterData* GizboCDA;
 	UPROPERTY(EditAnywhere, Category = Data)
 	UAoS_MapList* MapList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
+	float TimeModifier = 10.0f;
+	UPROPERTY(EditAnywhere, Category = "Levels")
+	float LevelLoadDelay = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
+	float GlobalFadeInDuration = .5f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
+	float GlobalFadeOutDuration = .5f;
 	
 	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
 	APlayerStart* GetPlayerStart(FString InPlayerStartTag = FString(TEXT(""))) const;

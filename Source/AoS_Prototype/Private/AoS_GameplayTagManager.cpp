@@ -4,8 +4,7 @@
 #include "AoS_GameplayTagManager.h"
 
 #include "AoS_GameplayTagTypes.h"
-#include "AoS_NativeGameplayTagLibrary.h"
-#include "Levels/AoS_MapGameplayTagLibrary.h"
+
 
 void UAoS_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
 {
@@ -23,6 +22,35 @@ void UAoS_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag)
 
 	ContainerToRemoveFrom.RemoveTag(InGameplayTag);
 	OnTagRemovedDelegate.Broadcast(InGameplayTag);
+}
+
+void UAoS_GameplayTagManager::ClearAllTagsFromContainer(FAoS_GameplayTagContainer& InContainerToClear)
+{
+	TArray<FGameplayTag> AllContainerTags;
+	InContainerToClear.GetGameplayTagArray(AllContainerTags);
+	for (FGameplayTag& CurrentGameplayTag : AllContainerTags)
+	{
+		RemoveTag(CurrentGameplayTag);
+	}
+}
+
+void UAoS_GameplayTagManager::ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag)
+{
+	TArray<FGameplayTag> AllGameplayTags;
+	const FAoS_GameplayTagContainer& TagTypeContainer = GetContainerTypeByTag(InNewTag);
+	if(!TagTypeContainer.IsValid()){return;}
+
+	TagTypeContainer.GetGameplayTagArray(AllGameplayTags);
+
+	for (FGameplayTag& CurrentGameplayTag : AllGameplayTags)
+	{
+		if (HasParentTag(CurrentGameplayTag, InParentTag))
+		{
+			RemoveTag(CurrentGameplayTag);
+		}
+	}
+	
+	AddNewGameplayTag(InNewTag);
 }
 
 bool UAoS_GameplayTagManager::HasGameplayTag(const FGameplayTag& InGameplayTag)

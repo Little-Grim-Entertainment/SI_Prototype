@@ -67,7 +67,7 @@ struct FAoS_InputMapping
 	GENERATED_BODY()
 
 	const UInputMappingContext* GetInputMappingContext() const;
-	const FGameplayTag& GetAssociatedPlayerModeTag() const;
+	const FGameplayTag& GetAssociatedTag() const;
 	const FGameplayTag& GetSecondaryTag() const;
 	bool IsDefaultMappingForMode() const;
 	
@@ -81,7 +81,7 @@ private:
 	UInputMappingContext* InputMappingContext = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (Categories = "Player.Mode"))
-	FGameplayTag AssociatedPlayerModeTag;
+	FGameplayTag AssociatedTag;
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTag SecondaryTag;
 

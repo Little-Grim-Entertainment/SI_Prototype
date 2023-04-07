@@ -47,8 +47,6 @@ public:
 
 private:
 
-
-
 	UFUNCTION()
 	virtual UWidgetComponent* GetInteractionIconComponent_Implementation() override;
 	UFUNCTION()

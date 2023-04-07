@@ -63,12 +63,15 @@ void UAoS_MediaManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay
 
 	if(!IsValid(GameInstance) || !IsValid(InCinematicToPlay->CinematicPlayer)){return;}
 
-	if (!GameInstance->GetLevelManager()->GetLevelHasLoaded())
+	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
+	if (!IsValid(LevelManager)) {return;}
+	
+	if (!LevelManager->GetLevelHasLoaded())
 	{
 		if (DelayedCinematicDelegate.IsBound()){DelayedCinematicDelegate.Unbind();}
 		
 		DelayedCinematicDelegate.BindUObject(this, &ThisClass::PlayCinematic, InCinematicToPlay, InCinematicSettings);
-		GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedCinematicPlay);
+		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedCinematicPlay);
 		return;
 	}
 
@@ -76,7 +79,7 @@ void UAoS_MediaManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay
 	LoadedCinematic->CinematicPlayer->OnPause.AddDynamic(this, &ThisClass::OnCinematicSkipped);
 	LoadedCinematic->CinematicPlayer->Play();
 	
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
+	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
 	OnCinematicBeginPlay.Broadcast(LoadedCinematic);
 }
 
@@ -91,13 +94,16 @@ void UAoS_MediaManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, FAoS_Video
 
 	LoadedVideo->bCanRepeat = InVideoSettings.bShouldRepeat;
 	LoadedVideo->MediaPlayer->SetNativeVolume(InVideoSettings.Volume);
+
+	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
+	if (!IsValid(LevelManager)) {return;}
 	
-	if (!GameInstance->GetLevelManager()->GetLevelHasLoaded())
+	if (!LevelManager->GetLevelHasLoaded())
 	{
 		if (DelayedVideoDelegate.IsBound()){DelayedVideoDelegate.Unbind();}
 		
 		DelayedVideoDelegate.BindUObject(this, &ThisClass::PlayVideo, InVideoToPlay, InVideoSettings);
-		GameInstance->GetLevelManager()->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedVideoPlay);
+		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedVideoPlay);
 		return;
 	}
 	
@@ -115,7 +121,7 @@ void UAoS_MediaManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, FAoS_Video
 	LoadedVideo->MediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::UAoS_MediaManager::OnVideoEnded);
 	LoadedVideo->MediaPlayer->OnMediaClosed.AddDynamic(this, &ThisClass::UAoS_MediaManager::OnVideoSkipped);
 
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_VideoMode);
+	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_VideoMode);
 
 	// Note: Playing the actual video file happens in the widget blueprint
 	LoadedVideo->MediaPlayer->Play();
@@ -259,11 +265,11 @@ void UAoS_MediaManager::OnCinematicSkipped()
 	AddToWatchedCinematics(LoadedCinematic);
 	if(LoadedCinematic->bIsOpeningMedia)
 	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
+		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
 	}
 	else
 	{
-		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
@@ -275,11 +281,11 @@ void UAoS_MediaManager::OnCinematicEnded()
 	AddToWatchedCinematics(LoadedCinematic);
 	if (LoadedCinematic->bIsOpeningMedia)
 	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
+		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 	}
 	else
 	{
-		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
@@ -305,11 +311,11 @@ void UAoS_MediaManager::OnVideoEnded()
 	AddToWatchedVideos(LoadedVideo);
 	if (LoadedVideo->bIsOpeningMedia)
 	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
+		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
 	}
 	else
 	{
-		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
@@ -321,11 +327,11 @@ void UAoS_MediaManager::OnVideoSkipped()
 	AddToWatchedVideos(LoadedVideo);
 	if(LoadedVideo->bIsOpeningMedia)
 	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
+		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
 	}
 	else
 	{
-		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
 	}
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }

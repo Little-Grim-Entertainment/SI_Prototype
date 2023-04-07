@@ -11,26 +11,31 @@ void UAoS_WorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
+	InitializeDelegates();
+	InitializeDelegateMaps();
+}
+
+void UAoS_WorldSubsystem::InitializeDelegates()
+{
 	if (!IsValid(GameInstance)){return;}
 
-	GameInstance->OnPlayerModeChanged.AddDynamic(this, &ThisClass::OnPlayerModeChanged);
-	GameInstance->OnGameModeBeginPlay.AddDynamic(this, &ThisClass::OnGameModeBeginPlay);
+	GameInstance->OnGameModeBeginPlay.AddUObject(this, &ThisClass::OnGameModeBeginPlay);
 	
-	AoS_GameplayTagManager = GameInstance->GetSubsystem<UAoS_GameplayTagManager>();
-	if (!IsValid(AoS_GameplayTagManager)) {return;}
+	AoSTagManager = GameInstance->GetSubsystem<UAoS_GameplayTagManager>();
+	if (!IsValid(AoSTagManager)) {return;}
 
-	AoS_GameplayTagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
-	AoS_GameplayTagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);
+	AoSTagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
+	AoSTagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);
+}
+
+void UAoS_WorldSubsystem::InitializeDelegateMaps()
+{
+	
 }
 
 void UAoS_WorldSubsystem::OnGameModeBeginPlay()
 {
 	
-}
-
-void UAoS_WorldSubsystem::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
-{
-
 }
 
 void UAoS_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)

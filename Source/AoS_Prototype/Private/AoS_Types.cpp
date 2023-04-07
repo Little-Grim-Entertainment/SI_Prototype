@@ -22,9 +22,9 @@ const UInputMappingContext* FAoS_InputMapping::GetInputMappingContext() const
 	return InputMappingContext;
 }
 
-const FGameplayTag& FAoS_InputMapping::GetAssociatedPlayerModeTag() const
+const FGameplayTag& FAoS_InputMapping::GetAssociatedTag() const
 {
-	return AssociatedPlayerModeTag;
+	return AssociatedTag;
 }
 
 const FGameplayTag& FAoS_InputMapping::GetSecondaryTag() const

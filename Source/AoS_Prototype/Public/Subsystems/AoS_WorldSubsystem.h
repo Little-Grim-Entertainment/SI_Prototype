@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "AoS_GameplayTagTypes.h"
+#include "AoS_NativeGameplayTagLibrary.h"
 #include "AoS_WorldSubsystem.generated.h"
 
 enum class EPlayerMode : uint8;
 
 class UAoS_GameInstance;
 class UAoS_GameplayTagManager;
+
+using namespace AoS_NativeGameplayTagLibrary;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_WorldSubsystem : public UWorldSubsystem
@@ -22,14 +24,16 @@ protected:
 	UPROPERTY()
 	UAoS_GameInstance* GameInstance;
 	UPROPERTY()
-	UAoS_GameplayTagManager* AoS_GameplayTagManager;
+	UAoS_GameplayTagManager* AoSTagManager;
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	UFUNCTION()
-	virtual void OnGameModeBeginPlay();
+	virtual void InitializeDelegates();
 	UFUNCTION()
-	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode);
+	virtual void InitializeDelegateMaps();
+	UFUNCTION()
+	virtual void OnGameModeBeginPlay();
 	UFUNCTION()
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
 	UFUNCTION()

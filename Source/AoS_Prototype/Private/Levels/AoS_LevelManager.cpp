@@ -14,7 +14,6 @@
 #include "GameModes/AoS_GameMode.h"
 #include "Data/Maps/AoS_MapData.h"
 #include "Data/Media/AoS_CinematicDataAsset.h"
-#include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "MediaPlayer.h"
@@ -100,14 +99,16 @@ void UAoS_LevelManager::LoadLevelByTag(const FGameplayTag InLevelToLoadTag,  FSt
 	}
 	
 	OnBeginLevelLoad.Broadcast(MapStateToLoad.GetMapData(), bShouldFade);
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+	
+	const AAoS_GameMode* GameMode = GameInstance->GetGameMode();
+	if (!IsValid(GameMode)) {return;}
 	
 	if (GetWorld() != MapStateToLoad.GetMapData()->Map.Get())
 	{
 		if (bAllowDelay)
 		{
 			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevelByTag, MapStateToLoad.GetMapData()->MapTag, InPlayerStartTag, false, bShouldFade);
-			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameInstance->LevelLoadDelay, false);
+			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameMode->LevelLoadDelay, false);
 		}
 		else
 		{
@@ -139,7 +140,7 @@ void UAoS_LevelManager::LoadLevelOnMediaComplete(const FAoS_MapState& InLevelToL
 
 void UAoS_LevelManager::LoadLevelOnVideoComplete(const FAoS_MapState& InLevelToLoad, const UAoS_VideoDataAsset* InVideoToPlay, FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
-	GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+	//GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
 
 	const FGameplayTag& LevelToLoadTag = InLevelToLoad.GetMapData()->MapTag;
 	
@@ -150,7 +151,7 @@ void UAoS_LevelManager::LoadLevelOnVideoComplete(const FAoS_MapState& InLevelToL
 
 void UAoS_LevelManager::LoadLevelOnCinematicComplete(const FAoS_MapState& InLevelToLoad, const UAoS_CinematicDataAsset* InCinematicToPlay, FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
-	GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
+	//GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
 
 	const FGameplayTag& LevelToLoadTag = InLevelToLoad.GetMapData()->MapTag;
 
@@ -241,7 +242,7 @@ void UAoS_LevelManager::LevelLoaded()
 	LoadedMapState = LevelStateToLoad;
 	if (LoadedMapState->GetMapData()->MapType == AOSTag_Map_Type_Menu)
 	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_MainMenuMode);
+		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_MainMenuMode);
 	}
 	else
 	{
@@ -252,7 +253,7 @@ void UAoS_LevelManager::LevelLoaded()
 		}
 		else
 		{
-			GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
+			//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
 		}
 	}
 	

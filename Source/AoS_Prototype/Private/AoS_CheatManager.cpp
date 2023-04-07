@@ -39,7 +39,7 @@ void UAoS_CheatManager::InitCheatManager()
 
 void UAoS_CheatManager::CheatResetCase(FString CaseToResetName)
 {
-	if (UAoS_CaseManager* CaseManager = GameInstance->GetCaseManager())
+	if (UAoS_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_CaseManager>())
 	{
 		if (CaseToResetName == "All")
 		{

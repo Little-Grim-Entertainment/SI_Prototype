@@ -18,8 +18,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorT
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCameraSetup);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPostCameraSetup, AActor*, InNewViewTarget);
 
-enum class EPlayerMode : uint8;
-
 class AAoS_Nick;
 class UAoS_HUD;
 
@@ -126,9 +124,6 @@ protected:
 	void RequestGizboMoveToTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboMoveToCancel(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	
-	UFUNCTION()
-	void OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlayerMode InPreviousPlayerMode);
 
 private:
 

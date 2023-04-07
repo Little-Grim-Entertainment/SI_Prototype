@@ -34,7 +34,7 @@ void UAoS_DialogueManager::StartDialogue(UAoS_CharacterData* InCharacterData)
 
 	CurrentDialogue = CurrentCharacterData->GetCurrentDialogueData(CaseManager).RelevantDialogue;
 	CurrentDialogue->StartDialogue(CurrentCharacterData, this, CaseManager);
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
+	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
 }
 
 void UAoS_DialogueManager::ExitDialogue(UDialogueSessionNode* NewSaveNode, int32 NewAngerLevel)
@@ -48,7 +48,7 @@ void UAoS_DialogueManager::ExitDialogue(UDialogueSessionNode* NewSaveNode, int32
 	CurrentDialogue = nullptr;
 	CurrentCharacterData = nullptr;
 
-	GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
+	//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
 }
 
 void UAoS_DialogueManager::OnNextPressed()
@@ -92,12 +92,12 @@ void UAoS_DialogueManager::StartDefaultDialogue(UAoS_CharacterData* InCharacterD
 	// TO DO: find default dialogue
 
 
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
+	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
 }
 
 void UAoS_DialogueManager::OnInterrogationPressed()
 {
-	GameInstance->RequestNewPlayerMode(EPlayerMode::PM_InterrogationMode);
+	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_InterrogationMode);
 }
 
 UDialogueSession* UAoS_DialogueManager::GetCurrentDialogue()
@@ -137,7 +137,8 @@ bool UAoS_DialogueManager::HasItemOptions()
 
 bool UAoS_DialogueManager::CanEnterInterrogation()
 {
-	return (GameInstance->GetPlayerMode() == EPlayerMode::PM_InterrogationMode && CurrentDialogue != nullptr && CurrentDialogue->bIsInterrogationDialogue);
+	//return (GameInstance->GetPlayerMode() == EPlayerMode::PM_InterrogationMode && CurrentDialogue != nullptr && CurrentDialogue->bIsInterrogationDialogue);
+	return false;
 }
 
 UDialogueSession* UAoS_DialogueManager::FindDialogue(UAoS_Case* Case, UAoS_Part* Part)

@@ -73,7 +73,7 @@ void AAoS_Nick::BeginPlay()
 	const UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	if (!IsValid(GameInstance)) {return;}
 
-	LevelManager = GameInstance->GetLevelManager();
+	LevelManager = GameInstance->GetSubsystem<UAoS_LevelManager>();
 	if (!IsValid(LevelManager)){return;}
 
 	if(LevelManager->GetLevelHasLoaded())

@@ -54,7 +54,6 @@ public:
 protected:
 
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
-	virtual void OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode) override;
 
 	UFUNCTION()
 	void OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade);

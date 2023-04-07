@@ -19,6 +19,9 @@ public:
 
 	void AddNewGameplayTag(const FGameplayTag& InGameplayTag);
 	void RemoveTag(const FGameplayTag& InGameplayTag);
+	void ClearAllTagsFromContainer(FAoS_GameplayTagContainer& InContainerToClear);
+	void ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag );
+	
 	bool HasGameplayTag(const FGameplayTag& InGameplayTag);
 	bool HasParentTag(const FGameplayTag& InTagToCheck, const FGameplayTag& InParentTag) const;
 	TArray<FAoS_GameplayTagContainer>& GetAllTagContainers();

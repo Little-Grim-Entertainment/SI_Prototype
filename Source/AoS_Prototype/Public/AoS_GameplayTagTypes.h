@@ -20,7 +20,7 @@ struct FAoS_GameplayTagContainer : public FGameplayTagContainer
 
 	void SetParentTag(const FGameplayTag& InParentTag);
 	const FGameplayTag& GetParentTag() const;
-	
+		
 private:
 
 	FGameplayTag ParentTag;

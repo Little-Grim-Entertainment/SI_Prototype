@@ -37,7 +37,7 @@ const UInputMappingContext* UAoS_InputConfig::GetInputMappingByTag(const FGamepl
 	
 	for (FAoS_InputMapping CurrentInputMapping: InputMappings)
 	{
-		if(CurrentInputMapping.GetAssociatedPlayerModeTag() == InAssociatedPlayerModeTag)
+		if(CurrentInputMapping.GetAssociatedTag() == InAssociatedPlayerModeTag)
 		{
 			MatchedMappings.AddUnique(CurrentInputMapping);
 		}
