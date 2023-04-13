@@ -39,8 +39,8 @@ AAoS_Nick::AAoS_Nick()
 	ATPCCamera->SetupAttachment(RootComponent);
 
 	// Create a follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(ATPCCamera);
+	NickFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("NickFollowCamera"));
+	NickFollowCamera->SetupAttachment(ATPCCamera);
 	
 	// Create an AI Perception Stimuli Source component
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAoS_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
