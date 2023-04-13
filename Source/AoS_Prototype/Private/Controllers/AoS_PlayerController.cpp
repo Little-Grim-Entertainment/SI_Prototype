@@ -95,8 +95,8 @@ bool AAoS_PlayerController::UpdateMoveToIndicatorPosition() const
 	if (bMoveToMarker)
 	{
 		FHitResult HitResult;
-		FVector Start = Nick->GetFollowCameraActor()->GetActorLocation();
-		FVector End = Nick->GetFollowCameraActor()->GetActorLocation() + Nick->GetFollowCameraActor()->GetActorForwardVector() * 10000;
+		FVector Start = Nick->GetFollowCamera()->GetComponentLocation();
+		FVector End = Nick->GetFollowCamera()->GetComponentLocation() + Nick->GetFollowCamera()->GetForwardVector() * 10000;
 		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel2);
 
 		//TODO: Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
@@ -120,8 +120,8 @@ bool AAoS_PlayerController::UpdateMoveToIndicatorPosition() const
 
 			//TODO: Requires further tuning, to make sure that the rotation is correct.
 			//When the 'MoveTo' actor currently hits the boundary, it causes the indicator to jump away from where it was previously aligned.
-			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Nick->GetFollowCameraActor()->GetActorLocation(), HitLocation);
-			double NickArcTan = atan2(Nick->GetFollowCameraActor()->GetActorLocation().Y, Nick->GetFollowCameraActor()->GetActorLocation().X);
+			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Nick->GetFollowCamera()->GetComponentLocation(), HitLocation);
+			double NickArcTan = atan2(Nick->GetFollowCamera()->GetComponentLocation().Y, Nick->GetFollowCamera()->GetComponentLocation().X);
 			double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
 			double Angle = MoveToArcTan - NickArcTan;
 				

@@ -36,10 +36,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAoS_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
-
-	UPROPERTY()
-	ACameraActor* FollowCameraActor;
+	UCameraComponent* NickFollowCamera;
 	
 	UPROPERTY()
 	UAoS_LevelManager* LevelManager;
@@ -62,9 +59,7 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE UATPCCameraComponent* GetATPCCamera() const { return ATPCCamera; }
 	/** Returns FollowCamera subobject **/
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-	/** Returns FollowCamera Actor **/
-	FORCEINLINE ACameraActor* GetFollowCameraActor() const { return FollowCameraActor; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return NickFollowCamera; }
 	/** Returns PerceptionStimuliSourceComponent subobject **/
 	FORCEINLINE UAoS_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
 
