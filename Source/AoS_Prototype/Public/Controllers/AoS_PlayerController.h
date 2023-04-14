@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/Actor/AoS_LineTraces.h"
 #include "InputActionValue.h"
@@ -11,6 +12,7 @@
 
 class UAoS_EnhancedInputComponent;
 class UMediaSoundComponent;
+class UAoS_UserWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
@@ -88,16 +90,25 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)	
 	bool CreateLineTrace(ETraceType DrawDebugType, FVector Start, FVector End, FLinearColor TraceColor, FLinearColor TraceHitColor, FHitResult& HitResults);
 	UFUNCTION(BlueprintCallable)
-	void LockPlayerMovement(bool bLockMovement, bool bLockTurning);
-	UFUNCTION(BlueprintCallable)
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void AddInputMappingByTag(const FGameplayTag InMappingTag);
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void RemoveInputMappingByTag(const FGameplayTag InMappingTag);
 	UFUNCTION(BlueprintImplementableEvent)
 	AActor* SpawnMoveToMarker();
 
+	void SetFocusedWidget(UAoS_UserWidget* InWidgetToFocus);
+	
+	UFUNCTION()
+	void SetMenuMode(bool bSetMenuMode = false);
+	
 	UFUNCTION(BlueprintPure)
 	UMediaSoundComponent* GetMediaSoundComponent() const;
+
+	bool IsInMenuMode() const;
 
 protected:
 	// Player Input Functions
@@ -129,6 +140,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UMediaSoundComponent* MediaSoundComponent;
+	
+	UPROPERTY()
+	UAoS_UserWidget* FocusedWidget;
+
+	bool bInMenuMode;
 	
 	FTimerHandle CameraBlendHandle;
 };

@@ -8,8 +8,8 @@
 
 class UDialogueSession;
 class UDialogueSessionNode;
-class UAoS_Case;
-class UAoS_Part;
+class UAoS_CaseData;
+class UAoS_PartData;
 class UAoS_CharacterData;
 
 UCLASS()
@@ -57,7 +57,7 @@ public:
 
 	// Finds the relevant dialogue based on Case and Part
 	// To be called by CharacterManager when it is updating all of the character data
-	UDialogueSession* FindDialogue(UAoS_Case* Case, UAoS_Part* Part);
+	UDialogueSession* FindDialogue(UAoS_CaseData* Case, UAoS_PartData* Part);
 
 private:
 

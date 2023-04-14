@@ -34,12 +34,12 @@ bool UAoS_CharacterManager::GetIsActiveCharacter(UAoS_CharacterData* InCharacter
 	return false;
 }
 
-void UAoS_CharacterManager::OnPartActivated(UAoS_Part* ActivatedPart)
+void UAoS_CharacterManager::OnPartActivated(UAoS_PartData* ActivatedPart)
 {
 	
 }
 
-void UAoS_CharacterManager::OnPartCompleted(UAoS_Part* CompletedPart)
+void UAoS_CharacterManager::OnPartCompleted(UAoS_PartData* CompletedPart)
 {
 	
 }

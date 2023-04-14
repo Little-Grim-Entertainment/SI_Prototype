@@ -25,7 +25,6 @@ public:
 	TArray<UAoS_MapData*> NovaLuxDistrictInteriorMaps;
 	UPROPERTY(EditAnywhere, Category = "NovaLuxDistrict")
 	TArray<UAoS_MapData*> NovaLuxDistrictExteriorMaps;
-	
 	UPROPERTY(EditAnywhere, Category = "TestMaps")
 	TArray<UAoS_MapData*> TestMaps;
 

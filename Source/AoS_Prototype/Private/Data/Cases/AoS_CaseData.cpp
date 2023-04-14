@@ -1,19 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Data/Cases/AoS_Case.h"
-#include "Data/Cases/AoS_Part.h"
+#include "Data/Cases/AoS_CaseData.h"
+#include "Data/Cases/AoS_PartData.h"
 #include "Data/Cases/AoS_CaseManager.h"
 
-UAoS_Case::UAoS_Case()
+UAoS_CaseData::UAoS_CaseData()
 {
 	bIsComplete = false;
 	bIsActive = false;
 }
 
-UAoS_Part* UAoS_Case::GetActivePart() const
+UAoS_PartData* UAoS_CaseData::GetActivePart() const
 {
-	for (UAoS_Part* CurrentPart : Parts)
+	for (UAoS_PartData* CurrentPart : Parts)
 	{
 		if (CurrentPart->GetPartIsActive())
 		{
@@ -23,23 +23,23 @@ UAoS_Part* UAoS_Case::GetActivePart() const
 	return nullptr;
 }
 
-void UAoS_Case::ResetCase()
+void UAoS_CaseData::ResetCase()
 {
 	bIsActive = false;
 	bIsComplete = false;
-	for (UAoS_Part* CurrentPart : GetAllParts())
+	for (UAoS_PartData* CurrentPart : GetAllParts())
 	{
 		CurrentPart->ResetPart();
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Case %s reset."), *GetName()));
 }
 
-void UAoS_Case::SetCaseComplete(bool bCaseCompleted)
+void UAoS_CaseData::SetCaseComplete(bool bCaseCompleted)
 {
 	bIsComplete = bCaseCompleted;
 }
 
-void UAoS_Case::SetCaseIsActive(bool bCaseIsActive, UAoS_CaseManager* CaseManagerRef)
+void UAoS_CaseData::SetCaseIsActive(bool bCaseIsActive, UAoS_CaseManager* CaseManagerRef)
 {
 	bIsActive = bCaseIsActive;
 	if (bIsActive)
@@ -52,9 +52,9 @@ void UAoS_Case::SetCaseIsActive(bool bCaseIsActive, UAoS_CaseManager* CaseManage
 	}
 }
 
-void UAoS_Case::ActivatePart(UAoS_CaseManager* CaseManagerRef)
+void UAoS_CaseData::ActivatePart(UAoS_CaseManager* CaseManagerRef)
 {
-	for (UAoS_Part* CurrentPart : Parts)
+	for (UAoS_PartData* CurrentPart : Parts)
 	{
 		if (CurrentPart && !CurrentPart->GetPartIsComplete())
 		{
@@ -65,9 +65,9 @@ void UAoS_Case::ActivatePart(UAoS_CaseManager* CaseManagerRef)
 	}
 }
 
-void UAoS_Case::DeactivatePart(UAoS_CaseManager* CaseManagerRef)
+void UAoS_CaseData::DeactivatePart(UAoS_CaseManager* CaseManagerRef)
 {
-	for (UAoS_Part* CurrentPart : Parts)
+	for (UAoS_PartData* CurrentPart : Parts)
 	{
 		if (CurrentPart && CurrentPart->GetPartIsActive())
 		{

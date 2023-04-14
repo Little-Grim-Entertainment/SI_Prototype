@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
-#include "AoS_Objective.generated.h"
+#include "AoS_ObjectiveData.generated.h"
 
 class UAoS_MapData;
 class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
 
 USTRUCT(BlueprintType)
-struct FLevelMediaAssignment
+struct FAoS_LevelMediaAssignment
 {
 	GENERATED_BODY()
 
@@ -36,35 +36,16 @@ struct FLevelMediaAssignment
 };
 
 UCLASS(BlueprintType)
-class AOS_PROTOTYPE_API UAoS_Objective : public UDataAsset
+class AOS_PROTOTYPE_API UAoS_ObjectiveData : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
 	
-	UAoS_Objective();
+	UAoS_ObjectiveData();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ObjectiveDetails")
 	FText ObjectiveDescription;
 	UPROPERTY(EditAnywhere, Category = "Media")
-	TArray<FLevelMediaAssignment> LevelMediaAssignments;
-	
-	UFUNCTION(BlueprintPure)
-	bool GetObjectiveComplete() const {return bIsComplete;}
-	UFUNCTION(BlueprintPure)
-	bool GetObjectiveIsActive() const {return bIsActive;}
-	
-	void ResetObjective();
-	void SetObjectiveComplete(bool bObjectiveCompleted);
-	void SetObjectiveIsActive(bool bObjectiveIsActive);
-
-	void SetMediaLevelAssignments();
-	void ClearMediaLevelAssignments();
-	void ResetMediaLevelAssignments();
-
-private:
-
-	bool bIsActive;
-	bool bIsComplete;
-	
+	TArray<FAoS_LevelMediaAssignment> LevelMediaAssignments;
 };

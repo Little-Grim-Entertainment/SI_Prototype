@@ -34,14 +34,13 @@ public:
 	FOnBackgroundMusicPaused OnBackgroundMusicStopped;
 
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayLevelBackgroundMusic(FAoS_MapState& InMapState);
+	UAudioComponent* PlayLoadedLevelBackgroundMusic();
 	
 	UFUNCTION(BlueprintCallable, Category = "Music")
 	UAudioComponent* PlayBackgroundMusic(FAoS_MusicSettings InMusicSettings);
 	UFUNCTION(BlueprintCallable, Category = "Music")
-	UAudioComponent* PlayBackgroundMusicLoopWithIntro(FAoS_MusicSettings InMusicSettings);
-	UFUNCTION(BlueprintCallable, Category = "Music")
 	void PauseMusicWithFade();
+	
 	UFUNCTION(BlueprintCallable, Category = "Music")
 	void ResumeMusicWithFade();
 
@@ -54,11 +53,8 @@ public:
 protected:
 
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
-
-	UFUNCTION()
-	void OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade);
-	UFUNCTION()
-	void OnLevelUnloaded(UAoS_MapData* UnloadedLevel);
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
 
 private:
 	
@@ -77,11 +73,10 @@ private:
 
 	bool bMusicIsPlaying;
 	bool bMusicIsPaused;
-	bool bMusicHasIntro;
+	
 	float MusicTimeAtPause;
 	float MusicVolumeAtPause;
 	float MusicPitchAtPause;
-	float MusicLoopStart;
 
 	UFUNCTION()
 	void TickMusicTimecode();

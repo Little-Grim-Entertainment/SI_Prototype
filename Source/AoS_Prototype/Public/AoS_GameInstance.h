@@ -14,6 +14,8 @@ DECLARE_MULTICAST_DELEGATE(FOnGameModeBeginPlay);
 DECLARE_MULTICAST_DELEGATE(FOnInitGame);
 DECLARE_MULTICAST_DELEGATE(FOnPlayerStart);
 DECLARE_MULTICAST_DELEGATE(FGameModeSet);
+DECLARE_MULTICAST_DELEGATE(FOnTagManagerInitialized);
+
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstance : public UGameInstance
@@ -30,6 +32,8 @@ public:
 	FOnGameModeBeginPlay OnGameModeBeginPlay;
 	FOnInitGame OnInitGame;
 
+	FOnTagManagerInitialized& OnTagManagerInitialized();
+
 	UFUNCTION()
 	AAoS_GameMode* GetGameMode();
 
@@ -40,6 +44,8 @@ protected:
 private:
 
 	FGameModeSet GameModeSet;
+
+	FOnTagManagerInitialized OnTagManagerInitializedDelegate;
 	
 	UPROPERTY()
 	AAoS_GameMode* GameMode;

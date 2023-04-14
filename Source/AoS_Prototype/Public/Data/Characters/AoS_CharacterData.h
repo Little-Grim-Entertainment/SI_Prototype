@@ -9,8 +9,8 @@
 
 class UDialogueSession;
 class UDialogueSessionNode;
-class UAoS_Case;
-class UAoS_Part;
+class UAoS_CaseData;
+class UAoS_PartData;
 class UAoS_CaseManager;
 
 USTRUCT(BlueprintType)
@@ -22,9 +22,9 @@ struct FAoS_DialogueData
 	bool bIsDefaultDialogue = true;
 	
 	UPROPERTY(EditAnywhere, meta=(EditCondition="!bIsDefaultDialogue", EditConditionHides))
-	UAoS_Case* Case = nullptr;
+	UAoS_CaseData* Case = nullptr;
 	UPROPERTY(EditAnywhere, meta=(EditCondition="!bIsDefaultDialogue", EditConditionHides))
-	UAoS_Part* Part = nullptr;
+	UAoS_PartData* Part = nullptr;
 	UPROPERTY(EditAnywhere)
 	UDialogueSession* RelevantDialogue = nullptr;
 

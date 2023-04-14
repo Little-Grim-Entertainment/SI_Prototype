@@ -21,8 +21,6 @@ AAoS_GameMode::AAoS_GameMode()
 void AAoS_GameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
-
-	
 	
 	if (IsValid(GameInstance))
 	{

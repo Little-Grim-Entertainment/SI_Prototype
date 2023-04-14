@@ -30,6 +30,7 @@
 #include "Data/Input/AoS_InputConfig.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "AoS_NativeGameplayTagLibrary.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 
 using namespace AoS_NativeGameplayTagLibrary;
 
@@ -389,12 +390,6 @@ void AAoS_PlayerController::RequestGizboMoveToCancel()
 	}
 }
 
-void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
-{
-	bPlayerCanMove = !bLockMovement;
-	bPlayerCanTurn = !bLockTurning;
-}
-
 void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
 	InteractableActor = InInteractableActor;
@@ -405,7 +400,51 @@ void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 	ObservableActor = InObservableActor;
 }
 
+void AAoS_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag)
+{
+	if (!InMappingTag.IsValid()) {return;}
+	
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag);
+	EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(MappingToAdd);
+}
+
+void AAoS_PlayerController::RemoveInputMappingByTag(const FGameplayTag InMappingTag)
+{
+	if (!InMappingTag.IsValid()) {return;}
+	
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	const UInputMappingContext* MappingToRemove = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag);
+	EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(MappingToRemove);
+}
+
+void AAoS_PlayerController::SetFocusedWidget(UAoS_UserWidget* InWidgetToFocus)
+{
+	FocusedWidget = InWidgetToFocus;
+}
+
+void AAoS_PlayerController::SetMenuMode(bool bSetMenuMode)
+{
+	if (bSetMenuMode)
+	{
+		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(this, FocusedWidget);
+		SetShowMouseCursor(true);
+	}
+	else
+	{
+		UWidgetBlueprintLibrary::SetInputMode_GameOnly(this);
+		SetShowMouseCursor(false);
+	}
+	
+	bInMenuMode = bSetMenuMode;
+}
+
 UMediaSoundComponent* AAoS_PlayerController::GetMediaSoundComponent() const
 {
 	return MediaSoundComponent;
+}
+
+bool AAoS_PlayerController::IsInMenuMode() const
+{
+	return bInMenuMode;
 }

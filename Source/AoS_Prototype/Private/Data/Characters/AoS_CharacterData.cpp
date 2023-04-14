@@ -3,7 +3,7 @@
 
 #include "Data/Characters/AoS_CharacterData.h"
 
-#include "Data/Cases/AoS_Case.h"
+#include "Data/Cases/AoS_CaseData.h"
 #include "Data/Cases/AoS_CaseManager.h"
 
 UAoS_CharacterData::UAoS_CharacterData()

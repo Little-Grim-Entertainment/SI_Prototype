@@ -3,7 +3,9 @@
 
 #include "AoS_GameplayTagManager.h"
 
+#include "AoS_GameInstance.h"
 #include "AoS_GameplayTagTypes.h"
+#include "Levels/AoS_MapGameplayTagLibrary.h"
 
 
 void UAoS_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
@@ -38,30 +40,45 @@ void UAoS_GameplayTagManager::ReplaceTagWithSameParent(const FGameplayTag& InNew
 {
 	TArray<FGameplayTag> AllGameplayTags;
 	const FAoS_GameplayTagContainer& TagTypeContainer = GetContainerTypeByTag(InNewTag);
-	if(!TagTypeContainer.IsValid()){return;}
-
-	TagTypeContainer.GetGameplayTagArray(AllGameplayTags);
-
-	for (FGameplayTag& CurrentGameplayTag : AllGameplayTags)
+	if(TagTypeContainer.IsValid())
 	{
-		if (HasParentTag(CurrentGameplayTag, InParentTag))
+		TagTypeContainer.GetGameplayTagArray(AllGameplayTags);
+		for (FGameplayTag& CurrentGameplayTag : AllGameplayTags)
 		{
-			RemoveTag(CurrentGameplayTag);
+			if (HasParentTag(CurrentGameplayTag, InParentTag))
+			{
+				RemoveTag(CurrentGameplayTag);
+			}
 		}
 	}
 	
 	AddNewGameplayTag(InNewTag);
 }
 
+bool UAoS_GameplayTagManager::SwapTags(const FGameplayTag& InOldTag, const FGameplayTag& InNewTag)
+{
+	const FAoS_GameplayTagContainer& TagTypeContainer = GetContainerTypeByTag(InOldTag);
+	const FAoS_GameplayTagContainer& NewTagTypeContainer = GetContainerTypeByTag(InNewTag);
+
+	if(!TagTypeContainer.IsValid() || TagTypeContainer != NewTagTypeContainer){return false;}
+
+	if (TagTypeContainer.HasTag(InOldTag))
+	{
+		RemoveTag(InOldTag);
+		AddNewGameplayTag(InNewTag);
+		return true;
+	}
+	
+	return false;
+}
+
 bool UAoS_GameplayTagManager::HasGameplayTag(const FGameplayTag& InGameplayTag)
 {
 	if (!InGameplayTag.IsValid()){return false;}
 
-	TArray<FAoS_GameplayTagContainer>& AllTagContainers = GetAllTagContainers();
-
-	for (const FAoS_GameplayTagContainer& CurrentContainer : AllTagContainers)
+	for (const TPair<FGameplayTag, FAoS_GameplayTagContainer>& CurrentContainer : AllTagContainers)
 	{
-		if (CurrentContainer.HasTagExact(InGameplayTag))
+		if (CurrentContainer.Value.HasTagExact(InGameplayTag))
 		{
 			return true;
 		}
@@ -87,17 +104,8 @@ bool UAoS_GameplayTagManager::HasParentTag(const FGameplayTag& InTagToCheck, con
 	return false;
 }
 
-TArray<FAoS_GameplayTagContainer>& UAoS_GameplayTagManager::GetAllTagContainers() 
+TMap<FGameplayTag, FAoS_GameplayTagContainer>& UAoS_GameplayTagManager::GetAllTagContainers() 
 {
-	static TArray<FAoS_GameplayTagContainer> AllTagContainers = TArray
-{
-	GameStateTags,
-	PlayerModeTags,
-	UITags,
-	LevelTags,
-	MediaTags, 
-	CameraTags
-};
 	return AllTagContainers;
 }
 
@@ -109,6 +117,15 @@ FOnTagAdded& UAoS_GameplayTagManager::OnTagAdded()
 FOnTagAdded& UAoS_GameplayTagManager::OnTagRemoved()
 {
 	return OnTagRemovedDelegate;
+}
+
+void UAoS_GameplayTagManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	InitializeTagContainers();
+
+	Super::Initialize(Collection);
+
+	GameInstance->OnTagManagerInitialized().Broadcast();
 }
 
 bool UAoS_GameplayTagManager::CheckContainerForParentTag(const FGameplayTag& InParentTag, const FAoS_GameplayTagContainer& InContainerToCheck) const
@@ -135,18 +152,31 @@ bool UAoS_GameplayTagManager::CheckContainerForParentTag(const FGameplayTag& InP
 
 FAoS_GameplayTagContainer& UAoS_GameplayTagManager::GetContainerTypeByTag(const FGameplayTag& InGameplayTag)
 {
-	TArray<FAoS_GameplayTagContainer>& AllTagContainers = GetAllTagContainers();
-
-	for (FAoS_GameplayTagContainer& CurrentContainer : AllTagContainers)
+	for (TPair<FGameplayTag, FAoS_GameplayTagContainer>& CurrentContainer : AllTagContainers)
 	{
-		if (HasParentTag(InGameplayTag, CurrentContainer.GetParentTag()))
+		if (HasParentTag(InGameplayTag, CurrentContainer.Value.GetParentTag()))
 		{
-			return CurrentContainer;
+			return CurrentContainer.Value;
 		}
 	}
 		
 	static FAoS_GameplayTagContainer EmptyContainer;
 	return EmptyContainer;
+}
+
+void UAoS_GameplayTagManager::InitializeTagContainers()
+{
+	AllTagContainers.Add(AOSTag_Game_State, GameStateTags);
+	AllTagContainers.Add(AOSTag_Player_State, PlayerStateTags);
+	AllTagContainers.Add(AOSTag_UI, UITags);
+	AllTagContainers.Add(AOSTag_Map, LevelTags);
+	AllTagContainers.Add(AOSTag_Media, MediaTags);
+	AllTagContainers.Add(AOSTag_Camera, CameraTags);
+
+	for (TPair<FGameplayTag, FAoS_GameplayTagContainer>& CurrentContainerPair : AllTagContainers)
+	{
+		CurrentContainerPair.Value.SetParentTag(CurrentContainerPair.Key);
+	}
 }
 
 

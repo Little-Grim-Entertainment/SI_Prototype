@@ -13,9 +13,9 @@ class UAoS_InteractionPrompt;
 class UMediaPlayer;
 class UAoS_MoviePlayerWidget;
 class UAoS_DialogueManager;
-class UAoS_Objective;
-class UAoS_Part;
-class UAoS_Case;
+class UAoS_ObjectiveData;
+class UAoS_PartData;
+class UAoS_CaseData;
 class AAoS_PlayerController;
 class UAoS_HUD;
 class UAoS_UserWidget;
@@ -44,14 +44,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void ShowCaseTitleCard();
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void CreateCaseTitleCard(UAoS_Case* InCase, bool bShouldFadeIn = false);
+	void CreateCaseTitleCard(UAoS_CaseData* InCase, bool bShouldFadeIn = false);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveCaseTitleCard();
-
+	
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, TSubclassOf<UAoS_UserWidget> InWidgetClass);
+	UAoS_UserWidget* CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, TSubclassOf<UAoS_UserWidget> InWidgetClass, FGameplayTag InUITag);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveAOSWidget(UAoS_UserWidget* InWidgetPtr);
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	UAoS_UserWidget* GetWidgetByTag(const FGameplayTag InWidgetTag);
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateMapMenu();
@@ -70,19 +72,16 @@ public:
 	
 	// Case Manager Delegates
 	UFUNCTION()
-	void OnCaseAccepted(UAoS_Case* AcceptedCase);
+	void OnCaseAccepted(UAoS_CaseData* AcceptedCase);
 	UFUNCTION()
-	void OnCaseActivated(UAoS_Case* ActivatedCase);
+	void OnCaseActivated(UAoS_CaseData* ActivatedCase);
 	UFUNCTION()
-	void OnCaseCompleted(UAoS_Case* CompletedCase);
+	void OnCaseCompleted(UAoS_CaseData* CompletedCase);
 
 	UFUNCTION()
-	void OnPartActivated(UAoS_Part* ActivatedPart);
+	void OnPartActivated(UAoS_PartData* ActivatedPart);
 	UFUNCTION()
-	void OnPartCompleted(UAoS_Part* CompletedPart);
-
-	UFUNCTION()
-	void SetMenuMode(bool bInMenu = false, UAoS_UserWidget* WidgetToFocus = nullptr);
+	void OnPartCompleted(UAoS_PartData* CompletedPart);
 
 	UFUNCTION()
 	void AddActiveInteractionWidget(UAoS_InteractionWidget* InInteractionWidget);
@@ -90,9 +89,9 @@ public:
 	void RemoveActiveInteractionWidget(UAoS_InteractionWidget* InInteractionWidget);
 	
 	UFUNCTION()
-	void OnObjectiveActivated(UAoS_Objective* ActivatedObjective);
+	void OnObjectiveActivated(UAoS_ObjectiveData* ActivatedObjective);
 	UFUNCTION()
-	void OnObjectiveCompleted(UAoS_Objective* CompletedObjective);
+	void OnObjectiveCompleted(UAoS_ObjectiveData* CompletedObjective);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	TArray<UAoS_InteractionWidget*>& GetActiveInteractionWidgets();
@@ -122,17 +121,19 @@ private:
 	void BindCaseManagerDelegates();
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
+	void InitializeMenuMaps();
 	
 	UPROPERTY()
 	AAoS_PlayerController* PlayerController;
+
+	TMap<FGameplayTag, UAoS_UserWidget*> UIWidgetContainer;
+	
 	UPROPERTY()
 	UAoS_UserWidget* LoadingScreen;
 	UPROPERTY()
 	UAoS_HUD* PlayerHUD;
 	UPROPERTY()
 	UAoS_UserWidget* SystemMenu;
-	UPROPERTY()
-	UAoS_UserWidget* MainMenu;
 	UPROPERTY()
 	UAoS_UserWidget* MapMenu;
 	UPROPERTY()
@@ -158,16 +159,5 @@ private:
 	FSimpleDelegate AddHUDDelegate;
 	FSimpleDelegate AddLoadingScreenDelegate;
 	FSimpleDelegate AddVideoScreenDelegate;
-
-
-	TMap<FGameplayTag, FSimpleDelegate> RemoveUIDelegateContainer;
-
-	FSimpleDelegate RemoveGameMenuDelegate;
-	FSimpleDelegate RemoveMapMenuDelegate;
-	FSimpleDelegate RemoveSystemMenuDelegate;
-	FSimpleDelegate RemoveVendorMenuDelegate;
-	FSimpleDelegate RemoveHUDDelegate;
-	FSimpleDelegate RemoveLoadingScreenDelegate;
-	FSimpleDelegate RemoveVideoScreenDelegate;
 
 };

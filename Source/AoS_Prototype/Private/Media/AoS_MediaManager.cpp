@@ -4,6 +4,7 @@
 #include "Media/AoS_MediaManager.h"
 
 #include "AoS_GameInstance.h"
+#include "AoS_GameplayTagManager.h"
 #include "GameplayTagContainer.h"
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
@@ -19,6 +20,46 @@ void UAoS_MediaManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
 	
+}
+
+void UAoS_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+{
+	Super::OnGameplayTagAdded(InAddedTag);
+	
+	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_Media)) {return;}
+
+	if(InAddedTag == AOSTag_Media_Video)
+	{
+		
+	}
+	if(InAddedTag == AOSTag_Media_Cinematic)
+	{
+		
+	}
+	if(InAddedTag == AOSTag_Media_TitleCard)
+	{
+		
+	}
+}
+
+void UAoS_MediaManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+{
+	Super::OnGameplayTagRemoved(InRemovedTag);
+	
+	if(!AoSTagManager->HasParentTag(InRemovedTag, AOSTag_Media)) {return;}
+
+	if(InRemovedTag == AOSTag_Media_Video)
+	{
+		
+	}
+	if(InRemovedTag == AOSTag_Media_Cinematic)
+	{
+		
+	}
+	if(InRemovedTag == AOSTag_Media_TitleCard)
+	{
+		
+	}
 }
 
 void UAoS_MediaManager::PlayMedia(UAoS_MediaDataAsset* InMediaToPlay, FAoS_MediaSettings& InMediaSettings)

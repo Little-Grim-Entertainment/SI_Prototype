@@ -6,29 +6,29 @@
 #include "Engine/DataAsset.h"
 #include "UI/AoS_CaseTitleCard.h"
 
-#include "AoS_Case.generated.h"
+#include "AoS_CaseData.generated.h"
 
 
 
 //class UAoS_CaseTitleCard;
 class UAoS_CaseManager;
-class UAoS_Part;
+class UAoS_PartData;
 class UAoS_CharacterData;
 class UTexture2D;
 
 UCLASS(BlueprintType)
-class AOS_PROTOTYPE_API UAoS_Case : public UDataAsset
+class AOS_PROTOTYPE_API UAoS_CaseData : public UDataAsset
 {
 	GENERATED_BODY()
 	
 public:
 
-	UAoS_Case();
+	UAoS_CaseData();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
 	FText CaseName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
-	TArray<UAoS_Part*> Parts;
+	TArray<UAoS_PartData*> Parts;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
 	TArray<UAoS_CharacterData*> PeopleOfInterest;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TitleCard")
@@ -46,9 +46,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetCaseIsActive() const {return bIsActive;}
 	UFUNCTION(BlueprintPure)
-	UAoS_Part* GetActivePart() const;
+	UAoS_PartData* GetActivePart() const;
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_Part*> GetAllParts() const {return Parts;}
+	TArray<UAoS_PartData*> GetAllParts() const {return Parts;}
 	
 	void ResetCase();	
 	void SetCaseComplete(bool bCaseCompleted);

@@ -11,9 +11,9 @@
 #include "AoS_PlayerManager.h"
 
 // Case Data
-#include "Data/Cases/AoS_Case.h"
-#include "Data/Cases/AoS_Part.h"
-#include "Data/Cases/AoS_Objective.h"
+#include "Data/Cases/AoS_CaseData.h"
+#include "Data/Cases/AoS_PartData.h"
+#include "Data/Cases/AoS_ObjectiveData.h"
 
 // UI
 #include "AoS_GameplayTagManager.h"
@@ -21,7 +21,6 @@
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UserWidget.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "UI/AoS_MoviePlayerWidget.h"
 #include "UI/AoS_InteractionWidget.h"
 #include "UI/AoS_CaseTitleCard.h"
@@ -75,9 +74,9 @@ void UAoS_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_UI)){return;}
 
-	Super::OnGameplayTagAdded(InAddedTag);
-
 	AddUIDelegateContainer.Find(InAddedTag)->Execute();
+
+	Super::OnGameplayTagAdded(InAddedTag);
 }
 
 void UAoS_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
@@ -85,13 +84,29 @@ void UAoS_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	if(!AoSTagManager->HasParentTag(InRemovedTag, AOSTag_UI)){return;}
 
 	Super::OnGameplayTagRemoved(InRemovedTag);
-
-	RemoveUIDelegateContainer.Find(InRemovedTag)->Execute();
+	
+	if (InRemovedTag == AOSTag_UI_Screen_Loading)
+	{
+		DisplayLoadingScreen(false, true);
+		return;
+	}
+	if (InRemovedTag == AOSTag_UI_Screen_Video)
+	{
+		RemoveMoviePlayerWidget();
+		return;
+	}
+	if (InRemovedTag == AOSTag_UI_Screen_TitleCard)
+	{
+		RemoveCaseTitleCard();
+		return;
+	}
+	
+	RemoveAOSWidget(GetWidgetByTag(InRemovedTag));
 }
 
 void UAoS_UIManager::BindCaseManagerDelegates()
 {
-	UAoS_CaseManager* CaseManager = GameInstance->GetSubsystem<UAoS_CaseManager>();
+	/*UAoS_CaseManager* CaseManager = GameInstance->GetSubsystem<UAoS_CaseManager>();
 	if (!IsValid(CaseManager)) {return;}
 
 	// Case Bindings
@@ -105,7 +120,7 @@ void UAoS_UIManager::BindCaseManagerDelegates()
 
 	// Objective Bindings
 	CaseManager->OnObjectiveActivated.AddDynamic(this, &ThisClass::OnObjectiveActivated);
-	CaseManager->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);
+	CaseManager->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);*/
 }
 
 void UAoS_UIManager::InitializeDelegates()
@@ -117,14 +132,6 @@ void UAoS_UIManager::InitializeDelegates()
 	AddLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, true, true);
 	AddVideoScreenDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
 	AddSystemMenuDelegate.BindUObject(this, &ThisClass::CreateSystemMenu);
-
-	UAoS_UserWidget* UserWidgetHUD = Cast<UAoS_UserWidget>(PlayerHUD);
-	
-	RemoveMapMenuDelegate.BindUObject(this, &ThisClass::RemoveAOSWidget, MapMenu);
-	RemoveHUDDelegate.BindUObject(this, &ThisClass::RemoveAOSWidget, UserWidgetHUD);
-	RemoveLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, false, true);
-	RemoveVideoScreenDelegate.BindUObject(this, &ThisClass::RemoveMoviePlayerWidget);
-	RemoveSystemMenuDelegate.BindUObject(this, &ThisClass::RemoveAOSWidget, SystemMenu);
 }
 
 void UAoS_UIManager::InitializeDelegateMaps()
@@ -138,21 +145,24 @@ void UAoS_UIManager::InitializeDelegateMaps()
 	AddUIDelegateContainer.Add(AOSTag_UI_HUD, AddHUDDelegate);
 	AddUIDelegateContainer.Add(AOSTag_UI_Screen_Loading, AddLoadingScreenDelegate);
 	AddUIDelegateContainer.Add(AOSTag_UI_Screen_Video, AddVideoScreenDelegate);
-	
-	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_Game, RemoveGameMenuDelegate);
-	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_Map, RemoveMapMenuDelegate);
-	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_System, RemoveSystemMenuDelegate);
-	RemoveUIDelegateContainer.Add(AOSTag_UI_Menu_Vendor, RemoveVendorMenuDelegate);
-	RemoveUIDelegateContainer.Add(AOSTag_UI_HUD, RemoveHUDDelegate);
-	RemoveUIDelegateContainer.Add(AOSTag_UI_Screen_Loading, RemoveLoadingScreenDelegate);
-	RemoveUIDelegateContainer.Add(AOSTag_UI_Screen_Video, RemoveVideoScreenDelegate);
+}
+
+void UAoS_UIManager::InitializeMenuMaps()
+{
+	UIWidgetContainer.Add(AOSTag_UI_Screen_Loading, LoadingScreen);
+	UIWidgetContainer.Add(AOSTag_UI_HUD, PlayerHUD);
+	UIWidgetContainer.Add(AOSTag_UI_Menu_System, SystemMenu);
+	UIWidgetContainer.Add(AOSTag_UI_Menu_Map, MapMenu);
+	UIWidgetContainer.Add(AOSTag_UI_Prompt_Skip, SkipWidget);
+	UIWidgetContainer.Add(AOSTag_UI_Screen_Video, MoviePlayerWidget);
+	UIWidgetContainer.Add(AOSTag_UI_Screen_TitleCard, CaseTitleCardWidget);
 }
 
 void UAoS_UIManager::CreatePlayerHUD()
 {
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 
-	CreateAOSWidget(PlayerHUD, GameInstance->GetGameMode()->PlayerHUD_Class);
+	CreateAOSWidget(PlayerHUD, GameInstance->GetGameMode()->PlayerHUD_Class, AOSTag_UI_HUD);
 }
 
 void UAoS_UIManager::CreateMoviePlayerWidget()
@@ -160,7 +170,8 @@ void UAoS_UIManager::CreateMoviePlayerWidget()
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
 	
-	MoviePlayerWidget =	CreateWidget<UAoS_MoviePlayerWidget>(GameInstance, GameInstance->GetGameMode()->MoviePlayerWidget);
+	CreateAOSWidget(MoviePlayerWidget, GameInstance->GetGameMode()->MoviePlayerWidget, AOSTag_UI_Screen_Video);
+	
 	if (IsValid(MoviePlayerWidget))
 	{
 		const UAoS_MediaManager* MediaManager = GetWorld()->GetSubsystem<UAoS_MediaManager>();
@@ -174,6 +185,7 @@ void UAoS_UIManager::CreateMoviePlayerWidget()
 		}
 		else
 		{
+			
 		}
 	}
 }
@@ -200,7 +212,7 @@ void UAoS_UIManager::ShowCaseTitleCard()
 	TitleCardDelayDelegate.Unbind();
 }
 
-void UAoS_UIManager::CreateCaseTitleCard(UAoS_Case* InCase, bool bShouldFadeIn)
+void UAoS_UIManager::CreateCaseTitleCard(UAoS_CaseData* InCase, bool bShouldFadeIn)
 {
 	if (!IsValid(InCase)) {return;}
 
@@ -222,17 +234,22 @@ void UAoS_UIManager::RemoveCaseTitleCard()
 	CaseManager->OnCaseTitleCardComplete.Broadcast();
 }
 
-void UAoS_UIManager::CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, TSubclassOf<UAoS_UserWidget> InWidgetClass)
+UAoS_UserWidget* UAoS_UIManager::CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, TSubclassOf<UAoS_UserWidget> InWidgetClass, FGameplayTag InUITag)
 {
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(PlayerController) || !IsValid(InWidgetClass)){return;}
+	if (!IsValid(PlayerController) || !IsValid(InWidgetClass)){return nullptr;}
 	
 	InWidgetPtr = CreateWidget<UAoS_UserWidget>(PlayerController, InWidgetClass);
 	if (IsValid(InWidgetPtr))
 	{
 		InWidgetPtr->AddToViewport();
-		SetMenuMode(true, InWidgetPtr);
+		if (AoSTagManager->HasParentTag(InUITag, AOSTag_UI_Menu))
+		{
+			PlayerController->SetFocusedWidget(InWidgetPtr);
+		}
 	}
+	
+	return InWidgetPtr;
 }
 
 void UAoS_UIManager::RemoveAOSWidget(UAoS_UserWidget* InWidgetPtr)
@@ -243,6 +260,19 @@ void UAoS_UIManager::RemoveAOSWidget(UAoS_UserWidget* InWidgetPtr)
 	InWidgetPtr = nullptr;
 }
 
+UAoS_UserWidget* UAoS_UIManager::GetWidgetByTag(const FGameplayTag InWidgetTag)
+{
+	for (TPair<FGameplayTag, UAoS_UserWidget*> CurrentWidgetPair : UIWidgetContainer)
+	{
+		if (CurrentWidgetPair.Key == InWidgetTag)
+		{
+			return CurrentWidgetPair.Value;
+		}
+	}
+	
+	return nullptr;
+}
+
 void UAoS_UIManager::CreateMapMenu()
 {
 	const UAoS_LevelManager* LevelManager = GameInstance->GetSubsystem<UAoS_LevelManager>();
@@ -251,14 +281,14 @@ void UAoS_UIManager::CreateMapMenu()
 	const UAoS_MenuMapData* MenuMapData = Cast<UAoS_MenuMapData>(LevelManager->GetCurrentMap());
 	if (!IsValid(MenuMapData) || !IsValid(MenuMapData->MapMenuWidgetClass)){return;}
 
-	CreateAOSWidget(MapMenu, MenuMapData->MapMenuWidgetClass);
+	CreateAOSWidget(MapMenu, MenuMapData->MapMenuWidgetClass, AOSTag_UI_Menu_Map);
 }
 
 void UAoS_UIManager::CreateSystemMenu()
 {
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 
-	CreateAOSWidget(SystemMenu, GameInstance->GetGameMode()->SystemMenuClass);
+	CreateAOSWidget(SystemMenu, GameInstance->GetGameMode()->SystemMenuClass, AOSTag_UI_Menu_System);
 }
 
 void UAoS_UIManager::ToggleSystemMenu()
@@ -282,26 +312,6 @@ UAoS_SkipWidget* UAoS_UIManager::CreateSkipWidget()
 		SkipWidget->AddToViewport();
 	}
 	return SkipWidget;
-}
-
-void UAoS_UIManager::SetMenuMode(bool bInMenu, UAoS_UserWidget* WidgetToFocus)
-{
-	if(!IsValid(PlayerController))
-	{
-		PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-		if(!IsValid(PlayerController)){return;}
-	}
-	
-	if (bInMenu)
-	{
-		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, WidgetToFocus);
-		PlayerController->SetShowMouseCursor(true);
-	}
-	else
-	{
-		UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
-		PlayerController->SetShowMouseCursor(false);
-	}
 }
 
 void UAoS_UIManager::AddActiveInteractionWidget(UAoS_InteractionWidget* InInteractionWidget)
@@ -337,7 +347,6 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 				if (IsValid(LoadingScreen) && IsValid(GameInstance))
 				{
 					GameInstance->GetGameViewportClient()->AddViewportWidgetContent(LoadingScreen->TakeWidget());
-					SetMenuMode(false, LoadingScreen);
 				}
 			}
 		}
@@ -354,7 +363,6 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			{
 				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(LoadingScreen->TakeWidget());
 			}
-			SetMenuMode(false);
 		}
 	}
 }
@@ -394,7 +402,7 @@ void UAoS_UIManager::LoadingScreenFadeDelay()
 	GetWorld()->GetTimerManager().SetTimer(LoadingScreenFadeDelayHandle, LoadingScreenFadeDelayDelegate, 20.0f, false);
 }
 
-void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
+void UAoS_UIManager::OnCaseAccepted(UAoS_CaseData* AcceptedCase)
 {
 	if (!IsValid(AcceptedCase) || !IsValid(PlayerHUD)) {return;}
 	
@@ -405,32 +413,32 @@ void UAoS_UIManager::OnCaseAccepted(UAoS_Case* AcceptedCase)
 	}
 }
 
-void UAoS_UIManager::OnCaseActivated(UAoS_Case* ActivatedCase)
+void UAoS_UIManager::OnCaseActivated(UAoS_CaseData* ActivatedCase)
 {
 	
 }
 
-void UAoS_UIManager::OnCaseCompleted(UAoS_Case* CompletedCase)
+void UAoS_UIManager::OnCaseCompleted(UAoS_CaseData* CompletedCase)
 {
 	
 }
 
-void UAoS_UIManager::OnPartActivated(UAoS_Part* ActivatedPart)
+void UAoS_UIManager::OnPartActivated(UAoS_PartData* ActivatedPart)
 {
 	
 }
 
-void UAoS_UIManager::OnPartCompleted(UAoS_Part* CompletedPart)
+void UAoS_UIManager::OnPartCompleted(UAoS_PartData* CompletedPart)
 {
 	
 }
 
-void UAoS_UIManager::OnObjectiveActivated(UAoS_Objective* ActivatedObjective)
+void UAoS_UIManager::OnObjectiveActivated(UAoS_ObjectiveData* ActivatedObjective)
 {
 	
 }
 
-void UAoS_UIManager::OnObjectiveCompleted(UAoS_Objective* CompletedObjective)
+void UAoS_UIManager::OnObjectiveCompleted(UAoS_ObjectiveData* CompletedObjective)
 {
 	
 }

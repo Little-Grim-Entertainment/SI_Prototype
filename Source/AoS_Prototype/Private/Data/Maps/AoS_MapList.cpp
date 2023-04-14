@@ -2,6 +2,7 @@
 
 
 #include "Data/Maps/AoS_MapList.h"
+#include "Data/Maps/AoS_MapData.h"
 
 UAoS_MapList::UAoS_MapList()
 {
@@ -10,33 +11,22 @@ UAoS_MapList::UAoS_MapList()
 
 TArray<UAoS_MapData*> UAoS_MapList::GetAllMaps()
 {
+	TArray<TArray<UAoS_MapData*>> AllMapArrays {
+		MenuMaps,
+		NovaLuxDistrictInteriorMaps,
+		NovaLuxDistrictExteriorMaps,
+		TestMaps
+	};
+	
 	TArray<UAoS_MapData*> AllMaps;
-	if (!MenuMaps.IsEmpty())
+	for (const TArray<UAoS_MapData*>& CurrentMapArray : AllMapArrays)
 	{
-		for (UAoS_MapData* CurrentMap : MenuMaps)
+		if(CurrentMapArray.IsEmpty()){continue;}
+		
+		for (UAoS_MapData* CurrentMapData : CurrentMapArray)
 		{
-			AllMaps.AddUnique(CurrentMap);
-		}	
-	}
-	if (!NovaLuxDistrictInteriorMaps.IsEmpty())
-	{
-		for (UAoS_MapData* CurrentMap : NovaLuxDistrictInteriorMaps)
-		{
-			AllMaps.AddUnique(CurrentMap);
-		}
-	}
-	if (!NovaLuxDistrictExteriorMaps.IsEmpty())
-	{
-		for (UAoS_MapData* CurrentMap : NovaLuxDistrictExteriorMaps)
-		{
-			AllMaps.AddUnique(CurrentMap);
-		}
-	}
-	if (!TestMaps.IsEmpty())
-	{
-		for (UAoS_MapData* CurrentMap : TestMaps)
-		{
-			AllMaps.AddUnique(CurrentMap);
+			if (!IsValid(CurrentMapData)){continue;}
+			AllMaps.AddUnique(CurrentMapData);
 		}
 	}
 	

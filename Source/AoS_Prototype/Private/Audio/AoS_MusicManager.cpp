@@ -3,6 +3,7 @@
 
 #include "Audio/AoS_MusicManager.h"
 #include "AoS_GameInstance.h"
+#include "AoS_GameplayTagManager.h"
 #include "AudioDevice.h"
 #include "Components/AudioComponent.h"
 #include "Data/Maps/AoS_MapData.h"
@@ -15,11 +16,9 @@ UAoS_MusicManager::UAoS_MusicManager()
 {
 	bMusicIsPlaying = false;
 	bMusicIsPaused = false;
-	bMusicHasIntro = false;
 	MusicTimeAtPause = 0.f;
 	MusicVolumeAtPause = 1.f;
 	MusicPitchAtPause = 1.f;
-	MusicLoopStart = 0.f;
 }
 
 void UAoS_MusicManager::TickMusicTimecode()
@@ -30,12 +29,40 @@ void UAoS_MusicManager::TickMusicTimecode()
 void UAoS_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 {
 	Super::OnWorldBeginPlay(InWorld);
+	
+}
 
-	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
-	if (IsValid(LevelManager))
+void UAoS_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+{
+	if (AoSTagManager->HasParentTag(InAddedTag, AOSTag_Map_Title))
 	{
-		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelLoaded);
-		LevelManager->OnLevelUnloaded.AddDynamic(this, &ThisClass::OnLevelUnloaded);
+		PlayLoadedLevelBackgroundMusic();
+		return;
+	}
+	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_Audio_Music)) {return;}
+
+	Super::OnGameplayTagAdded(InAddedTag);
+
+	if(InAddedTag == AOSTag_Audio_Music_Pause)
+	{
+		PauseMusicWithFade();
+	}
+}
+
+void UAoS_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+{
+	if (AoSTagManager->HasParentTag(InRemovedTag, AOSTag_Map_Title))
+	{
+		StopBackgroundMusic(true, 0.0f);
+		return;
+	}
+	if(!AoSTagManager->HasParentTag(InRemovedTag, AOSTag_Audio_Music)) {return;}
+	
+	Super::OnGameplayTagRemoved(InRemovedTag);
+
+	if(InRemovedTag == AOSTag_Audio_Music_Pause)
+	{
+		ResumeMusicWithFade();
 	}
 }
 
@@ -80,32 +107,14 @@ void UAoS_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 	}
 }*/
 
-void UAoS_MusicManager::OnLevelLoaded(UAoS_MapData* LoadedLevel, bool bShouldFade)
+UAudioComponent* UAoS_MusicManager::PlayLoadedLevelBackgroundMusic()
 {
-	UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
-
-	if (!IsValid(LoadedLevel) || !IsValid(LevelManager)) {return;}
-
-	FAoS_MapState& LoadedMapState = LevelManager->GetMapStateByTag(LoadedLevel->MapTag);
+	const UAoS_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_LevelManager>();
 	
-	PlayLevelBackgroundMusic(LoadedMapState);
-}
-
-void UAoS_MusicManager::OnLevelUnloaded(UAoS_MapData* UnloadedLevel)
-{
-	StopBackgroundMusic(true, 0);
-}
-
-UAudioComponent* UAoS_MusicManager::PlayLevelBackgroundMusic(FAoS_MapState& InMapState)
-{
-	if (!InMapState.IsStateValid() || IsValid(InMapState.GetMapData())){return nullptr;}
+	if (!IsValid(LevelManager)){return nullptr;}
+	if (!LevelManager->GetCurrentLoadedMapState().IsStateValid()){return nullptr;}
 	
-	if(InMapState.GetMapData()->BackgroundMusicSettings.bHasIntro)
-	{
-		return  PlayBackgroundMusicLoopWithIntro(InMapState.GetMapData()->BackgroundMusicSettings);
-	}
-
-	return PlayBackgroundMusic(InMapState.GetMapData()->BackgroundMusicSettings);
+	return PlayBackgroundMusic(LevelManager->GetCurrentLoadedMapState().GetMapData()->BackgroundMusicSettings);
 }
 
 UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FAoS_MusicSettings InMusicSettings)
@@ -119,10 +128,13 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FAoS_MusicSettings InMus
 	
 	if (IsValid(BackgroundMusic))
 	{
-		bMusicHasIntro = false;
-
 		BackgroundMusic->SetObjectParameter("Wave Asset", CurrentMusicSettings.MusicSource);
 		BackgroundMusic->SetFloatParameter("Start Time", CurrentMusicSettings.StartTime);
+		
+		if(InMusicSettings.bHasIntro && BackgroundMusic->GetSound()->IsLooping())
+		{
+			BackgroundMusic->SetFloatParameter("Loop Start", CurrentMusicSettings.LoopStart);
+		}
 
 		GetWorld()->GetTimerManager().SetTimer(MusicTimecode, this, &ThisClass::TickMusicTimecode, 0.001f, true);
 
@@ -131,46 +143,6 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FAoS_MusicSettings InMus
 		
 		if (CurrentMusicSettings.bShouldFade)
 		{
-			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameMode->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
-			BackgroundMusic->FadeIn(FadeInDuration);
-		}
-		else
-		{
-			BackgroundMusic->Play();
-		}
-		OnBackgroundMusicStarted.Broadcast();
-		bMusicIsPlaying = true;
-		bMusicIsPaused = false;
-		return BackgroundMusic;
-	}
-	return nullptr;
-}
-
-UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(FAoS_MusicSettings InMusicSettings)
-{
-	BackgroundMusic = UGameplayStatics::CreateSound2D(GameInstance, InMusicSettings.MetaSoundSource, InMusicSettings.VolumeMultiplier, InMusicSettings.PitchMultiplier, InMusicSettings.StartTime, nullptr, true);
-
-	CurrentMusicSettings = InMusicSettings;
-	
-	MetaSoundSoftClassPtr = CurrentMusicSettings.MetaSoundSource;
-	MusicSoftClassPtr = CurrentMusicSettings.MusicSource;
-	
-	if (IsValid(BackgroundMusic))
-	{
-		bMusicHasIntro = true;
-		MusicLoopStart = CurrentMusicSettings.LoopStart;
-		
-		BackgroundMusic->SetObjectParameter("Wave Asset", CurrentMusicSettings.MusicSource);
-		BackgroundMusic->SetFloatParameter("Start Time", CurrentMusicSettings.StartTime);
-		BackgroundMusic->SetFloatParameter("Loop Start", CurrentMusicSettings.LoopStart);
-
-		GetWorld()->GetTimerManager().SetTimer(MusicTimecode, this, &ThisClass::TickMusicTimecode, 0.001f, true);
-
-		if (CurrentMusicSettings.bShouldFade)
-		{
-			const AAoS_GameMode* GameMode = GameInstance->GetGameMode();
-			if (!IsValid(GameMode)) {return nullptr;}
-			
 			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameMode->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
 			BackgroundMusic->FadeIn(FadeInDuration);
 		}
@@ -208,7 +180,6 @@ void UAoS_MusicManager::PauseMusicWithFade()
 	GetWorld()->GetTimerManager().PauseTimer(MusicTimecode);
 	
 	StopBackgroundMusic(true, 0);
-	
 }
 
 void UAoS_MusicManager::ResumeMusicWithFade()
@@ -219,15 +190,7 @@ void UAoS_MusicManager::ResumeMusicWithFade()
 	{
 		bMusicIsPaused = false;
 		GetWorld()->GetTimerManager().UnPauseTimer(MusicTimecode);
-
-		if (bMusicHasIntro)
-		{
-			PlayBackgroundMusicLoopWithIntro(CurrentMusicSettings);
-		}
-		else
-		{
-			PlayBackgroundMusic(CurrentMusicSettings);
-		}
+		PlayBackgroundMusic(CurrentMusicSettings);
 	}
 }
 

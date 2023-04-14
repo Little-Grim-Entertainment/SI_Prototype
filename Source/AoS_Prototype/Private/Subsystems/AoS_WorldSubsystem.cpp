@@ -12,20 +12,23 @@ void UAoS_WorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 	InitializeDelegates();
-	InitializeDelegateMaps();
 }
 
 void UAoS_WorldSubsystem::InitializeDelegates()
 {
 	if (!IsValid(GameInstance)){return;}
-
 	GameInstance->OnGameModeBeginPlay.AddUObject(this, &ThisClass::OnGameModeBeginPlay);
 	
 	AoSTagManager = GameInstance->GetSubsystem<UAoS_GameplayTagManager>();
-	if (!IsValid(AoSTagManager)) {return;}
+	if (!IsValid(AoSTagManager))
+	{
+		GameInstance->OnTagManagerInitialized().AddUObject(this, &UAoS_WorldSubsystem::InitializeDelegates);
+		return;
+	}
 
 	AoSTagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
 	AoSTagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);
+	InitializeDelegateMaps();
 }
 
 void UAoS_WorldSubsystem::InitializeDelegateMaps()
@@ -35,7 +38,7 @@ void UAoS_WorldSubsystem::InitializeDelegateMaps()
 
 void UAoS_WorldSubsystem::OnGameModeBeginPlay()
 {
-	
+
 }
 
 void UAoS_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)

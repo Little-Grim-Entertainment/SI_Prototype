@@ -36,13 +36,13 @@ public:
 	FOnLevelUnloaded OnLevelUnloaded;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevelByTag(const FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelByTag(FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
 
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevelOnMediaComplete(const FAoS_MapState& InLevelToLoad, UAoS_MediaDataAsset* InMediaToPlay, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelOnMediaComplete(const FGameplayTag& InLevelToLoadTag, UAoS_MediaDataAsset* InMediaToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
 
-	void LoadLevelOnCinematicComplete(const FAoS_MapState& InLevelToLoad, const UAoS_CinematicDataAsset* InCinematicToPlay, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
-	void LoadLevelOnVideoComplete(const FAoS_MapState& InLevelToLoad, const UAoS_VideoDataAsset* InVideoToPlay, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelOnCinematicComplete(const FGameplayTag& InLevelToLoadTag, const UAoS_CinematicDataAsset* InCinematicToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelOnVideoComplete(const FGameplayTag& InLevelToLoadTag, const UAoS_VideoDataAsset* InVideoToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
 	
 	void ExecuteLoadLevelOnVideoComplete();
 	void ExecuteLoadLevelOnCinematicComplete();
@@ -54,6 +54,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	FAoS_MapState& GetMapStateByTag(const FGameplayTag InMapTag);
+	UFUNCTION(BlueprintCallable, Category = "Levels")
+	FAoS_MapState& GetMapStateByWorld();
 
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	const TArray<FAoS_MapState>& GetAllMapStates() const;

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "AoS_NativeGameplayTagLibrary.h"
+#include "Levels/AoS_MapGameplayTagLibrary.h"
 #include "AoS_GameInstanceSubsystem.generated.h"
 
 enum class EPlayerMode : uint8;
@@ -14,6 +15,7 @@ class AAoS_GameMode;
 class UAoS_GameplayTagManager;
 
 using namespace AoS_NativeGameplayTagLibrary;
+using namespace AoS_MapGameplayTagLibrary;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_GameInstanceSubsystem : public UGameInstanceSubsystem

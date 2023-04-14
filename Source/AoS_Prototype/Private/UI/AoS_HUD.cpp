@@ -42,7 +42,7 @@ void UAoS_HUD::SetupBindings()
 	bBindingsSetup = true;
 }
 
-void UAoS_HUD::OnObjectiveComplete_Implementation(UAoS_Objective* CompletedObjective)
+void UAoS_HUD::OnObjectiveComplete_Implementation(UAoS_ObjectiveData* CompletedObjective)
 {
 	
 }

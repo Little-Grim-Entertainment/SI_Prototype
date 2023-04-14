@@ -6,7 +6,7 @@
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
 #include "AoS_CharacterManager.generated.h"
 
-class UAoS_Part;
+class UAoS_PartData;
 class UAoS_CharacterData;
 
 UCLASS()
@@ -32,9 +32,9 @@ private:
 	
 	// Called when a new part of a case is activated in order to update ActiveCharactersData
 	UFUNCTION()
-	void OnPartActivated(UAoS_Part* ActivatedPart);
+	void OnPartActivated(UAoS_PartData* ActivatedPart);
 	
 	// Called when a part is completed to update ActiveCharactersData
 	UFUNCTION()
-	void OnPartCompleted(UAoS_Part* CompletedPart);
+	void OnPartCompleted(UAoS_PartData* CompletedPart);
 };

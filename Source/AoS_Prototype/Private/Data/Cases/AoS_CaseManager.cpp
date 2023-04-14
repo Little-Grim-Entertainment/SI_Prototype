@@ -2,9 +2,9 @@
 
 
 #include "Data/Cases/AoS_CaseManager.h"
-#include "Data/Cases/AoS_Case.h"
-#include "Data/Cases/AoS_Part.h"
-#include "Data/Cases/AoS_Objective.h"
+#include "Data/Cases/AoS_CaseData.h"
+#include "Data/Cases/AoS_PartData.h"
+#include "Data/Cases/AoS_ObjectiveData.h"
 
 UAoS_CaseManager::UAoS_CaseManager()
 {
@@ -16,7 +16,7 @@ void UAoS_CaseManager::OnGameInstanceInit()
 	Super::OnGameInstanceInit();
 }
 
-void UAoS_CaseManager::AcceptCase(UAoS_Case* CaseToAccept)
+void UAoS_CaseManager::AcceptCase(UAoS_CaseData* CaseToAccept)
 {
 	if (!IsValid(CaseToAccept)) { return; }
 	
@@ -32,7 +32,7 @@ void UAoS_CaseManager::AcceptCase(UAoS_Case* CaseToAccept)
 	}
 }
 
-void UAoS_CaseManager::SetActiveCase(UAoS_Case* CaseToSet)
+void UAoS_CaseManager::SetActiveCase(UAoS_CaseData* CaseToSet)
 {
 	if (!CaseToSet || CaseToSet == ActiveCase)
 	{
@@ -49,14 +49,14 @@ void UAoS_CaseManager::SetActiveCase(UAoS_Case* CaseToSet)
 	OnCaseActivated.Broadcast(CaseToSet);
 }
 
-void UAoS_CaseManager::CompleteObjective(UAoS_Objective* ObjectiveToComplete)
+void UAoS_CaseManager::CompleteObjective(UAoS_ObjectiveData* ObjectiveToComplete)
 {
 	if (!ActiveCase || !ActivePart || !ObjectiveToComplete)
 	{
 		return;
 	}
 	
-	for (const UAoS_Objective* CurrentObjective : ActivePart->GetActiveObjectives())
+	for (const UAoS_ObjectiveData* CurrentObjective : ActivePart->GetActiveObjectives())
 	{
 		if (ObjectiveToComplete == CurrentObjective && CurrentObjective->GetObjectiveIsActive() && !CurrentObjective->GetObjectiveComplete())
 		{
@@ -68,7 +68,7 @@ void UAoS_CaseManager::CompleteObjective(UAoS_Objective* ObjectiveToComplete)
 
 void UAoS_CaseManager::ResetAllCases()
 {
-	for (UAoS_Case* AcceptedCase : AcceptedCases)
+	for (UAoS_CaseData* AcceptedCase : AcceptedCases)
 	{
 		AcceptedCase->ResetCase();
 	}
@@ -81,8 +81,8 @@ void UAoS_CaseManager::ResetAllCases()
 
 void UAoS_CaseManager::ResetCase(FString CaseToResetName)
 {
-	UAoS_Case* CaseToReset = nullptr;
-	for (UAoS_Case* AcceptedCase : AcceptedCases)
+	UAoS_CaseData* CaseToReset = nullptr;
+	for (UAoS_CaseData* AcceptedCase : AcceptedCases)
 	{
 		if (AcceptedCase->CaseName.ToString() == CaseToResetName)
 		{
@@ -105,42 +105,42 @@ void UAoS_CaseManager::ResetCase(FString CaseToResetName)
 	}
 }
 
-UAoS_Case* UAoS_CaseManager::GetActiveCase() const
+UAoS_CaseData* UAoS_CaseManager::GetActiveCase() const
 {
 	return ActiveCase;
 }
 
-TArray<UAoS_Case*> UAoS_CaseManager::GetAcceptedCases() const
+TArray<UAoS_CaseData*> UAoS_CaseManager::GetAcceptedCases() const
 {
 	return AcceptedCases;
 }
 
-TArray<UAoS_Case*> UAoS_CaseManager::GetCompletedCases() const
+TArray<UAoS_CaseData*> UAoS_CaseManager::GetCompletedCases() const
 {
 	return CompletedCases;
 }
 
-UAoS_Part* UAoS_CaseManager::GetActivePart() const
+UAoS_PartData* UAoS_CaseManager::GetActivePart() const
 {
 	return ActivePart;
 }
 
-TArray<UAoS_Objective*> UAoS_CaseManager::GetActiveObjectives() const
+TArray<UAoS_ObjectiveData*> UAoS_CaseManager::GetActiveObjectives() const
 {
 	return ActiveObjectives;
 }
 
-void UAoS_CaseManager::SetActivePart(UAoS_Part* PartToSet)
+void UAoS_CaseManager::SetActivePart(UAoS_PartData* PartToSet)
 {
 	ActivePart = PartToSet;
 }
 
-void UAoS_CaseManager::SetActiveObjectives(TArray<UAoS_Objective*> ObjectivesToSet)
+void UAoS_CaseManager::SetActiveObjectives(TArray<UAoS_ObjectiveData*> ObjectivesToSet)
 {
 	ActiveObjectives = ObjectivesToSet;
 }
 
-void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)
+void UAoS_CaseManager::ObjectiveCompleted(UAoS_ObjectiveData* CompletedObjective)
 {
 	if (!CompletedObjective)
 	{
@@ -158,7 +158,7 @@ void UAoS_CaseManager::ObjectiveCompleted(UAoS_Objective* CompletedObjective)
 	}
 }
 
-void UAoS_CaseManager::PartCompleted(UAoS_Part* CompletedPart)
+void UAoS_CaseManager::PartCompleted(UAoS_PartData* CompletedPart)
 {
 	if (!CompletedPart)
 	{
@@ -173,7 +173,7 @@ void UAoS_CaseManager::PartCompleted(UAoS_Part* CompletedPart)
 	}
 }
 
-void UAoS_CaseManager::CaseCompleted(UAoS_Case* CompletedCase)
+void UAoS_CaseManager::CaseCompleted(UAoS_CaseData* CompletedCase)
 {
 	if (!CompletedCase)
 	{
@@ -188,7 +188,7 @@ void UAoS_CaseManager::CaseCompleted(UAoS_Case* CompletedCase)
 bool UAoS_CaseManager::CheckForCompletedPart()
 {
 	int32 CompletedObjectives = 0;
-	for (const UAoS_Objective* CurrentObjective : ActiveCase->GetActivePart()->GetAllObjectives())
+	for (const UAoS_ObjectiveData* CurrentObjective : ActiveCase->GetActivePart()->GetAllObjectives())
 	{
 		if(CurrentObjective->GetObjectiveComplete())
 		{
@@ -207,7 +207,7 @@ bool UAoS_CaseManager::CheckForCompletedPart()
 bool UAoS_CaseManager::CheckForCompletedCase()
 {
 	int32 CompletedParts = 0;
-	for (const UAoS_Part* CurrentPart : ActiveCase->GetAllParts())
+	for (const UAoS_PartData* CurrentPart : ActiveCase->GetAllParts())
 	{
 		if(CurrentPart->GetPartIsComplete())
 		{

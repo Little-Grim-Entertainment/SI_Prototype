@@ -6,7 +6,9 @@
 #include "Subsystems/AoS_LocalPlayerSubsystem.h"
 #include "AoS_PlayerManager.generated.h"
 
+class UAoS_UserWidget;
 class AAoS_PlayerController;
+class UAoS_EnhancedInputComponent;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_PlayerManager : public UAoS_LocalPlayerSubsystem
@@ -34,30 +36,20 @@ private:
 	void SetupDialogueState();
 	void SetupInterrogationState();
 	void SetupInactiveState();
-
+	
 	UPROPERTY()
 	AAoS_PlayerController* PlayerController;
-
+	
 	FGameplayTag PreviousPlayerState;
 	FGameplayTag CurrentPlayerState;
 
-	TMap<FGameplayTag, FSimpleDelegate> AddPlayerDelegateContainer;
+	TMap<FGameplayTag, FSimpleDelegate> PlayerDelegateContainer;
 	
-	FSimpleDelegate AddExplorationStateDelegate;
-	FSimpleDelegate AddObservationStateDelegate;
-	FSimpleDelegate AddMenuStateDelegate;
-	FSimpleDelegate AddMediaStateDelegate;
-	FSimpleDelegate AddDialogueStateDelegate;
-	FSimpleDelegate AddInterrogationStateDelegate;
-	FSimpleDelegate AddInactiveStateDelegate;
-
-	TMap<FGameplayTag, FSimpleDelegate> RemovePlayerDelegateContainer;
-
-	FSimpleDelegate RemoveExplorationStateDelegate;
-	FSimpleDelegate RemoveObservationStateDelegate;
-	FSimpleDelegate RemoveMenuStateDelegate;
-	FSimpleDelegate RemoveMediaStateDelegate;
-	FSimpleDelegate RemoveDialogueStateDelegate;
-	FSimpleDelegate RemoveInterrogationStateDelegate;
-	FSimpleDelegate RemoveInactiveStateDelegate;
+	FSimpleDelegate ExplorationStateDelegate;
+	FSimpleDelegate ObservationStateDelegate;
+	FSimpleDelegate MenuStateDelegate;
+	FSimpleDelegate MediaStateDelegate;
+	FSimpleDelegate DialogueStateDelegate;
+	FSimpleDelegate InterrogationStateDelegate;
+	FSimpleDelegate InactiveStateDelegate;
 };

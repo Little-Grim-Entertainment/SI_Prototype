@@ -16,6 +16,11 @@ void UAoS_GameInstance::Init()
 	OnGameInstanceInit.Broadcast();
 }
 
+FOnTagManagerInitialized& UAoS_GameInstance::OnTagManagerInitialized()
+{
+	return OnTagManagerInitializedDelegate;
+}
+
 AAoS_GameMode* UAoS_GameInstance::GetGameMode()
 {
 	return Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());

@@ -4,27 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "AoS_Part.generated.h"
+#include "AoS_PartData.generated.h"
 
 class UAoS_CaseManager;
 class UAoS_CharacterData;
-class UAoS_Objective;
+class UAoS_ObjectiveData;
 
 
 
 UCLASS(BlueprintType)
-class AOS_PROTOTYPE_API UAoS_Part : public UDataAsset
+class AOS_PROTOTYPE_API UAoS_PartData : public UDataAsset
 {
 	GENERATED_BODY()
 	
 public:
 	
-	UAoS_Part();
+	UAoS_PartData();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PartDetails")
 	FText PartName;
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
-	TArray<UAoS_Objective*> Objectives;
+	TArray<UAoS_ObjectiveData*> Objectives;
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
 	bool bCompleteObjectivesInOrder;
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
@@ -35,9 +35,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetPartIsActive() const {return bIsActive;}
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_Objective*> GetActiveObjectives() const;
+	TArray<UAoS_ObjectiveData*> GetActiveObjectives() const;
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_Objective*> GetAllObjectives() const {return Objectives;}
+	TArray<UAoS_ObjectiveData*> GetAllObjectives() const {return Objectives;}
 	
 	void ResetPart();
 	void SetPartComplete(bool bPartCompleted);

@@ -8,9 +8,9 @@
 
 class UAoS_DialogueBox;
 class UAoS_CaseManager;
-class UAoS_Case;
-class UAoS_Part;
-class UAoS_Objective;
+class UAoS_CaseData;
+class UAoS_PartData;
+class UAoS_ObjectiveData;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_HUD : public UAoS_UserWidget
@@ -28,7 +28,7 @@ public:
 	UAoS_UserWidget* GetReticle() const;
 	
 	UFUNCTION(BlueprintNativeEvent)
-	void OnObjectiveComplete(UAoS_Objective* CompletedObjective);
+	void OnObjectiveComplete(UAoS_ObjectiveData* CompletedObjective);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "HUD")
 	void ShowCaseAcceptedWidget();

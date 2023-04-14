@@ -141,7 +141,7 @@ bool UAoS_DialogueManager::CanEnterInterrogation()
 	return false;
 }
 
-UDialogueSession* UAoS_DialogueManager::FindDialogue(UAoS_Case* Case, UAoS_Part* Part)
+UDialogueSession* UAoS_DialogueManager::FindDialogue(UAoS_CaseData* Case, UAoS_PartData* Part)
 {
 	return nullptr;
 }

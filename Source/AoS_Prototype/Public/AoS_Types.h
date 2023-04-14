@@ -14,6 +14,9 @@ class UInputMappingContext;
 class UAoS_MapData;
 class ULevelStreaming;
 class UAoS_MediaDataAsset;
+class UAoS_CaseData;
+class UAoS_PartData;
+class UAoS_ObjectiveData;
 
 USTRUCT(BlueprintType)
 struct FAoS_MusicSettings
@@ -87,6 +90,51 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	bool bIsDefaultMappingForMode = false;
+};
+
+USTRUCT(BlueprintType)
+struct FAoS_Objective
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UAoS_ObjectiveData* ObjectiveDataAsset;
+
+	bool bIsObjectiveComplete;
+};
+
+USTRUCT(BlueprintType)
+struct FAoS_Part
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UAoS_CaseData* PartDataAsset;
+
+	UPROPERTY()
+	TArray<UAoS_ObjectiveData*> ActiveObjectives;
+	UPROPERTY()
+	TArray<UAoS_ObjectiveData*> CompletedObjectives;
+
+	bool bIsPartComplete;
+	
+	void CompleteObjective(UAoS_ObjectiveData* InObjectiveToComplete);
+};
+
+USTRUCT(BlueprintType)
+struct FAoS_Case
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UAoS_CaseData* CaseDataAsset;
+	
+	UPROPERTY()
+	UAoS_PartData* ActivePart;
+	UPROPERTY()
+	TArray<UAoS_PartData*> CompletedParts;
+
+	bool bIsCaseComplete;
 };
 
 USTRUCT(BlueprintType)

@@ -20,15 +20,19 @@ public:
 	void AddNewGameplayTag(const FGameplayTag& InGameplayTag);
 	void RemoveTag(const FGameplayTag& InGameplayTag);
 	void ClearAllTagsFromContainer(FAoS_GameplayTagContainer& InContainerToClear);
-	void ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag );
-	
+	void ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag);
+	bool SwapTags(const FGameplayTag& InOldTag, const FGameplayTag& InNewTag);
+		
 	bool HasGameplayTag(const FGameplayTag& InGameplayTag);
 	bool HasParentTag(const FGameplayTag& InTagToCheck, const FGameplayTag& InParentTag) const;
-	TArray<FAoS_GameplayTagContainer>& GetAllTagContainers();
+	TMap<FGameplayTag, FAoS_GameplayTagContainer>& GetAllTagContainers();
 
 	FOnTagAdded& OnTagAdded();
 	FOnTagAdded& OnTagRemoved();
 
+protected:
+
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 private:
 
@@ -37,10 +41,14 @@ private:
 
 	FAoS_GameplayTagContainer& GetContainerTypeByTag(const FGameplayTag& InGameplayTag);
 
+	void InitializeTagContainers();
+	
 	bool CheckContainerForParentTag(const FGameplayTag& InParentTag, const FAoS_GameplayTagContainer& InContainerToCheck) const;
+
+	TMap<FGameplayTag, FAoS_GameplayTagContainer> AllTagContainers;
 	
 	FAoS_GameplayTagContainer GameStateTags;
-	FAoS_GameplayTagContainer PlayerModeTags;
+	FAoS_GameplayTagContainer PlayerStateTags;
 	FAoS_GameplayTagContainer UITags;
 	FAoS_GameplayTagContainer LevelTags;
 	FAoS_GameplayTagContainer MediaTags;

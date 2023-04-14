@@ -95,6 +95,8 @@ public:
 protected:
 
 	virtual void OnGameModeBeginPlay() override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
 	
 private:
 

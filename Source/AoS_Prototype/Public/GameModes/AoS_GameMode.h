@@ -6,6 +6,7 @@
 #include "GameFramework/GameMode.h"
 #include "AoS_GameMode.generated.h"
 
+class UUAoS_CaseList;
 class UAoS_MoviePlayerWidget;
 class UAoS_GameInstance;
 class UAoS_UserWidget;
@@ -47,6 +48,8 @@ public:
 	UAoS_CharacterData* GizboCDA;
 	UPROPERTY(EditAnywhere, Category = Data)
 	UAoS_MapList* MapList;
+	UPROPERTY(EditAnywhere, Category = Data)
+	UUAoS_CaseList* CaseList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
 	float TimeModifier = 10.0f;
