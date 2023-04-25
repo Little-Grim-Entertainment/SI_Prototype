@@ -67,7 +67,7 @@
 		},
 		{
 			"Name": "TDxUnrealEditor",
-			"Enabled": true
+			"Enabled": false
 		}
 	]
 }
