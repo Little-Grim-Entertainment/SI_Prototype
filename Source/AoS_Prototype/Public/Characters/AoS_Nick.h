@@ -6,7 +6,6 @@
 #include "Characters/AoS_Character.h"
 #include "AoS_Nick.generated.h"
 
-class UATPCCameraComponent;
 class UAoS_NickCharacterData;
 class USpringArmComponent;
 class UCameraComponent;
@@ -25,17 +24,24 @@ public:
 	AAoS_Nick();
 
 	// ================== VARIABLES ==================
-
-	UPROPERTY(VisibleAnywhere, Category = Camera)
-	UATPCCameraComponent* ATPCCamera;
 	
 private:
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAoS_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* NickFollowCamera;
+	UChildActorComponent* FollowCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UChildActorComponent* ObservationCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UBoxComponent* FollowCameraCollision;
+
+	UPROPERTY()
+	ACameraActor* FollowCameraActor;
+	UPROPERTY()
+	ACameraActor* ObservationCameraActor;
 	
 	UPROPERTY()
 	UAoS_LevelManager* LevelManager;
@@ -56,9 +62,15 @@ public:
 	UAoS_NickCharacterData* NickCharacterData;
 	
 	/** Returns CameraBoom subobject **/
-	FORCEINLINE UATPCCameraComponent* GetATPCCamera() const { return ATPCCamera; }
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
-	FORCEINLINE UCameraComponent* GetFollowCamera() const { return NickFollowCamera; }
+	FORCEINLINE UChildActorComponent* GetFollowCamera() const { return FollowCamera; }
+	/** Returns ObservationCamera subobject **/
+	FORCEINLINE UChildActorComponent* GetObservationCamera() const { return ObservationCamera; }
+	/** Returns FollowCamera Actor **/
+	FORCEINLINE ACameraActor* GetFollowCameraActor() const { return FollowCameraActor; }
+	/** Returns ObservationCamera Actor **/
+	FORCEINLINE ACameraActor* GetObservationCameraActor() const { return ObservationCameraActor; }
 	/** Returns PerceptionStimuliSourceComponent subobject **/
 	FORCEINLINE UAoS_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
 
@@ -66,7 +78,6 @@ public:
 	void HideMeshes(bool Value);
 	
 protected:
-
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 };

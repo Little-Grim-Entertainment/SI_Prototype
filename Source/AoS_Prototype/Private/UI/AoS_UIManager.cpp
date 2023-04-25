@@ -121,11 +121,6 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 			RemoveMainMenu();
 			break;
 		}
-		case EPlayerMode::PM_SystemMenuMode:
-		{
-			RemoveSystemMenu();
-			break;
-		}
 		case EPlayerMode::PM_InterrogationMode:
 		{
 			HideDialogueBox();
@@ -149,12 +144,6 @@ void UAoS_UIManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode 
 		{
 			CreateMainMenu();
 			SetMenuMode(true, MainMenu);
-			break;	
-		}
-		case EPlayerMode::PM_SystemMenuMode:
-		{
-			CreateSystemMenu();
-			SetMenuMode(true, SystemMenu);
 			break;	
 		}
 		case EPlayerMode::PM_CinematicMode:
@@ -325,37 +314,6 @@ void UAoS_UIManager::RemoveMainMenu()
 	if (!IsValid(MainMenu)){return;}
 	
 	MainMenu->RemoveFromParent();
-}
-
-void UAoS_UIManager::CreateSystemMenu()
-{
-	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(PlayerController) || !IsValid(GameInstance->GetGameMode())){return;}
-	
-	SystemMenu = CreateWidget<UAoS_UserWidget>(PlayerController, GameInstance->GetGameMode()->SystemMenuClass);
-	if (IsValid(SystemMenu))
-	{
-		SystemMenu->AddToViewport();
-	}
-}
-
-void UAoS_UIManager::RemoveSystemMenu()
-{
-	if (!IsValid(SystemMenu)){return;}
-	
-	SystemMenu->RemoveFromParent();
-}
-
-void UAoS_UIManager::ToggleSystemMenu()
-{
-	if (!IsValid(SystemMenu))
-	{
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_SystemMenuMode);
-	}
-	else
-	{
-		GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
-	}
 }
 
 UAoS_SkipWidget* UAoS_UIManager::CreateSkipWidget()

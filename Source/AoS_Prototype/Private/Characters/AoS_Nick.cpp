@@ -2,7 +2,7 @@
 
 
 #include "Characters/AoS_Nick.h"
-#include "ATPCCameraComponent.h"
+
 #include "AI/AoS_AIPerceptionStimuliSource.h"
 #include "AoS_GameInstance.h"
 #include "Camera/CameraActor.h"
@@ -35,23 +35,49 @@ AAoS_Nick::AAoS_Nick()
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
-	ATPCCamera = CreateDefaultSubobject<UATPCCameraComponent>(TEXT("ATPCCamera"));
-	ATPCCamera->SetupAttachment(RootComponent);
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
-	NickFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("NickFollowCamera"));
-	NickFollowCamera->SetupAttachment(ATPCCamera);
+	FollowCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("FollowCamera"));
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetChildActorClass(ACameraActor::StaticClass());
+	//FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	//Create an observation camera
+	ObservationCamera = CreateDefaultSubobject<UChildActorComponent>(TEXT("ObservationCamera"));
+	ObservationCamera->SetupAttachment(RootComponent);
+
+	//Create FollowCameraCollision
+	FollowCameraCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("FollowCameraCollision"));
+	FollowCameraCollision->SetupAttachment(FollowCamera);
 	
 	// Create an AI Perception Stimuli Source component
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAoS_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
+	ObservationCamera->SetChildActorClass(ACameraActor::StaticClass());
 }
 
 void AAoS_Nick::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	if (IsValid(FollowCamera))
+	{
+		FollowCameraActor = Cast<ACameraActor>(FollowCamera->GetChildActor());
+		FollowCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
+	}
+	if (IsValid(FollowCamera))
+	{
+		ObservationCameraActor = Cast<ACameraActor>(ObservationCamera->GetChildActor());
+		ObservationCameraActor->GetCameraComponent()->SetConstraintAspectRatio(false);
+	}
+	
+	FollowCameraCollision->OnComponentBeginOverlap.AddDynamic(this, &AAoS_Nick::OnCameraCollisionBeginOverlap);
+	FollowCameraCollision->OnComponentEndOverlap.AddDynamic(this, &AAoS_Nick::OnCameraCollisionEndOverlap);
 }
 
 void AAoS_Nick::HideMeshes(bool Value)

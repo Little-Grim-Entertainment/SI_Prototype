@@ -58,14 +58,6 @@ public:
 	void RemoveMainMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void CreateSystemMenu();
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void RemoveSystemMenu();
-
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void ToggleSystemMenu();
-
-	UFUNCTION(BlueprintCallable, Category = "UI")
 	UAoS_SkipWidget* CreateSkipWidget();
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveSkipWidget();
@@ -129,8 +121,6 @@ private:
 	UAoS_UserWidget* LoadingScreen;
 	UPROPERTY()
 	UAoS_HUD* PlayerHUD;
-	UPROPERTY()
-	UAoS_UserWidget* SystemMenu;
 	UPROPERTY()
 	UAoS_UserWidget* MainMenu;
 	UPROPERTY()

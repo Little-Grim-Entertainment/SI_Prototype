@@ -41,7 +41,6 @@ enum class EPlayerMode : uint8
 	PM_InspectionMode		UMETA(DisplayName = "InspectionMode"),
 	PM_InterrogationMode	UMETA(DisplayName = "InterrogationMode"),
 	PM_GameMenuMode			UMETA(DisplayName = "GameMenuMode"),
-	PM_SystemMenuMode		UMETA(DisplayName = "SystemMenuMode"),
 	PM_VendorMode			UMETA(DisplayName = "VendorMode"),
 };
 
@@ -90,9 +89,9 @@ public:
 	float LevelLoadDelay = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
-	float GlobalFadeInDuration = .5f;
+	float AudioFadeInDuration = .5f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MusicSettings")
-	float GlobalFadeOutDuration = .5f;
+	float AudioFadeOutDuration = .5f;
 	
 	UFUNCTION(BlueprintPure, Category = "PlayerData")
 	EPlayerMode GetPlayerMode() const;

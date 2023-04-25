@@ -13,7 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
-#include "Actors/AoS_MoveToIndicator.h"
+#include "Actors/MoveToIndicator.h"
 #include "Cameras/AoS_PlayerCameraManager.h"
 #include "Characters/AoS_GizboManager.h"
 #include "Cinematics/AoS_CinematicsManager.h"
@@ -26,7 +26,8 @@
 #include "UI/AoS_DialogueBox.h"
 #include "UI/AoS_HUD.h"
 #include "UI/AoS_UIManager.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "Actors/MoveToIndicator.h"
+
 
 AAoS_PlayerController::AAoS_PlayerController()
 {
@@ -44,6 +45,16 @@ void AAoS_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	/*// Old Input System
+	check(InputComponent);
+
+	InputComponent->BindAction("Interact", IE_Pressed,this, &AAoS_PlayerController::RequestInteract);
+	InputComponent->BindAction("ObservationMode", IE_Pressed,this, &AAoS_PlayerController::RequestObservation);
+	InputComponent->BindAxis("MoveForward", this, &AAoS_PlayerController::RequestMoveForward);
+	InputComponent->BindAxis("MoveRight", this, &AAoS_PlayerController::RequestMoveRight);
+	InputComponent->BindAxis("TurnRate", this, &AAoS_PlayerController::RequestTurnRight);
+	InputComponent->BindAxis("LookUpRate", this, &AAoS_PlayerController::RequestLookUp);*/
+
 	// Enhanced Input System
 	
 	UAoS_EnhancedInputComponent* EnhancedInputComponent = Cast<UAoS_EnhancedInputComponent>(InputComponent);
@@ -52,7 +63,6 @@ void AAoS_PlayerController::SetupInputComponent()
 	// Action Bindings
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("Interact"), ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleObservationMode"), ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
-	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ToggleSystemMenu"), ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("ObserveObject"), ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("SkipCinematic"), ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
 	EnhancedInputComponent->BindAction(EnhancedInputSettings->GetActionInput("NextDialogue"), ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
@@ -78,67 +88,69 @@ void AAoS_PlayerController::SetupInputComponent()
 void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	OnCameraSetup.AddDynamic(this, &ThisClass::PostCameraSetup);
+	SetupPlayerCamera();
 }
 
+
+void AAoS_PlayerController::SetupPlayerCamera()
+{
+	Nick = Cast<AAoS_Nick>(GetPawn());
+	if (IsValid(Nick))
+	{
+		if (IsValid(Nick->GetFollowCameraActor()))
+		{
+			SetViewTarget(Nick->GetFollowCameraActor());
+			OnCameraSetup.Broadcast();
+		}
+	}
+}
 
 void AAoS_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-		
-	UpdateMoveToIndicatorPosition();
-}
 
-bool AAoS_PlayerController::UpdateMoveToIndicatorPosition() const
-{
-	if(!IsValid(Nick)) {return false;}
-	
-	//TODO: Should this functionality be moved into the AoS_MoveToIndicator class?
-	if (bMoveToMarker)
+	if(bObservationMode)
 	{
 		FHitResult HitResult;
-		FVector Start = Nick->GetFollowCamera()->GetComponentLocation();
-		FVector End = Nick->GetFollowCamera()->GetComponentLocation() + Nick->GetFollowCamera()->GetForwardVector() * 10000;
-		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel2);
-
-		//TODO: Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
-		if (HitResult.GetActor())
+		ObservationStart = Nick->GetObservationCameraActor()->GetActorLocation();
+		ObservationEnd = Nick->GetObservationCameraActor()->GetActorLocation() + Nick->GetObservationCameraActor()->GetActorForwardVector() * ObservationDistance;
+		GetWorld()->LineTraceSingleByChannel(HitResult, ObservationStart, ObservationEnd, ECC_Visibility, FCollisionQueryParams(FName(TEXT("ObservationTrace")), true, this));
+		if(HitResult.GetActor())
 		{
-			FVector HitLocation = HitResult.ImpactPoint;
-
-			// Check whether the 'Move To' indicator is within a specific radius
-			double Distance = (HitLocation - Nick->GetActorLocation()).Length();
+			AActor* HitActor = HitResult.GetActor();
+			const bool bObservable = HitActor->ActorHasTag(FName(TEXT("Observable")));
 			
-			if (Distance < AdaptableActionMaximumRadius)
+			if(bObservable && HitActor != ObservableActor)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
-				return MoveToActor->SetActorLocation(HitLocation);
+				ObservableActor = HitActor;
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("On"));
 			}
-
-			// Keep the 'Move To' actor confined to the bounds of a circle, with radius AdaptableActionMaximumRadius
-			// See https://gamedev.stackexchange.com/questions/9607/moving-an-object-in-a-circular-path and
-			// https://www.euclideanspace.com/maths/geometry/trig/inverse/index.htm and
-			// https://forums.unrealengine.com/t/how-to-get-an-angle-between-2-vectors/280850
-
-			//TODO: Requires further tuning, to make sure that the rotation is correct.
-			//When the 'MoveTo' actor currently hits the boundary, it causes the indicator to jump away from where it was previously aligned.
-			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Nick->GetFollowCamera()->GetComponentLocation(), HitLocation);
-			double NickArcTan = atan2(Nick->GetFollowCamera()->GetComponentLocation().Y, Nick->GetFollowCamera()->GetComponentLocation().X);
-			double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
-			double Angle = MoveToArcTan - NickArcTan;
-				
-			float Cosine = cos(Angle);
-			float Sine = sin(Angle);
-				
-			HitLocation.X = Nick->GetActorLocation().X + Cosine * AdaptableActionMaximumRadius;
-			HitLocation.Y = Nick->GetActorLocation().Y + Sine * AdaptableActionMaximumRadius;
-			Distance = (HitLocation - Nick->GetActorLocation()).Length();
-				
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
-			return MoveToActor->SetActorLocation(HitLocation);
+			else if(!bObservable && ObservableActor)
+			{
+				ObservableActor = nullptr;
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
+			}
+		}
+		else if(ObservableActor)
+		{
+			ObservableActor = nullptr;
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, TEXT("Off"));
 		}
 	}
-
-	return bMoveToMarker;
+	if(bMoveToMarker)
+	{
+		FHitResult HitResult;
+		FVector Start = Nick->GetFollowCameraActor()->GetActorLocation();
+		FVector End = Nick->GetFollowCameraActor()->GetActorLocation() + Nick->GetFollowCameraActor()->GetActorForwardVector() * 10000;
+		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel2);
+		if(HitResult.GetActor())
+		{
+			FVector HitLocation = HitResult.ImpactPoint;
+			MoveToActor->SetActorLocation(HitLocation);
+		}
+	}
 }
 
 void AAoS_PlayerController::PostInitializeComponents()
@@ -170,6 +182,7 @@ void AAoS_PlayerController::OnPlayerModeChanged(EPlayerMode InPlayerMode, EPlaye
 		case EPlayerMode::PM_CinematicMode:
 		{
 			if (!IsValid(Nick)) {break;}
+			SetViewTargetWithBlend(Nick->GetFollowCamera()->GetChildActor());
 			break;
 		}
 		default:
@@ -264,6 +277,8 @@ void AAoS_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
 	
 	AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+
+	
 }
 
 void AAoS_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue)
@@ -291,7 +306,7 @@ void AAoS_PlayerController::RequestInteract()
 
 void AAoS_PlayerController::RequestToggleObservation()
 {
-	/*bObservationMode = !bObservationMode;
+	bObservationMode = !bObservationMode;
 
 	UAoS_GameInstance* GameInstance = Cast<UAoS_GameInstance>(GetWorld()->GetGameInstance());
 
@@ -318,7 +333,7 @@ void AAoS_PlayerController::RequestToggleObservation()
 	}
 	Nick->HideMeshes(!bObservationMode);
 
-	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, this, &AAoS_PlayerController::PostCameraBlend, CameraTransitionTime, false);*/
+	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, this, &AAoS_PlayerController::PostCameraBlend, CameraTransitionTime, false);
 }
 
 void AAoS_PlayerController::RequestObserveObject()
@@ -389,15 +404,6 @@ void AAoS_PlayerController::RequestExitDialogue()
 	}
 }
 
-void AAoS_PlayerController::RequestToggleSystemMenu()
-{
-	UAoS_UIManager* UIManager = GetGameInstance()->GetSubsystem<UAoS_UIManager>();
-	if (IsValid(UIManager))
-	{
-		UIManager->ToggleSystemMenu();
-	}
-}
-
 void AAoS_PlayerController::RequestGizboFollowTemp()
 {
 	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
@@ -412,45 +418,29 @@ void AAoS_PlayerController::RequestGizboMoveToTemp()
 	{
 		MoveToActor = SpawnMoveToMarker();
 		bMoveToMarker = true;
-		GizboManager->GetGizboController()->ToggleWait();
 	}
 }
 
 void AAoS_PlayerController::RequestGizboMoveToConfirm()
 {
-	if (bMoveToMarker)
-	{
-		if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
-		{
-			bMoveToMarker = false;
-			Cast<AAoS_MoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
-			MoveToActor = nullptr;
-			GizboManager->GetGizboController()->ToggleMoveTo();
-
-			//TODO: Replace current marker, with a new one in the same location (in an attempt to bypass Perception woes)
-			/*FVector MarkerLocation = MoveToActor->GetActorLocation();
-			bMoveToMarker = false;
-			MoveToActor->Destroy();
-			MoveToActor = nullptr;
-
-			MoveToActor = SpawnMoveToMarker();
-			MoveToActor->SetActorLocation(MarkerLocation);
-			Cast<AAoS_MoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
-			MoveToActor = nullptr;
-			GizboManager->GetGizboController()->ToggleMoveTo();*/
-		}
-	}
-		
-}
-
-void AAoS_PlayerController::RequestGizboMoveToCancel()
-{
-	if (bMoveToMarker)
+	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 	{
 		bMoveToMarker = false;
-		MoveToActor->Destroy();
+		Cast<AMoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
 		MoveToActor = nullptr;
+		GizboManager->GetGizboController()->ToggleMoveTo();
 	}
+}
+
+void AAoS_PlayerController::PostCameraBlend()
+{
+	Nick->bUseControllerRotationPitch = bObservationMode;
+	Nick->bUseControllerRotationYaw = bObservationMode;
+
+	SetControlRotation(FRotator(0, Nick->GetActorRotation().Yaw, 0));
+	Nick->SetActorRotation(FRotator(0., Nick->GetActorRotation().Yaw, 0));
+	
+	EnableInput(this);
 }
 
 void AAoS_PlayerController::LockPlayerMovement(bool bLockMovement, bool bLockTurning)
@@ -467,6 +457,11 @@ void AAoS_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 {
 	ObservableActor = InObservableActor;
+}
+
+void AAoS_PlayerController::PostCameraSetup_Implementation()
+{
+	
 }
 
 UMediaSoundComponent* AAoS_PlayerController::GetMediaSoundComponent() const

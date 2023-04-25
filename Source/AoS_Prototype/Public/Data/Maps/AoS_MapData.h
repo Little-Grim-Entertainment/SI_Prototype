@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "AoS_Types.h"
+#include "AoS_GlobalStructs.h"
 #include "AoS_MapData.generated.h"
 
 class UAoS_MusicManager;

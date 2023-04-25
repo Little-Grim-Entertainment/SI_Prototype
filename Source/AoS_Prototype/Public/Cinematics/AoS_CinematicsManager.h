@@ -98,4 +98,5 @@ private:
 	void DelayedVideoPlay(UAoS_MapData* LoadedLevel, bool bShouldFade);
 	UFUNCTION()
 	void DelayedCinematicPlay(UAoS_MapData* LoadedLevel, bool bShouldFade);
+	
 };

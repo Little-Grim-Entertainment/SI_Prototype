@@ -27,8 +27,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_UserWidget> MainMenuClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
-	TSubclassOf<UAoS_UserWidget> SystemMenuClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_HUD> PlayerHUD_Class;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
 	TSubclassOf<UAoS_MoviePlayerWidget> MoviePlayerWidget;

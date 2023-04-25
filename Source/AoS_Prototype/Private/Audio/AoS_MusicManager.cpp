@@ -112,8 +112,7 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusic(FMusicSettings InMusicSe
 		
 		if (CurrentMusicSettings.bShouldFade)
 		{
-			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
-			BackgroundMusic->FadeIn(FadeInDuration);
+			BackgroundMusic->FadeIn(GameInstance->AudioFadeInDuration);
 		}
 		else
 		{
@@ -149,8 +148,7 @@ UAudioComponent* UAoS_MusicManager::PlayBackgroundMusicLoopWithIntro(FMusicSetti
 
 		if (CurrentMusicSettings.bShouldFade)
 		{
-			const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
-			BackgroundMusic->FadeIn(FadeInDuration);
+			BackgroundMusic->FadeIn(GameInstance->AudioFadeInDuration);
 		}
 		else
 		{
@@ -171,9 +169,7 @@ void UAoS_MusicManager::PauseMusicWithFade()
 		return;
 	}
 
-	const float FadeInDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeInDuration : CurrentMusicSettings.FadeInDuration;
-	
-	MusicTimeAtPause += FadeInDuration;
+	MusicTimeAtPause += GameInstance->AudioFadeInDuration;
 	MusicVolumeAtPause = CurrentMusicSettings.VolumeMultiplier;
 	MusicPitchAtPause = CurrentMusicSettings.PitchMultiplier;
 
@@ -212,8 +208,7 @@ void UAoS_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLe
 	{
 		if (bShouldFade)
 		{
-			const float FadeOutDuration = CurrentMusicSettings.bUseGlobalFadeSettings ? GameInstance->GlobalFadeOutDuration : CurrentMusicSettings.FadeOutDuration;
-			BackgroundMusic->FadeOut(FadeOutDuration, FadeVolumeLevel);
+			BackgroundMusic->FadeOut(GameInstance->AudioFadeInDuration, FadeVolumeLevel);
 		}
 		else
 		{
