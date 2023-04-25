@@ -1,0 +1,8 @@
+Begin Object Class=/Script/Engine.CurveFloat Name="CF_PitchDistance"
+   Begin Object Class=/Script/Engine.AssetImportData Name="AssetImportData"
+   End Object
+   Begin Object Name="AssetImportData"
+   End Object
+   FloatCurve=(Keys=((InterpMode=RCIM_Cubic,TangentMode=RCTM_User),(InterpMode=RCIM_Cubic,TangentMode=RCTM_User,Time=50.000000,Value=-50.000000)))
+   AssetImportData=AssetImportData'"AssetImportData"'
+End Object
