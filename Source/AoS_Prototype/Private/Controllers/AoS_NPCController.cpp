@@ -97,7 +97,7 @@ void AAoS_NPCController::UpdateBehaviorTree()
 	}
 
 	UBehaviorTree* SelectedTree = PossessedNPC->GetNothingTree();
-	
+
 	if (PossessedNPC->IsWandering()) { SelectedTree = PossessedNPC->GetWanderingTree(); }
 
 	//TODO: Should also check for a patrol path
@@ -120,6 +120,8 @@ void AAoS_NPCController::UpdateBehaviorTree()
 	RunBehaviorTree(SelectedTree);
 }
 
+//TODO: Get the Actor's perception, check its info, and for sight (index 0), check whether it was successfully sensed
+// Split functions into acquiring / losing a target, and sensing / or losing sense of a given target
 void AAoS_NPCController::SetSeenTarget(AActor* Actor)
 {
 	if (Blackboard && Actor)
