@@ -6,9 +6,26 @@ public class AoS_Prototype : ModuleRules
 {
 	public AoS_Prototype(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PrivateDependencyModuleNames.AddRange(new string[] { "GenericGraphRuntime" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "GenericGraphRuntime", "AdvancedThirdPersonCamera" });
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AIModule", "NavigationSystem", "Slate", "SlateCore", "MoviePlayer", "UMG", "LevelSequence", "MovieScene", "MediaAssets" });
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"AIModule",
+			"Core", 
+			"CoreUObject",
+			"Engine", 
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks", 
+			"InputCore",
+			"LevelSequence",
+			"MediaAssets",
+			"MoviePlayer",
+			"MovieScene", 
+			"NavigationSystem", 
+			"Slate", 
+			"SlateCore", 
+			"UMG",
+		});
 	}
 }
