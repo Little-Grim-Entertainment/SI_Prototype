@@ -77,6 +77,8 @@ void UAoS_MediaManager::PlayMedia(UAoS_MediaDataAsset* InMediaToPlay, FAoS_Media
 		{
 			PlayCinematic(CinematicDataAsset);
 		}
+		
+		AoSTagManager->AddNewGameplayTag(AOSTag_Audio_Music_Pause);
 		return;
 	}
 
@@ -92,6 +94,8 @@ void UAoS_MediaManager::PlayMedia(UAoS_MediaDataAsset* InMediaToPlay, FAoS_Media
 		{
 			PlayVideo(VideoDataAsset);
 		}
+
+		AoSTagManager->AddNewGameplayTag(AOSTag_Audio_Music_Pause);
 	}
 }
 
@@ -319,7 +323,8 @@ void UAoS_MediaManager::OnCinematicSkipped()
 			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
 		}
 	}
-	
+
+	AoSTagManager->RemoveTag(AOSTag_Audio_Music_Pause);
 	AoSTagManager->RemoveTag(AOSTag_Media_Cinematic);
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
@@ -341,7 +346,8 @@ void UAoS_MediaManager::OnCinematicEnded()
 			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
 		}
 	}
-	
+
+	AoSTagManager->RemoveTag(AOSTag_Audio_Music_Pause);
 	AoSTagManager->RemoveTag(AOSTag_Media_Cinematic);
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
@@ -377,7 +383,8 @@ void UAoS_MediaManager::OnVideoEnded()
 			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
 		}
 	}
-	
+
+	AoSTagManager->RemoveTag(AOSTag_Audio_Music_Pause);
 	AoSTagManager->RemoveTag(AOSTag_Media_Video);
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
@@ -399,7 +406,8 @@ void UAoS_MediaManager::OnVideoSkipped()
 			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
 		}
 	}
-	
+
+	AoSTagManager->RemoveTag(AOSTag_Audio_Music_Pause);
 	AoSTagManager->RemoveTag(AOSTag_Media_Video);
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }

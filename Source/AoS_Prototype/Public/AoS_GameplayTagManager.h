@@ -17,14 +17,23 @@ class AOS_PROTOTYPE_API UAoS_GameplayTagManager : public UAoS_GameInstanceSubsys
 
 public:
 
+	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	void AddNewGameplayTag(const FGameplayTag& InGameplayTag);
+	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	void RemoveTag(const FGameplayTag& InGameplayTag);
+	
 	void ClearAllTagsFromContainer(FAoS_GameplayTagContainer& InContainerToClear);
+	
+	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	void ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag);
+	
 	bool SwapTags(const FGameplayTag& InOldTag, const FGameplayTag& InNewTag);
-		
+
+	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	bool HasGameplayTag(const FGameplayTag& InGameplayTag);
+	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	bool HasParentTag(const FGameplayTag& InTagToCheck, const FGameplayTag& InParentTag) const;
+	
 	TMap<FGameplayTag, FAoS_GameplayTagContainer>& GetAllTagContainers();
 	FAoS_GameplayTagContainer& GetContainerTypeByTag(const FGameplayTag& InGameplayTag);
 

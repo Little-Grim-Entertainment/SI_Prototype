@@ -39,6 +39,11 @@ void UAoS_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		PlayLoadedLevelBackgroundMusic();
 		return;
 	}
+	if (AoSTagManager->HasParentTag(InAddedTag, AOSTag_Game_State_Loading))
+	{
+		StopBackgroundMusic(true, 0.0f);
+		return;
+	}
 	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_Audio_Music)) {return;}
 
 	Super::OnGameplayTagAdded(InAddedTag);
@@ -51,11 +56,6 @@ void UAoS_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 void UAoS_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
-	if (AoSTagManager->HasParentTag(InRemovedTag, AOSTag_Map_Title))
-	{
-		StopBackgroundMusic(true, 0.0f);
-		return;
-	}
 	if(!AoSTagManager->HasParentTag(InRemovedTag, AOSTag_Audio_Music)) {return;}
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
