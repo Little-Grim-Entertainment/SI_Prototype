@@ -24,8 +24,7 @@ using namespace AoS_MapGameplayTagLibrary;
 
 UAoS_LevelManager::UAoS_LevelManager()
 {
-	/*static ConstructorHelpers::FObjectFinder<UAoS_MapData> MainMenuAsset(TEXT("/Game/AoS/Maps/Menus/DA_MainMenu"));
-	MainMenu = MainMenuAsset.Object;*/
+
 }
 
 void UAoS_LevelManager::OnInitGame()
@@ -37,9 +36,9 @@ void UAoS_LevelManager::OnInitGame()
 void UAoS_LevelManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
-	
+
 	InitializeMapStates();
-	LevelLoaded();
+	LevelLoaded(GetWorld());
 }
 
 void UAoS_LevelManager::OnPlayerStart()
@@ -55,7 +54,8 @@ void UAoS_LevelManager::OnPlayerStart()
 
 void UAoS_LevelManager::InitializeMapStates()
 {
-	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());
+	if(MapStates.Num() > 0) {return;}
+ 	const AAoS_GameMode* GameMode = Cast<AAoS_GameMode>(GetWorld()->GetAuthGameMode());
 	
 	if (!IsValid(GameMode)) {return;}
 	if (!IsValid(GameMode->MapList)) {return;}
@@ -77,13 +77,20 @@ void UAoS_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString I
 	if (!MapStateToLoad.GetMapData()) {return;}
 	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
 
-	UAoS_MediaManager* MediaManager =  GetWorld()->GetSubsystem<UAoS_MediaManager>();
-	if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
+	if (LoadedMapState->GetMapData()->MapType == AOSTag_Map_Type_Menu)
 	{
-		MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
-		LoadLevelOnMediaComplete(InLevelToLoadTag, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
+		AoSTagManager->RemoveTag(AOSTag_UI_Menu_Map);
+	}
 
-		return;
+	if(LoadedMapState->HasOutroMedia())
+	{
+		UAoS_MediaManager* MediaManager =  GetWorld()->GetSubsystem<UAoS_MediaManager>();
+		if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
+		{
+			MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
+			LoadLevelOnMediaComplete(InLevelToLoadTag, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
+			return;
+		}
 	}
 	
 	LevelStateToLoad = &MapStateToLoad;
@@ -98,10 +105,10 @@ void UAoS_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString I
 		GizboManager->SetGizboStartTag(GizboStartTag);
 	}
 	
-	OnBeginLevelLoad.Broadcast(MapStateToLoad.GetMapData(), bShouldFade);
-	
 	const AAoS_GameMode* GameMode = GameInstance->GetGameMode();
 	if (!IsValid(GameMode)) {return;}
+
+	AoSTagManager->ReplaceTagWithSameParent(AOSTag_Game_State_Loading, AOSTag_Game_State);
 	
 	if (GetWorld() != MapStateToLoad.GetMapData()->Map.Get())
 	{
@@ -109,6 +116,7 @@ void UAoS_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString I
 		{
 			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevelByTag, InLevelToLoadTag, InPlayerStartTag, false, bShouldFade);
 			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameMode->LevelLoadDelay, false);
+			OnBeginLevelLoad.Broadcast(MapStateToLoad.GetMapData(), bShouldFade);
 		}
 		else
 		{
@@ -121,6 +129,7 @@ void UAoS_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString I
 				}
 				
 				UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelStateToLoad->GetMapData()->Map, true, InPlayerStartTag);
+				OnBeginLevelLoad.Broadcast(MapStateToLoad.GetMapData(), bShouldFade);
 			}
 		}
 	}
@@ -220,6 +229,11 @@ FAoS_MapState& UAoS_LevelManager::GetMapStateFromName(FString InMapName)
 	for (FAoS_MapState& CurrentMapState : MapStates)
 	{
 		FString CurrentMapDataName = CurrentMapState.GetMapData()->GetName();
+		if(CurrentMapDataName == InMapName)
+		{
+			return CurrentMapState;
+		}
+		
 		FString CurrentMapName = CurrentMapDataName.Replace(TEXT("DA"), TEXT("M"));
 		
 		if (CurrentMapName == InMapName)
@@ -233,7 +247,7 @@ FAoS_MapState& UAoS_LevelManager::GetMapStateFromName(FString InMapName)
 }
 
 
-void UAoS_LevelManager::LevelLoaded()
+void UAoS_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 {
 	LoadedMapState = LevelStateToLoad;
 
@@ -263,6 +277,7 @@ void UAoS_LevelManager::LevelLoaded()
 	}
 	
 	bLevelHasLoaded = true;
+	AoSTagManager->ReplaceTagWithSameParent(AOSTag_Game_State_Playing, AOSTag_Game_State);
 
 	OnLevelLoaded.Broadcast(LoadedMapState->GetMapData(), bLoadShouldFade);
 }

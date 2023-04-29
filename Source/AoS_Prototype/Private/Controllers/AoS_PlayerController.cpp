@@ -30,6 +30,7 @@
 #include "Data/Input/AoS_InputConfig.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "AoS_NativeGameplayTagLibrary.h"
+#include "AoS_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
 using namespace AoS_NativeGameplayTagLibrary;
@@ -79,6 +80,24 @@ void AAoS_PlayerController::SetupInputComponent()
 void AAoS_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	const UAoS_PlayerManager* PlayerManager = GetLocalPlayer()->GetSubsystem<UAoS_PlayerManager>();
+	if(!IsValid(PlayerManager) || !PlayerManager->GetCurrentPlayerState().IsValid()) {return;}
+
+	if(PlayerManager->GetCurrentPlayerState() == AOSTag_Player_State_Menu)
+	{
+		SetMenuMode(true);
+	}
+	else
+	{
+		SetMenuMode(false);
+	}
+
+	AddInputMappingByTag(PlayerManager->GetCurrentPlayerState());
+	if(PlayerManager->GetPreviousPlayerState().IsValid())
+	{
+		RemoveInputMappingByTag(PlayerManager->GetPreviousPlayerState());
+	}
 }
 
 void AAoS_PlayerController::Tick(float DeltaSeconds)
@@ -400,21 +419,22 @@ void AAoS_PlayerController::SetObservableActor(AActor* InObservableActor)
 	ObservableActor = InObservableActor;
 }
 
-void AAoS_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag)
+void AAoS_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
 {
 	if (!InMappingTag.IsValid()) {return;}
 	
 	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag);
-	EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(MappingToAdd);
+	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);
+	const FModifyContextOptions ModifyContextOptions;
+	EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingToAdd, 0, ModifyContextOptions);
 }
 
-void AAoS_PlayerController::RemoveInputMappingByTag(const FGameplayTag InMappingTag)
+void AAoS_PlayerController::RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
 {
 	if (!InMappingTag.IsValid()) {return;}
 	
 	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	const UInputMappingContext* MappingToRemove = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag);
+	const UInputMappingContext* MappingToRemove = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);
 	EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(MappingToRemove);
 }
 

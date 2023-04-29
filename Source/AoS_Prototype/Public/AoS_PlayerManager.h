@@ -19,6 +19,10 @@ public:
 
 	void RequestNewPlayerState(const FGameplayTag& InPlayerState);
 
+	const FGameplayTag& GetCurrentPlayerState() const;
+	const FGameplayTag& GetPreviousPlayerState() const;
+
+
 protected:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -42,6 +46,7 @@ private:
 	
 	FGameplayTag PreviousPlayerState;
 	FGameplayTag CurrentPlayerState;
+	FGameplayTag SecondaryMediaTag;
 
 	TMap<FGameplayTag, FSimpleDelegate> PlayerDelegateContainer;
 	

@@ -48,4 +48,6 @@ public:
 	FText ObjectiveDescription;
 	UPROPERTY(EditAnywhere, Category = "Media")
 	TArray<FAoS_LevelMediaAssignment> LevelMediaAssignments;
+
+	bool HasLevelMediaAssignments();
 };

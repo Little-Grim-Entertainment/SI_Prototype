@@ -38,7 +38,7 @@ void UAoS_HUD::NativeConstruct()
 
 void UAoS_HUD::SetupBindings()
 {
-	CaseManagerRef->OnObjectiveComplete.AddDynamic(this, &UAoS_HUD::OnObjectiveComplete);
+	CaseManagerRef->OnObjectiveComplete().AddDynamic(this, &UAoS_HUD::OnObjectiveComplete);
 	bBindingsSetup = true;
 }
 

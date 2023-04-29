@@ -8,6 +8,7 @@
 #include "AoS_GameplayTagTypes.h"
 #include "AoS_Types.generated.h"
 
+class UAoS_LevelManager;
 class USoundBase;
 class UInputAction;
 class UInputMappingContext;
@@ -23,10 +24,13 @@ struct FAoS_MusicSettings
 {
 	GENERATED_BODY()
 
+	FAoS_MusicSettings();
+	FAoS_MusicSettings(USoundBase* InMusicSource);
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
-	USoundBase* MetaSoundSource;
+	USoundBase* MetaSoundSource = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
-	USoundBase* MusicSource;
+	USoundBase* MusicSource = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
 	bool bHasIntro = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music", meta=(EditCondition="bHasIntro", EditConditionHides))
@@ -51,6 +55,9 @@ USTRUCT(BlueprintType)
 struct FAoS_InputAction
 {
 	GENERATED_BODY()
+
+	FAoS_InputAction();
+	FAoS_InputAction(UInputAction* InInputAction);
 	
 	const UInputAction* GetInputAction() const;
 	const FGameplayTag& GetInputTag() const;
@@ -58,7 +65,7 @@ struct FAoS_InputAction
 private:
 	
 	UPROPERTY(EditDefaultsOnly)
-	const UInputAction* InputAction = nullptr; 
+	UInputAction* InputAction = nullptr; 
 
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Input"))
 	FGameplayTag InputTag;
@@ -68,6 +75,9 @@ USTRUCT(BlueprintType)
 struct FAoS_InputMapping
 {
 	GENERATED_BODY()
+
+	FAoS_InputMapping();
+	FAoS_InputMapping(UInputMappingContext* InInputMappingContext);
 
 	const UInputMappingContext* GetInputMappingContext() const;
 	const FGameplayTag& GetAssociatedTag() const;
@@ -79,7 +89,6 @@ struct FAoS_InputMapping
 
 private:
 	
-
 	UPROPERTY(EditDefaultsOnly)
 	UInputMappingContext* InputMappingContext = nullptr;
 
@@ -93,56 +102,133 @@ private:
 };
 
 USTRUCT(BlueprintType)
-struct FAoS_Objective
+struct FAoS_ObjectiveDetails
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
-	UAoS_ObjectiveData* ObjectiveDataAsset;
+	FAoS_ObjectiveDetails();
+	FAoS_ObjectiveDetails(UAoS_ObjectiveData* InObjectiveData);
 
-	bool bIsObjectiveComplete;
+	void SetIsObjectiveActive(bool bIsActive);
+	void SetIsObjectiveComplete(bool bIsComplete);
+
+	void ResetObjective();
+
+	UAoS_ObjectiveData* GetObjectiveData() const;
+
+	bool IsObjectiveActive();
+	bool IsObjectiveComplete();
+
+	bool operator==(const FAoS_ObjectiveDetails& OtherObjective) const;
+	bool operator!=(const FAoS_ObjectiveDetails& OtherObjective) const;
+	
+private:
+	
+	UPROPERTY()
+	UAoS_ObjectiveData* ObjectiveDataAsset = nullptr;
+
+	bool bIsObjectiveActive = false;
+	bool bIsObjectiveComplete = false;
 };
 
 USTRUCT(BlueprintType)
-struct FAoS_Part
+struct FAoS_PartDetails
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
-	UAoS_CaseData* PartDataAsset;
+	FAoS_PartDetails();
+	FAoS_PartDetails(UAoS_PartData* InPartData);
 
+	bool CompleteObjective(const UAoS_ObjectiveData* InObjectiveToComplete);
+
+	void SetIsPartActive(bool bIsActive);
+	void SetIsPartComplete(bool bIsComplete);
+
+	void ResetPart();
+	
+	bool IsPartComplete();
+
+	UAoS_PartData* GetPartData() const;
+
+	FAoS_ObjectiveDetails& GetObjectiveDetails(const UAoS_ObjectiveData* InObjectiveData);
+
+	TMap<UAoS_ObjectiveData*, FAoS_ObjectiveDetails>& GetPartObjectives();
+	TArray<UAoS_ObjectiveData*> GetActiveObjectives();
+	TArray<UAoS_ObjectiveData*> GetCompletedObjectives();
+
+	bool operator==(const FAoS_PartDetails& OtherPart) const;
+	bool operator!=(const FAoS_PartDetails& OtherPart) const;
+	
+private:
+	
+	UPROPERTY()
+	UAoS_PartData* PartDataAsset = nullptr;
+
+	UPROPERTY()
+	TMap<UAoS_ObjectiveData*, FAoS_ObjectiveDetails> PartObjectives;
 	UPROPERTY()
 	TArray<UAoS_ObjectiveData*> ActiveObjectives;
 	UPROPERTY()
 	TArray<UAoS_ObjectiveData*> CompletedObjectives;
 
-	bool bIsPartComplete;
-	
-	void CompleteObjective(UAoS_ObjectiveData* InObjectiveToComplete);
+	bool bIsPartActive = false;
+	bool bIsPartComplete = false;
 };
 
 USTRUCT(BlueprintType)
-struct FAoS_Case
+struct FAoS_CaseDetails
 {
 	GENERATED_BODY()
 
+	FAoS_CaseDetails();
+	FAoS_CaseDetails(UAoS_CaseData* InCaseData);
+
+	void SetIsCaseAccepted(const bool bIsAccepted);
+	void SetIsCaseActive(const bool bIsActive);
+	void SetIsCaseComplete(const bool bIsComplete);
+	void SetActivePart(UAoS_PartData* InActivePart);
+	
+	UAoS_CaseData* GetCaseData() const;
+
+	bool IsCaseAccepted() const;
+	bool IsCaseComplete() const;
+	bool IsCaseActive() const;
+
+	void ResetCase();
+	
+	FAoS_PartDetails& GetPartDetails(const UAoS_PartData* InPart);
+	TMap<UAoS_PartData*, FAoS_PartDetails>& GetCaseParts();
+	UAoS_PartData* GetActivePart();
+
+	bool operator==(const FAoS_CaseDetails& OtherCase) const;
+	bool operator!=(const FAoS_CaseDetails& OtherCase) const;
+	
+private:
+
 	UPROPERTY()
-	UAoS_CaseData* CaseDataAsset;
+	UAoS_CaseData* CaseDataAsset = nullptr;
 	
 	UPROPERTY()
-	UAoS_PartData* ActivePart;
+	UAoS_PartData* ActivePart = nullptr;
+	
+	TMap<UAoS_PartData*, FAoS_PartDetails> CaseParts;
+	
 	UPROPERTY()
 	TArray<UAoS_PartData*> CompletedParts;
 
-	bool bIsCaseComplete;
+	bool bIsCaseAccepted = false;
+	bool bIsCaseActive = false;
+	bool bIsCaseComplete = false;
+	
+	const UAoS_PartData* GetActivePart() const;
 };
 
 USTRUCT(BlueprintType)
 struct FAoS_MapState
 {
 	GENERATED_BODY()
-	
-	FAoS_MapState() {}
+
+	FAoS_MapState();
 	FAoS_MapState(UAoS_MapData* InMapData, FAoS_MediaSettings InIntroSettings = FAoS_MediaSettings(), FAoS_MediaSettings InOutroSettings = FAoS_MediaSettings(), UAoS_MediaDataAsset* InLoadedIntroMedia = nullptr, UAoS_MediaDataAsset* InLoadedOutroMedia = nullptr, ULevelStreaming* InStreamingLevelRef = nullptr);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Levels")

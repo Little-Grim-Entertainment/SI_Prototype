@@ -121,13 +121,12 @@ private:
 	void BindCaseManagerDelegates();
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
-	void InitializeMenuMaps();
 	
 	UPROPERTY()
 	AAoS_PlayerController* PlayerController;
 
 	TMap<FGameplayTag, UAoS_UserWidget*> UIWidgetContainer;
-	
+
 	UPROPERTY()
 	UAoS_UserWidget* LoadingScreen;
 	UPROPERTY()

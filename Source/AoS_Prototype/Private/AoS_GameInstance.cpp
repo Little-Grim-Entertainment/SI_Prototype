@@ -3,6 +3,7 @@
 
 #include "AoS_GameInstance.h"
 #include "GameModes/AoS_GameMode.h"
+#include "Levels/AoS_LevelManager.h"
 
 UAoS_GameInstance::UAoS_GameInstance()
 {	
@@ -14,6 +15,12 @@ void UAoS_GameInstance::Init()
 	Super::Init();
 	
 	OnGameInstanceInit.Broadcast();
+
+	/*UAoS_LevelManager* LevelManager = GetSubsystem<UAoS_LevelManager>();
+	if(IsValid(LevelManager))
+	{
+		FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(LevelManager, &UAoS_LevelManager::LevelLoaded);
+	}*/
 }
 
 FOnTagManagerInitialized& UAoS_GameInstance::OnTagManagerInitialized()

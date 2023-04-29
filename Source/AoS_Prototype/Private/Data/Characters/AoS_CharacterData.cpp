@@ -17,7 +17,7 @@ FAoS_DialogueData& UAoS_CharacterData::GetCurrentDialogueData(UAoS_CaseManager* 
 
 	for(FAoS_DialogueData& CurrentDialogueData : CaseDialogueData)
 	{
-		if (CurrentDialogueData.Case == CaseManager->GetActiveCase() && CurrentDialogueData.Part == CaseManager->GetActiveCase()->GetActivePart())
+		if (CurrentDialogueData.Case == CaseManager->GetActiveCase() && CurrentDialogueData.Part == CaseManager->GetActivePart())
 		{
 			return CurrentDialogueData;
 		}

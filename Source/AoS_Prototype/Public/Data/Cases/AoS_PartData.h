@@ -29,25 +29,7 @@ public:
 	bool bCompleteObjectivesInOrder;
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
 	TArray<UAoS_CharacterData*> ActiveCharacters;
-	
-	UFUNCTION(BlueprintPure)
-	bool GetPartIsComplete() const {return bIsComplete;}
-	UFUNCTION(BlueprintPure)
-	bool GetPartIsActive() const {return bIsActive;}
-	UFUNCTION(BlueprintPure)
-	TArray<UAoS_ObjectiveData*> GetActiveObjectives() const;
+
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_ObjectiveData*> GetAllObjectives() const {return Objectives;}
-	
-	void ResetPart();
-	void SetPartComplete(bool bPartCompleted);
-	void SetPartIsActive(bool bPartIsActive, UAoS_CaseManager* CaseManagerRef);
-	void ActivateObjectives(UAoS_CaseManager* CaseManagerRef);
-	void DeactivateObjectives();
-	
-private:
-	
-	bool bIsActive;
-	bool bIsComplete;
-	
 };

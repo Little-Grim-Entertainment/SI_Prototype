@@ -11,7 +11,7 @@
 void UAoS_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
 {
 	FAoS_GameplayTagContainer& ContainerToAddTo = GetContainerTypeByTag(InGameplayTag);
-	if (ContainerToAddTo.HasTagExact(InGameplayTag)) {return;}
+	if (!InGameplayTag.IsValid() || ContainerToAddTo.HasTagExact(InGameplayTag)) {return;}
 
 	ContainerToAddTo.AddTag(InGameplayTag);
 	OnTagAddedDelegate.Broadcast(InGameplayTag);
@@ -38,10 +38,14 @@ void UAoS_GameplayTagManager::ClearAllTagsFromContainer(FAoS_GameplayTagContaine
 
 void UAoS_GameplayTagManager::ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag)
 {
-	TArray<FGameplayTag> AllGameplayTags;
+	
 	const FAoS_GameplayTagContainer& TagTypeContainer = GetContainerTypeByTag(InNewTag);
+
+	if(TagTypeContainer.HasTag(InNewTag)){return;}
+
 	if(TagTypeContainer.IsValid())
 	{
+		TArray<FGameplayTag> AllGameplayTags;
 		TagTypeContainer.GetGameplayTagArray(AllGameplayTags);
 		for (FGameplayTag& CurrentGameplayTag : AllGameplayTags)
 		{
@@ -96,12 +100,16 @@ bool UAoS_GameplayTagManager::HasParentTag(const FGameplayTag& InTagToCheck, con
 
 	const FString ParentTagString = InParentTag.ToString();
 	const FString TraitTagString = InTagToCheck.ToString();
-	if (TraitTagString.Contains(ParentTagString))
+
+	for (int32 CurrentCharIndex = 0; CurrentCharIndex < ParentTagString.Len(); CurrentCharIndex++)
 	{
-		return true;
+		if(TraitTagString[CurrentCharIndex] != ParentTagString[CurrentCharIndex])
+		{
+			return false;
+		}
 	}
 	
-	return false;
+	return true;
 }
 
 TMap<FGameplayTag, FAoS_GameplayTagContainer>& UAoS_GameplayTagManager::GetAllTagContainers() 

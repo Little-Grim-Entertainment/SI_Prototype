@@ -32,7 +32,7 @@ public:
 	UFUNCTION(exec)
 
 	// Case Manager Cheats
-	void CheatResetCase(FString CaseToResetName);
+	void CheatResetCase(const FString& CaseToResetName);
 	UFUNCTION(exec)
 	void CheatResetPlayedVideos();
 	UFUNCTION(exec)

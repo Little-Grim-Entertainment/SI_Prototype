@@ -59,9 +59,7 @@ void UAoS_UIManager::OnGameInstanceInit()
 void UAoS_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-
-	InitializeDelegates();
-	InitializeDelegateMaps();
+	
 }
 
 void UAoS_UIManager::OnGameModeBeginPlay()
@@ -72,6 +70,11 @@ void UAoS_UIManager::OnGameModeBeginPlay()
 
 void UAoS_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
+	if(InAddedTag == AOSTag_Game_State_Loading)
+	{
+		AoSTagManager->ReplaceTagWithSameParent(AOSTag_UI_Screen_Loading, AOSTag_UI);
+	}
+	
 	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_UI)){return;}
 
 	AddUIDelegateContainer.Find(InAddedTag)->Execute();
@@ -81,6 +84,11 @@ void UAoS_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 void UAoS_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
+	if(InRemovedTag == AOSTag_Game_State_Loading)
+	{
+		AoSTagManager->RemoveTag(AOSTag_UI_Screen_Loading);
+	}
+	
 	if(!AoSTagManager->HasParentTag(InRemovedTag, AOSTag_UI)){return;}
 
 	Super::OnGameplayTagRemoved(InRemovedTag);
@@ -102,6 +110,7 @@ void UAoS_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	}
 	
 	RemoveAOSWidget(GetWidgetByTag(InRemovedTag));
+	UIWidgetContainer.Remove(InRemovedTag);
 }
 
 void UAoS_UIManager::BindCaseManagerDelegates()
@@ -147,22 +156,11 @@ void UAoS_UIManager::InitializeDelegateMaps()
 	AddUIDelegateContainer.Add(AOSTag_UI_Screen_Video, AddVideoScreenDelegate);
 }
 
-void UAoS_UIManager::InitializeMenuMaps()
-{
-	UIWidgetContainer.Add(AOSTag_UI_Screen_Loading, LoadingScreen);
-	UIWidgetContainer.Add(AOSTag_UI_HUD, PlayerHUD);
-	UIWidgetContainer.Add(AOSTag_UI_Menu_System, SystemMenu);
-	UIWidgetContainer.Add(AOSTag_UI_Menu_Map, MapMenu);
-	UIWidgetContainer.Add(AOSTag_UI_Prompt_Skip, SkipWidget);
-	UIWidgetContainer.Add(AOSTag_UI_Screen_Video, MoviePlayerWidget);
-	UIWidgetContainer.Add(AOSTag_UI_Screen_TitleCard, CaseTitleCardWidget);
-}
-
 void UAoS_UIManager::CreatePlayerHUD()
 {
-	if (!IsValid(GameInstance->GetGameMode())){return;}
+	if (!IsValid(GameInstance->GetGameMode()) || IsValid(PlayerHUD)){return;}
 
-	CreateAOSWidget(PlayerHUD, GameInstance->GetGameMode()->PlayerHUD_Class, AOSTag_UI_HUD);
+	PlayerHUD = Cast<UAoS_HUD>(CreateAOSWidget(PlayerHUD, GameInstance->GetGameMode()->PlayerHUD_Class, AOSTag_UI_HUD));
 }
 
 void UAoS_UIManager::CreateMoviePlayerWidget()
@@ -170,7 +168,7 @@ void UAoS_UIManager::CreateMoviePlayerWidget()
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
 	
-	CreateAOSWidget(MoviePlayerWidget, GameInstance->GetGameMode()->MoviePlayerWidget, AOSTag_UI_Screen_Video);
+	MoviePlayerWidget = Cast<UAoS_MoviePlayerWidget>(CreateAOSWidget(MoviePlayerWidget, GameInstance->GetGameMode()->MoviePlayerWidget, AOSTag_UI_Screen_Video));
 	
 	if (IsValid(MoviePlayerWidget))
 	{
@@ -228,10 +226,10 @@ void UAoS_UIManager::RemoveCaseTitleCard()
 {
 	RemoveAOSWidget(CaseTitleCardWidget);
 	
-	const UAoS_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_CaseManager>();
+	UAoS_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_CaseManager>();
 	if (!IsValid(CaseManager)) {return;}
 	
-	CaseManager->OnCaseTitleCardComplete.Broadcast();
+	CaseManager->OnCaseTitleCardComplete().Broadcast();
 }
 
 UAoS_UserWidget* UAoS_UIManager::CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, TSubclassOf<UAoS_UserWidget> InWidgetClass, FGameplayTag InUITag)
@@ -243,6 +241,8 @@ UAoS_UserWidget* UAoS_UIManager::CreateAOSWidget(UAoS_UserWidget* InWidgetPtr, T
 	if (IsValid(InWidgetPtr))
 	{
 		InWidgetPtr->AddToViewport();
+		UIWidgetContainer.Add(InUITag, InWidgetPtr);
+		
 		if (AoSTagManager->HasParentTag(InUITag, AOSTag_UI_Menu))
 		{
 			PlayerController->SetFocusedWidget(InWidgetPtr);
@@ -262,7 +262,7 @@ void UAoS_UIManager::RemoveAOSWidget(UAoS_UserWidget* InWidgetPtr)
 
 UAoS_UserWidget* UAoS_UIManager::GetWidgetByTag(const FGameplayTag InWidgetTag)
 {
-	for (TPair<FGameplayTag, UAoS_UserWidget*> CurrentWidgetPair : UIWidgetContainer)
+	for (TPair<FGameplayTag, UAoS_UserWidget*>& CurrentWidgetPair : UIWidgetContainer)
 	{
 		if (CurrentWidgetPair.Key == InWidgetTag)
 		{
@@ -276,19 +276,19 @@ UAoS_UserWidget* UAoS_UIManager::GetWidgetByTag(const FGameplayTag InWidgetTag)
 void UAoS_UIManager::CreateMapMenu()
 {
 	const UAoS_LevelManager* LevelManager = GameInstance->GetSubsystem<UAoS_LevelManager>();
-	if (!IsValid(LevelManager)){return;}
+	if (!IsValid(LevelManager) || IsValid(MapMenu)){return;}
 
 	const UAoS_MenuMapData* MenuMapData = Cast<UAoS_MenuMapData>(LevelManager->GetCurrentMap());
 	if (!IsValid(MenuMapData) || !IsValid(MenuMapData->MapMenuWidgetClass)){return;}
 
-	CreateAOSWidget(MapMenu, MenuMapData->MapMenuWidgetClass, AOSTag_UI_Menu_Map);
+	MapMenu = CreateAOSWidget(MapMenu, MenuMapData->MapMenuWidgetClass, AOSTag_UI_Menu_Map);
 }
 
 void UAoS_UIManager::CreateSystemMenu()
 {
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 
-	CreateAOSWidget(SystemMenu, GameInstance->GetGameMode()->SystemMenuClass, AOSTag_UI_Menu_System);
+	SystemMenu = CreateAOSWidget(SystemMenu, GameInstance->GetGameMode()->SystemMenuClass, AOSTag_UI_Menu_System);
 }
 
 void UAoS_UIManager::ToggleSystemMenu()
@@ -342,7 +342,7 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			const int32 RandNumb = FMath::RandRange(0, GameMode->LoadingScreens.Num() - 1);
 			if (const TSubclassOf<UAoS_UserWidget> SelectedLoadingScreen = GameMode->LoadingScreens[RandNumb])
 			{
-				LoadingScreen = Cast<UAoS_UserWidget>(CreateWidget(GetWorld()->GetFirstPlayerController(), SelectedLoadingScreen));
+				LoadingScreen = CreateAOSWidget(LoadingScreen, SelectedLoadingScreen, AOSTag_UI_Screen_Loading);
 				
 				if (IsValid(LoadingScreen) && IsValid(GameInstance))
 				{
@@ -358,10 +358,12 @@ void UAoS_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			if (bShouldFade)
 			{
 				LoadingScreen->FadeOutWidget();
+				LoadingScreen = nullptr;
 			}
 			else
 			{
 				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(LoadingScreen->TakeWidget());
+				LoadingScreen = nullptr;
 			}
 		}
 	}

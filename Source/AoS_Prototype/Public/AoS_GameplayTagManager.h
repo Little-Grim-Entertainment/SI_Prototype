@@ -26,6 +26,7 @@ public:
 	bool HasGameplayTag(const FGameplayTag& InGameplayTag);
 	bool HasParentTag(const FGameplayTag& InTagToCheck, const FGameplayTag& InParentTag) const;
 	TMap<FGameplayTag, FAoS_GameplayTagContainer>& GetAllTagContainers();
+	FAoS_GameplayTagContainer& GetContainerTypeByTag(const FGameplayTag& InGameplayTag);
 
 	FOnTagAdded& OnTagAdded();
 	FOnTagAdded& OnTagRemoved();
@@ -38,8 +39,6 @@ private:
 
 	FOnTagAdded OnTagAddedDelegate;
 	FOnTagRemoved OnTagRemovedDelegate;
-
-	FAoS_GameplayTagContainer& GetContainerTypeByTag(const FGameplayTag& InGameplayTag);
 
 	void InitializeTagContainers();
 	

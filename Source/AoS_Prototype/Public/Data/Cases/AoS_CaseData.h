@@ -8,8 +8,6 @@
 
 #include "AoS_CaseData.generated.h"
 
-
-
 //class UAoS_CaseTitleCard;
 class UAoS_CaseManager;
 class UAoS_PartData;
@@ -40,28 +38,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TitleCard", meta=(EditCondition="TitleCardWidget != nullptr", EditConditionHides))
 	float TitleCardLength = 7.0f;
 	
-
-	UFUNCTION(BlueprintPure)
-	bool GetCaseIsComplete() const {return bIsComplete;}
-	UFUNCTION(BlueprintPure)
-	bool GetCaseIsActive() const {return bIsActive;}
-	UFUNCTION(BlueprintPure)
-	UAoS_PartData* GetActivePart() const;
 	UFUNCTION(BlueprintPure)
 	TArray<UAoS_PartData*> GetAllParts() const {return Parts;}
-	
-	void ResetCase();	
-	void SetCaseComplete(bool bCaseCompleted);
-	void SetCaseIsActive(bool bCaseIsActive, UAoS_CaseManager* CaseManagerRef);
-	void ActivatePart(UAoS_CaseManager* CaseManagerRef);
-	void DeactivatePart(UAoS_CaseManager* CaseManagerRef);
-	
-private:
-
-	UPROPERTY()
-	UAoS_CaseTitleCard* CaseTitleCard;
-	
-	bool bIsActive;
-	bool bIsComplete;
-	
 };

@@ -13,8 +13,8 @@ void UAoS_CharacterManager::OnGameInstanceInit()
 	UAoS_CaseManager* CaseManager = GameInstance->GetSubsystem<UAoS_CaseManager>();
 	if (!IsValid(CaseManager)) {return;}
 	
-	CaseManager->OnPartActivated.AddDynamic(this, &ThisClass::OnPartActivated);
-	CaseManager->OnPartComplete.AddDynamic(this, &ThisClass::OnPartCompleted);
+	CaseManager->OnPartActivated().AddDynamic(this, &ThisClass::OnPartActivated);
+	CaseManager->OnPartComplete().AddDynamic(this, &ThisClass::OnPartCompleted);
 }
 
 UAoS_CharacterData* UAoS_CharacterManager::GetActiveCharacterData(FText CharacterName)

@@ -94,9 +94,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	void AddInputMappingByTag(const FGameplayTag InMappingTag);
+	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
 	UFUNCTION(BlueprintCallable, Category = "Input")
-	void RemoveInputMappingByTag(const FGameplayTag InMappingTag);
+	void RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
 	UFUNCTION(BlueprintImplementableEvent)
 	AActor* SpawnMoveToMarker();
 

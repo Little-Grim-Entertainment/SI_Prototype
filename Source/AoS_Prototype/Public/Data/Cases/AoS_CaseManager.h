@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/AoS_GameInstanceSubsystem.h"
+#include "AoS_Types.h"
 #include "AoS_CaseManager.generated.h"
 
 class UAoS_CaseData;
@@ -12,6 +13,7 @@ class UAoS_ObjectiveData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCaseAccepted, UAoS_CaseData*, AcceptedCase);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCaseActivated, UAoS_CaseData*, ActivatedCase);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCaseDeactivated, UAoS_CaseData*, DeactivatedCase);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCaseComplete, UAoS_CaseData*, CompletedCase);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPartActivated, UAoS_PartData*, ActivatedPart);
@@ -21,7 +23,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveActivated, UAoS_Objectiv
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnObjectiveComplete, UAoS_ObjectiveData*, CompletedObjective);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCaseTitleCardComplete);
-
 
 // This system is responsible for handling the receiving, completing, and updating of cases
 
@@ -34,73 +35,99 @@ public:
 
 	UAoS_CaseManager();
 
-	UPROPERTY(BlueprintAssignable)
-	FOnCaseAccepted OnCaseAccepted;
-	UPROPERTY(BlueprintAssignable)
-	FOnCaseActivated OnCaseActivated;
-	UPROPERTY(BlueprintAssignable)
-	FOnCaseComplete OnCaseComplete;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnPartActivated OnPartActivated;
-	UPROPERTY(BlueprintAssignable)
-	FOnPartComplete OnPartComplete;
-	
-	UPROPERTY(BlueprintAssignable)
-	FOnObjectiveActivated OnObjectiveActivated;	
-	UPROPERTY(BlueprintAssignable)
-	FOnObjectiveComplete OnObjectiveComplete;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnCaseTitleCardComplete OnCaseTitleCardComplete;
-
 	UFUNCTION(BlueprintCallable)
 	void AcceptCase(UAoS_CaseData* CaseToAccept);
 	UFUNCTION(BlueprintCallable)
 	void SetActiveCase(UAoS_CaseData* CaseToSet);
 	UFUNCTION(BlueprintCallable)
-	void CompleteObjective(UAoS_ObjectiveData* ObjectiveToComplete);
+	void DeactivateCase(UAoS_CaseData* CaseToDeactivate);
 	UFUNCTION(BlueprintCallable)
 	void ResetAllCases();
 	UFUNCTION(BlueprintCallable)
-	void ResetCase(FString CaseToResetName);
+	void ResetCase(UAoS_CaseData* CaseToReset);
+	
+	UFUNCTION(BlueprintCallable)
+	void CompleteObjective(UAoS_ObjectiveData* ObjectiveToComplete);
 
 	UFUNCTION(BlueprintPure)
-	UAoS_CaseData* GetActiveCase() const;
+	FAoS_CaseDetails& GetCaseDetails(const UAoS_CaseData* InCaseData);
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_CaseData*> GetAcceptedCases() const;
+	UAoS_CaseData* GetActiveCase();
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_CaseData*> GetCompletedCases() const;
+	UAoS_CaseData* GetCaseByName(const FString InCaseName);
 	UFUNCTION(BlueprintPure)
-	UAoS_PartData* GetActivePart() const;
+	TArray<UAoS_CaseData*> GetAcceptedCases();
 	UFUNCTION(BlueprintPure)
-	TArray<UAoS_ObjectiveData*> GetActiveObjectives() const;
+	TArray<UAoS_CaseData*> GetCompletedCases();
 
-	void SetActivePart(UAoS_PartData* PartToSet);
-	void SetActiveObjectives(TArray<UAoS_ObjectiveData*> ObjectivesToSet);
+	UFUNCTION(BlueprintPure)
+	FAoS_PartDetails& GetPartDetails(const UAoS_PartData* InPartData);
+	UFUNCTION(BlueprintPure)
+	UAoS_PartData* GetActivePart();
+
+	UFUNCTION(BlueprintPure)
+	FAoS_ObjectiveDetails& GetObjectiveDetails(const UAoS_ObjectiveData* InObjectiveData);
+	UFUNCTION(BlueprintPure)
+	TArray<UAoS_ObjectiveData*> GetActiveObjectives();
+
+	FOnCaseAccepted& OnCaseAccepted();
+	FOnCaseActivated& OnCaseActivated();
+	FOnCaseDeactivated& OnCaseDeactivated();
+	FOnCaseComplete& OnCaseComplete();
+
+	FOnPartActivated& OnPartActivated();
+	FOnPartComplete& OnPartComplete();
+	
+	FOnObjectiveActivated& OnObjectiveActivated();	
+	FOnObjectiveComplete& OnObjectiveComplete();
+
+	FOnCaseTitleCardComplete& OnCaseTitleCardComplete();
 
 protected:
 
-	virtual void OnGameInstanceInit() override;
+	virtual void OnGameModeBeginPlay() override;
 	
 private:
 
+	FOnCaseAccepted OnCaseAcceptedDelegate;
+	FOnCaseActivated OnCaseActivatedDelegate;
+	FOnCaseDeactivated OnCaseDeactivatedDelegate;
+	FOnCaseComplete OnCaseCompleteDelegate;
+
+	FOnPartActivated OnPartActivatedDelegate;
+	FOnPartComplete OnPartCompleteDelegate;
+	
+	FOnObjectiveActivated OnObjectiveActivatedDelegate;	
+	FOnObjectiveComplete OnObjectiveCompleteDelegate;
+
+	FOnCaseTitleCardComplete OnCaseTitleCardCompleteDelegate;
+
+	TMap<UAoS_CaseData*, FAoS_CaseDetails> AllCases;
+	
 	UPROPERTY()
 	UAoS_CaseData* ActiveCase;
 	UPROPERTY()
 	TArray<UAoS_CaseData*> AcceptedCases;
 	UPROPERTY()
 	TArray<UAoS_CaseData*> CompletedCases;
-	
 
-	
-	void ObjectiveCompleted(UAoS_ObjectiveData* CompletedObjective);
-	void PartCompleted(UAoS_PartData* CompletedPart);
-	void CaseCompleted(UAoS_CaseData* CompletedCase);
-	void SkipVideoRequested();
-	void SkipVideoCanceled();
-	void SkipVideoComplete(); 
+	void InitializeCases();
+	void InitializeParts();
+	void InitializeObjectives();
 
+	bool CompleteCase(UAoS_CaseData* InCaseToComplete);
+	
+	void PostCaseActivated(const UAoS_CaseData* ActivatedCase);
+	void PostCaseCompleted(UAoS_CaseData* CompletedCase);
+
+	void ActivatePart();
+	void PostPartActivated(const UAoS_PartData* ActivatedPart);
+	bool CompletePart(UAoS_PartData* InPartToComplete);
+	void PostPartCompleted(const UAoS_PartData* CompletedPart);
+
+	void ActivateObjectives();
+	void AssignObjectiveMedia(UAoS_LevelManager* InLevelManager);
+	void PostObjectiveCompleted(const UAoS_ObjectiveData* CompletedObjective);
 	
 	bool CheckForCompletedPart();
 	bool CheckForCompletedCase();

@@ -11,6 +11,7 @@
 class UAoS_MusicManager;
 class UAoS_CinematicDataAsset;
 class UAoS_VideoDataAsset;
+class UAoS_UserWidget;
 
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_MapData : public UDataAsset

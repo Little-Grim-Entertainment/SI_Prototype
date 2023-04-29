@@ -66,7 +66,7 @@ public:
 	FAoS_MapState& GetMapStateFromName(FString InMapName);
 	
 	UFUNCTION()
-	void LevelLoaded();
+	void LevelLoaded(UWorld* LoadedWorld);
 
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	FAoS_MapState& GetCurrentLoadedMapState() const;

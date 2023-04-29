@@ -8,3 +8,12 @@ UAoS_ObjectiveData::UAoS_ObjectiveData()
 
 }
 
+bool UAoS_ObjectiveData::HasLevelMediaAssignments()
+{
+	if(LevelMediaAssignments.Num() > 0)
+	{
+		return true;
+	}
+	return false;
+}
+

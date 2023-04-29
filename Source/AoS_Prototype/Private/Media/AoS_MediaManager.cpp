@@ -5,6 +5,7 @@
 
 #include "AoS_GameInstance.h"
 #include "AoS_GameplayTagManager.h"
+#include "AoS_PlayerManager.h"
 #include "GameplayTagContainer.h"
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
@@ -119,8 +120,8 @@ void UAoS_MediaManager::PlayCinematic(UAoS_CinematicDataAsset* InCinematicToPlay
 	LoadedCinematic->CinematicPlayer->OnFinished.AddDynamic(this, &ThisClass::OnCinematicEnded);
 	LoadedCinematic->CinematicPlayer->OnPause.AddDynamic(this, &ThisClass::OnCinematicSkipped);
 	LoadedCinematic->CinematicPlayer->Play();
-	
-	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_CinematicMode);
+
+	AoSTagManager->ReplaceTagWithSameParent(AOSTag_Media_Cinematic, AOSTag_Media);
 	OnCinematicBeginPlay.Broadcast(LoadedCinematic);
 }
 
@@ -161,11 +162,11 @@ void UAoS_MediaManager::PlayVideo(UAoS_VideoDataAsset* InVideoToPlay, FAoS_Video
 
 	LoadedVideo->MediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::UAoS_MediaManager::OnVideoEnded);
 	LoadedVideo->MediaPlayer->OnMediaClosed.AddDynamic(this, &ThisClass::UAoS_MediaManager::OnVideoSkipped);
-
-	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_VideoMode);
-
+	
 	// Note: Playing the actual video file happens in the widget blueprint
 	LoadedVideo->MediaPlayer->Play();
+	
+	AoSTagManager->ReplaceTagWithSameParent(AOSTag_Media_Video, AOSTag_Media);
 	OnVideoBeginPlay.Broadcast(LoadedVideo);
 }
 
@@ -174,10 +175,12 @@ void UAoS_MediaManager::SkipMedia(UAoS_MediaDataAsset* InMediaToSkip)
 	if(const UAoS_CinematicDataAsset* CinematicDataAsset = Cast<UAoS_CinematicDataAsset>(InMediaToSkip))
 	{
 		CinematicDataAsset->CinematicPlayer->Stop();
+		OnCinematicSkipped();
 	}
 	if(const UAoS_VideoDataAsset* VideoDataAsset = Cast<UAoS_VideoDataAsset>(InMediaToSkip))
 	{
 		VideoDataAsset->MediaPlayer->Close();
+		OnVideoSkipped();
 	}
 }
 
@@ -306,12 +309,18 @@ void UAoS_MediaManager::OnCinematicSkipped()
 	AddToWatchedCinematics(LoadedCinematic);
 	if(LoadedCinematic->bIsOpeningMedia)
 	{
-		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
+		AoSTagManager->ReplaceTagWithSameParent(AOSTag_Player_State_Exploration, AOSTag_Player_State);
 	}
 	else
 	{
-		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		const UAoS_PlayerManager* PlayerManager = GetWorld()->GetFirstPlayerController()->GetLocalPlayer()->GetSubsystem<UAoS_PlayerManager>();
+		if(IsValid(PlayerManager))
+		{
+			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
+		}
 	}
+	
+	AoSTagManager->RemoveTag(AOSTag_Media_Cinematic);
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
@@ -322,12 +331,18 @@ void UAoS_MediaManager::OnCinematicEnded()
 	AddToWatchedCinematics(LoadedCinematic);
 	if (LoadedCinematic->bIsOpeningMedia)
 	{
-		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
+		AoSTagManager->ReplaceTagWithSameParent(AOSTag_Player_State_Exploration, AOSTag_Player_State);
 	}
 	else
 	{
-		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		const UAoS_PlayerManager* PlayerManager = GetWorld()->GetFirstPlayerController()->GetLocalPlayer()->GetSubsystem<UAoS_PlayerManager>();
+		if(IsValid(PlayerManager))
+		{
+			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
+		}
 	}
+	
+	AoSTagManager->RemoveTag(AOSTag_Media_Cinematic);
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
@@ -352,12 +367,18 @@ void UAoS_MediaManager::OnVideoEnded()
 	AddToWatchedVideos(LoadedVideo);
 	if (LoadedVideo->bIsOpeningMedia)
 	{
-		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
+		AoSTagManager->ReplaceTagWithSameParent(AOSTag_Player_State_Exploration, AOSTag_Player_State);
 	}
 	else
 	{
-		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		const UAoS_PlayerManager* PlayerManager = GetWorld()->GetFirstPlayerController()->GetLocalPlayer()->GetSubsystem<UAoS_PlayerManager>();
+		if(IsValid(PlayerManager))
+		{
+			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
+		}
 	}
+	
+	AoSTagManager->RemoveTag(AOSTag_Media_Video);
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
 
@@ -368,12 +389,18 @@ void UAoS_MediaManager::OnVideoSkipped()
 	AddToWatchedVideos(LoadedVideo);
 	if(LoadedVideo->bIsOpeningMedia)
 	{
-		//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);	
+		AoSTagManager->ReplaceTagWithSameParent(AOSTag_Player_State_Exploration, AOSTag_Player_State);
 	}
 	else
 	{
-		//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());	
+		const UAoS_PlayerManager* PlayerManager = GetWorld()->GetFirstPlayerController()->GetLocalPlayer()->GetSubsystem<UAoS_PlayerManager>();
+		if(IsValid(PlayerManager))
+		{
+			AoSTagManager->ReplaceTagWithSameParent(PlayerManager->GetPreviousPlayerState(), AOSTag_Player_State);
+		}
 	}
+	
+	AoSTagManager->RemoveTag(AOSTag_Media_Video);
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
 	

@@ -18,21 +18,32 @@ void UAoS_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState
 	CurrentPlayerState = InPlayerState;
 }
 
+const FGameplayTag& UAoS_PlayerManager::GetCurrentPlayerState() const
+{
+	return CurrentPlayerState;
+}
+
+const FGameplayTag& UAoS_PlayerManager::GetPreviousPlayerState() const
+{
+	return PreviousPlayerState;
+}
+
 void UAoS_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-
-	InitializeDelegates();
-	InitializeDelegateMaps();
 	
 	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
 }
 
 void UAoS_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
+	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+
 	if (AoSTagManager->HasParentTag(InAddedTag, AOSTag_UI_Menu))
 	{
 		AoSTagManager->ReplaceTagWithSameParent(AOSTag_Player_State_Menu,AOSTag_Player_State);
+		if (!IsValid(PlayerController)){return;}
+		PlayerController->SetMenuMode(true);
 		return;
 	}
 	if (AoSTagManager->HasParentTag(InAddedTag, AOSTag_UI_Screen))
@@ -40,38 +51,62 @@ void UAoS_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		AoSTagManager->ReplaceTagWithSameParent(AOSTag_Player_State_Inactive,AOSTag_Player_State);
 		return;
 	}
-	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_Player)){return;}
-	Super::OnGameplayTagAdded(InAddedTag);
+	if (AoSTagManager->HasParentTag(InAddedTag, AOSTag_Media))
+	{
+		SecondaryMediaTag = InAddedTag;
+		AoSTagManager->ReplaceTagWithSameParent(AOSTag_Player_State_Media,AOSTag_Player_State);
+		return;
+	}
 	
+	if(!AoSTagManager->HasParentTag(InAddedTag, AOSTag_Player)){return;}
+	
+	Super::OnGameplayTagAdded(InAddedTag);
+
+	if(AoSTagManager->HasParentTag(InAddedTag, AOSTag_Player_State))
+	{
+		CurrentPlayerState = InAddedTag;
+	}
+
+	if(InAddedTag == AOSTag_Player_State_Media)
+	{
+		if (!IsValid(PlayerController)){return;}
+		PlayerController->AddInputMappingByTag(InAddedTag, SecondaryMediaTag);
+		PlayerDelegateContainer.Find(InAddedTag)->Execute();
+		return;
+	}
+
 	PlayerDelegateContainer.Find(InAddedTag)->Execute();
 
 	if (!IsValid(PlayerController)){return;}
 	PlayerController->AddInputMappingByTag(InAddedTag);
-
-	if (InAddedTag == AOSTag_Player_State_Menu && !PlayerController->IsInMenuMode())
-	{
-		PlayerController->SetMenuMode(true);
-	}
-	else if (InAddedTag != AOSTag_Player_State_Menu && PlayerController->IsInMenuMode())
-	{
-		PlayerController->SetMenuMode(false);
-	}
+	
 }
 
 void UAoS_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
+	PlayerController = Cast<AAoS_PlayerController>(GetWorld()->GetFirstPlayerController());
+
 	if (AoSTagManager->HasParentTag(InRemovedTag, AOSTag_UI_Menu))
 	{
 		AoSTagManager->RemoveTag(AOSTag_Player_State_Menu);
+		if (!IsValid(PlayerController)){return;}
+		PlayerController->SetMenuMode(false);
+		return;
 	}
-	else if (AoSTagManager->HasParentTag(InRemovedTag, AOSTag_UI_Screen))
+	if (AoSTagManager->HasParentTag(InRemovedTag, AOSTag_UI_Screen))
 	{
 		AoSTagManager->RemoveTag(AOSTag_Player_State_Inactive);
+		return;
 	}
 	
 	if(!AoSTagManager->HasParentTag(InRemovedTag, AOSTag_Player)){return;}
 
 	Super::OnGameplayTagRemoved(InRemovedTag);
+
+	if(AoSTagManager->HasParentTag(InRemovedTag, AOSTag_Player_State))
+	{
+		PreviousPlayerState = InRemovedTag;
+	}
 
 	if (!IsValid(PlayerController)){return;}
 	PlayerController->RemoveInputMappingByTag(InRemovedTag);
@@ -105,7 +140,6 @@ void UAoS_PlayerManager::InitializeDelegateMaps()
 
 void UAoS_PlayerManager::SetupExplorationState()
 {
-
 }
 
 void UAoS_PlayerManager::SetupObservationState()
@@ -114,7 +148,6 @@ void UAoS_PlayerManager::SetupObservationState()
 
 void UAoS_PlayerManager::SetupMenuState()
 {
-
 }
 
 void UAoS_PlayerManager::SetupDialogueState()
