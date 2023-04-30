@@ -17,6 +17,16 @@
 #include "MediaAssets/Public/MediaSoundComponent.h"
 #include "Data/Media/AoS_VideoDataAsset.h"
 
+#if !UE_BUILD_SHIPPING
+static TAutoConsoleVariable<int32> CvarDisableAllMedia(
+	TEXT("CheatDisableAllMedia"),
+	0,
+	TEXT("Disables all videos and cinematics.\n")
+	TEXT("<=0: enabled\n")
+	TEXT("  1: disabled\n"),
+	ECVF_Scalability | ECVF_RenderThreadSafe);
+#endif
+
 void UAoS_MediaManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
@@ -79,6 +89,7 @@ void UAoS_MediaManager::PlayMedia(UAoS_MediaDataAsset* InMediaToPlay, FAoS_Media
 		}
 		
 		AoSTagManager->AddNewGameplayTag(AOSTag_Audio_Music_Pause);
+		if(CvarDisableAllMedia.GetValueOnAnyThread()){SkipMedia(InMediaToPlay);}
 		return;
 	}
 
@@ -96,6 +107,7 @@ void UAoS_MediaManager::PlayMedia(UAoS_MediaDataAsset* InMediaToPlay, FAoS_Media
 		}
 
 		AoSTagManager->AddNewGameplayTag(AOSTag_Audio_Music_Pause);
+		if(CvarDisableAllMedia.GetValueOnAnyThread()){SkipMedia(InMediaToPlay);}
 	}
 }
 
