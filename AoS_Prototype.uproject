@@ -74,6 +74,10 @@
 		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
+		},
+		{
+			"Name": "TDxUnrealEditor",
+			"Enabled": true
 		}
 	]
 }
