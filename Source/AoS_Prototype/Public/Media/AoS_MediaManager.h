@@ -24,6 +24,16 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVideoEndPlay, UAoS_VideoDataAsset
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCinematicBeginPlay, UAoS_CinematicDataAsset*, PlayedCinematic);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCinematicEndPlay, UAoS_CinematicDataAsset*, EndedCinematic);
 
+#if !UE_BUILD_SHIPPING
+static TAutoConsoleVariable<int32> CvarDisableAllMedia(
+	TEXT("CheatDisableAllMedia"),
+	0,
+	TEXT("Disables all videos and cinematics.\n")
+	TEXT("<=0: enabled\n")
+	TEXT("  1: disabled\n"),
+	ECVF_Scalability | ECVF_RenderThreadSafe);
+#endif
+
 UCLASS()
 class AOS_PROTOTYPE_API UAoS_MediaManager : public UAoS_WorldSubsystem
 {
