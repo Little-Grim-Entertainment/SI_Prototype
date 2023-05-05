@@ -20,4 +20,6 @@ namespace AoS_MapGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Map_Title_Test, "Map.Title.Test")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Map_Title_Test_Bar, "Map.Title.Test.Bar")
 	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Map_Title_Test_Sandbox, "Map.Title.Test.Sandbox")
+	UE_DEFINE_GAMEPLAY_TAG(AOSTag_Map_Title_Test_AI, "Map.Title.Test.AI")
+
 }
