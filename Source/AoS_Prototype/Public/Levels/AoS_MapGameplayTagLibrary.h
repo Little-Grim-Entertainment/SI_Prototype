@@ -23,5 +23,7 @@ namespace AoS_MapGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Map_Test_Bar);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Map_Test_Sandbox);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Map_Test_AI);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(AOSTag_Map_Test_Industrial);
+
 
 }
