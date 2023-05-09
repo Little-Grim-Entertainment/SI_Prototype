@@ -41,7 +41,7 @@ void UAoS_GameplayTagManager::ReplaceTagWithSameParent(const FGameplayTag& InNew
 	
 	const FAoS_GameplayTagContainer& TagTypeContainer = GetContainerTypeByTag(InNewTag);
 
-	if(TagTypeContainer.HasTag(InNewTag)){return;}
+	if(TagTypeContainer.HasTagExact(InNewTag)){return;}
 
 	if(TagTypeContainer.IsValid())
 	{
