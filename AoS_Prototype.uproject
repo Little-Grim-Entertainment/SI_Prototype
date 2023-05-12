@@ -59,7 +59,7 @@
 		},
 		{
 			"Name": "GuidFixer",
-			"Enabled": true,
+			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/40897ef99c8b4d00a4d05dc1ca8e0481"
 		},
 		{
