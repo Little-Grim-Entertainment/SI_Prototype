@@ -18,6 +18,7 @@ AAoS_GizboController::AAoS_GizboController() : AAoS_NPCController_Interactable()
 void AAoS_GizboController::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 void AAoS_GizboController::OnPossess(APawn* InPawn)
@@ -69,7 +70,7 @@ void AAoS_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus 
 {
 	if (Actor && Stimulus.IsValid() && Stimulus.IsActive())
 	{
-		if (auto* Nick = Cast<AAoS_Nick>(Actor))
+		if (Nick)
 		{
 			switch (Stimulus.Type)
 			{
@@ -186,3 +187,4 @@ void AAoS_GizboController::ToggleWait()
 	SetLostTarget();
 	UpdateBehaviorTree();
 }
+

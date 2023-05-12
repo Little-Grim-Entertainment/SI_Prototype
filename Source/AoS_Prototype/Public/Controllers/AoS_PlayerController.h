@@ -11,6 +11,7 @@
 
 
 class UAoS_EnhancedInputComponent;
+class AAoS_MoveToIndicator;
 class UMediaSoundComponent;
 class UAoS_UserWidget;
 
@@ -27,8 +28,6 @@ UCLASS()
 class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
-
-	bool UpdateMoveToIndicatorPosition() const;
 	
 	UPROPERTY()
 	AActor* InteractableActor;
@@ -38,8 +37,6 @@ class AOS_PROTOTYPE_API AAoS_PlayerController : public APlayerController
 	UAoS_HUD* PlayerHUD;
 	UPROPERTY()
 	AAoS_Nick* Nick = nullptr;
-	UPROPERTY()
-	AActor* MoveToActor;
 	
 	bool bPlayerCanMove = true;
 	bool bPlayerCanTurn = true;
@@ -82,9 +79,6 @@ public:
 	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "PlayerCamera")
 	FOnPostCameraSetup OnPostCameraSetup;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
-	float AdaptableActionMaximumRadius = 2000.0f;
-
 	// ================== FUNCTIONS ==================
 
 	UFUNCTION(BlueprintImplementableEvent)	
@@ -97,8 +91,7 @@ public:
 	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
-	UFUNCTION(BlueprintImplementableEvent)
-	AActor* SpawnMoveToMarker();
+
 
 	void SetFocusedWidget(UAoS_UserWidget* InWidgetToFocus);
 	
@@ -145,6 +138,6 @@ private:
 	UAoS_UserWidget* FocusedWidget;
 
 	bool bInMenuMode;
-	
+
 	FTimerHandle CameraBlendHandle;
 };

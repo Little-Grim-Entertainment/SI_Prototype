@@ -6,6 +6,8 @@
 #include "Controllers/AoS_NPCController_Interactable.h"
 #include "AoS_GizboController.generated.h"
 
+class AAoS_Nick;
+class AAoS_MoveToIndicator;
 /**
  * AI Controller specifically for Gizbo, dervied from base NPC Controllers, for AoS Prototype
  */
@@ -23,6 +25,15 @@ public:
 	void ToggleMoveTo();
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	void ToggleWait();
+	void StartUpdateIndicatorPositionTimer();
+
+	UPROPERTY()
+	AAoS_Nick* Nick = nullptr;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AAoS_MoveToIndicator> MoveToIndicatorClass;
+	UPROPERTY(BlueprintReadWrite)
+	AAoS_MoveToIndicator* MoveToIndicator;
+	
 	
 protected:
 	virtual void BeginPlay() override;

@@ -5,16 +5,12 @@
 
 #include "AoS_GameInstance.h"
 #include "AoS_GameplayTagManager.h"
-#include "Camera/CameraActor.h"
-#include "Camera/CameraComponent.h"
-#include "Characters/AoS_Nick.h"
 #include "Components/Actor/AoS_EnhancedInputComponent.h"
 #include "Interfaces/AoS_InteractInterface.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
-#include "Actors/AoS_MoveToIndicator.h"
 #include "Cameras/AoS_PlayerCameraManager.h"
 #include "Characters/AoS_GizboManager.h"
 #include "Media/AoS_MediaManager.h"
@@ -31,6 +27,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "AoS_NativeGameplayTagLibrary.h"
 #include "AoS_PlayerManager.h"
+#include "AoS_Prototype/AoS_Prototype.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
 using namespace AoS_NativeGameplayTagLibrary;
@@ -98,66 +95,18 @@ void AAoS_PlayerController::BeginPlay()
 	{
 		RemoveInputMappingByTag(PlayerManager->GetPreviousPlayerState());
 	}
+
+	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
+	{
+		GizboManager->Nick = Nick;
+	}
 }
 
 void AAoS_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 		
-	UpdateMoveToIndicatorPosition();
-}
-
-bool AAoS_PlayerController::UpdateMoveToIndicatorPosition() const
-{
-	if(!IsValid(Nick)) {return false;}
-	
-	//TODO: Should this functionality be moved into the AoS_MoveToIndicator class?
-	if (bMoveToMarker)
-	{
-		FHitResult HitResult;
-		FVector Start = Nick->GetFollowCamera()->GetComponentLocation();
-		FVector End = Nick->GetFollowCamera()->GetComponentLocation() + Nick->GetFollowCamera()->GetForwardVector() * 10000;
-		GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel2);
-
-		//TODO: Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
-		if (HitResult.GetActor())
-		{
-			FVector HitLocation = HitResult.ImpactPoint;
-
-			// Check whether the 'Move To' indicator is within a specific radius
-			double Distance = (HitLocation - Nick->GetActorLocation()).Length();
-			
-			if (Distance < AdaptableActionMaximumRadius)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
-				return MoveToActor->SetActorLocation(HitLocation);
-			}
-
-			// Keep the 'Move To' actor confined to the bounds of a circle, with radius AdaptableActionMaximumRadius
-			// See https://gamedev.stackexchange.com/questions/9607/moving-an-object-in-a-circular-path and
-			// https://www.euclideanspace.com/maths/geometry/trig/inverse/index.htm and
-			// https://forums.unrealengine.com/t/how-to-get-an-angle-between-2-vectors/280850
-
-			//TODO: Requires further tuning, to make sure that the rotation is correct.
-			//When the 'MoveTo' actor currently hits the boundary, it causes the indicator to jump away from where it was previously aligned.
-			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Nick->GetFollowCamera()->GetComponentLocation(), HitLocation);
-			double NickArcTan = atan2(Nick->GetFollowCamera()->GetComponentLocation().Y, Nick->GetFollowCamera()->GetComponentLocation().X);
-			double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
-			double Angle = MoveToArcTan - NickArcTan;
-				
-			float Cosine = cos(Angle);
-			float Sine = sin(Angle);
-				
-			HitLocation.X = Nick->GetActorLocation().X + Cosine * AdaptableActionMaximumRadius;
-			HitLocation.Y = Nick->GetActorLocation().Y + Sine * AdaptableActionMaximumRadius;
-			Distance = (HitLocation - Nick->GetActorLocation()).Length();
-				
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
-			return MoveToActor->SetActorLocation(HitLocation);
-		}
-	}
-
-	return bMoveToMarker;
+	//UpdateMoveToIndicatorPosition();
 }
 
 void AAoS_PlayerController::PostInitializeComponents()
@@ -364,48 +313,33 @@ void AAoS_PlayerController::RequestGizboFollowTemp()
 
 void AAoS_PlayerController::RequestGizboMoveToTemp()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: MoveTo")));
+	UE_LOG(LogAoSAI, Log, TEXT("%s : AoS_PlayerController::RequestGizboMoveToTemp MoveTo Initiated"), *GetNameSafe(GetPawn()));
+
 	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 	{
-		MoveToActor = SpawnMoveToMarker();
-		bMoveToMarker = true;
+		AAoS_PlayerCameraManager* AOSCamera = Cast<AAoS_PlayerCameraManager>(this->PlayerCameraManager);
+		if(!IsValid(AOSCamera)) return;
+		
+		GizboManager->StartMoveTo(AOSCamera, GetPawn(), bMoveToMarker);
 		GizboManager->GetGizboController()->ToggleWait();
 	}
 }
 
 void AAoS_PlayerController::RequestGizboMoveToConfirm()
 {
-	if (bMoveToMarker)
+	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 	{
-		if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
-		{
-			bMoveToMarker = false;
-			Cast<AAoS_MoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
-			MoveToActor = nullptr;
-			GizboManager->GetGizboController()->ToggleMoveTo();
-
-			//TODO: Replace current marker, with a new one in the same location (in an attempt to bypass Perception woes)
-			/*FVector MarkerLocation = MoveToActor->GetActorLocation();
-			bMoveToMarker = false;
-			MoveToActor->Destroy();
-			MoveToActor = nullptr;
-
-			MoveToActor = SpawnMoveToMarker();
-			MoveToActor->SetActorLocation(MarkerLocation);
-			Cast<AAoS_MoveToIndicator>(MoveToActor)->SetPerceptionStimuliSource();
-			MoveToActor = nullptr;
-			GizboManager->GetGizboController()->ToggleMoveTo();*/
-		}
+		//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
+		GizboManager->GetGizboController()->ToggleMoveTo();		
 	}
-		
 }
 
 void AAoS_PlayerController::RequestGizboMoveToCancel()
 {
-	if (bMoveToMarker)
+	if (UAoS_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<UAoS_GizboManager>())
 	{
-		bMoveToMarker = false;
-		MoveToActor->Destroy();
-		MoveToActor = nullptr;
+		GizboManager->GetGizboController()->ToggleMoveTo();		
 	}
 }
 
