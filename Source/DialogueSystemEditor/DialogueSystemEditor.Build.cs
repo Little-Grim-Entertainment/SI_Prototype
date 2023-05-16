@@ -6,8 +6,8 @@ public class DialogueSystemEditor : ModuleRules
 {
 	public DialogueSystemEditor(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PrivateDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "UnrealEd", "GenericGraphRuntime", "AoS_Prototype" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "UnrealEd", "GenericGraphRuntime", "SI_Prototype" });
 
-        PublicIncludePaths.AddRange(new string[] { "AoS_Prototype/Public" });
+        PublicIncludePaths.AddRange(new string[] { "SI_Prototype/Public" });
     }
 }
