@@ -1,0 +1,230 @@
+
+#include "Dialogue/SI_DialogueSession.h"
+#include "Dialogue/SI_DialogueSessionNode.h"
+#include "Dialogue/SI_DialogueSessionEdge.h"
+#include "Dialogue/SI_DialogueManager.h"
+#include "Data/Cases/SI_CaseManager.h"
+#include "Data/Characters/SI_CharacterData.h"
+
+#define LOCTEXT_NAMESPACE "DialogueSession"
+
+#define MAX_ANGER 3
+#define NICK_DISPLAY_NAME TEXT("Nick Spade")
+
+UDialogueSession::UDialogueSession()
+{
+    NodeType = UDialogueSessionNode::StaticClass();
+    EdgeType = UDialogueSessionEdge::StaticClass();
+
+    Name = "DialogueSession";
+
+#if WITH_EDITORONLY_DATA
+    bCanBeCyclical = true;
+#endif
+}
+
+void UDialogueSession::StartDialogue(USI_CharacterData* InCharacterData, USI_DialogueManager* InDialogueManager,  USI_CaseManager* InCaseManager)
+{
+    DialogueManagerRef = InDialogueManager;
+    if (!DialogueManagerRef)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Can't find reference to the DialogueManager."));
+    }
+    
+    CharacterDisplayName = InCharacterData->CharacterName;
+
+    // if a node is saved in CurrentDialogueData, then start with the saved info
+    if (!IsValid(InCaseManager)) {return;}
+    if (InCharacterData->GetCurrentDialogueData(InCaseManager).SavedNode)
+    {
+        CurrentNode = InCharacterData->GetCurrentDialogueData(InCaseManager).SavedNode;
+        NodeToSave = InCharacterData->GetCurrentDialogueData(InCaseManager).SavedNode;
+        CurrentAngerLevel = InCharacterData->GetCurrentDialogueData(InCaseManager).AngerLevel;
+    }
+    else
+    {
+        ResetDialogue();
+    }
+}
+
+void UDialogueSession::ResetDialogue()
+{
+    CurrentNode = nullptr;
+    NodeToSave = nullptr;
+    CurrentAngerLevel = 0;
+
+    // Search for starting node
+    for (auto& NodeToCheck : AllNodes)
+    {
+        UDialogueSessionNode* TempNode = Cast<UDialogueSessionNode>(NodeToCheck);
+        // reset so that default dialogue is used
+        if (TempNode)
+        {
+            TempNode->bUseAlternateDialogue = false;
+        }
+        if (TempNode && TempNode->bIsDefaultStartingNode)
+        {
+            if (CurrentNode)
+            {
+                UE_LOG(LogTemp, Error, TEXT("Multiple default starting nodes set for dialogue %s. Dialogue will not start."), *Name);
+                CurrentNode = nullptr;
+                NodeToSave = nullptr;
+                return;
+            }
+            else
+            {
+                CurrentNode = TempNode;
+                NodeToSave = TempNode;
+            }
+        }
+    }
+
+    if (!CurrentNode)
+    {
+        UE_LOG(LogTemp, Error, TEXT("No default starting node set in dialogue %s. Dialogue will not start."), *Name);
+    }
+}
+
+void UDialogueSession::ExitDialogue()
+{
+    if (!DialogueManagerRef)
+    {
+        UE_LOG(LogTemp, Error, TEXT("No reference to DialogueManager found in dialogue %s, will be unable to save progress."), *Name);
+    }
+    else
+    {
+        DialogueManagerRef->ExitDialogue(NodeToSave, CurrentAngerLevel);
+    }
+
+    CurrentNode = nullptr;
+    NodeToSave = nullptr;
+}
+
+// As of now (11/26/22), this only updates the current node in the graph; doesn't change text anywhere
+void UDialogueSession::SelectEdgeOfType(EEdgeType Type, UObject* ItemToCheck, FText TextToCheck)
+{
+    if (!CheckCurrentNode(TEXT("CurrentNode not set in dialogue!")))
+    {
+        return;
+    }
+
+    // TO DO: Add text and item options
+    UDialogueSessionEdge* NewEdge = FindEdgeOfType(Type, true);
+
+    if (!NewEdge)
+    {
+        PrintErrorText(TEXT("No such edge found in dialogue graph."), true);
+        return;
+    }
+
+    // Update information for the graph depending on the type of edge
+    switch (Type)
+    {
+    case(EEdgeType::SetNewStartNode):
+        NodeToSave = Cast<UDialogueSessionNode>(NewEdge->EndNode);
+        break;
+    case(EEdgeType::AngerIncrease):
+        CurrentAngerLevel++;
+        break;
+    case(EEdgeType::ChooseAlternateDialogue):
+        Cast<UDialogueSessionNode>(NewEdge->EndNode)->bUseAlternateDialogue = true;
+        break;
+    case(EEdgeType::UpdatePart):
+        // tell case manager to update the part 
+        break;
+    }
+
+    // in case of anger increase, check if the dialogue should end
+    if (CurrentAngerLevel < MAX_ANGER)
+    {
+        UpdateCurrentNode(Cast<UDialogueSessionNode>(NewEdge->EndNode));
+    }
+    else
+    {
+        // deal with anger reaching max
+    }
+}
+
+// Sets CurrentNode to the new node and checks for error
+void UDialogueSession::UpdateCurrentNode(UDialogueSessionNode* NewNode)
+{
+    CurrentNode = NewNode;
+    if (!CheckCurrentNode(TEXT("Next node in the dialogue graph unable to be converted to type UDialogueSessionNode.")))
+    {
+        return;
+    }
+}
+
+FText UDialogueSession::GetName() const
+{
+    if (!CurrentNode)
+    {
+        return FText::FromString("Error: CurrentNode Not Found");
+    }
+    
+    return CurrentNode->bIsNickSpeaking ? FText::FromString(FString(NICK_DISPLAY_NAME)) : CharacterDisplayName;
+}
+
+FText UDialogueSession::GetText() const
+{
+    if (!CurrentNode)
+    {
+        return FText::FromString("Error: CurrentNode Not Found");
+    }
+    
+    return CurrentNode ? CurrentNode->GetDialogueText() : FText::FromString("Error: No Dialogue Found");
+}
+
+bool UDialogueSession::HasEdgeOfType(EEdgeType Type)
+{
+    return (FindEdgeOfType(Type, false) != nullptr);
+}
+
+// returns CurrentNode != nullptr
+bool UDialogueSession::CheckCurrentNode(FString ErrorText)
+{
+    if (!CurrentNode)
+    {
+        PrintErrorText(ErrorText, true);
+        return false;
+    }
+    return true;
+}
+
+void UDialogueSession::PrintErrorText(FString ErrorText, bool bShouldExit)
+{
+    UE_LOG(LogTemp, Error, TEXT("%s"), *ErrorText);
+    if (bShouldExit)
+    {
+        ExitDialogue();
+    }
+}
+
+UDialogueSessionEdge* UDialogueSession::FindEdgeOfType(EEdgeType Type, bool bShouldExitForMultipleEdges)
+{
+    // Search for edges indicating new save location
+    UDialogueSessionEdge* CurrEdge;
+    UDialogueSessionEdge* NewEdge = nullptr;
+    for (auto& ChildNode : CurrentNode->ChildrenNodes)
+    {
+        CurrEdge = Cast<UDialogueSessionEdge>(CurrentNode->Edges[ChildNode]);
+        if (CurrEdge && CurrEdge->TypeOfEdge == Type)
+        {
+            if (NewEdge)
+            {
+                PrintErrorText(TEXT("Multiple edges of same type given in dialogue. Cannot determine new node."), bShouldExitForMultipleEdges);
+                break;
+            }
+            NewEdge = CurrEdge;
+        }
+    }
+
+    return NewEdge;
+}
+
+TArray<UDialogueSessionEdge*> UDialogueSession::FindAllEdgesOfType(EEdgeType Type)
+{
+    return TArray<UDialogueSessionEdge*>();
+}
+
+#undef LOCTEXT_NAMESPACE
