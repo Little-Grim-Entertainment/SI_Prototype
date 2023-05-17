@@ -1,6 +1,6 @@
 
 #include "DialogueSessionFactory.h"
-#include "Dialogue/DialogueSession.h"
+#include "Dialogue/SI_DialogueSession.h"
 
 #define LOCTEXT_NAMESPACE "DialogueSessionFactory"
 
