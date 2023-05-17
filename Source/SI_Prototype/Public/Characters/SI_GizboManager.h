@@ -32,15 +32,18 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Gizbo")
 	ASI_GizboController* GetGizboController();
 	UPROPERTY()
-	ASI_Nick* Nick = nullptr;
+	ASI_Nick* Nick;
 	void StartMoveTo(ASI_PlayerCameraManager* InCameraManager ,AActor* InPawn, bool& InbMarkerIsValid);
 	void StartUpdateIndicatorPositionTimer();
+	void CancelUpdateIndicatorPositionTimer();
 	void UpdateMoveToIndicatorPosition() const;
 	ASI_MoveToIndicator* SpawnMoveToIndicator(FVector InHitLocation);
-
-	TSubclassOf<AAoS_MoveToIndicator> MoveToIndicatorClass;
 	UPROPERTY()
-	AAoS_MoveToIndicator* MoveToIndicator;
+	ASI_PlayerCameraManager* CameraManager;
+	UPROPERTY()
+	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
+	UPROPERTY()
+	ASI_MoveToIndicator* MoveToIndicator;
 	
 protected:
 

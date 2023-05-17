@@ -70,7 +70,8 @@ void ASI_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus S
 {
 	if (Actor && Stimulus.IsValid() && Stimulus.IsActive())
 	{
-		if (auto* Nick = Cast<ASI_Nick>(Actor))
+		//TODO: ASK JEFF about using a getter function from the manager instead here. would require adding manager pointer to header etc. 
+		if ((Nick = Cast<ASI_Nick>(Actor)) != nullptr)
 		{
 			switch (Stimulus.Type)
 			{
@@ -188,3 +189,12 @@ void ASI_GizboController::ToggleWait()
 	UpdateBehaviorTree();
 }
 
+TSubclassOf<ASI_MoveToIndicator> ASI_GizboController::GetMoveToIndicatorClass() const
+{
+	return MoveToIndicatorClass;
+}
+
+void ASI_GizboController::ReachedMoveToIndicator()
+{
+	//bReachedDestination = true;
+}

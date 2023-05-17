@@ -52,6 +52,7 @@ void USI_GizboManager::SpawnGizbo()
 	{
 		GizboController->Possess(GizboCharacter);
 		GizboController->Nick = Nick;
+		MoveToIndicatorClass = GizboController->GetMoveToIndicatorClass();
 	}
 }
 
@@ -70,9 +71,10 @@ ASI_GizboController* USI_GizboManager::GetGizboController()
 	return GizboController;
 }
 
-void USI_GizboManager::StartMoveTo(AAoS_PlayerCameraManager* InCameraManager, AActor* InPawn, bool& InbMarkerIsValid)
+void USI_GizboManager::StartMoveTo(ASI_PlayerCameraManager* InCameraManager, AActor* InPawn, bool& InbMarkerIsValid)
 {
 	float MaxMoveToDistance = 2000.0f;
+	CameraManager = InCameraManager;
 	
 	FVector TraceStart = InCameraManager->GetCameraLocation();
 	FVector TraceEnd =  InCameraManager->GetActorForwardVector() * MaxMoveToDistance + TraceStart;
@@ -91,22 +93,27 @@ void USI_GizboManager::StartMoveTo(AAoS_PlayerCameraManager* InCameraManager, AA
 		FVector HitLocation = OutHit.Location;
 		MoveToIndicator = SpawnMoveToIndicator(HitLocation);
 		InbMarkerIsValid = true;
-	}
-	StartUpdateIndicatorPositionTimer();
+		StartUpdateIndicatorPositionTimer();
+	}	
 }
 
 void USI_GizboManager::StartUpdateIndicatorPositionTimer()
 {
-	GetWorld()->GetTimerManager().SetTimer(IndicatorPositionTimerHandle, this, &UAoS_GizboManager::UpdateMoveToIndicatorPosition, UpdateIndicatorDelay, true);
+	GetWorld()->GetTimerManager().SetTimer(IndicatorPositionTimerHandle, this, &USI_GizboManager::UpdateMoveToIndicatorPosition, UpdateIndicatorDelay, true);
+}
+
+void USI_GizboManager::CancelUpdateIndicatorPositionTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(IndicatorPositionTimerHandle);
 }
 
 void USI_GizboManager::UpdateMoveToIndicatorPosition() const
 {
-	if(!IsValid(Nick)) return; 
+	if(!MoveToIndicator) return;
 	
 	FHitResult HitResult;
-	FVector Start = Nick->GetFollowCamera()->GetComponentLocation();
-	FVector End = Nick->GetFollowCamera()->GetComponentLocation() + Nick->GetFollowCamera()->GetForwardVector() * 2000;
+	FVector Start = CameraManager->GetCameraLocation();
+	FVector End = CameraManager->GetCameraLocation() + CameraManager->GetActorForwardVector() * 2000;
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel2);
 
 	//TODO: Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
@@ -115,7 +122,7 @@ void USI_GizboManager::UpdateMoveToIndicatorPosition() const
 		FVector HitLocation = HitResult.ImpactPoint;
 
 		// Check whether the 'Move To' indicator is within a specific radius
-		double Distance = (HitLocation - Nick->GetActorLocation()).Length();
+		double Distance = (HitLocation - CameraManager->GetCameraLocation()).Length();
 		
 		if (Distance < AdaptableActionMaximumRadius)
 		{
@@ -130,29 +137,35 @@ void USI_GizboManager::UpdateMoveToIndicatorPosition() const
 
 		//TODO: Requires further tuning, to make sure that the rotation is correct.
 		//When the 'MoveTo' actor currently hits the boundary, it causes the indicator to jump away from where it was previously aligned.
-		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Nick->GetFollowCamera()->GetComponentLocation(), HitLocation);
-		double NickArcTan = atan2(Nick->GetFollowCamera()->GetComponentLocation().Y, Nick->GetFollowCamera()->GetComponentLocation().X);
-		double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
-		double Angle = MoveToArcTan - NickArcTan;
-			
-		float Cosine = cos(Angle);
-		float Sine = sin(Angle);
-			
-		HitLocation.X = Nick->GetActorLocation().X + Cosine * AdaptableActionMaximumRadius;
-		HitLocation.Y = Nick->GetActorLocation().Y + Sine * AdaptableActionMaximumRadius;
-		Distance = (HitLocation - Nick->GetActorLocation()).Length();
-			
+		//TODO: Pace... Not sure what Liam is trying to accomplish in this bit of code but removing for now. 
+		/*	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(CameraManager->GetCameraLocation(), HitLocation);
+			double NickArcTan = atan2(CameraManager->GetCameraLocation().Y, CameraManager->GetCameraLocation().X);
+			double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
+			double Angle = MoveToArcTan - NickArcTan;
+				
+			float Cosine = cos(Angle);
+			float Sine = sin(Angle);
+				
+			HitLocation.X = CameraManager->GetCameraLocation().X + Cosine * AdaptableActionMaximumRadius;
+			HitLocation.Y = CameraManager->GetCameraLocation().Y + Sine * AdaptableActionMaximumRadius;
+			Distance = (HitLocation - CameraManager->GetCameraLocation()).Length();
+		*/		
 		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
 		MoveToIndicator->SetActorLocation(HitLocation);
 	}
 }
 
-AAoS_MoveToIndicator* USI_GizboManager::SpawnMoveToIndicator(FVector InHitLocation)
+ASI_MoveToIndicator* USI_GizboManager::SpawnMoveToIndicator(FVector InHitLocation)
 {
+	if(MoveToIndicatorClass == nullptr)
+	{
+		MoveToIndicatorClass = GizboController->GetMoveToIndicatorClass();
+	}
+	
 	if(!IsValid(MoveToIndicator))
 	{
 		FRotator Rotation = FRotator();
-		MoveToIndicator = GetWorld()->SpawnActor<AAoS_MoveToIndicator>(MoveToIndicatorClass, InHitLocation, Rotation);
+		MoveToIndicator = GetWorld()->SpawnActor<ASI_MoveToIndicator>(MoveToIndicatorClass, InHitLocation, Rotation);
 	}
 	else
 	{

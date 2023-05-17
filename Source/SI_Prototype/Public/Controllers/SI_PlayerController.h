@@ -35,7 +35,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	UPROPERTY()
 	USI_HUD* PlayerHUD;
 	UPROPERTY()
-	ASI_Nick* Nick = nullptr;
+	ASI_Nick* Nick;
 	UPROPERTY()
 	AActor* MoveToActor;
 	
