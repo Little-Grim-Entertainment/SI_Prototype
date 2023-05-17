@@ -6,6 +6,8 @@
 #include "Controllers/SI_NPCController_Interactable.h"
 #include "SI_GizboController.generated.h"
 
+class ASI_Nick;
+class ASI_MoveToIndicator;
 /**
  * AI Controller specifically for Gizbo, dervied from base NPC Controllers, for SI Prototype
  */
@@ -23,7 +25,14 @@ public:
 	void ToggleMoveTo();
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	void ToggleWait();
+	TSubclassOf<ASI_MoveToIndicator> GetMoveToIndicatorClass() const;
+	void ReachedMoveToIndicator();
 	
+	UPROPERTY()
+	ASI_Nick* Nick;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;

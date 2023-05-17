@@ -9,7 +9,7 @@
 #include "InputActionValue.h"
 #include "SI_PlayerController.generated.h"
 
-
+class ASI_MoveToIndicator;
 class USI_EnhancedInputComponent;
 class UMediaSoundComponent;
 class USI_UserWidget;
@@ -27,8 +27,6 @@ UCLASS()
 class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
-
-	bool UpdateMoveToIndicatorPosition() const;
 	
 	UPROPERTY()
 	AActor* InteractableActor;
@@ -37,7 +35,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	UPROPERTY()
 	USI_HUD* PlayerHUD;
 	UPROPERTY()
-	ASI_Nick* Nick = nullptr;
+	ASI_Nick* Nick;
 	UPROPERTY()
 	AActor* MoveToActor;
 	
@@ -82,9 +80,6 @@ public:
 	UPROPERTY(BlueprintCallable, BlueprintAssignable, Category = "PlayerCamera")
 	FOnPostCameraSetup OnPostCameraSetup;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
-	float AdaptableActionMaximumRadius = 2000.0f;
-
 	// ================== FUNCTIONS ==================
 
 	UFUNCTION(BlueprintImplementableEvent)	
@@ -97,8 +92,7 @@ public:
 	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
-	UFUNCTION(BlueprintImplementableEvent)
-	AActor* SpawnMoveToMarker();
+
 
 	void SetFocusedWidget(USI_UserWidget* InWidgetToFocus);
 	
@@ -145,6 +139,6 @@ private:
 	USI_UserWidget* FocusedWidget;
 
 	bool bInMenuMode;
-	
+
 	FTimerHandle CameraBlendHandle;
 };

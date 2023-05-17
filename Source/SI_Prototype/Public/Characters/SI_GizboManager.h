@@ -6,6 +6,9 @@
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_GizboManager.generated.h"
 
+class ASI_PlayerCameraManager;
+class ASI_MoveToIndicator;
+class ASI_Nick;
 class ASI_Gizbo;
 class ASI_GizboController;
 /**
@@ -28,13 +31,31 @@ public:
 	void ShowGizbo(bool bShouldHide);
 	UFUNCTION(BlueprintPure, Category = "Gizbo")
 	ASI_GizboController* GetGizboController();
+	UPROPERTY()
+	ASI_Nick* Nick;
+	void StartMoveTo(ASI_PlayerCameraManager* InCameraManager ,AActor* InPawn, bool& InbMarkerIsValid);
+	void StartUpdateIndicatorPositionTimer();
+	void CancelUpdateIndicatorPositionTimer();
+	void UpdateMoveToIndicatorPosition() const;
+	ASI_MoveToIndicator* SpawnMoveToIndicator(FVector InHitLocation);
+	UPROPERTY()
+	ASI_PlayerCameraManager* CameraManager;
+	UPROPERTY()
+	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
+	UPROPERTY()
+	ASI_MoveToIndicator* MoveToIndicator;
 	
 protected:
 
 	virtual void OnGameModeBeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
+	float AdaptableActionMaximumRadius = 2000.0f;
 	
 private:
 
+	FTimerHandle IndicatorPositionTimerHandle;
+	float UpdateIndicatorDelay = 0.1f;
 	UPROPERTY()
 	ASI_GizboController* GizboController;
 	UPROPERTY()
