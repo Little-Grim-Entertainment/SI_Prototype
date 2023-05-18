@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Components/Actor/SI_LineTraces.h"
 #include "InputActionValue.h"
+#include "Engine/PostProcessVolume.h"
 #include "SI_PlayerController.generated.h"
 
 class ASI_MoveToIndicator;
@@ -45,6 +46,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 protected:
 
 	bool bObservationMode = false;
+	bool bAdaptableActionMode = false; 
 	bool bMoveToMarker = false;
 	
 	float ObservationDistance = 1000.;
@@ -126,10 +128,13 @@ protected:
 
 	// Gizbo
 	void RequestGizboFollowTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboMoveToTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboMoveToConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboMoveToCancel(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void InitializeGizboAdaptableAction();
+	void CancelGizboAdaptableAction();
 
+	void HighlightInteractables();
+	
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

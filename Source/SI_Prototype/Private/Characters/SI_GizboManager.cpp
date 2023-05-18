@@ -137,8 +137,10 @@ void USI_GizboManager::UpdateMoveToIndicatorPosition() const
 
 		//TODO: Requires further tuning, to make sure that the rotation is correct.
 		//When the 'MoveTo' actor currently hits the boundary, it causes the indicator to jump away from where it was previously aligned.
-		//TODO: Pace... Not sure what Liam is trying to accomplish in this bit of code but removing for now. 
-		/*	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(CameraManager->GetCameraLocation(), HitLocation);
+
+		/*
+		TODO: --Pace-- Not sure what Liam is trying to accomplish in this bit of code but removing to make it work simpler for now. 
+			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(CameraManager->GetCameraLocation(), HitLocation);
 			double NickArcTan = atan2(CameraManager->GetCameraLocation().Y, CameraManager->GetCameraLocation().X);
 			double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
 			double Angle = MoveToArcTan - NickArcTan;
@@ -149,7 +151,8 @@ void USI_GizboManager::UpdateMoveToIndicatorPosition() const
 			HitLocation.X = CameraManager->GetCameraLocation().X + Cosine * AdaptableActionMaximumRadius;
 			HitLocation.Y = CameraManager->GetCameraLocation().Y + Sine * AdaptableActionMaximumRadius;
 			Distance = (HitLocation - CameraManager->GetCameraLocation()).Length();
-		*/		
+		*/
+		
 		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
 		MoveToIndicator->SetActorLocation(HitLocation);
 	}

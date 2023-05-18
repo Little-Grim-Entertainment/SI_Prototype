@@ -55,7 +55,7 @@ protected:
 private:
 
 	FTimerHandle IndicatorPositionTimerHandle;
-	float UpdateIndicatorDelay = 0.1f;
+	float UpdateIndicatorDelay = 0.001f;
 	UPROPERTY()
 	ASI_GizboController* GizboController;
 	UPROPERTY()

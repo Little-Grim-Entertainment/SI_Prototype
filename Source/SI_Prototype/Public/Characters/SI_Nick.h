@@ -7,6 +7,7 @@
 #include "SI_Types.h"
 #include "SI_Nick.generated.h"
 
+class APostProcessVolume;
 class UATPCCameraComponent;
 class USI_NickCharacterData;
 class USpringArmComponent;
@@ -52,15 +53,14 @@ private:
 	
 public:
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Clothing")
 	USI_NickCharacterData* NickCharacterData;
 	
-	/** Returns CameraBoom subobject **/
+	/** Returns CameraBoom SubObject **/
 	FORCEINLINE UATPCCameraComponent* GetATPCCamera() const { return ATPCCamera; }
-	/** Returns FollowCamera subobject **/
+	/** Returns FollowCamera SubObject **/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return NickFollowCamera; }
-	/** Returns PerceptionStimuliSourceComponent subobject **/
+	/** Returns PerceptionStimuliSourceComponent SubObject **/
 	FORCEINLINE USI_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
 
 	/** Turn off visibility of Nick's meshes **/

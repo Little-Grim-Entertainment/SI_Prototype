@@ -121,6 +121,7 @@ void ASI_NPCController::UpdateBehaviorTree()
 }
 
 //TODO: Get the Actor's perception, check its info, and for sight (index 0), check whether it was successfully sensed
+//TODO: --Pace-- Is this accomplished with EQS instead?
 // Split functions into acquiring / losing a target, and sensing / or losing sense of a given target
 void ASI_NPCController::SetSeenTarget(AActor* Actor)
 {

@@ -11,7 +11,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
-#include "Actors/SI_MoveToIndicator.h"
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_GizboManager.h"
 #include "Media/SI_MediaManager.h"
@@ -27,8 +26,10 @@
 #include "SI_Prototype/SI_Prototype.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "SI_PlayerManager.h"
+#include "Actors/SI_InteractableActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
+#include "EngineUtils.h" // ActorIterator
 
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -65,8 +66,8 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToConfirm); 
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm); 
 	
 	// Axis Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
@@ -248,8 +249,7 @@ void ASI_PlayerController::RequestSkipCinematic()
 		{
 			MediaManager->SkipMedia(MediaManager->GetLoadedCinematic());
 		}
-	}
-	
+	}	
 }
 
 void ASI_PlayerController::RequestNextDialogue()
@@ -310,11 +310,42 @@ void ASI_PlayerController::RequestGizboFollowTemp()
 	}
 }
 
-void ASI_PlayerController::RequestGizboMoveToTemp()
+void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: MoveTo")));
-	UE_LOG(LogSIAI, Log, TEXT("%s : AoS_PlayerController::RequestGizboMoveToTemp MoveTo Initiated"), *GetNameSafe(GetPawn()));
+	bAdaptableActionMode = !bAdaptableActionMode;
+	
+	if(bAdaptableActionMode)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
+		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Initiated"), *GetNameSafe(GetPawn()));
 
+		InitializeGizboAdaptableAction();
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
+		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Cancelled"), *GetNameSafe(GetPawn()));
+
+		CancelGizboAdaptableAction();
+	}
+}
+
+
+
+void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
+{
+	bAdaptableActionMode = false;
+	
+	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	{
+		//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
+		GizboManager->GetGizboController()->ToggleMoveTo();
+		GizboManager->CancelUpdateIndicatorPositionTimer();
+	}
+}
+
+void ASI_PlayerController::InitializeGizboAdaptableAction()
+{
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
 		ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
@@ -324,21 +355,25 @@ void ASI_PlayerController::RequestGizboMoveToTemp()
 	}
 }
 
-void ASI_PlayerController::RequestGizboMoveToConfirm()
+void ASI_PlayerController::CancelGizboAdaptableAction()
 {
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
-		//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
-		GizboManager->GetGizboController()->ToggleMoveTo();
 		GizboManager->CancelUpdateIndicatorPositionTimer();
+		GizboManager->GetGizboController()->ToggleWait();		
 	}
 }
 
-void ASI_PlayerController::RequestGizboMoveToCancel()
+void ASI_PlayerController::HighlightInteractables()
 {
-	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
-		GizboManager->GetGizboController()->ToggleMoveTo();		
+		ASI_InteractableActor* HitInteractableActor = *ActorItr;
+		if(FVector::Distance(HitInteractableActor->GetActorLocation(), GetPawn()->GetActorLocation()) < 2000.0f)
+		{//TODO:: Convert distance to a int from MagicNumber
+	
+	
+		}
 	}
 }
 

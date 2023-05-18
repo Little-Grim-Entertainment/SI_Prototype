@@ -16,6 +16,7 @@
 #include "Perception/AISense_Sight.h"
 #include "UI/SI_HUD.h"
 #include "Data/Maps/SI_MapData.h"
+#include "Engine/PostProcessVolume.h"
 #include "Levels/SI_LevelManager.h"
 
 ASI_Nick::ASI_Nick()
@@ -46,6 +47,7 @@ ASI_Nick::ASI_Nick()
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<USI_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
+
 }
 
 void ASI_Nick::PostInitializeComponents()
