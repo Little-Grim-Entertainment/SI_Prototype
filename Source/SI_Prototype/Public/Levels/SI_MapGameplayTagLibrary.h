@@ -15,7 +15,7 @@ namespace SI_MapGameplayTagLibrary
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Map_Title);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Map_Title_NovaLuxDistrict);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Map_Title_NovaLuxDistrict_NicksAppartment);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Map_Title_NovaLuxDistrict_NicksApartment);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Map_Title_NovaLuxDistrict_BettyBots);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Map_Title_NovaLuxDistrict_CherryTree);
 
