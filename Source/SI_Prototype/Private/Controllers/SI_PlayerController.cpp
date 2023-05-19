@@ -106,6 +106,17 @@ void ASI_PlayerController::BeginPlay()
 void ASI_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if(bObservationMode)
+	{
+		//line trace that ignores nick and only targets objects with the tag "SI_ObservationTarget"
+		FHitResult HitResult;
+		const FVector StartLocation = PlayerCameraManager->GetCameraLocation();
+		const FVector EndLocation = StartLocation + (PlayerCameraManager->GetCameraRotation().Vector() * 1000);
+		const FCollisionQueryParams QueryParams = FCollisionQueryParams(FName(TEXT("ObservationTrace")), false, this);
+		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, QueryParams);
+		
+	}
 }
 
 void ASI_PlayerController::PostInitializeComponents()
@@ -223,6 +234,7 @@ void ASI_PlayerController::RequestToggleObservation()
 
 	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	SITagManager->AddNewGameplayTag(SITag_Player_State_Observation);
+	bObservationMode = true;
 }
 
 void ASI_PlayerController::RequestObserveObject()
