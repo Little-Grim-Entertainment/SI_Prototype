@@ -330,8 +330,6 @@ void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 	}
 }
 
-
-
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
 	bAdaptableActionMode = false;
@@ -341,7 +339,9 @@ void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 		//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
 		GizboManager->GetGizboController()->ToggleMoveTo();
 		GizboManager->CancelUpdateIndicatorPositionTimer();
+		GizboManager->HideMoveToIndicator();
 	}
+	CancelInteractableHighlight();
 }
 
 void ASI_PlayerController::InitializeGizboAdaptableAction()
@@ -351,8 +351,9 @@ void ASI_PlayerController::InitializeGizboAdaptableAction()
 		ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
 		if(!IsValid(AOSCamera)) return;
 		
-		GizboManager->StartMoveTo(AOSCamera, GetPawn(), bMoveToMarker);
+		GizboManager->StartAdaptableAction(AOSCamera, GetPawn(), bMoveToMarker);
 	}
+	HighlightInteractables();
 }
 
 void ASI_PlayerController::CancelGizboAdaptableAction()
@@ -360,8 +361,10 @@ void ASI_PlayerController::CancelGizboAdaptableAction()
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
 		GizboManager->CancelUpdateIndicatorPositionTimer();
-		GizboManager->GetGizboController()->ToggleWait();		
+		GizboManager->HideMoveToIndicator();
+		GizboManager->GetGizboController()->ToggleWait();
 	}
+	CancelInteractableHighlight();
 }
 
 void ASI_PlayerController::HighlightInteractables()
@@ -371,8 +374,22 @@ void ASI_PlayerController::HighlightInteractables()
 		ASI_InteractableActor* HitInteractableActor = *ActorItr;
 		if(FVector::Distance(HitInteractableActor->GetActorLocation(), GetPawn()->GetActorLocation()) < 2000.0f)
 		{//TODO:: Convert distance to a int from MagicNumber
-	
-	
+			HitInteractableActor->HighlightMesh->SetVisibility(true);	
+		}
+		else
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
+		}
+	}
+}
+
+void ASI_PlayerController::CancelInteractableHighlight()
+{
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		if(ASI_InteractableActor* HitInteractableActor = *ActorItr)
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
 		}
 	}
 }

@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "SI_GameInstance.h"
+#include "Actors/SI_InteractableActor.h"
 #include "Characters/SI_Character.h"
 #include "Characters/SI_Nick.h"
 #include "Characters/SI_Gizbo.h"
@@ -15,7 +16,6 @@
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameModes/SI_GameMode.h"
-
 
 void USI_GizboManager::SpawnGizbo()
 {
@@ -71,7 +71,7 @@ ASI_GizboController* USI_GizboManager::GetGizboController()
 	return GizboController;
 }
 
-void USI_GizboManager::StartMoveTo(ASI_PlayerCameraManager* InCameraManager, AActor* InPawn, bool& InbMarkerIsValid)
+void USI_GizboManager::StartAdaptableAction(ASI_PlayerCameraManager* InCameraManager, AActor* InPawn, bool& InbMarkerIsValid)
 {
 	float MaxMoveToDistance = 2000.0f;
 	CameraManager = InCameraManager;
@@ -177,6 +177,12 @@ ASI_MoveToIndicator* USI_GizboManager::SpawnMoveToIndicator(FVector InHitLocatio
 	}
 	return MoveToIndicator;
 }
+
+void USI_GizboManager::HideMoveToIndicator()
+{
+	MoveToIndicator->SetActorHiddenInGame(true);
+}
+
 void USI_GizboManager::ShowGizbo(bool bShouldHide)
 {
 	if (!IsValid(GizboCharacter)) {return;}

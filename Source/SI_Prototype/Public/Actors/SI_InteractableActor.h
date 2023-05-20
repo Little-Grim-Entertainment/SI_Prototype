@@ -25,6 +25,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
 	UStaticMeshComponent* Mesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
+	UStaticMeshComponent* HighlightMesh;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	USI_InteractableComponent* InteractableComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")

@@ -18,6 +18,9 @@ ASI_InteractableActor::ASI_InteractableActor()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
 	
+	HighlightMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HighlightMesh"));
+	HighlightMesh->SetupAttachment(RootComponent);
+	
 	InteractableComponent = CreateDefaultSubobject<USI_InteractableComponent>(TEXT("InteractableComponent"));
 	InteractableComponent->SetupAttachment(RootComponent);
 	
@@ -32,7 +35,7 @@ ASI_InteractableActor::ASI_InteractableActor()
 void ASI_InteractableActor::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	if (IsValid(InteractionPrompt))
 	{
 		USI_InteractionPrompt* InteractionPromptWidget = Cast<USI_InteractionPrompt>(InteractionPrompt->GetWidget());

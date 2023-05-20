@@ -132,9 +132,9 @@ protected:
 	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void InitializeGizboAdaptableAction();
 	void CancelGizboAdaptableAction();
-
 	void HighlightInteractables();
-	
+	void CancelInteractableHighlight();
+
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
