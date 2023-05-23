@@ -27,7 +27,7 @@ public:
 
 	// ================== VARIABLES ==================
 
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	UATPCCameraComponent* ATPCCamera;
 	
 private:

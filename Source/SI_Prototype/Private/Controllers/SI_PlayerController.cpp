@@ -3,6 +3,7 @@
 
 #include "Controllers/SI_PlayerController.h"
 
+#include "ATPCCameraComponent.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
@@ -113,8 +114,16 @@ void ASI_PlayerController::Tick(float DeltaSeconds)
 		FHitResult HitResult;
 		const FVector StartLocation = PlayerCameraManager->GetCameraLocation();
 		const FVector EndLocation = StartLocation + (PlayerCameraManager->GetCameraRotation().Vector() * 1000);
-		const FCollisionQueryParams QueryParams = FCollisionQueryParams(FName(TEXT("ObservationTrace")), false, this);
-		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, QueryParams);
+		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility);
+		//debug line to show the line trace
+		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 0.1f, 0, 1);
+
+		//if the line trace hits an object with the tag "SI_ObservationTarget" then set the observation target to that object
+		if(HitResult.GetActor() && HitResult.GetActor()->ActorHasTag(TEXT("Observable")))
+		{
+			//print to screen the name of the object that is being observed
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Observing: %s"), *HitResult.GetActor()->GetName()));
+		}
 		
 	}
 }
@@ -234,7 +243,8 @@ void ASI_PlayerController::RequestToggleObservation()
 
 	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	SITagManager->AddNewGameplayTag(SITag_Player_State_Observation);
-	bObservationMode = true;
+	//Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_Observation, false, false);
+	bObservationMode = !bObservationMode;
 }
 
 void ASI_PlayerController::RequestObserveObject()
