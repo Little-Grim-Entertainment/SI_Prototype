@@ -3,12 +3,8 @@
 
 #include "Characters/SI_GizboManager.h"
 
-#include "Camera/CameraComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "SI_GameInstance.h"
-#include "Actors/SI_InteractableActor.h"
 #include "Characters/SI_Character.h"
-#include "Characters/SI_Nick.h"
 #include "Characters/SI_Gizbo.h"
 #include "Controllers/SI_GizboController.h"
 #include "Data/Characters/SI_CharacterData.h"
@@ -180,7 +176,10 @@ ASI_MoveToIndicator* USI_GizboManager::SpawnMoveToIndicator(FVector InHitLocatio
 
 void USI_GizboManager::HideMoveToIndicator()
 {
-	MoveToIndicator->SetActorHiddenInGame(true);
+	if(MoveToIndicator)
+	{
+		MoveToIndicator->SetActorHiddenInGame(true);
+	}
 }
 
 void USI_GizboManager::ShowGizbo(bool bShouldHide)
@@ -195,3 +194,4 @@ void USI_GizboManager::OnGameModeBeginPlay()
 
 	SpawnGizbo();
 }
+

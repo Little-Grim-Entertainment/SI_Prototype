@@ -20,6 +20,7 @@ ASI_InteractableActor::ASI_InteractableActor()
 	
 	HighlightMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HighlightMesh"));
 	HighlightMesh->SetupAttachment(RootComponent);
+	HighlightMesh->SetVisibility(false);
 	
 	InteractableComponent = CreateDefaultSubobject<USI_InteractableComponent>(TEXT("InteractableComponent"));
 	InteractableComponent->SetupAttachment(RootComponent);

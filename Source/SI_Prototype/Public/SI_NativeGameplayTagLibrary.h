@@ -33,6 +33,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Next);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Previous);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Exit);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_ControlsToggle)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_Follow);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_MoveTo);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_MoveToConfirm);

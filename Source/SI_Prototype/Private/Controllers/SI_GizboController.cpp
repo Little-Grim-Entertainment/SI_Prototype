@@ -193,8 +193,3 @@ TSubclassOf<ASI_MoveToIndicator> ASI_GizboController::GetMoveToIndicatorClass() 
 {
 	return MoveToIndicatorClass;
 }
-
-void ASI_GizboController::ReachedMoveToIndicator()
-{
-	//bReachedDestination = true;
-}

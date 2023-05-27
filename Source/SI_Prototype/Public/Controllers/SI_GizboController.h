@@ -26,9 +26,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	void ToggleWait();
 	TSubclassOf<ASI_MoveToIndicator> GetMoveToIndicatorClass() const;
-	void ReachedMoveToIndicator();
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	ASI_Nick* Nick;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
