@@ -244,6 +244,8 @@ void ASI_PlayerController::RequestToggleObservation()
 
 	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	SITagManager->AddNewGameplayTag(SITag_Player_State_Observation);
+	//Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_Observation, false, false);
+	bObservationMode = !bObservationMode;
 }
 
 void ASI_PlayerController::RequestObserveObject()
