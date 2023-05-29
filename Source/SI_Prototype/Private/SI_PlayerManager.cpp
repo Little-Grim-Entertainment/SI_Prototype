@@ -115,42 +115,46 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 void USI_PlayerManager::InitializeDelegates()
 {
 	Super::InitializeDelegates();
-	
-	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
-	ObservationStateDelegate.BindUObject(this, &ThisClass::SetupObservationState);
-	MenuStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
-	MediaStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
+
 	DialogueStateDelegate.BindUObject(this, &ThisClass::SetupDialogueState);
-	InterrogationStateDelegate.BindUObject(this, &ThisClass::SetupInterrogationState);
+	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
+	GizboActionsStateDelegate.BindUObject(this, &ThisClass::SetupGizboActionsState);
 	InactiveStateDelegate.BindUObject(this, &ThisClass::SetupInactiveState);
+	InterrogationStateDelegate.BindUObject(this, &ThisClass::SetupInterrogationState);
+	MediaStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
+	MenuStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
+	ObservationStateDelegate.BindUObject(this, &ThisClass::SetupObservationState);
+	
 }
 
 void USI_PlayerManager::InitializeDelegateMaps()
 {
 	Super::InitializeDelegateMaps();
 
-	PlayerDelegateContainer.Add(SITag_Player_State_Exploration, ExplorationStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Menu, MenuStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Dialogue, DialogueStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Interrogation, InterrogationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Exploration, ExplorationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_GizboActions, GizboActionsStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Inactive, InactiveStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Interrogation, InterrogationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Menu, MenuStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
+	
+}
+
+void USI_PlayerManager::SetupDialogueState()
+{
 }
 
 void USI_PlayerManager::SetupExplorationState()
 {
 }
 
-void USI_PlayerManager::SetupObservationState()
+void USI_PlayerManager::SetupGizboActionsState()
 {
 }
 
-void USI_PlayerManager::SetupMenuState()
-{
-}
-
-void USI_PlayerManager::SetupDialogueState()
+void USI_PlayerManager::SetupInactiveState()
 {
 }
 
@@ -158,6 +162,10 @@ void USI_PlayerManager::SetupInterrogationState()
 {
 }
 
-void USI_PlayerManager::SetupInactiveState()
+void USI_PlayerManager::SetupMenuState()
+{
+}
+
+void USI_PlayerManager::SetupObservationState()
 {
 }

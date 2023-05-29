@@ -65,6 +65,7 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
+	//EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Ongoing, this, &ThisClass::RequestGizboFollowTemp);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm); 
