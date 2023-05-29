@@ -108,6 +108,25 @@ void ASI_PlayerController::BeginPlay()
 void ASI_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if(bObservationMode)
+	{
+		//line trace that ignores nick and only targets objects with the tag "SI_ObservationTarget"
+		FHitResult HitResult;
+		const FVector StartLocation = PlayerCameraManager->GetCameraLocation();
+		const FVector EndLocation = StartLocation + (PlayerCameraManager->GetCameraRotation().Vector() * 1000);
+		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility);
+		//debug line to show the line trace
+		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 0.1f, 0, 1);
+
+		//if the line trace hits an object with the tag "SI_ObservationTarget" then set the observation target to that object
+		if(HitResult.GetActor() && HitResult.GetActor()->ActorHasTag(TEXT("Observable")))
+		{
+			//print to screen the name of the object that is being observed
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Observing: %s"), *HitResult.GetActor()->GetName()));
+		}
+		
+	}
 }
 
 void ASI_PlayerController::PostInitializeComponents()
