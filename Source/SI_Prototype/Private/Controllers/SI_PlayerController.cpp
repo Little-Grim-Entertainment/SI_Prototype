@@ -3,6 +3,7 @@
 
 #include "Controllers/SI_PlayerController.h"
 
+#include "ATPCCameraComponent.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
@@ -14,6 +15,7 @@
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_GizboManager.h"
 #include "Media/SI_MediaManager.h"
+#include "Actors/SI_InteractableActor.h"
 #include "Controllers/SI_GizboController.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Data/Media/SI_CinematicDataAsset.h"
@@ -26,7 +28,6 @@
 #include "SI_Prototype/SI_Prototype.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "SI_PlayerManager.h"
-#include "Actors/SI_InteractableActor.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
 #include "EngineUtils.h" // ActorIterator
@@ -99,6 +100,8 @@ void ASI_PlayerController::BeginPlay()
 		RemoveInputMappingByTag(PlayerManager->GetPreviousPlayerState());
 	}
 
+	Nick = Cast<ASI_Nick>(GetCharacter());
+
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
 		GizboManager->Nick = Cast<ASI_Nick>(GetCharacter());
@@ -116,16 +119,23 @@ void ASI_PlayerController::Tick(float DeltaSeconds)
 		const FVector StartLocation = PlayerCameraManager->GetCameraLocation();
 		const FVector EndLocation = StartLocation + (PlayerCameraManager->GetCameraRotation().Vector() * 1000);
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility);
-		//debug line to show the line trace
-		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 0.1f, 0, 1);
 
 		//if the line trace hits an object with the tag "SI_ObservationTarget" then set the observation target to that object
-		if(HitResult.GetActor() && HitResult.GetActor()->ActorHasTag(TEXT("Observable")))
+		if(HitResult.GetActor() && HitResult.GetActor()->ActorHasTag("Interactable"))
 		{
-			//print to screen the name of the object that is being observed
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Observing: %s"), *HitResult.GetActor()->GetName()));
+			if(InteractableActor == HitResult.GetActor()) return;
+			
+			if(InteractableActor) InteractableActor->HighlightMesh->SetVisibility(false);
+			
+			InteractableActor = Cast<ASI_InteractableActor>(HitResult.GetActor());
+			InteractableActor->HighlightMesh->SetVisibility(true);
 		}
-		
+		else
+		{
+			if(!InteractableActor) return;
+			InteractableActor->HighlightMesh->SetVisibility(false);
+			InteractableActor = nullptr;
+		}
 	}
 }
 
@@ -213,39 +223,22 @@ void ASI_PlayerController::RequestInteract()
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	/*bObservationMode = !bObservationMode;
+	bObservationMode = !bObservationMode;
 
-	USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
-
-	float CameraTransitionTime = 0.35f;
-
-	DisableInput(this);
-	
 	if(bObservationMode)
 	{
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMin = -89;
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMax = 89;
-		Nick->SetActorRotation(FRotator(0., Nick->GetFollowCameraActor()->GetActorRotation().Yaw, 0));
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ObservationMode);
-		SetViewTargetWithBlend(Nick->GetObservationCameraActor(), CameraTransitionTime);
+		USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+		SITagManager->AddNewGameplayTag(SITag_Player_State_Observation);
+		Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_Observation, false, false);
+		Nick->HideMeshes(false);
 	}
 	else
 	{
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMin = -60;
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMax = 20;
-		Nick->SetActorRotation(FRotator(0, Nick->GetActorRotation().Yaw, Nick->GetActorRotation().Roll));
-		SetControlRotation(FRotator(Nick->GetActorRotation()));
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
-		SetViewTargetWithBlend(Nick->GetFollowCameraActor(), CameraTransitionTime);
+		USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+		SITagManager->AddNewGameplayTag(SITag_Player_State_Exploration);
+		Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_InDoor, false, false);
+		Nick->HideMeshes(true);
 	}
-	Nick->HideMeshes(!bObservationMode);
-
-	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, this, &ASI_PlayerController::PostCameraBlend, CameraTransitionTime, false);*/
-
-	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-	SITagManager->AddNewGameplayTag(SITag_Player_State_Observation);
-	//Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_Observation, false, false);
-	bObservationMode = !bObservationMode;
 }
 
 void ASI_PlayerController::RequestObserveObject()
@@ -418,7 +411,7 @@ void ASI_PlayerController::CancelInteractableHighlight()
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	InteractableActor = InInteractableActor;
+	InteractableActor = Cast<ASI_InteractableActor>(InInteractableActor);
 }
 
 void ASI_PlayerController::SetObservableActor(AActor* InObservableActor)

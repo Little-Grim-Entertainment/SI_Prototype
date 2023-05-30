@@ -7,9 +7,9 @@
 #include "GameFramework/PlayerController.h"
 #include "Components/Actor/SI_LineTraces.h"
 #include "InputActionValue.h"
-#include "Engine/PostProcessVolume.h"
 #include "SI_PlayerController.generated.h"
 
+class ASI_InteractableActor;
 class ASI_MoveToIndicator;
 class USI_EnhancedInputComponent;
 class UMediaSoundComponent;
@@ -30,7 +30,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	AActor* InteractableActor;
+	ASI_InteractableActor* InteractableActor;
 	UPROPERTY()
 	AActor* ObservableActor;
 	UPROPERTY()
@@ -134,6 +134,7 @@ protected:
 	void CancelGizboAdaptableAction();
 	void HighlightInteractables();
 	void CancelInteractableHighlight();
+
 
 private:
 
