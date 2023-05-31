@@ -30,6 +30,7 @@
 #include "SI_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "EngineUtils.h" // ActorIterator
 
 
@@ -121,20 +122,13 @@ void ASI_PlayerController::Tick(float DeltaSeconds)
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility);
 
 		//if the line trace hits an object with the tag "SI_ObservationTarget" then set the observation target to that object
-		if(HitResult.GetActor() && HitResult.GetActor()->ActorHasTag("Interactable"))
+		if(HitResult.GetActor())
 		{
-			if(InteractableActor == HitResult.GetActor()) return;
-			
-			if(InteractableActor) InteractableActor->HighlightMesh->SetVisibility(false);
-			
-			InteractableActor = Cast<ASI_InteractableActor>(HitResult.GetActor());
-			InteractableActor->HighlightMesh->SetVisibility(true);
-		}
-		else
-		{
-			if(!InteractableActor) return;
-			InteractableActor->HighlightMesh->SetVisibility(false);
-			InteractableActor = nullptr;
+			ASI_InteractableActor* IActor = Cast<ASI_InteractableActor>(HitResult.GetActor());
+			if(IsValid(IActor) && IActor->AbilitySystemComponent->HasMatchingGameplayTag(SITag_Actor_Observable))
+			{
+				IActor->HighlightBeginTimer();
+			}
 		}
 	}
 }
@@ -223,21 +217,22 @@ void ASI_PlayerController::RequestInteract()
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	bObservationMode = !bObservationMode;
-
-	if(bObservationMode)
+	
+	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
 	{
-		USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-		SITagManager->AddNewGameplayTag(SITag_Player_State_Observation);
-		Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_Observation, false, false);
-		Nick->HideMeshes(false);
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
+		Nick->HideMeshes(true);
+		bObservationMode = false;
+
+		if(!IsValid(InteractableActor)) {return;}
+		InteractableActor->HighlightMesh->SetVisibility(false);
 	}
 	else
 	{
-		USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-		SITagManager->AddNewGameplayTag(SITag_Player_State_Exploration);
-		Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_InDoor, false, false);
-		Nick->HideMeshes(true);
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Observation, SITag_Player_State);
+		Nick->HideMeshes(false);
+		bObservationMode = true;
 	}
 }
 

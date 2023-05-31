@@ -5,6 +5,10 @@
 
 namespace SI_NativeGameplayTagLibrary
 {
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor, "Actor")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Observable, "Actor.Observable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Interactable, "Actor.Interactable")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio, "Audio")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music, "Audio.Music")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music_Pause, "Audio.Music.Pause")

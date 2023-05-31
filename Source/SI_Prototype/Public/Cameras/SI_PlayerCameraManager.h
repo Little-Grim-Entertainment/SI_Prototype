@@ -6,6 +6,9 @@
 #include "Camera/PlayerCameraManager.h"
 #include "SI_PlayerCameraManager.generated.h"
 
+class USI_LevelManager;
+class USI_GameInstance;
+class USI_GameplayTagManager;
 /**
  * 
  */
@@ -13,17 +16,22 @@ UCLASS()
 class SI_PROTOTYPE_API ASI_PlayerCameraManager : public APlayerCameraManager
 {
 	GENERATED_BODY()
-
 	UPROPERTY()
-	class ASI_Nick* PlayerCharacter;
+	USI_GameInstance* GameInstance;
+	UPROPERTY()
+	USI_GameplayTagManager* SITagManager;
+
 	
 public:
 
-	UFUNCTION(BlueprintPure)
-	FTransform GetFollowCamTransform();
-	UFUNCTION(BlueprintPure)
-	ASI_Nick* GetPlayerCharacter() {return PlayerCharacter;}
+	void ChangeCameraByTag();
 
-	UFUNCTION(BlueprintCallable)
-	void SetPlayerCharacter(ASI_Nick* CharacterToSet);
+protected:
+
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
+	UFUNCTION()
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag);
 };
