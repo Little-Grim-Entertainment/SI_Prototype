@@ -7,6 +7,8 @@
 #include "SI_AbilitySystemComponent.generated.h"
 
 
+class USI_GameplayAbility;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SI_PROTOTYPE_API USI_AbilitySystemComponent : public UAbilitySystemComponent
 {
@@ -24,4 +26,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
+
+	USI_GameplayAbility* GetGameplayAbilityFromTag(FGameplayTag InAbilityTag);
+
+
 };

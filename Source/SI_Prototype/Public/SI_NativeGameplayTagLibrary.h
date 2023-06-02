@@ -7,6 +7,9 @@
 
 namespace SI_NativeGameplayTagLibrary
 {
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Observation);
+	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Actor);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Actor_Observable);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Actor_Interactable);

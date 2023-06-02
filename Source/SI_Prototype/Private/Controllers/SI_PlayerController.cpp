@@ -32,6 +32,7 @@
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "EngineUtils.h" // ActorIterator
+#include "Abilities/SI_GameplayAbility_Observation.h"
 
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -217,22 +218,20 @@ void ASI_PlayerController::RequestInteract()
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	
 	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+	if(!IsValid(SITagManager)) {return;}
+	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
 	{
+		Nick->GetSIAbilitySystemComponent()->CancelAbility(Nick->GetSIAbilitySystemComponent()->GetGameplayAbilityFromTag(SITag_Ability_Observation));
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
 		Nick->HideMeshes(true);
-		bObservationMode = false;
-
-		if(!IsValid(InteractableActor)) {return;}
-		InteractableActor->HighlightMesh->SetVisibility(false);
 	}
 	else
 	{
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Observation.GetTag().GetSingleTagContainer(), false);
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Observation, SITag_Player_State);
 		Nick->HideMeshes(false);
-		bObservationMode = true;
 	}
 }
 

@@ -5,6 +5,9 @@
 
 namespace SI_NativeGameplayTagLibrary
 {
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Observation, "Ability.Observation")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor, "Actor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Observable, "Actor.Observable")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Interactable, "Actor.Interactable")

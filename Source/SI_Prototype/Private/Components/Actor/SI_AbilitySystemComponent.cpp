@@ -3,6 +3,8 @@
 
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
+#include "GameModes/SI_GameMode.h"
+
 
 // Sets default values for this component's properties
 USI_AbilitySystemComponent::USI_AbilitySystemComponent()
@@ -19,9 +21,6 @@ USI_AbilitySystemComponent::USI_AbilitySystemComponent()
 void USI_AbilitySystemComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 
@@ -32,5 +31,13 @@ void USI_AbilitySystemComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+USI_GameplayAbility* USI_AbilitySystemComponent::GetGameplayAbilityFromTag(FGameplayTag InAbilityTag)
+{
+	ASI_GameMode* GameMode = Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
+	if(!IsValid(GameMode)) { return nullptr;}
+
+	return GameMode->GetGameplayAbility(InAbilityTag);
 }
 

@@ -5,18 +5,14 @@
 #include "ATPCCameraComponent.h"
 #include "AI/SI_AIPerceptionStimuliSource.h"
 #include "SI_GameInstance.h"
-#include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
-#include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Data/Characters/SI_NickCharacterData.h"
 #include "Perception/AISense_Hearing.h"
 #include "Perception/AISense_Sight.h"
-#include "UI/SI_HUD.h"
 #include "Data/Maps/SI_MapData.h"
-#include "Engine/PostProcessVolume.h"
 #include "Levels/SI_LevelManager.h"
 
 ASI_Nick::ASI_Nick()
@@ -48,12 +44,19 @@ ASI_Nick::ASI_Nick()
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
 
+	AbilitySystemComponent = CreateDefaultSubobject<USI_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+
 }
 
 void ASI_Nick::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+}
+
+UAbilitySystemComponent* ASI_Nick::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 
 void ASI_Nick::HideMeshes(bool Value)
@@ -65,6 +68,21 @@ void ASI_Nick::HideMeshes(bool Value)
 	for (USceneComponent* _Mesh : Meshes)
 	{
 		_Mesh->SetVisibility(Value);
+	}
+}
+
+USI_AbilitySystemComponent* ASI_Nick::GetSIAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+void ASI_Nick::GiveAbilities()
+{
+	if (!IsValid(AbilitySystemComponent)) {return;}
+
+	for (TSubclassOf<USI_GameplayAbility>& Ability : DefaultAbilities)
+	{
+		AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
 	}
 }
 
@@ -86,6 +104,8 @@ void ASI_Nick::BeginPlay()
 	{
 		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelLoaded);	
 	}
+
+	GiveAbilities();
 }
 
 

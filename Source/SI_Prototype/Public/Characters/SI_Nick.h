@@ -5,8 +5,11 @@
 #include "CoreMinimal.h"
 #include "Characters/SI_Character.h"
 #include "SI_Types.h"
+#include "AbilitySystemInterface.h"
+#include "Abilities/SI_GameplayAbility.h"
 #include "SI_Nick.generated.h"
 
+class USI_AbilitySystemComponent;
 class APostProcessVolume;
 class UATPCCameraComponent;
 class USI_NickCharacterData;
@@ -18,7 +21,7 @@ class USI_LevelManager;
 class USI_MapData;
 
 UCLASS()
-class SI_PROTOTYPE_API ASI_Nick : public ASI_Character
+class SI_PROTOTYPE_API ASI_Nick : public ASI_Character, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 	
@@ -30,10 +33,16 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = Camera)
 	UATPCCameraComponent* ATPCCamera;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
+	USI_AbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Abilities)
+	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
 	
 private:
 
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USI_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -65,9 +74,13 @@ public:
 
 	/** Turn off visibility of Nick's meshes **/
 	void HideMeshes(bool Value);
+
+	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
+	void GiveAbilities();
 	
 protected:
 
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 };
