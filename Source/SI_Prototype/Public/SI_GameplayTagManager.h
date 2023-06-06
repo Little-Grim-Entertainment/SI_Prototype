@@ -61,4 +61,5 @@ private:
 	FSI_GameplayTagContainer LevelTags;
 	FSI_GameplayTagContainer MediaTags;
 	FSI_GameplayTagContainer CameraTags;
+	FSI_GameplayTagContainer MusicTags;
 };

@@ -124,7 +124,7 @@ void ASI_Nick::OnLevelLoaded(USI_MapData* LoadedLevel, bool bShouldFade)
 		MapName = "DA_MainMenu";
 	}
 	
-	if (MapName == "DA_NicksOffice")
+	if (MapName == "DA_NicksApartment")
 	{
 		GetMesh()->SetSkeletalMesh(NickCharacterData->GetClothingMeshFromName(FName(TEXT("NoJacketNick"))));
 	}

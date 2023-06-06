@@ -21,7 +21,7 @@ struct FSI_LevelMediaAssignment
 	UPROPERTY(EditAnywhere, meta=(EditCondition="!bHasVideos"))
 	bool bHasCinematics;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Levels", meta =(Categories ="Map.Title"))
 	FGameplayTag AssociatedLevelTag;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Videos", meta=(EditCondition="bHasVideos", EditConditionHides))
