@@ -5,9 +5,12 @@
 #include "Components/Scene/SI_InteractableComponent.h"
 #include "Characters/SI_Nick.h"
 #include "Components/WidgetComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "UI/SI_InteractionIcon.h"
 #include "UI/SI_InteractionPrompt.h"
+#include "SI_NativeGameplayTagLibrary.h"
+
+using namespace SI_NativeGameplayTagLibrary;
 
 // Sets default values
 ASI_InteractableActor::ASI_InteractableActor()
@@ -18,6 +21,10 @@ ASI_InteractableActor::ASI_InteractableActor()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
 	
+	HighlightMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HighlightMesh"));
+	HighlightMesh->SetupAttachment(RootComponent);
+	HighlightMesh->SetVisibility(false);
+	
 	InteractableComponent = CreateDefaultSubobject<USI_InteractableComponent>(TEXT("InteractableComponent"));
 	InteractableComponent->SetupAttachment(RootComponent);
 	
@@ -26,13 +33,15 @@ ASI_InteractableActor::ASI_InteractableActor()
 	
 	InteractionPrompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionPrompt"));
 	InteractionPrompt->SetupAttachment(RootComponent);
+
+	AbilitySystemComponent = CreateDefaultSubobject<USI_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 }
 
 // Called when the game starts or when spawned
 void ASI_InteractableActor::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	if (IsValid(InteractionPrompt))
 	{
 		USI_InteractionPrompt* InteractionPromptWidget = Cast<USI_InteractionPrompt>(InteractionPrompt->GetWidget());
@@ -45,6 +54,17 @@ void ASI_InteractableActor::BeginPlay()
 	{
 		InteractableComponent->OnPlayerBeginOverlap.AddDynamic(this, &ThisClass::OnBeginOverlap);
 		InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);	
+	}
+}
+
+void ASI_InteractableActor::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (IsValid(AbilitySystemComponent))
+	{
+		AbilitySystemComponent->AddLooseGameplayTag(SITag_Actor_Interactable);
+		AbilitySystemComponent->AddLooseGameplayTag(SITag_Actor_Observable);
 	}
 }
 
@@ -65,6 +85,17 @@ void ASI_InteractableActor::OnEndOverlap(ASI_Nick* InNickActor)
 {
 	if (!IsValid(InteractableComponent)) {return;}
 	InteractableComponent->HideInteractionPromptWidget();
+}
+
+void ASI_InteractableActor::HighlightBeginTimer()
+{
+	if(!HighlightMesh->GetVisibleFlag()) {HighlightMesh->SetVisibility(true);}
+	GetWorld()->GetTimerManager().SetTimer(HighlightTimerHandle, this, &ThisClass::DisableHighlight, 0.01f);
+}
+
+void ASI_InteractableActor::DisableHighlight()
+{
+	HighlightMesh->SetVisibility(false);
 }
 
 UWidgetComponent* ASI_InteractableActor::GetInteractionIconComponent_Implementation()

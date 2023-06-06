@@ -5,6 +5,7 @@
 
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagTypes.h"
+#include "SI_NativeGameplayTagLibrary.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 
 
@@ -180,6 +181,7 @@ void USI_GameplayTagManager::InitializeTagContainers()
 	AllTagContainers.Add(SITag_Map, LevelTags);
 	AllTagContainers.Add(SITag_Media, MediaTags);
 	AllTagContainers.Add(SITag_Camera, CameraTags);
+	AllTagContainers.Add(SITag_Audio_Music, MusicTags);
 
 	for (TPair<FGameplayTag, FSI_GameplayTagContainer>& CurrentContainerPair : AllTagContainers)
 	{

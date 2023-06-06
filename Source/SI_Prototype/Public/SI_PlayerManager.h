@@ -22,7 +22,6 @@ public:
 	const FGameplayTag& GetCurrentPlayerState() const;
 	const FGameplayTag& GetPreviousPlayerState() const;
 
-
 protected:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -33,13 +32,14 @@ private:
 
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
-	
-	void SetupExplorationState();
-	void SetupObservationState();
-	void SetupMenuState();
+
 	void SetupDialogueState();
+	void SetupExplorationState();
+	void SetupGizboActionsState();
+	void SetupInactiveState();	
 	void SetupInterrogationState();
-	void SetupInactiveState();
+	void SetupMenuState();
+	void SetupObservationState();
 	
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
@@ -49,12 +49,14 @@ private:
 	FGameplayTag SecondaryMediaTag;
 
 	TMap<FGameplayTag, FSimpleDelegate> PlayerDelegateContainer;
-	
-	FSimpleDelegate ExplorationStateDelegate;
-	FSimpleDelegate ObservationStateDelegate;
-	FSimpleDelegate MenuStateDelegate;
-	FSimpleDelegate MediaStateDelegate;
+
 	FSimpleDelegate DialogueStateDelegate;
-	FSimpleDelegate InterrogationStateDelegate;
+	FSimpleDelegate ExplorationStateDelegate;
+	FSimpleDelegate GizboActionsStateDelegate;
 	FSimpleDelegate InactiveStateDelegate;
+	FSimpleDelegate InterrogationStateDelegate;
+	FSimpleDelegate MediaStateDelegate;
+	FSimpleDelegate MenuStateDelegate;
+	FSimpleDelegate ObservationStateDelegate;
+
 };

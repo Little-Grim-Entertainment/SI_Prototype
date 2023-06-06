@@ -7,6 +7,13 @@
 
 namespace SI_NativeGameplayTagLibrary
 {
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Observation);
+	
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Actor);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Actor_Observable);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Actor_Interactable);
+	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Audio);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Audio_Music);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Audio_Music_Pause);
@@ -33,6 +40,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Next);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Previous);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Exit);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_ControlsToggle)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_Follow);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_MoveTo);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_MoveToConfirm);
@@ -50,13 +58,14 @@ namespace SI_NativeGameplayTagLibrary
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Dialogue);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Exploration);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Observation);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_GizboActions);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Inactive);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Interrogation);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Menu);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Media);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Dialogue);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Interrogation);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Inactive);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Observation);
 		
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_UI);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_UI_HUD);

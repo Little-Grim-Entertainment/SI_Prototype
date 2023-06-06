@@ -6,6 +6,8 @@
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
 #include "Controllers/SI_PlayerController.h"
+#include "Data/Maps/SI_MapData.h"
+#include "Levels/SI_LevelManager.h"
 #include "UI/SI_UserWidget.h"
 
 void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
@@ -16,6 +18,7 @@ void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 
 	PreviousPlayerState = CurrentPlayerState;
 	CurrentPlayerState = InPlayerState;
+	
 }
 
 const FGameplayTag& USI_PlayerManager::GetCurrentPlayerState() const
@@ -115,42 +118,54 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 void USI_PlayerManager::InitializeDelegates()
 {
 	Super::InitializeDelegates();
-	
-	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
-	ObservationStateDelegate.BindUObject(this, &ThisClass::SetupObservationState);
-	MenuStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
-	MediaStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
+
 	DialogueStateDelegate.BindUObject(this, &ThisClass::SetupDialogueState);
-	InterrogationStateDelegate.BindUObject(this, &ThisClass::SetupInterrogationState);
+	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
+	GizboActionsStateDelegate.BindUObject(this, &ThisClass::SetupGizboActionsState);
 	InactiveStateDelegate.BindUObject(this, &ThisClass::SetupInactiveState);
+	InterrogationStateDelegate.BindUObject(this, &ThisClass::SetupInterrogationState);
+	MediaStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
+	MenuStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
+	ObservationStateDelegate.BindUObject(this, &ThisClass::SetupObservationState);
+	
 }
 
 void USI_PlayerManager::InitializeDelegateMaps()
 {
 	Super::InitializeDelegateMaps();
 
-	PlayerDelegateContainer.Add(SITag_Player_State_Exploration, ExplorationStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Menu, MenuStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Dialogue, DialogueStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_Interrogation, InterrogationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Exploration, ExplorationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_GizboActions, GizboActionsStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Inactive, InactiveStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Interrogation, InterrogationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Menu, MenuStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
+	
+}
+
+void USI_PlayerManager::SetupDialogueState()
+{
 }
 
 void USI_PlayerManager::SetupExplorationState()
 {
+	USI_LevelManager* SILevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
+	if (!IsValid(SILevelManager)){return;}
+	if (SILevelManager->GetCurrentMap()->MapType == SITag_Map_Type_Interior)
+	{
+		SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_InDoor, SITag_Camera_Mode);
+		return;
+	}
+	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_OutDoor, SITag_Camera_Mode);
 }
 
-void USI_PlayerManager::SetupObservationState()
+void USI_PlayerManager::SetupGizboActionsState()
 {
 }
 
-void USI_PlayerManager::SetupMenuState()
-{
-}
-
-void USI_PlayerManager::SetupDialogueState()
+void USI_PlayerManager::SetupInactiveState()
 {
 }
 
@@ -158,6 +173,11 @@ void USI_PlayerManager::SetupInterrogationState()
 {
 }
 
-void USI_PlayerManager::SetupInactiveState()
+void USI_PlayerManager::SetupMenuState()
 {
+}
+
+void USI_PlayerManager::SetupObservationState()
+{
+	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_Observation, SITag_Camera_Mode);
 }

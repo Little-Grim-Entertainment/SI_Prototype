@@ -47,7 +47,7 @@ void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Audio_Music)) {return;}
 
 	Super::OnGameplayTagAdded(InAddedTag);
-
+	
 	if(InAddedTag == SITag_Audio_Music_Pause)
 	{
 		PauseMusicWithFade();
@@ -65,47 +65,6 @@ void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		ResumeMusicWithFade();
 	}
 }
-
-/*void USI_MusicManager::OnPlayerModeChanged(EPlayerMode NewPlayerMode, EPlayerMode InPreviousPlayerMode)
-{
-	Super::OnPlayerModeChanged(NewPlayerMode, InPreviousPlayerMode);
-	
-	switch (NewPlayerMode)
-	{
-		case EPlayerMode::PM_CinematicMode:
-		{
-			if(!bMusicIsPaused)
-			{
-				PauseMusicWithFade();
-			}
-			break;	
-		}
-		case EPlayerMode::PM_VideoMode:
-		{
-			if(!bMusicIsPaused)
-			{
-				PauseMusicWithFade();
-			}
-			break;
-		}
-		case EPlayerMode::PM_TitleCardMode:
-		{
-			if(!bMusicIsPaused)
-			{
-				PauseMusicWithFade();
-			}
-			break;
-		}
-		default:
-		{
-			if(bMusicIsPaused)
-			{
-				ResumeMusicWithFade();
-			}
-			break;
-		}
-	}
-}*/
 
 UAudioComponent* USI_MusicManager::PlayLoadedLevelBackgroundMusic()
 {
@@ -150,9 +109,11 @@ UAudioComponent* USI_MusicManager::PlayBackgroundMusic(FSI_MusicSettings InMusic
 		{
 			BackgroundMusic->Play();
 		}
+				
 		OnBackgroundMusicStarted.Broadcast();
 		bMusicIsPlaying = true;
 		bMusicIsPaused = false;
+		
 		return BackgroundMusic;
 	}
 	return nullptr;

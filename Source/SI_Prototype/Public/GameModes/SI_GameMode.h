@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTags.h"
 #include "GameFramework/GameMode.h"
 #include "SI_GameMode.generated.h"
 
+class USI_GameplayAbility;
 class USI_CaseList;
 class USI_MoviePlayerWidget;
 class USI_GameInstance;
@@ -69,6 +71,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
 	void RestartNickSpawn();
 
+	USI_GameplayAbility* GetGameplayAbility(FGameplayTag InAbilityTag);
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -81,4 +85,6 @@ private:
 	USI_LevelManager* LevelManager;
 	UPROPERTY()
 	USI_GameInstance* GameInstance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (Categories = "Ability", AllowPrivateAccess = "true"))
+	TMap<FGameplayTag, TSubclassOf<USI_GameplayAbility>> GameplayAbilities;
 };

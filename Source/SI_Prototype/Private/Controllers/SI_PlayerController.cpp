@@ -12,10 +12,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
-#include "Actors/SI_MoveToIndicator.h"
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_GizboManager.h"
 #include "Media/SI_MediaManager.h"
+#include "Actors/SI_InteractableActor.h"
 #include "Controllers/SI_GizboController.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Data/Media/SI_CinematicDataAsset.h"
@@ -30,6 +30,9 @@
 #include "SI_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
+#include "EngineUtils.h" // ActorIterator
+#include "Abilities/SI_GameplayAbility_Observation.h"
 
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -65,9 +68,10 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
+	//EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Ongoing, this, &ThisClass::RequestGizboFollowTemp);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToTemp); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboMoveToConfirm); 
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm); 
 	
 	// Axis Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
@@ -98,6 +102,8 @@ void ASI_PlayerController::BeginPlay()
 		RemoveInputMappingByTag(PlayerManager->GetPreviousPlayerState());
 	}
 
+	Nick = Cast<ASI_Nick>(GetCharacter());
+
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
 		GizboManager->Nick = Cast<ASI_Nick>(GetCharacter());
@@ -115,16 +121,16 @@ void ASI_PlayerController::Tick(float DeltaSeconds)
 		const FVector StartLocation = PlayerCameraManager->GetCameraLocation();
 		const FVector EndLocation = StartLocation + (PlayerCameraManager->GetCameraRotation().Vector() * 1000);
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility);
-		//debug line to show the line trace
-		DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 0.1f, 0, 1);
 
 		//if the line trace hits an object with the tag "SI_ObservationTarget" then set the observation target to that object
-		if(HitResult.GetActor() && HitResult.GetActor()->ActorHasTag(TEXT("Observable")))
+		if(HitResult.GetActor())
 		{
-			//print to screen the name of the object that is being observed
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Observing: %s"), *HitResult.GetActor()->GetName()));
+			ASI_InteractableActor* IActor = Cast<ASI_InteractableActor>(HitResult.GetActor());
+			if(IsValid(IActor) && IActor->AbilitySystemComponent->HasMatchingGameplayTag(SITag_Actor_Observable))
+			{
+				IActor->HighlightBeginTimer();
+			}
 		}
-		
 	}
 }
 
@@ -212,39 +218,21 @@ void ASI_PlayerController::RequestInteract()
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	/*bObservationMode = !bObservationMode;
-
-	USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
-
-	float CameraTransitionTime = 0.35f;
-
-	DisableInput(this);
+	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+	if(!IsValid(SITagManager)) {return;}
 	
-	if(bObservationMode)
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
 	{
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMin = -89;
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMax = 89;
-		Nick->SetActorRotation(FRotator(0., Nick->GetFollowCameraActor()->GetActorRotation().Yaw, 0));
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ObservationMode);
-		SetViewTargetWithBlend(Nick->GetObservationCameraActor(), CameraTransitionTime);
+		Nick->GetSIAbilitySystemComponent()->CancelAbility(Nick->GetSIAbilitySystemComponent()->GetGameplayAbilityFromTag(SITag_Ability_Observation));
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
+		Nick->HideMeshes(true);
 	}
 	else
 	{
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMin = -60;
-		Cast<ASI_PlayerCameraManager>(PlayerCameraManager)->ViewPitchMax = 20;
-		Nick->SetActorRotation(FRotator(0, Nick->GetActorRotation().Yaw, Nick->GetActorRotation().Roll));
-		SetControlRotation(FRotator(Nick->GetActorRotation()));
-		GameInstance->RequestNewPlayerMode(EPlayerMode::PM_ExplorationMode);
-		SetViewTargetWithBlend(Nick->GetFollowCameraActor(), CameraTransitionTime);
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Observation.GetTag().GetSingleTagContainer(), false);
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Observation, SITag_Player_State);
+		Nick->HideMeshes(false);
 	}
-	Nick->HideMeshes(!bObservationMode);
-
-	GetWorld()->GetTimerManager().SetTimer(CameraBlendHandle, this, &ASI_PlayerController::PostCameraBlend, CameraTransitionTime, false);*/
-
-	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-	SITagManager->AddNewGameplayTag(SITag_Player_State_Observation);
-	//Nick->GetATPCCamera()->SetCameraMode(SITag_Camera_Mode_Observation, false, false);
-	bObservationMode = !bObservationMode;
 }
 
 void ASI_PlayerController::RequestObserveObject()
@@ -270,8 +258,7 @@ void ASI_PlayerController::RequestSkipCinematic()
 		{
 			MediaManager->SkipMedia(MediaManager->GetLoadedCinematic());
 		}
-	}
-	
+	}	
 }
 
 void ASI_PlayerController::RequestNextDialogue()
@@ -332,41 +319,93 @@ void ASI_PlayerController::RequestGizboFollowTemp()
 	}
 }
 
-void ASI_PlayerController::RequestGizboMoveToTemp()
+void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: MoveTo")));
-	UE_LOG(LogSIAI, Log, TEXT("%s : AoS_PlayerController::RequestGizboMoveToTemp MoveTo Initiated"), *GetNameSafe(GetPawn()));
-
-	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	bAdaptableActionMode = !bAdaptableActionMode;
+	
+	if(bAdaptableActionMode)
 	{
-		ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
-		if(!IsValid(AOSCamera)) return;
-		
-		GizboManager->StartMoveTo(AOSCamera, GetPawn(), bMoveToMarker);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
+		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Initiated"), *GetNameSafe(GetPawn()));
+
+		InitializeGizboAdaptableAction();
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
+		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Cancelled"), *GetNameSafe(GetPawn()));
+
+		CancelGizboAdaptableAction();
 	}
 }
 
-void ASI_PlayerController::RequestGizboMoveToConfirm()
+void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
+	bAdaptableActionMode = false;
+	
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
 		//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
 		GizboManager->GetGizboController()->ToggleMoveTo();
 		GizboManager->CancelUpdateIndicatorPositionTimer();
+		GizboManager->HideMoveToIndicator();
 	}
+	CancelInteractableHighlight();
 }
 
-void ASI_PlayerController::RequestGizboMoveToCancel()
+void ASI_PlayerController::InitializeGizboAdaptableAction()
 {
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
-		GizboManager->GetGizboController()->ToggleMoveTo();		
+		ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
+		if(!IsValid(AOSCamera)) return;
+		
+		GizboManager->StartAdaptableAction(AOSCamera, GetPawn(), bMoveToMarker);
+	}
+	HighlightInteractables();
+}
+
+void ASI_PlayerController::CancelGizboAdaptableAction()
+{
+	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	{
+		GizboManager->CancelUpdateIndicatorPositionTimer();
+		GizboManager->HideMoveToIndicator();
+		GizboManager->GetGizboController()->ToggleWait();
+	}
+	CancelInteractableHighlight();
+}
+
+void ASI_PlayerController::HighlightInteractables()
+{
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		ASI_InteractableActor* HitInteractableActor = *ActorItr;
+		if(FVector::Distance(HitInteractableActor->GetActorLocation(), GetPawn()->GetActorLocation()) < 2000.0f)
+		{//TODO:: Convert distance to a int from MagicNumber
+			HitInteractableActor->HighlightMesh->SetVisibility(true);	
+		}
+		else
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
+		}
+	}
+}
+
+void ASI_PlayerController::CancelInteractableHighlight()
+{
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		if(ASI_InteractableActor* HitInteractableActor = *ActorItr)
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
+		}
 	}
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	InteractableActor = InInteractableActor;
+	InteractableActor = Cast<ASI_InteractableActor>(InInteractableActor);
 }
 
 void ASI_PlayerController::SetObservableActor(AActor* InObservableActor)

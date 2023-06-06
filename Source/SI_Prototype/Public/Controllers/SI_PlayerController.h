@@ -9,6 +9,7 @@
 #include "InputActionValue.h"
 #include "SI_PlayerController.generated.h"
 
+class ASI_InteractableActor;
 class ASI_MoveToIndicator;
 class USI_EnhancedInputComponent;
 class UMediaSoundComponent;
@@ -29,7 +30,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	AActor* InteractableActor;
+	ASI_InteractableActor* InteractableActor;
 	UPROPERTY()
 	AActor* ObservableActor;
 	UPROPERTY()
@@ -45,6 +46,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 protected:
 
 	bool bObservationMode = false;
+	bool bAdaptableActionMode = false; 
 	bool bMoveToMarker = false;
 	
 	float ObservationDistance = 1000.;
@@ -126,9 +128,13 @@ protected:
 
 	// Gizbo
 	void RequestGizboFollowTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboMoveToTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboMoveToConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboMoveToCancel(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void InitializeGizboAdaptableAction();
+	void CancelGizboAdaptableAction();
+	void HighlightInteractables();
+	void CancelInteractableHighlight();
+
 
 private:
 

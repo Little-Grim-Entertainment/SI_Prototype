@@ -33,11 +33,12 @@ public:
 	ASI_GizboController* GetGizboController();
 	UPROPERTY()
 	ASI_Nick* Nick;
-	void StartMoveTo(ASI_PlayerCameraManager* InCameraManager ,AActor* InPawn, bool& InbMarkerIsValid);
+	void StartAdaptableAction(ASI_PlayerCameraManager* InCameraManager ,AActor* InPawn, bool& InbMarkerIsValid);
 	void StartUpdateIndicatorPositionTimer();
 	void CancelUpdateIndicatorPositionTimer();
 	void UpdateMoveToIndicatorPosition() const;
 	ASI_MoveToIndicator* SpawnMoveToIndicator(FVector InHitLocation);
+	void HideMoveToIndicator();
 	UPROPERTY()
 	ASI_PlayerCameraManager* CameraManager;
 	UPROPERTY()
@@ -55,7 +56,7 @@ protected:
 private:
 
 	FTimerHandle IndicatorPositionTimerHandle;
-	float UpdateIndicatorDelay = 0.1f;
+	float UpdateIndicatorDelay = 0.001f;
 	UPROPERTY()
 	ASI_GizboController* GizboController;
 	UPROPERTY()
