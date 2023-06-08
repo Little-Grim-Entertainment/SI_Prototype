@@ -2,9 +2,8 @@
 
 
 #include "Abilities/Tasks/SI_AbilityTask_Observation.h"
-
 #include "SI_NativeGameplayTagLibrary.h"
-#include "Actors/SI_InteractableActor.h"
+#include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -28,6 +27,8 @@ void USI_AbilityTask_Observation::Activate()
 	Super::Activate();
 
 	PlayerController = OwningAbility->GetOwningActorFromActorInfo()->GetInstigatorController<APlayerController>();
+
+	Nick = Cast<ASI_Nick>(PlayerController->GetPawn());
 }
 
 void USI_AbilityTask_Observation::TickTask(float DeltaTime)
@@ -52,6 +53,15 @@ void USI_AbilityTask_Observation::StartLineTrace()
 		if(IsValid(IActor) && IActor->AbilitySystemComponent->HasMatchingGameplayTag(SITag_Actor_Observable))
 		{
 			IActor->HighlightBeginTimer();
+
+			if(Nick->GetCurrentInteractableActor() != IActor)
+			{
+				Nick->SetCurrentInteractableActor(IActor);
+			}
+		}
+		else
+		{
+			Nick->SetCurrentInteractableActor(nullptr);
 		}
 	}
 }

@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
 #include "SI_GameplayAbility.generated.h"
-
 /**
  * 
  */
@@ -13,4 +12,6 @@ UCLASS()
 class SI_PROTOTYPE_API USI_GameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+
+	//ASI_Nick* Nick;
 };

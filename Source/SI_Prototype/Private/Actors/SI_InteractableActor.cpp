@@ -55,17 +55,21 @@ void ASI_InteractableActor::BeginPlay()
 		InteractableComponent->OnPlayerBeginOverlap.AddDynamic(this, &ThisClass::OnBeginOverlap);
 		InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);	
 	}
+
+	if (IsValid(AbilitySystemComponent))
+	{
+		AbilitySystemComponent->AddLooseGameplayTag(SITag_Actor_Interactable);
+		
+		if(bIsObservable)
+		{
+			AbilitySystemComponent->AddLooseGameplayTag(SITag_Actor_Observable);
+		}
+	}
 }
 
 void ASI_InteractableActor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	if (IsValid(AbilitySystemComponent))
-	{
-		AbilitySystemComponent->AddLooseGameplayTag(SITag_Actor_Interactable);
-		AbilitySystemComponent->AddLooseGameplayTag(SITag_Actor_Observable);
-	}
 }
 
 // Called every frame

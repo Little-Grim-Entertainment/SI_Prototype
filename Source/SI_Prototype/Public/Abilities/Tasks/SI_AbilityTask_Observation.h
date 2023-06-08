@@ -6,9 +6,8 @@
 #include "SI_AbilityTask.h"
 #include "SI_AbilityTask_Observation.generated.h"
 
-/**
- * 
- */
+class ASI_Nick;
+
 UCLASS()
 class SI_PROTOTYPE_API USI_AbilityTask_Observation : public USI_AbilityTask
 {
@@ -26,5 +25,6 @@ public:
 private:
 	UGameplayAbility* OwningAbility;
 	APlayerController* PlayerController;
+	ASI_Nick* Nick;
 	void StartLineTrace();
 };

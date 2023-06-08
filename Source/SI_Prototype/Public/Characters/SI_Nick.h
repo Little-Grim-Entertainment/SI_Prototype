@@ -7,6 +7,7 @@
 #include "SI_Types.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/SI_GameplayAbility.h"
+#include "Actors/SI_InteractableActor.h"
 #include "SI_Nick.generated.h"
 
 class USI_AbilitySystemComponent;
@@ -50,6 +51,8 @@ private:
 	
 	UPROPERTY()
 	USI_LevelManager* LevelManager;
+
+	ASI_InteractableActor* CurrentInteractableActor;
 		
 	// ================== FUNCTIONS ==================
 
@@ -71,12 +74,15 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return NickFollowCamera; }
 	/** Returns PerceptionStimuliSourceComponent SubObject **/
 	FORCEINLINE USI_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
+	
 
 	/** Turn off visibility of Nick's meshes **/
 	void HideMeshes(bool Value);
 
 	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
 	void GiveAbilities();
+	ASI_InteractableActor* GetCurrentInteractableActor() { return CurrentInteractableActor; }
+	void SetCurrentInteractableActor(ASI_InteractableActor* InInteractableActor) { CurrentInteractableActor = InInteractableActor; }
 	
 protected:
 
