@@ -36,7 +36,7 @@ public:
 	UWidgetComponent* InteractionPrompt;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
 	USI_AbilitySystemComponent* AbilitySystemComponent;
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
+	UPROPERTY(EditAnywhere, Category = "Abilities")
 	bool bIsObservable = false;
 
 

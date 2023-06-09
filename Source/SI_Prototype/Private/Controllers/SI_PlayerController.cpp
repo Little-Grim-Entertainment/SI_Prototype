@@ -186,14 +186,10 @@ void ASI_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue
 void ASI_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {return;}
-	
-	if(InteractableActor)
+
+	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false))
 	{
-		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(InteractableActor))
-		{
-			InterfaceActor->Execute_OnInteract(InteractableActor, InteractableActor);
-			OnInteractPressed.Broadcast(InteractableActor, this);
-		}
+		OnInteractPressed.Broadcast(InteractableActor, this);
 	}
 }
 
@@ -218,15 +214,9 @@ void ASI_PlayerController::RequestToggleObservation()
 
 void ASI_PlayerController::RequestObserveObject()
 {
-	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-	if(!IsValid(SITagManager)) {return;}
-	
-	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
+	if (Nick->GetCurrentInteractableActor() != nullptr)
 	{
-		if (Nick->GetCurrentInteractableActor() != nullptr)
-		{
-			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
-		}
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_ObserveObject.GetTag().GetSingleTagContainer(), false);
 	}
 }
 
@@ -389,7 +379,12 @@ void ASI_PlayerController::CancelInteractableHighlight()
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	InteractableActor = Cast<ASI_InteractableActor>(InInteractableActor);
+	InteractableActor = InInteractableActor;
+}
+
+AActor* ASI_PlayerController::GetInteractableActor()
+{
+	return InteractableActor;
 }
 
 void ASI_PlayerController::SetObservableActor(AActor* InObservableActor)
