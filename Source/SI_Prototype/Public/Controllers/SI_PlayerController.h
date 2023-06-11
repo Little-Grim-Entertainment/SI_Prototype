@@ -127,11 +127,12 @@ protected:
 	void RequestToggleSystemMenu();
 
 	// Gizbo
-	void RequestGizboFollowTemp(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestToggleGizboActions();
+	void RequestToggleGizboFollow(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void InitializeGizboAdaptableAction();
-	void CancelGizboAdaptableAction();
+	void CancelGizboAdaptableAction();	
 	void HighlightInteractables();
 	void CancelInteractableHighlight();
 

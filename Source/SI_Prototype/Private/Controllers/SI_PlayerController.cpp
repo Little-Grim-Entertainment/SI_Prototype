@@ -58,8 +58,14 @@ void ASI_PlayerController::SetupInputComponent()
 
 	const USI_InputConfig* InputConfig = EnhancedInputComponent->GetInputConfig();
 	if (!IsValid(InputConfig)) {return;}
-	
+
 	// Axis Bindings
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveRight,  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
+	
+	// Nick Action Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
@@ -68,17 +74,16 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
-	//EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Ongoing, this, &ThisClass::RequestGizboFollowTemp);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
+
+	// Gizbo Commands Bindings
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_ControlsToggle, ETriggerEvent::Ongoing, this, &ThisClass::RequestToggleGizboActions);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboFollow); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm); 
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
+
+	// Gadget Bindings
 	
-	// Axis Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveRight,  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
-}
+	}
 
 void ASI_PlayerController::BeginPlay()
 {
@@ -295,7 +300,23 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 	}
 }
 
-void ASI_PlayerController::RequestGizboFollowTemp()
+void ASI_PlayerController::RequestToggleGizboActions()
+{
+	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+	if(!IsValid(SITagManager)) {return;}
+
+	if(SITagManager->HasGameplayTag(SITag_Player_State_GizboActions))
+	{
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
+	}
+	else
+	{
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_GizboActions, SITag_Player_State);
+	}
+	
+}
+
+void ASI_PlayerController::RequestToggleGizboFollow()
 {
 	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{

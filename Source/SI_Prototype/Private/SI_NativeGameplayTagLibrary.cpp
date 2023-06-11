@@ -39,6 +39,8 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Next, "Input.Action.Dialogue.Next")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Previous, "Input.Action.Dialogue.Previous")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Exit, "Input.Action.Dialogue.Exit")
+
+	// Gizbo Commands
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_ControlsToggle, "Input.Action.Gizbo.ControlsToggle")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_Follow, "Input.Action.Gizbo.Follow")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MoveTo, "Input.Action.Gizbo.MoveTo")
@@ -48,7 +50,8 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Cinematic, "Media.Cinematic")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Video, "Media.Video")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_TitleCard, "Media.TitleCard")
-	
+
+	// Player State
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player, "Player")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State, "Player.State")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Dialogue, "Player.State.Dialogue")
