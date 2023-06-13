@@ -46,6 +46,15 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MoveTo, "Input.Action.Gizbo.MoveTo")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MoveToConfirm, "Input.Action.Gizbo.MoveToConfirm")
 
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindOne, "Input.Action.Gadget.QuickbindOne");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindTwo, "Input.Action.Gadget.QuickbindTwo");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindThree, "Input.Action.Gadget.QuickbindThree");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindFour, "Input.Action.Gadget.QuickbindFour");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindFive, "Input.Action.Gadget.QuickbindFive");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindSix, "Input.Action.Gadget.QuickbindSix");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindSeven, "Input.Action.Gadget.QuickbindSeven");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindEight, "Input.Action.Gadget.QuickbindEight");
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media, "Media")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Cinematic, "Media.Cinematic")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Video, "Media.Video")

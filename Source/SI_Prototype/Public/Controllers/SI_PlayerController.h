@@ -73,9 +73,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	USI_EnhancedInputComponent* EnhancedInputSettings;
 	
-	
 	FOnInteractableActorAdded OnInteractableActorAdded;
 	FOnInteractableActorRemoved OnInteractableActorRemoved;
+
 
 	UPROPERTY(BlueprintAssignable, Category = "PlayerCamera")
 	FOnCameraSetup OnCameraSetup;
@@ -136,6 +136,16 @@ protected:
 	void HighlightInteractables();
 	void CancelInteractableHighlight();
 
+	//ConstructGadget
+	void ConstructGadget(uint8 InGadgetIndex);
+	void RequestQuickbindGadgetOne();
+	void RequestQuickbindGadgetTwo();
+	void RequestQuickbindGadgetThree();
+	void RequestQuickbindGadgetFour();
+	void RequestQuickbindGadgetFive();
+	void RequestQuickbindGadgetSix();
+	void RequestQuickbindGadgetSeven();
+	void RequestQuickbindGadgetEight();
 
 private:
 

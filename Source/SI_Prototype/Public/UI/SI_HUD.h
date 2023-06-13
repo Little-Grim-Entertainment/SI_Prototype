@@ -26,6 +26,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	USI_UserWidget* GetReticle() const;
+
+	//Using this to display the button mappings temporarily
+	UFUNCTION(BlueprintCallable)
+	USI_UserWidget* GetButtonMappings() const;
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void OnObjectiveComplete(USI_ObjectiveData* CompletedObjective);
