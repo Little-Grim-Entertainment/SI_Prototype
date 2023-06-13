@@ -35,7 +35,6 @@ private:
 
 	void SetupDialogueState();
 	void SetupExplorationState();
-	void SetupGizboActionsState();
 	void SetupInactiveState();	
 	void SetupInterrogationState();
 	void SetupMenuState();
@@ -52,7 +51,6 @@ private:
 
 	FSimpleDelegate DialogueStateDelegate;
 	FSimpleDelegate ExplorationStateDelegate;
-	FSimpleDelegate GizboActionsStateDelegate;
 	FSimpleDelegate InactiveStateDelegate;
 	FSimpleDelegate InterrogationStateDelegate;
 	FSimpleDelegate MediaStateDelegate;

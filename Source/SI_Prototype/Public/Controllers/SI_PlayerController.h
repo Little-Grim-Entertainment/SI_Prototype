@@ -138,14 +138,14 @@ protected:
 
 	//ConstructGadget
 	void ConstructGadget(uint8 InGadgetIndex);
-	void RequestQuickbindGadgetOne();
-	void RequestQuickbindGadgetTwo();
-	void RequestQuickbindGadgetThree();
-	void RequestQuickbindGadgetFour();
-	void RequestQuickbindGadgetFive();
-	void RequestQuickbindGadgetSix();
-	void RequestQuickbindGadgetSeven();
-	void RequestQuickbindGadgetEight();
+	void RequestGadgetNickOne();
+	void RequestGadgetNickTwo();
+	void RequestGadgetNickThree();
+	void RequestGadgetNickFour();
+	void RequestGadgetGizboOne();
+	void RequestGadgetGizboTwo();
+	void RequestGadgetGizboThree();
+	void RequestGadgetGizboFour();
 
 private:
 

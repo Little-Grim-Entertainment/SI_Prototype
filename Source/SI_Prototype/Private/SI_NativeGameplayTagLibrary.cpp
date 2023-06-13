@@ -46,14 +46,14 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MoveTo, "Input.Action.Gizbo.MoveTo")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MoveToConfirm, "Input.Action.Gizbo.MoveToConfirm")
 
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindOne, "Input.Action.Gadget.QuickbindOne");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindTwo, "Input.Action.Gadget.QuickbindTwo");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindThree, "Input.Action.Gadget.QuickbindThree");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindFour, "Input.Action.Gadget.QuickbindFour");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindFive, "Input.Action.Gadget.QuickbindFive");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindSix, "Input.Action.Gadget.QuickbindSix");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindSeven, "Input.Action.Gadget.QuickbindSeven");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_QuickbindEight, "Input.Action.Gadget.QuickbindEight");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickOne, "Input.Action.Gadget.NickOne");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickTwo, "Input.Action.Gadget.NickTwo");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickThree, "Input.Action.Gadget.NickThree");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickFour, "Input.Action.Gadget.NickFour");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboOne, "Input.Action.Gadget.GizboOne");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboTwo, "Input.Action.Gadget.GizboTwo");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboThree, "Input.Action.Gadget.GizboThree");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboFour, "Input.Action.Gadget.GizboFour");
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media, "Media")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Cinematic, "Media.Cinematic")
@@ -65,7 +65,6 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State, "Player.State")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Dialogue, "Player.State.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Exploration, "Player.State.Exploration")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_GizboActions, "Player.State.GizboActions")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Inactive, "Player.State.Inactive")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Interrogation, "Player.State.Interrogation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Menu, "Player.State.Menu")

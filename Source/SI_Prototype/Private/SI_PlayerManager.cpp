@@ -121,7 +121,6 @@ void USI_PlayerManager::InitializeDelegates()
 
 	DialogueStateDelegate.BindUObject(this, &ThisClass::SetupDialogueState);
 	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
-	GizboActionsStateDelegate.BindUObject(this, &ThisClass::SetupGizboActionsState);
 	InactiveStateDelegate.BindUObject(this, &ThisClass::SetupInactiveState);
 	InterrogationStateDelegate.BindUObject(this, &ThisClass::SetupInterrogationState);
 	MediaStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
@@ -136,7 +135,6 @@ void USI_PlayerManager::InitializeDelegateMaps()
 
 	PlayerDelegateContainer.Add(SITag_Player_State_Dialogue, DialogueStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Exploration, ExplorationStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_GizboActions, GizboActionsStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Inactive, InactiveStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Interrogation, InterrogationStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
@@ -159,10 +157,6 @@ void USI_PlayerManager::SetupExplorationState()
 		return;
 	}
 	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_OutDoor, SITag_Camera_Mode);
-}
-
-void USI_PlayerManager::SetupGizboActionsState()
-{
 }
 
 void USI_PlayerManager::SetupInactiveState()

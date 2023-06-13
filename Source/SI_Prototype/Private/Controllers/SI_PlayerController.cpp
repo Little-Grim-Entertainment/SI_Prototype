@@ -82,14 +82,14 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
 
 	// Gadget Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindOne, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetOne);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindTwo, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetTwo);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindThree, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetThree);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindFour, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetFour);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindFive, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetFive);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindSix, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetSix);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindSeven, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetSeven);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_QuickbindEight, ETriggerEvent::Started, this, &ThisClass::RequestQuickbindGadgetEight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_NickOne, ETriggerEvent::Started, this, &ThisClass::RequestGadgetNickOne);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_NickTwo, ETriggerEvent::Started, this, &ThisClass::RequestGadgetNickTwo);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_NickThree, ETriggerEvent::Started, this, &ThisClass::RequestGadgetNickThree);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_NickFour, ETriggerEvent::Started, this, &ThisClass::RequestGadgetNickFour);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_GizboOne, ETriggerEvent::Started, this, &ThisClass::RequestGadgetGizboOne);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_GizboTwo, ETriggerEvent::Started, this, &ThisClass::RequestGadgetGizboTwo);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_GizboThree, ETriggerEvent::Started, this, &ThisClass::RequestGadgetGizboThree);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_GizboFour, ETriggerEvent::Started, this, &ThisClass::RequestGadgetGizboFour);
 	}
 
 void ASI_PlayerController::BeginPlay()
@@ -310,18 +310,7 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 void ASI_PlayerController::RequestToggleGizboActions()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestToggleGizboActions");
-	
-	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-	if(!IsValid(SITagManager)) {return;}
 
-	if(SITagManager->HasGameplayTag(SITag_Player_State_GizboActions))
-	{
-		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
-	}
-	else
-	{
-		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_GizboActions, SITag_Player_State);
-	}	
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
@@ -418,54 +407,52 @@ void ASI_PlayerController::CancelInteractableHighlight()
 
 void ASI_PlayerController::ConstructGadget(uint8 InGadgetIndex)
 {
-
-
 	
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetOne()
+void ASI_PlayerController::RequestGadgetNickOne()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetOne");
 	ConstructGadget(1);
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetTwo()
+void ASI_PlayerController::RequestGadgetNickTwo()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetTwo");
 	ConstructGadget(2);
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetThree()
+void ASI_PlayerController::RequestGadgetNickThree()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetThree");
 	ConstructGadget(3);
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetFour()
+void ASI_PlayerController::RequestGadgetNickFour()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetFour");
 	ConstructGadget(4);
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetFive()
+void ASI_PlayerController::RequestGadgetGizboOne()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetFive");
 	ConstructGadget(5);
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetSix()
+void ASI_PlayerController::RequestGadgetGizboTwo()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetSix");
 	ConstructGadget(6);
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetSeven()
+void ASI_PlayerController::RequestGadgetGizboThree()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetSeven");
 	ConstructGadget(7);
 }
 
-void ASI_PlayerController::RequestQuickbindGadgetEight()
+void ASI_PlayerController::RequestGadgetGizboFour()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetEight");
 	ConstructGadget(8);
