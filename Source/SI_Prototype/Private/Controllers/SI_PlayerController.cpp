@@ -310,7 +310,6 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 void ASI_PlayerController::RequestToggleGizboActions()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestToggleGizboActions");
-
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
@@ -405,57 +404,47 @@ void ASI_PlayerController::CancelInteractableHighlight()
 	}
 }
 
-void ASI_PlayerController::ConstructGadget(uint8 InGadgetIndex)
-{
-	
-}
-
 void ASI_PlayerController::RequestGadgetNickOne()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetOne");
-	ConstructGadget(1);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestNickGadgetOne");
+
+	//Collect Gadget GameplayTag from Quickbind Widget
+	
 }
 
 void ASI_PlayerController::RequestGadgetNickTwo()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetTwo");
-	ConstructGadget(2);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestNickGadgetTwo");
 }
 
 void ASI_PlayerController::RequestGadgetNickThree()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetThree");
-	ConstructGadget(3);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestNickGadgetThree");
 }
 
 void ASI_PlayerController::RequestGadgetNickFour()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetFour");
-	ConstructGadget(4);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestNickGadgetFour");
 }
 
 void ASI_PlayerController::RequestGadgetGizboOne()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetFive");
-	ConstructGadget(5);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestGizboGadgetOne");
 }
 
 void ASI_PlayerController::RequestGadgetGizboTwo()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetSix");
-	ConstructGadget(6);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestGizboGadgetTwo");
 }
 
 void ASI_PlayerController::RequestGadgetGizboThree()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetSeven");
-	ConstructGadget(7);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestGizboGadgetThree");
 }
 
 void ASI_PlayerController::RequestGadgetGizboFour()
 {
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestQuickbindGadgetEight");
-	ConstructGadget(8);
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestGizboGadgetFour");
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)

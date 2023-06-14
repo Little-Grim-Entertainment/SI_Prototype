@@ -3,7 +3,7 @@
 
 #include "Characters/SI_Gizbo.h"
 
-#include "AssetTypeCategories.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Actors/SI_InteractableActor.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 
@@ -13,6 +13,8 @@ ASI_Gizbo::ASI_Gizbo()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
+
+	AbilitySystemComponent = CreateDefaultSubobject<USI_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	
 	//Picked up object Dampening;
 	AdjustedDampening = 1000.0f;
@@ -35,6 +37,62 @@ void ASI_Gizbo::Tick(float DeltaTime)
 		//Move object to Grab location and change its linear dampening
 	//	HeldItemPosition();
 	}	
+}
+
+void ASI_Gizbo::ConstructGadget(bool InbGiveToNick)
+{
+	//Check is in world
+	//If false SpawnActor
+
+		//If true 
+		//check is hidden in game
+		//if true
+		//teleport to socket location
+		//set hidden in game false
+		//play construct animation
+
+	if(InbGiveToNick)
+	{
+		//MoveToNick
+		//SwapItemsWithNick
+	}
+	else
+	{
+		//Swap with Gizbo equipped gadget
+	}
+
+	//If already exists
+	//check if Gizbo has it.
+	if(InbGiveToNick)
+	{
+		//MoveToNick
+		//SwapItemsWithNick
+	}
+	else if (!InbGiveToNick)//nick has and Gizbo Needs wants
+	{
+		//MoveToNick
+		//SwapItemsWithNick
+	}
+	else
+	{
+		//Deconstruct
+		//SetHiddenInGame True
+	}
+}
+
+USI_AbilitySystemComponent* ASI_Gizbo::GetSIAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+void ASI_Gizbo::GiveAbilities()
+{
+	if (!IsValid(AbilitySystemComponent)) {return;}
+
+	for (TSubclassOf<USI_GameplayAbility>& Ability : DefaultAbilities)
+	{
+		AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
+	}
 }
 
 void ASI_Gizbo::HeldItemPosition()

@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Characters/SI_NPC_Interactable.h"
+#include "Abilities/SI_GameplayAbility.h"
 #include "SI_Gizbo.generated.h"
 
 class UPhysicsHandleComponent;
+class USI_AbilitySystemComponent;
 
 /**
  * 
@@ -46,4 +48,12 @@ public:
 	AActor* HeldActor;
 	FRotator CarriedObjectRotation;
 	FName PickupSocket = TEXT("Socket_Chest");
+
+	void ConstructGadget(bool InbGiveToNick);
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
+	USI_AbilitySystemComponent* AbilitySystemComponent;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Abilities)
+	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
+	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
+	void GiveAbilities();
 };

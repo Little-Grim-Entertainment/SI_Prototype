@@ -137,7 +137,6 @@ protected:
 	void CancelInteractableHighlight();
 
 	//ConstructGadget
-	void ConstructGadget(uint8 InGadgetIndex);
 	void RequestGadgetNickOne();
 	void RequestGadgetNickTwo();
 	void RequestGadgetNickThree();

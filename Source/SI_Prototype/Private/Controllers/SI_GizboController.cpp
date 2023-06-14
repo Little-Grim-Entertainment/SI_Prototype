@@ -17,8 +17,7 @@ ASI_GizboController::ASI_GizboController() : ASI_NPCController_Interactable()
 
 void ASI_GizboController::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 void ASI_GizboController::OnPossess(APawn* InPawn)
