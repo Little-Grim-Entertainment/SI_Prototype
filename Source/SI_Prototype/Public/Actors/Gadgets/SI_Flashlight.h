@@ -6,9 +6,10 @@
 #include "SI_BaseGadget.h"
 #include "SI_Flashlight.generated.h"
 
-/**
- * 
- */
+
+class USpotLightComponent;
+
+
 UCLASS()
 class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 {
@@ -17,13 +18,26 @@ class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 	ASI_Flashlight();
 
 public:	
-	virtual void OnInteract_Implementation(AActor* Caller) override;
-	//VARIABLE DECLARATIONS
-	// Spotlight myFlashlight;
-
+	
+	
 private:
-	// bool bFlashlightOn;
-	// int SegmentsPlaced;
-	// int MaxPlaceableSegments
+
+	/*UPROPERTY(EditAnywhere, Category = Mesh)
+	UStaticMeshComponent* FlashlightMesh;*/
+	
+	UPROPERTY(EditAnywhere, Category = Spotlight)
+	USpotLightComponent* Spotlight;
+	
+	/*UPROPERTY(EditAnywhere, Category = Spotlight)
+	float LightBrightness;
+
+	UPROPERTY(EditAnywhere, Category = Spotlight)
+	bool bFlashlightOn;
+
+	UPROPERTY(EditAnywhere, Category = SectionalPieces)
+	int SegmentsPlaced;
+	
+	UPROPERTY(EditAnywhere, Category = SectionalPieces)
+	int MaxPlaceableSegments;*/
 	
 };

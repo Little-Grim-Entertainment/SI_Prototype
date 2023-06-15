@@ -2,19 +2,15 @@
 
 
 #include "Actors/Gadgets/SI_Flashlight.h"
+#include "Components/SpotLightComponent.h"
+
 
 ASI_Flashlight::ASI_Flashlight()
 {
 	//*** CONSTRUCTOR
+	Spotlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Flashlight Spotlight"));
+	Spotlight->SetupAttachment(RootComponent);
 	// bFlashlightOn = false;
-}
-
-void ASI_Flashlight::OnInteract_Implementation(AActor* Caller)
-{
-	Super::OnInteract_Implementation(Caller);
-
-	// Attach to nick/ gizbo socket (socket name shared)
-	// CreateGramaphoneMenu();
 }
 
 

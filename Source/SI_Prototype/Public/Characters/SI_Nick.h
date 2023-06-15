@@ -8,6 +8,7 @@
 #include "AbilitySystemInterface.h"
 #include "Abilities/SI_GameplayAbility.h"
 #include "Actors/SI_InteractableActor.h"
+#include "Actors/Gadgets/SI_Flashlight.h"
 #include "SI_Nick.generated.h"
 
 class USI_AbilitySystemComponent;
@@ -21,6 +22,9 @@ class USI_AIPerceptionStimuliSource;
 class USI_LevelManager;
 class USI_MapData;
 
+// ****************  TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
+class ASI_Flashlight;
+
 UCLASS()
 class SI_PROTOTYPE_API ASI_Nick : public ASI_Character, public IAbilitySystemInterface
 {
@@ -28,6 +32,16 @@ class SI_PROTOTYPE_API ASI_Nick : public ASI_Character, public IAbilitySystemInt
 	
 public:
 
+	// ****************  TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
+	// *** Need to understand TSubclassOf properly
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASI_Flashlight> FlashlightClass = ASI_Flashlight::StaticClass();
+
+	UPROPERTY(EditAnywhere)
+	ASI_Flashlight* Flashlight;
+	
+
+	
 	ASI_Nick();
 
 	// ================== VARIABLES ==================

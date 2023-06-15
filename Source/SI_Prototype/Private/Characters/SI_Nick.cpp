@@ -15,8 +15,12 @@
 #include "Data/Maps/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
 
+// ******************* TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
+#include "Actors/Gadgets/SI_Flashlight.h"
+#include "Engine/SkeletalMeshSocket.h"
+
 ASI_Nick::ASI_Nick()
-{
+{	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
@@ -106,6 +110,30 @@ void ASI_Nick::BeginPlay()
 	}
 
 	GiveAbilities();
+
+
+	// ****************** TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED		
+	// Spawn Flashlight at world 0
+	if (FlashlightClass)
+	{
+		UWorld* CurrentWorld = GetWorld();
+		
+		if (CurrentWorld)
+		{
+			FTransform const FlashlightTransform = GetActorTransform();
+			Flashlight = CurrentWorld->SpawnActor<ASI_Flashlight>(FlashlightClass, FlashlightTransform);
+			if (IsValid(Flashlight))
+			{								
+				Flashlight->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("gadget_socket"));
+				
+			}
+			else
+			{
+			
+			}
+		}		
+	}
+	
 }
 
 
