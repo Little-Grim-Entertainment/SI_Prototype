@@ -18,7 +18,7 @@ class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 	ASI_Flashlight();
 
 public:	
-	
+	void UsePrimary();
 	
 private:
 
@@ -28,16 +28,17 @@ private:
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	USpotLightComponent* Spotlight;
 	
-	/*UPROPERTY(EditAnywhere, Category = Spotlight)
-	float LightBrightness;
+	//UPROPERTY(EditAnywhere, Category = Spotlight)
+	//float LightBrightness;
 
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	bool bFlashlightOn;
 
-	UPROPERTY(EditAnywhere, Category = SectionalPieces)
+	/*UPROPERTY(EditAnywhere, Category = SectionalPieces)
 	int SegmentsPlaced;
 	
 	UPROPERTY(EditAnywhere, Category = SectionalPieces)
-	int MaxPlaceableSegments;*/
+	int MaxPlaceableSegments;#1#*/
+
 	
 };

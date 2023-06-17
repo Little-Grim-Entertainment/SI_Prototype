@@ -125,7 +125,9 @@ protected:
 	void RequestPreviousDialogue();
 	void RequestExitDialogue();
 	void RequestToggleSystemMenu();
-
+	void RequestUseGadget();
+	void RequestUseGadgetSecondary();
+	
 	// Gizbo
 	void RequestToggleGizboActions();
 	void RequestToggleGizboFollow(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
@@ -135,6 +137,8 @@ protected:
 	void CancelGizboAdaptableAction();	
 	void HighlightInteractables();
 	void CancelInteractableHighlight();
+	void RequestGizboUseGadget();
+	void RequestGizboUseGadgetSecondary();
 
 	//ConstructGadget
 	void RequestGadgetNickOne();

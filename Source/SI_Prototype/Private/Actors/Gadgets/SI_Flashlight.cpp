@@ -10,7 +10,20 @@ ASI_Flashlight::ASI_Flashlight()
 	//*** CONSTRUCTOR
 	Spotlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Flashlight Spotlight"));
 	Spotlight->SetupAttachment(RootComponent);
-	// bFlashlightOn = false;
+	bFlashlightOn = false;
+}
+
+void ASI_Flashlight::UsePrimary()
+{
+	if (bFlashlightOn)
+	{
+		Spotlight->SetHiddenInGame(true);
+	}
+	else
+	{
+		Spotlight->SetHiddenInGame(false);
+	}
+	bFlashlightOn = !bFlashlightOn;
 }
 
 

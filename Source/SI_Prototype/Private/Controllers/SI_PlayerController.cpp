@@ -34,6 +34,9 @@
 #include "EngineUtils.h" // ActorIterator
 #include "Abilities/SI_GameplayAbility_Observation.h"
 
+// todo: delete when gadget system implemented
+#include "Actors/Gadgets/SI_Flashlight.h"
+
 
 using namespace SI_NativeGameplayTagLibrary;
 
@@ -74,12 +77,18 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
+	
+	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadget);
+	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
+	
 
 	// Gizbo Commands Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_ControlsToggle, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboActions);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboFollow); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadget);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetSecondary);
 
 	// Gadget Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gadget_NickOne, ETriggerEvent::Started, this, &ThisClass::RequestGadgetNickOne);
@@ -307,6 +316,26 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 	}
 }
 
+void ASI_PlayerController::RequestUseGadget()
+{
+	// todo: Delete when gadget system implemented
+	TArray<AActor*> AttachedFlashlights;
+	Nick->GetAttachedActors(AttachedFlashlights, true, false);
+
+	for (auto AttachedFlashlight : AttachedFlashlights)
+	{
+			ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
+			EquippedFlashlight->UsePrimary();			
+	}	
+}
+
+void ASI_PlayerController::RequestUseGadgetSecondary()
+{
+	
+}
+
+
+
 void ASI_PlayerController::RequestToggleGizboActions()
 {
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestToggleGizboActions");
@@ -402,6 +431,16 @@ void ASI_PlayerController::CancelInteractableHighlight()
 			HitInteractableActor->HighlightMesh->SetVisibility(false);
 		}
 	}
+}
+
+void ASI_PlayerController::RequestGizboUseGadget()
+{
+	// todo:
+}
+
+void ASI_PlayerController::RequestGizboUseGadgetSecondary()
+{
+	// todo:
 }
 
 void ASI_PlayerController::RequestGadgetNickOne()
