@@ -5,13 +5,18 @@
 
 namespace SI_NativeGameplayTagLibrary
 {
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Observation, "Ability.Observation")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Flashlight, "Ability.Construct.Flashlight");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Lockpicks, "Ability.Construct.Lockpicks");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct, "Ability.Gizbo.Construct");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Deconstruct, "Ability.Gizbo.Deconstruct");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact, "Ability.Interact")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Observation, "Ability.Observation")
+
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor, "Actor")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Observable, "Actor.Observable")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Interactable, "Actor.Interactable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Observable, "Actor.Observable")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio, "Audio")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music, "Audio.Music")
@@ -26,6 +31,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget, "Gadget")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_Flashlight, "Gadget.Flashlight")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_Lockpicks, "Gadget.Lockpicks")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_NONE, "Gadget.NONE")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Game, "Game")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Game_State, "Game.State")

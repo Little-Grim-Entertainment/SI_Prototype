@@ -3,10 +3,13 @@
 
 #include "Characters/SI_Gizbo.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "SI_NativeGameplayTagLibrary.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Actors/SI_InteractableActor.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 
+using namespace SI_NativeGameplayTagLibrary;
 
 ASI_Gizbo::ASI_Gizbo()
 {
@@ -34,55 +37,31 @@ void ASI_Gizbo::Tick(float DeltaTime)
 	//Does character have something picked up?
 	if(bIsHoldingItem)
 	{
-		//Move object to Grab location and change its linear dampening
-	//	HeldItemPosition();
+		// Move object to Grab location and change its linear dampening
+		// HeldItemPosition();
 	}	
 }
 
-void ASI_Gizbo::ConstructGadget(bool InbGiveToNick)
+UAbilitySystemComponent* ASI_Gizbo::GetAbilitySystemComponent() const
 {
-	//Check is in world
-	//If false SpawnActor
+	return AbilitySystemComponent;
+}
 
-		//If true 
-		//check is hidden in game
-		//if true
-		//teleport to socket location
-		//set hidden in game false
-		//play construct animation
-
-	if(InbGiveToNick)
-	{
-		//MoveToNick
-		//SwapItemsWithNick
-	}
-	else
-	{
-		//Swap with Gizbo equipped gadget
-	}
-
-	//If already exists
-	//check if Gizbo has it.
-	if(InbGiveToNick)
-	{
-		//MoveToNick
-		//SwapItemsWithNick
-	}
-	else if (!InbGiveToNick)//nick has and Gizbo Needs wants
-	{
-		//MoveToNick
-		//SwapItemsWithNick
-	}
-	else
-	{
-		//Deconstruct
-		//SetHiddenInGame True
-	}
+void ASI_Gizbo::ConstructGadget(FGameplayTag InGadgetTag, APawn* InPawnRequestingGadget)
+{
+	
 }
 
 USI_AbilitySystemComponent* ASI_Gizbo::GetSIAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void ASI_Gizbo::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GiveAbilities();
 }
 
 void ASI_Gizbo::GiveAbilities()
