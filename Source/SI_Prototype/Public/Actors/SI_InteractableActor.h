@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/SI_InteractInterface.h"
 #include "SI_InteractableActor.generated.h"
@@ -34,6 +35,8 @@ public:
 	UWidgetComponent* InteractionIcon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UWidgetComponent* InteractionPrompt;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
+	FGameplayTag InteractionTag;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
 	USI_AbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities")

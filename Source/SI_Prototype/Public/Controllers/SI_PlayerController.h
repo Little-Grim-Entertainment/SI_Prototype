@@ -9,6 +9,7 @@
 #include "InputActionValue.h"
 #include "SI_PlayerController.generated.h"
 
+class USI_GameplayTagManager;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
@@ -132,7 +133,6 @@ protected:
 	void RequestUseGadgetSecondary();
 	
 	// Gizbo
-	void RequestToggleGizboActions();
 	void RequestToggleGizboFollow(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
@@ -161,6 +161,8 @@ private:
 	
 	UPROPERTY()
 	USI_UserWidget* FocusedWidget;
+	UPROPERTY()
+	USI_GameplayTagManager* SITagManager;
 
 	bool bInMenuMode;
 

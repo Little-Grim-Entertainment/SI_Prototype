@@ -4,7 +4,6 @@
 #include "Controllers/SI_PlayerController.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
-#include "ATPCCameraComponent.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
@@ -26,14 +25,12 @@
 #include "UI/SI_HUD.h"
 #include "UI/SI_UIManager.h"
 #include "Data/Input/SI_InputConfig.h"
-#include "SI_Prototype/SI_Prototype.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "SI_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "EngineUtils.h" // ActorIterator
-#include "Abilities/SI_GameplayAbility_Observation.h"
 #include "Characters/SI_Gizbo.h"
 
 // todo: delete when gadget system implemented
@@ -83,7 +80,6 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
 	
 	// Gizbo Commands Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_ControlsToggle, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboActions);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboFollow); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
@@ -108,6 +104,8 @@ void ASI_PlayerController::BeginPlay()
 	const USI_PlayerManager* PlayerManager = GetLocalPlayer()->GetSubsystem<USI_PlayerManager>();
 	if(!IsValid(PlayerManager) || !PlayerManager->GetCurrentPlayerState().IsValid()) {return;}
 
+	SITagManager =  GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+	
 	if(PlayerManager->GetCurrentPlayerState() == SITag_Player_State_Menu)
 	{
 		SetMenuMode(true);
@@ -221,8 +219,7 @@ void ASI_PlayerController::RequestInteract()
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-	if(!IsValid(SITagManager)) {return;}
+	if(!IsValid(SITagManager))	{return;}
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
 	{
@@ -240,7 +237,6 @@ void ASI_PlayerController::RequestToggleObservation()
 
 void ASI_PlayerController::RequestObserveObject()
 {
-	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	if(!IsValid(SITagManager)) {return;}
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
@@ -319,6 +315,13 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 
 void ASI_PlayerController::RequestUseGadget()
 {
+	if(!IsValid(SITagManager)) {return;}
+	
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	{
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gadget_UsePrimary.GetTag().GetSingleTagContainer(), false);
+	}
+	
 	// todo: Delete when gadget system implemented
 	TArray<AActor*> AttachedFlashlights;
 	Nick->GetAttachedActors(AttachedFlashlights, true, false);
@@ -332,12 +335,12 @@ void ASI_PlayerController::RequestUseGadget()
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
 {
+	if(!IsValid(SITagManager)) {return;}
 	
-}
-
-void ASI_PlayerController::RequestToggleGizboActions()
-{
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestToggleGizboActions");
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	{
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gadget_UseSecondary.GetTag().GetSingleTagContainer(), false);
+	}
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
@@ -347,22 +350,13 @@ void ASI_PlayerController::RequestToggleGizboFollow()
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-	bAdaptableActionMode = !bAdaptableActionMode;
+	if(!IsValid(SITagManager)) {return;}
 	
-	if(bAdaptableActionMode)
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
-		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Initiated"), *GetNameSafe(GetPawn()));
-
-		InitializeGizboAdaptableAction();
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(), false);
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
-		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Cancelled"), *GetNameSafe(GetPawn()));
-
-		CancelGizboAdaptableAction();
-	}
+	InitializeGizboAdaptableAction();
 }
 
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
@@ -371,8 +365,8 @@ void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 	
 	//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
 	GizboManager->GetGizboController()->ToggleMoveTo();
-	GizboManager->CancelUpdateIndicatorPositionTimer();
-	GizboManager->HideMoveToIndicator();
+//	GizboManager->CancelUpdateIndicatorPositionTimer();
+//	GizboManager->HideMoveToIndicator();
 
 	CancelInteractableHighlight();
 }
@@ -382,14 +376,14 @@ void ASI_PlayerController::InitializeGizboAdaptableAction()
 	ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
 	if(!IsValid(AOSCamera)) return;
 	
-	GizboManager->StartAdaptableAction(AOSCamera, GetPawn(), bMoveToMarker);
+//	GizboManager->StartAdaptableAction(AOSCamera, GetPawn(), bMoveToMarker);
 	HighlightInteractables();
 }
 
 void ASI_PlayerController::CancelGizboAdaptableAction()
 {
-	GizboManager->CancelUpdateIndicatorPositionTimer();
-	GizboManager->HideMoveToIndicator();
+//	GizboManager->CancelUpdateIndicatorPositionTimer();
+//	GizboManager->HideMoveToIndicator();
 	GizboManager->GetGizboController()->ToggleWait();
 
 	CancelInteractableHighlight();
@@ -425,11 +419,13 @@ void ASI_PlayerController::CancelInteractableHighlight()
 void ASI_PlayerController::RequestGizboUseGadget()
 {
 	// todo:
+	GizboManager->GetGizboController()->ToggleFollow();
 }
 
 void ASI_PlayerController::RequestGizboUseGadgetSecondary()
 {
 	// todo:
+	GizboManager->GetGizboController()->ToggleFollow();
 }
 
 void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetTag)
@@ -448,8 +444,7 @@ void ASI_PlayerController::RequestGadgetNickOne()
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestNickGadgetOne");
 
 	//TODO: Add functionality to collect gadget GameplayTag from quickbind widget
-	RequestGadget(this,SITag_Ability_Construct_Flashlight.GetTag());
-	
+	RequestGadget(GetPawn(),SITag_Gadget_Flashlight);
 }
 
 void ASI_PlayerController::RequestGadgetNickTwo()
@@ -457,7 +452,7 @@ void ASI_PlayerController::RequestGadgetNickTwo()
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestNickGadgetTwo");
 
 	//TODO: Add functionality to collect gadget GameplayTag from quickbind widget
-	RequestGadget(this,SITag_Ability_Construct_Lockpicks);
+	RequestGadget(GetPawn(),SITag_Ability_Construct_Lockpicks);
 }
 
 void ASI_PlayerController::RequestGadgetNickThree()
@@ -475,7 +470,7 @@ void ASI_PlayerController::RequestGadgetGizboOne()
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestGizboGadgetOne");
 
 	//TODO: Add functionality to collect gadget GameplayTag from quickbind widget
-	RequestGadget(Gizbo,SITag_Ability_Construct_Flashlight);
+	RequestGadget(Gizbo,SITag_Gadget_Flashlight);
 }
 
 void ASI_PlayerController::RequestGadgetGizboTwo()

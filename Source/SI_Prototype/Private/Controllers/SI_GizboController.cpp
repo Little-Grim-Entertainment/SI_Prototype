@@ -187,8 +187,3 @@ void ASI_GizboController::ToggleWait()
 	SetLostTarget();
 	UpdateBehaviorTree();
 }
-
-TSubclassOf<ASI_MoveToIndicator> ASI_GizboController::GetMoveToIndicatorClass() const
-{
-	return MoveToIndicatorClass;
-}

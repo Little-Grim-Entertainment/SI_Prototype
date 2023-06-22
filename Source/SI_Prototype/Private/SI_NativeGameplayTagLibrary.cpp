@@ -8,11 +8,20 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Flashlight, "Ability.Construct.Flashlight");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Lockpicks, "Ability.Construct.Lockpicks");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Follow, "Ability.Follow");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UsePrimary, "Ability.Gadget.UsePrimary");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UseSecondary, "Ability.Gadget.UseSecondary")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_AdaptableAction, "Ability.Gizbo.AdaptableAction");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct, "Ability.Gizbo.Construct");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Deconstruct, "Ability.Gizbo.Deconstruct");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact, "Ability.Interact")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Drop, "Ability.Interact.Drop");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pickup, "Ability.Interact.Pickup");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pull, "Ability.Interact.Pull");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Push, "Ability.Interact.PPush");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_MoveTo, "Ability.MoveTo");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Observation, "Ability.Observation")
-
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Wait, "Ability.Wait");
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor, "Actor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Interactable, "Actor.Interactable")
@@ -89,6 +98,9 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_MoveRight, "Input.Axis.1D.MoveRight")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_TurnRate, "Input.Axis.1D.TurnRate")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_LookUpRate, "Input.Axis.1D.LookUpRate")
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pickupable, "Interact.Pickupable");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pushable, "Interact.Pushable");
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI, "UI")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD, "UI.HUD")

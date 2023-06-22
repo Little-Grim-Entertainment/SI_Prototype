@@ -36,11 +36,12 @@ protected:
 	
 private:
 	void HeldItemPosition();
-	void PickupItem(AActor* InHitActor);
+	void PickupObject(AActor* InHitActor);
+	void PushObject(AActor* InHitActor);
 	UFUNCTION(BlueprintCallable)
 	void DropItem();
 	UFUNCTION(BlueprintCallable)
-	void LocatePickupItem();
+	void LocateInteractable();
 	UPROPERTY(EditAnywhere)
 	UPhysicsHandleComponent* PhysicsHandle;
 
@@ -52,6 +53,7 @@ private:
 	float AdjustedDampening;
 	// Used to restore item state after Gizbo drops it
 	float DefaultDampening;
+	
 	UPROPERTY()
 	UPrimitiveComponent* ObjectBeingCarried;
 	UPROPERTY()

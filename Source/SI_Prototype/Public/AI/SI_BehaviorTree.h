@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/SI_BehaviorTree.h"
-#include "SI_DialogueTree.generated.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "SI_BehaviorTree.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_DialogueTree : public USI_BehaviorTree
+class SI_PROTOTYPE_API USI_BehaviorTree : public UBehaviorTree
 {
 	GENERATED_BODY()
-	
 };
