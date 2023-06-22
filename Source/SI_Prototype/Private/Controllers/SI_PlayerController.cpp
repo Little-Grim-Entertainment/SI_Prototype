@@ -335,14 +335,14 @@ void ASI_PlayerController::RequestUseGadget()
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
 {
-<<<<<<< Updated upstream
+
 	if(!IsValid(SITagManager)) {return;}
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
 	{
 		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gadget_UseSecondary.GetTag().GetSingleTagContainer(), false);
 	}
-=======
+
 	// todo: Delete when gadget system implemented
 	TArray<AActor*> AttachedFlashlights;
 	Nick->GetAttachedActors(AttachedFlashlights, true, false);
@@ -352,12 +352,6 @@ void ASI_PlayerController::RequestUseGadgetSecondary()
 		ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
 		EquippedFlashlight->UseSecondary();			
 	}
-}
-
-void ASI_PlayerController::RequestToggleGizboActions()
-{
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestToggleGizboActions");
->>>>>>> Stashed changes
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()

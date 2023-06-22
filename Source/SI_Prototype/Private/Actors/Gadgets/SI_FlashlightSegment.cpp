@@ -14,8 +14,8 @@ ASI_FlashlightSegment::ASI_FlashlightSegment()
 
 	LightDome = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Light Dome"));
 	LightDome->SetupAttachment(RootComponent);
-	LightDome->SetCollisionResponseToAllChannels(ECR_Ignore);	// todo: Change when collision needed
-	LightDome->SetCollisionResponseToChannel (ECC_GameTraceChannel3, ECR_Overlap);
+	//LightDome->SetCollisionResponseToAllChannels(ECR_Ignore);	// todo: Change when collision needed
+	//LightDome->SetCollisionResponseToChannel (ECC_GameTraceChannel3, ECR_Overlap);
 	
 	Pointlight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Point Light"));
 	Pointlight->SetupAttachment(RootComponent);

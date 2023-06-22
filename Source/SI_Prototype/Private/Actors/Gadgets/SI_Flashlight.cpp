@@ -10,12 +10,16 @@ ASI_Flashlight::ASI_Flashlight()
 {	
 	FirstSegment = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FirstSegment"));
 	FirstSegment->SetupAttachment(RootComponent);
+	FirstSegment->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SecondSegment = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SecondSegment"));
 	SecondSegment->SetupAttachment(FirstSegment);
+	SecondSegment->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ThirdSegment = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ThirdSegment"));
 	ThirdSegment->SetupAttachment(FirstSegment);
+	ThirdSegment->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FourthSegment = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FourthSegment"));
 	FourthSegment->SetupAttachment(FirstSegment);
+	FourthSegment->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	
 	Spotlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Flashlight Spotlight"));
