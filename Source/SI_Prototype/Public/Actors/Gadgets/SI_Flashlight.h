@@ -4,41 +4,76 @@
 
 #include "CoreMinimal.h"
 #include "SI_BaseGadget.h"
+#include "SI_FlashlightSegment.h"
 #include "SI_Flashlight.generated.h"
 
 
-class USpotLightComponent;
 
+class USpotLightComponent;
 
 UCLASS()
 class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 {
 	GENERATED_BODY()
 
-	ASI_Flashlight();
+	ASI_Flashlight();	
 
 public:	
 	void UsePrimary();
+	void UseSecondary();
+	void PlaceSegment();
+	void BindPickUpSegment();
+
+	UFUNCTION()
+	void PickUpSegment(int InSegmentNumber);	
+
+	void SpawnSegment();
+	void LightIntensityHandler();
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASI_FlashlightSegment> FlashlightSegmentClass = ASI_FlashlightSegment::StaticClass();
+
+	UPROPERTY(EditAnywhere)
+	ASI_FlashlightSegment* FlashlightSegment;
 	
 private:
 
-	/*UPROPERTY(EditAnywhere, Category = Mesh)
-	UStaticMeshComponent* FlashlightMesh;*/
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	UStaticMeshComponent* FirstSegment;
+	
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	UStaticMeshComponent* SecondSegment;
+	
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	UStaticMeshComponent* ThirdSegment;
+	
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	UStaticMeshComponent* FourthSegment;
 	
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	USpotLightComponent* Spotlight;
 	
-	//UPROPERTY(EditAnywhere, Category = Spotlight)
-	//float LightBrightness;
+	UPROPERTY(EditAnywhere, Category = Spotlight)
+	float MaxSpotlightIntensity;
+	
+	UPROPERTY(EditAnywhere, Category = Spotlight)
+	float CurrentSpotlightIntensity;
 
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	bool bFlashlightOn;
 
-	/*UPROPERTY(EditAnywhere, Category = SectionalPieces)
+	UPROPERTY(EditAnywhere, Category = SegmentPieces)
 	int SegmentsPlaced;
 	
-	UPROPERTY(EditAnywhere, Category = SectionalPieces)
-	int MaxPlaceableSegments;#1#*/
+	UPROPERTY(EditAnywhere, Category = SegmentPiece)
+	int MaxPlaceableSegments;
+
+
+	// Todo: DELETE TEST VARIABLE
+	bool PickUpAllowed = false;
 
 	
+
+protected:
+	virtual void BeginPlay() override;
 };

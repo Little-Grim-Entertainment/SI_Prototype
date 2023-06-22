@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API ASI_BaseGadget : public ASI_InteractableActor
+class SI_PROTOTYPE_API ASI_BaseGadget : public AActor
 {
 	GENERATED_BODY()
 

@@ -115,27 +115,15 @@ void ASI_Nick::BeginPlay()
 	// ****************** TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED		
 	// Spawn Flashlight at world 0
 	if (FlashlightClass)
-	{
-		UWorld* CurrentWorld = GetWorld();
-		
-		if (CurrentWorld)
-		{
-			FTransform const FlashlightTransform = GetActorTransform();
-			Flashlight = CurrentWorld->SpawnActor<ASI_Flashlight>(FlashlightClass, FlashlightTransform);
-			if (IsValid(Flashlight))
-			{								
-				Flashlight->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("gadget_socket"));
-				
-			}
-			else
-			{
-			
-			}
-		}		
+	{		
+		FTransform const FlashlightTransform = GetActorTransform();
+		Flashlight = GetWorld()->SpawnActor<ASI_Flashlight>(FlashlightClass, FlashlightTransform);
+		if (IsValid(Flashlight))
+		{								
+			Flashlight->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("gadget_socket"));
+		}				
 	}
-	
 }
-
 
 void ASI_Nick::OnLevelLoaded(USI_MapData* LoadedLevel, bool bShouldFade)
 {

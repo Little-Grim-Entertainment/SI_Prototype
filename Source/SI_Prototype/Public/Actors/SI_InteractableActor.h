@@ -25,7 +25,7 @@ public:
 	// Sets default values for this actor's properties
 	ASI_InteractableActor();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
+	UPROPERTY(EditAnywhere, Category = "Mesh")
 	UStaticMeshComponent* Mesh;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
 	UStaticMeshComponent* HighlightMesh;
