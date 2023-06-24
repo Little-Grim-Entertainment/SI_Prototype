@@ -8,7 +8,6 @@
 #include "Characters/SI_Gizbo.h"
 #include "Controllers/SI_GizboController.h"
 #include "Data/Characters/SI_CharacterData.h"
-
 #include "GameFramework/PlayerStart.h"
 #include "GameModes/SI_GameMode.h"
 

@@ -12,7 +12,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
-#include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_GizboManager.h"
 #include "Media/SI_MediaManager.h"
 #include "Actors/SI_InteractableActor.h"
@@ -30,7 +29,6 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
-#include "EngineUtils.h" // ActorIterator
 #include "Characters/SI_Gizbo.h"
 
 // todo: delete when gadget system implemented
@@ -365,65 +363,29 @@ void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
 	{
-		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(), false);
+		TArray<FGameplayAbilitySpec*> AbilitySpecArray;
+		Nick->GetSIAbilitySystemComponent()->GetActivatableGameplayAbilitySpecsByAllMatchingTags(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(),AbilitySpecArray, true);
+		for(FGameplayAbilitySpec* AbilitySpec : AbilitySpecArray)
+		{
+			if(AbilitySpec->Ability->AbilityTags == SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer() && AbilitySpec->IsActive())
+			{
+				Nick->GetSIAbilitySystemComponent()->CancelAbilityHandle(AbilitySpec->Handle);
+			}
+			else if(AbilitySpec->Ability->AbilityTags == SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer())
+			{
+				Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(), false);
+			}
+		}
 	}
-	InitializeGizboAdaptableAction();
 }
 
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
-	bAdaptableActionMode = false;
+	if(!IsValid(SITagManager)) {return;}
 	
-	//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
-	GizboManager->GetGizboController()->ToggleMoveTo();
-//	GizboManager->CancelUpdateIndicatorPositionTimer();
-//	GizboManager->HideMoveToIndicator();
-
-	CancelInteractableHighlight();
-}
-
-void ASI_PlayerController::InitializeGizboAdaptableAction()
-{
-	ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
-	if(!IsValid(AOSCamera)) return;
-	
-//	GizboManager->StartAdaptableAction(AOSCamera, GetPawn(), bMoveToMarker);
-	HighlightInteractables();
-}
-
-void ASI_PlayerController::CancelGizboAdaptableAction()
-{
-//	GizboManager->CancelUpdateIndicatorPositionTimer();
-//	GizboManager->HideMoveToIndicator();
-	GizboManager->GetGizboController()->ToggleWait();
-
-	CancelInteractableHighlight();
-}
-
-void ASI_PlayerController::HighlightInteractables()
-{
-	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
 	{
-		ASI_InteractableActor* HitInteractableActor = *ActorItr;
-		if(FVector::Distance(HitInteractableActor->GetActorLocation(), GetPawn()->GetActorLocation()) < 2000.0f)
-		{//TODO:: Convert distance to a int from MagicNumber
-			HitInteractableActor->HighlightMesh->SetVisibility(true);	
-		}
-		else
-		{
-			HitInteractableActor->HighlightMesh->SetVisibility(false);
-		}
-	}
-}
-
-void ASI_PlayerController::CancelInteractableHighlight()
-{
-	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		if(ASI_InteractableActor* HitInteractableActor = *ActorItr)
-		{
-			HitInteractableActor->HighlightMesh->SetVisibility(false);
-		}
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableActionConfirm.GetTag().GetSingleTagContainer(), false);
 	}
 }
 
@@ -548,7 +510,6 @@ void ASI_PlayerController::SetMenuMode(bool bSetMenuMode)
 		UWidgetBlueprintLibrary::SetInputMode_GameOnly(this);
 		SetShowMouseCursor(false);
 	}
-	
 	bInMenuMode = bSetMenuMode;
 }
 

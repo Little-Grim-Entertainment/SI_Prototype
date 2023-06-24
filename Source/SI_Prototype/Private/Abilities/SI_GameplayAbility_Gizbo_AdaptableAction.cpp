@@ -5,39 +5,53 @@
 
 #include "Actors/SI_MoveToIndicator.h"
 #include "Cameras/SI_PlayerCameraManager.h"
+#include "Characters/SI_Nick.h"
+#include "Controllers/SI_PlayerController.h"
+#include "EngineUtils.h" // ActorIterator
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+	ASI_Nick* Nick = Cast<ASI_Nick>(ActorInfo->OwnerActor);
+	if(!IsValid(Nick)) return;
+	ASI_PlayerController* PC = Cast<ASI_PlayerController>(Nick->GetController());
+	if(!IsValid(PC)) return;
+	SICameraManger = Cast<ASI_PlayerCameraManager>(PC->PlayerCameraManager);
+	if(!IsValid(SICameraManger)) return;
+	
+	HighlightInteractables(Nick);
+	StartAdaptableAction(Nick);	
 }
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	CancelInteractableHighlight();
+	HideMoveToIndicator();
+	CancelUpdateIndicatorPositionTimer();
 }
 
-void USI_GameplayAbility_Gizbo_AdaptableAction::StartAdaptableAction(ASI_PlayerCameraManager* InCameraManager, AActor* InPawn, bool& InbMarkerIsValid)
-{
-	float MaxMoveToDistance = 2000.0f;
-	CameraManager = InCameraManager;
-	
-	FVector TraceStart = CameraManager->GetCameraLocation();
-	FVector TraceEnd =  CameraManager->GetActorForwardVector() * MaxMoveToDistance + TraceStart;
+void USI_GameplayAbility_Gizbo_AdaptableAction::StartAdaptableAction(const AActor* InActor)
+{	
+	FVector TraceStart = SICameraManger->GetCameraLocation();
+	FVector TraceEnd =  TraceStart + SICameraManger->GetActorForwardVector() * AdaptableActionMaximumRadius;
 
 	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(CameraManager);
-	QueryParams.AddIgnoredActor(InPawn);
+	QueryParams.AddIgnoredActor(SICameraManger);
+	QueryParams.AddIgnoredActor(InActor);
 	
 	FHitResult OutHit;
 	
-	bool bBlockingHit = GetWorld()->LineTraceSingleByChannel(OutHit, TraceStart, TraceEnd, ECollisionChannel::ECC_WorldDynamic, QueryParams);
-	//	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 30.0f, 0, 1.0f);
+	bool bBlockingHit = GetWorld()->LineTraceSingleByChannel(OutHit, TraceStart, TraceEnd, ECC_WorldDynamic, QueryParams);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 30.0f, 0, 1.0f);
 
 	if(bBlockingHit)
 	{
 		FVector HitLocation = OutHit.Location;
 		MoveToIndicator = SpawnMoveToIndicator(HitLocation);
-		InbMarkerIsValid = true;
 		StartUpdateIndicatorPositionTimer();
 	}	
 }
@@ -57,8 +71,8 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::UpdateMoveToIndicatorPosition() 
 	if(!MoveToIndicator) return;
 	
 	FHitResult HitResult;
-	FVector Start = CameraManager->GetCameraLocation();
-	FVector End = CameraManager->GetCameraLocation() + CameraManager->GetActorForwardVector() * 2000;
+	FVector Start = SICameraManger->GetCameraLocation();
+	FVector End = SICameraManger->GetCameraLocation() + SICameraManger->GetActorForwardVector() * AdaptableActionMaximumRadius;
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_GameTraceChannel2);
 
 	//TODO: Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
@@ -67,11 +81,10 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::UpdateMoveToIndicatorPosition() 
 		FVector HitLocation = HitResult.ImpactPoint;
 
 		// Check whether the 'Move To' indicator is within a specific radius
-		double Distance = (HitLocation - CameraManager->GetCameraLocation()).Length();
+		double Distance = (HitLocation - SICameraManger->GetCameraLocation()).Length();
 		
 		if (Distance < AdaptableActionMaximumRadius)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
 			MoveToIndicator->SetActorLocation(HitLocation);
 		}
 
@@ -98,8 +111,7 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::UpdateMoveToIndicatorPosition() 
 			Distance = (HitLocation - CameraManager->GetCameraLocation()).Length();
 		*/
 		
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Orange, FString::SanitizeFloat(Distance, 0));
-		MoveToIndicator->SetActorLocation(HitLocation);
+	MoveToIndicator->SetActorLocation(HitLocation);
 	}
 }
 
@@ -129,5 +141,32 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::HideMoveToIndicator()
 	if(MoveToIndicator)
 	{
 		MoveToIndicator->SetActorHiddenInGame(true);
+	}
+}
+
+void USI_GameplayAbility_Gizbo_AdaptableAction::HighlightInteractables(const AActor* InActor)
+{
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		ASI_InteractableActor* HitInteractableActor = *ActorItr;
+		if(FVector::Distance(HitInteractableActor->GetActorLocation(), InActor->GetActorLocation()) < AdaptableActionMaximumRadius)
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(true);	
+		}
+		else
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
+		}
+	}
+}
+
+void USI_GameplayAbility_Gizbo_AdaptableAction::CancelInteractableHighlight()
+{
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		if(ASI_InteractableActor* HitInteractableActor = *ActorItr)
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
+		}
 	}
 }

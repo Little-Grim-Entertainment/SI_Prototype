@@ -14,6 +14,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gadget_UsePrimary);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gadget_UseSecondary);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gizbo_AdaptableAction);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gizbo_AdaptableActionConfirm);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gizbo_Construct);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gizbo_Deconstruct);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Interact);

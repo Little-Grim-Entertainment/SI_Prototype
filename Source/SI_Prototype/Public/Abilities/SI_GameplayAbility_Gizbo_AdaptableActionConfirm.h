@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "SI_GameplayAbility.h"
-#include "SI_GameplayAbility_Interact_Drop.generated.h"
+#include "SI_GameplayAbility_Gizbo_AdaptableActionConfirm.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_GameplayAbility_Interact_Drop : public USI_GameplayAbility
+class SI_PROTOTYPE_API USI_GameplayAbility_Gizbo_AdaptableActionConfirm : public USI_GameplayAbility
 {
 	GENERATED_BODY()
 };
