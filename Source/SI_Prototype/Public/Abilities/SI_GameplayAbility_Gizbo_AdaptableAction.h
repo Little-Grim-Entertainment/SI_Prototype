@@ -7,6 +7,12 @@
 #include "SI_GameplayAbility_Gizbo_AdaptableAction.generated.h"
 
 
+class ASI_Nick;
+class ASI_PlayerController;
+class USI_GameplayAbility_Interact_Pickup;
+class USI_GameplayAbility_Interact_Drop;
+class USI_GameplayAbility_Interact_Push;
+class USI_GameplayAbility_Interact_Pull;
 class ASI_PlayerCameraManager;
 class ASI_MoveToIndicator;
 /**
@@ -28,11 +34,24 @@ protected:
 	void StartUpdateIndicatorPositionTimer();
 	void CancelUpdateIndicatorPositionTimer();
 	void UpdateMoveToIndicatorPosition() const;
-	ASI_MoveToIndicator* SpawnMoveToIndicator(FVector InHitLocation);
+	ASI_MoveToIndicator* SpawnMoveToIndicator(const FVector InHitLocation);
 	void HideMoveToIndicator();
 	void HighlightInteractables(const AActor* InActor);
 	void CancelInteractableHighlight();
 
+	UPROPERTY()
+	USI_GameplayAbility_Interact_Pull* PullAbility;
+	UPROPERTY()
+	USI_GameplayAbility_Interact_Push* PushAbility;
+	UPROPERTY()
+	USI_GameplayAbility_Interact_Drop* DropAbility;
+	UPROPERTY()
+	USI_GameplayAbility_Interact_Pickup* PickupAbility;
+
+	UPROPERTY()
+	ASI_Nick* Nick;
+	UPROPERTY()
+	ASI_PlayerController* PC;
 	UPROPERTY()
 	ASI_MoveToIndicator* MoveToIndicator;
 	UPROPERTY(EditAnywhere)
@@ -43,6 +62,5 @@ protected:
 	ASI_PlayerCameraManager* SICameraManger;
 	float UpdateIndicatorDelay = 0.001f;
 	FTimerHandle IndicatorPositionTimerHandle;
-	bool bIsActive;
-
+	bool bIsActive;	
 };

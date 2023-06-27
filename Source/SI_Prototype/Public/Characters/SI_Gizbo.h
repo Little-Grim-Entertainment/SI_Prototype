@@ -18,9 +18,11 @@ UCLASS()
 class SI_PROTOTYPE_API ASI_Gizbo : public ASI_NPC_Interactable , public IAbilitySystemInterface 
 {
 	GENERATED_BODY()
+	
 public:
 	ASI_Gizbo();
 	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
+
 protected:
 	virtual void BeginPlay() override;
 	void Tick(float DeltaTime);
@@ -61,7 +63,5 @@ private:
 	FRotator CarriedObjectRotation;
 	FName PickupSocket = TEXT("Socket_Chest");
 
-	void ConstructGadget(FGameplayTag InGadgetTag, APawn* InPawnRequestingGadget);
-	
 	void GiveAbilities();
 };

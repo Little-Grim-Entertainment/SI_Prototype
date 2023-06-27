@@ -36,12 +36,10 @@ public:
 	// *** Need to understand TSubclassOf properly
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASI_Flashlight> FlashlightClass = ASI_Flashlight::StaticClass();
-
 	UPROPERTY(EditAnywhere)
 	ASI_Flashlight* Flashlight;
-	
 
-	
+
 	
 	ASI_Nick();
 
@@ -57,7 +55,6 @@ public:
 	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
 	
 private:
-
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USI_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
@@ -66,7 +63,7 @@ private:
 	
 	UPROPERTY()
 	USI_LevelManager* LevelManager;
-
+	UPROPERTY()
 	ASI_InteractableActor* CurrentInteractableActor;
 		
 	// ================== FUNCTIONS ==================
@@ -90,7 +87,6 @@ public:
 	/** Returns PerceptionStimuliSourceComponent SubObject **/
 	FORCEINLINE USI_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
 	
-
 	/** Turn off visibility of Nick's meshes **/
 	void HideMeshes(bool Value);
 

@@ -43,11 +43,6 @@ UAbilitySystemComponent* ASI_Gizbo::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-void ASI_Gizbo::ConstructGadget(FGameplayTag InGadgetTag, APawn* InPawnRequestingGadget)
-{
-	
-}
-
 USI_AbilitySystemComponent* ASI_Gizbo::GetSIAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -137,15 +132,14 @@ void ASI_Gizbo::LocateInteractable()
 				ASI_InteractableActor* HitInteractable = Cast<ASI_InteractableActor>(Hit.GetActor());
 				if(!IsValid(HitInteractable)) return;
 
-				if(HitInteractable->InteractionTag == SITag_Interact_Pickupable)
+				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interact_Pickupable))
 				{
 					PickupObject(HitInteractable);
 					return;
 				}
-				if(HitInteractable->InteractionTag == SITag_Interact_Pushable)
+				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interact_Pushable) )
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Gizbo: Pushable Located %s"), *Hit.GetActor()->GetName()));
-	
 				}
 			}
 		}

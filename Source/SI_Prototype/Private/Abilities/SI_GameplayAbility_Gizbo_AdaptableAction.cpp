@@ -8,22 +8,25 @@
 #include "Characters/SI_Nick.h"
 #include "Controllers/SI_PlayerController.h"
 #include "EngineUtils.h" // ActorIterator
+#include "Actors/SI_MovableActor.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
+#include "Interfaces/SI_MovableInterface.h"
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	
-	ASI_Nick* Nick = Cast<ASI_Nick>(ActorInfo->OwnerActor);
+
+	Nick = Cast<ASI_Nick>(ActorInfo->OwnerActor);
 	if(!IsValid(Nick)) return;
-	ASI_PlayerController* PC = Cast<ASI_PlayerController>(Nick->GetController());
+	PC = Cast<ASI_PlayerController>(Nick->GetController());
 	if(!IsValid(PC)) return;
 	SICameraManger = Cast<ASI_PlayerCameraManager>(PC->PlayerCameraManager);
 	if(!IsValid(SICameraManger)) return;
-	
+
 	HighlightInteractables(Nick);
-	StartAdaptableAction(Nick);	
+	StartAdaptableAction(Nick);
 }
+
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
@@ -50,15 +53,14 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::StartAdaptableAction(const AActo
 
 	if(bBlockingHit)
 	{
-		FVector HitLocation = OutHit.Location;
-		MoveToIndicator = SpawnMoveToIndicator(HitLocation);
+		MoveToIndicator = SpawnMoveToIndicator(OutHit.Location);
 		StartUpdateIndicatorPositionTimer();
 	}	
 }
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::StartUpdateIndicatorPositionTimer()
 {
-	GetWorld()->GetTimerManager().SetTimer(IndicatorPositionTimerHandle, this, &ThisClass::UpdateMoveToIndicatorPosition, UpdateIndicatorDelay, true);
+		GetWorld()->GetTimerManager().SetTimer(IndicatorPositionTimerHandle, this, &ThisClass::UpdateMoveToIndicatorPosition, UpdateIndicatorDelay, true);
 }
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::CancelUpdateIndicatorPositionTimer()
@@ -75,47 +77,23 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::UpdateMoveToIndicatorPosition() 
 	FVector End = SICameraManger->GetCameraLocation() + SICameraManger->GetActorForwardVector() * AdaptableActionMaximumRadius;
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_GameTraceChannel2);
 
-	//TODO: Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
+	//TODO: Liam ... Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
 	if (HitResult.GetActor())
 	{
 		FVector HitLocation = HitResult.ImpactPoint;
-
-		// Check whether the 'Move To' indicator is within a specific radius
-		double Distance = (HitLocation - SICameraManger->GetCameraLocation()).Length();
 		
-		if (Distance < AdaptableActionMaximumRadius)
+		if (HitResult.GetActor()->Implements<USI_MovableInterface>())
 		{
-			MoveToIndicator->SetActorLocation(HitLocation);
+			FGameplayEventData Payload;
+			Payload.Target = HitResult.GetActor();
+			Payload.EventTag = SITag_Ability_PossessMovable;
+			Nick->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
 		}
-
-		// Keep the 'Move To' actor confined to the bounds of a circle, with radius AdaptableActionMaximumRadius
-		// See https://gamedev.stackexchange.com/questions/9607/moving-an-object-in-a-circular-path and
-		// https://www.euclideanspace.com/maths/geometry/trig/inverse/index.htm and
-		// https://forums.unrealengine.com/t/how-to-get-an-angle-between-2-vectors/280850
-
-		//TODO: Requires further tuning, to make sure that the rotation is correct.
-		//When the 'MoveTo' actor currently hits the boundary, it causes the indicator to jump away from where it was previously aligned.
-
-		/*
-		TODO: --Pace-- Not sure what Liam is trying to accomplish in this bit of code but removing to make it work simpler for now. 
-			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(CameraManager->GetCameraLocation(), HitLocation);
-			double NickArcTan = atan2(CameraManager->GetCameraLocation().Y, CameraManager->GetCameraLocation().X);
-			double MoveToArcTan = atan2(UKismetMathLibrary::GetForwardVector(Rotation).Y, UKismetMathLibrary::GetForwardVector(Rotation).X);
-			double Angle = MoveToArcTan - NickArcTan;
-				
-			float Cosine = cos(Angle);
-			float Sine = sin(Angle);
-				
-			HitLocation.X = CameraManager->GetCameraLocation().X + Cosine * AdaptableActionMaximumRadius;
-			HitLocation.Y = CameraManager->GetCameraLocation().Y + Sine * AdaptableActionMaximumRadius;
-			Distance = (HitLocation - CameraManager->GetCameraLocation()).Length();
-		*/
-		
 	MoveToIndicator->SetActorLocation(HitLocation);
 	}
 }
 
-ASI_MoveToIndicator* USI_GameplayAbility_Gizbo_AdaptableAction::SpawnMoveToIndicator(FVector InHitLocation)
+ASI_MoveToIndicator* USI_GameplayAbility_Gizbo_AdaptableAction::SpawnMoveToIndicator(const FVector InHitLocation)
 {
 	MoveToIndicatorClass = GetMoveToIndicatorClass();
 	if(MoveToIndicatorClass == nullptr)
@@ -127,12 +105,14 @@ ASI_MoveToIndicator* USI_GameplayAbility_Gizbo_AdaptableAction::SpawnMoveToIndic
 	{
 		FRotator Rotation = FRotator();
 		MoveToIndicator = GetWorld()->SpawnActor<ASI_MoveToIndicator>(MoveToIndicatorClass, InHitLocation, Rotation);
+		MoveToIndicator->SetActiveMeshToDefault();
 	}
 	else
 	{
 		MoveToIndicator->SetActorHiddenInGame(false);
 		MoveToIndicator->SetActorLocation(InHitLocation);
 	}
+	
 	return MoveToIndicator;
 }
 
@@ -141,6 +121,7 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::HideMoveToIndicator()
 	if(MoveToIndicator)
 	{
 		MoveToIndicator->SetActorHiddenInGame(true);
+		MoveToIndicator->SetActiveMeshToDefault();
 	}
 }
 
@@ -170,3 +151,4 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::CancelInteractableHighlight()
 		}
 	}
 }
+

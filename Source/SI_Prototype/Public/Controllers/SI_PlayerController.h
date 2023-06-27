@@ -39,8 +39,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	USI_HUD* PlayerHUD;
 	UPROPERTY()
 	ASI_Nick* Nick;
-	UPROPERTY()
-	ASI_Gizbo* Gizbo;
+	
 	UPROPERTY()
 	USI_GizboManager* GizboManager;
 	UPROPERTY()
@@ -76,6 +75,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractPressed OnInteractPressed;
 
+	UPROPERTY()
+	ASI_Gizbo* Gizbo;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	USI_EnhancedInputComponent* EnhancedInputSettings;
 	
@@ -96,6 +98,7 @@ public:
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
+	void AddSecondaryInputMappingByTag(FGameplayTag InMappingTag, FGameplayTag InSecondaryTag);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
 	

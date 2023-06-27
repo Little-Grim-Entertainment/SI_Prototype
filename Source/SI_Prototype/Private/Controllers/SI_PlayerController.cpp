@@ -407,9 +407,6 @@ void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetT
 	Payload.Target = InActor;
 	Payload.EventTag = InGadgetTag;
 	Gizbo->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
-	
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Orange,"Called: SendGameplayEventToActor");
-
 }
 
 void ASI_PlayerController::RequestGadgetNickOne()
@@ -484,6 +481,16 @@ void ASI_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag,
 	EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingToAdd, 0, ModifyContextOptions);
 }
 
+void ASI_PlayerController::AddSecondaryInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
+{
+	if (!InMappingTag.IsValid()) {return;}
+	
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);
+	const FModifyContextOptions ModifyContextOptions;
+	EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingToAdd, 1, ModifyContextOptions);
+}
+
 void ASI_PlayerController::RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
 {
 	if (!InMappingTag.IsValid()) {return;}
@@ -522,3 +529,27 @@ bool ASI_PlayerController::IsInMenuMode() const
 {
 	return bInMenuMode;
 }
+
+
+/* After MoveableObject Possessed
+ *	FUNCTION OnButtonPressed for Option 1 Selected
+ *
+ *	Secondary IMC bound to these functions
+ *	
+ *	PC Gets the UIManager
+ *	Get the OptionWidget (The current one being displayed
+ *	Null Check OptionWidget
+ *	IF IsValid
+ *		Call Option1 (Virtual function in widget)
+ */
+
+/*
+ * Within the WidgetClass (Child of OptionWidget)
+ *
+ * FUNCTION Option1
+ * GetGizboManager
+ * Check For Null
+ * Get Gizbo's AbilityComponent
+ * Call TryAbility from Tag
+ * 
+ */

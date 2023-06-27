@@ -4,11 +4,9 @@
 #include "SI_PlayerManager.h"
 #include "SI_GameplayTagManager.h"
 #include "SI_NativeGameplayTagLibrary.h"
-#include "Components/Actor/SI_EnhancedInputComponent.h"
 #include "Controllers/SI_PlayerController.h"
 #include "Data/Maps/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
-#include "UI/SI_UserWidget.h"
 
 void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 {

@@ -36,7 +36,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UWidgetComponent* InteractionPrompt;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
-	FGameplayTag InteractionTag;
+	FGameplayTagContainer InteractionTags;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
 	USI_AbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities")

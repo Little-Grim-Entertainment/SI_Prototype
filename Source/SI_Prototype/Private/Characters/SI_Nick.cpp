@@ -49,7 +49,6 @@ ASI_Nick::ASI_Nick()
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
 
 	AbilitySystemComponent = CreateDefaultSubobject<USI_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-
 }
 
 void ASI_Nick::PostInitializeComponents()

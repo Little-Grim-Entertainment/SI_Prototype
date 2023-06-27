@@ -22,6 +22,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Push, "Ability.Interact.Push");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_MoveTo, "Ability.MoveTo");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Observation, "Ability.Observation")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_PossessMovable, "Ability.PossessMovable")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Wait, "Ability.Wait");
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor, "Actor")

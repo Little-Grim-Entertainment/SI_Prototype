@@ -6,7 +6,6 @@
 #include "ATPCCameraComponent.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
-#include "Camera/CameraComponent.h"
 #include "Characters/SI_Nick.h"
 
 void ASI_PlayerCameraManager::BeginPlay()

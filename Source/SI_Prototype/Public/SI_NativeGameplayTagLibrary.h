@@ -24,6 +24,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Interact_Push);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_MoveTo);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Observation);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_PossessMovable);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Wait);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Actor);
