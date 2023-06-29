@@ -7,8 +7,6 @@
 #include "SI_FlashlightSegment.h"
 #include "SI_Flashlight.generated.h"
 
-
-
 class USpotLightComponent;
 
 UCLASS()
@@ -26,7 +24,6 @@ public:
 
 	UFUNCTION()
 	void PickUpSegment(int InSegmentNumber);	
-
 	void SpawnSegment();
 	void LightIntensityHandler();
 	
@@ -35,6 +32,22 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	ASI_FlashlightSegment* FlashlightSegment;
+	
+	UPROPERTY(EditAnywhere, Category = Power)
+	float MaxPower;
+
+	UPROPERTY(EditAnywhere, Category = Power)
+	float CurrentPower;
+
+	UPROPERTY(EditAnywhere, Category = Spotlight)
+	bool bFlashlightOn;
+
+	UPROPERTY(EditAnywhere, Category = SegmentPieces)
+	int SegmentsPlaced;
+	
+	UPROPERTY(EditAnywhere, Category = SegmentPiece)
+	int MaxPlaceableSegments;
+
 	
 private:
 
@@ -60,18 +73,9 @@ private:
 	float CurrentSpotlightIntensity;
 
 	UPROPERTY(EditAnywhere, Category = Spotlight)
-	bool bFlashlightOn;
+	float SpotlightIntensityIncrement;
 
-	UPROPERTY(EditAnywhere, Category = SegmentPieces)
-	int SegmentsPlaced;
 	
-	UPROPERTY(EditAnywhere, Category = SegmentPiece)
-	int MaxPlaceableSegments;
-
-
-	// Todo: DELETE TEST VARIABLE
-	bool PickUpAllowed = false;
-
 	
 
 protected:

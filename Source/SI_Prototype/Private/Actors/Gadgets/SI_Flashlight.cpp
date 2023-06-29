@@ -19,22 +19,25 @@ ASI_Flashlight::ASI_Flashlight()
 	ThirdSegment->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FourthSegment = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FourthSegment"));
 	FourthSegment->SetupAttachment(FirstSegment);
-	FourthSegment->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+	FourthSegment->SetCollisionEnabled(ECollisionEnabled::NoCollision);	
 	
 	Spotlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Flashlight Spotlight"));
 	Spotlight->SetupAttachment(FirstSegment);
 	MaxSpotlightIntensity = 10000.0f;
 	Spotlight->SetIntensity(MaxSpotlightIntensity);
-	
+
+	SpotlightIntensityIncrement = MaxSpotlightIntensity/(MaxPlaceableSegments+1);
+
+	// Initializing defaults
 	SegmentsPlaced = 0;
 	MaxPlaceableSegments = 3;
+	MaxPower = 100.0f;	
 }
 
 void ASI_Flashlight::BeginPlay()
 {
 	Super::BeginPlay();
-	Spotlight->SetHiddenInGame(true);		
+	Spotlight->SetHiddenInGame(true);	
 	bFlashlightOn = false;
 }
 
@@ -42,11 +45,13 @@ void ASI_Flashlight::UsePrimary()
 {
 	if (bFlashlightOn)
 	{
-		Spotlight->SetHiddenInGame(true);		
+		Spotlight->SetHiddenInGame(true);
+		// todo: set emissive property of flashlight glass
 	}
 	else
 	{
-		Spotlight->SetHiddenInGame(false);		
+		Spotlight->SetHiddenInGame(false);
+		// todo: set emissive property of flashlight glass
 	}
 	bFlashlightOn = !bFlashlightOn;
 }
@@ -105,22 +110,23 @@ void ASI_Flashlight::SpawnSegment()
 	{				
 			FTransform const SegmentSpawnTransform = GetActorTransform();
 			FlashlightSegment = GetWorld()->SpawnActor<ASI_FlashlightSegment>(FlashlightSegmentClass, SegmentSpawnTransform);
-			FlashlightSegment->SegmentNumber = SegmentsPlaced + 1;
+			// FlashlightSegment->SegmentNumber = SegmentsPlaced + 1;
+			FlashlightSegment->InitializeSegment(MaxPower/(MaxPlaceableSegments + 1));
 			BindPickUpSegment();
 	}
 }
 
 void ASI_Flashlight::LightIntensityHandler()
 {
-	const float SpotlightIntensityIncrement = MaxSpotlightIntensity/(MaxPlaceableSegments+1);
+	SpotlightIntensityIncrement = MaxSpotlightIntensity/(MaxPlaceableSegments+1);
 	CurrentSpotlightIntensity = MaxSpotlightIntensity - (SpotlightIntensityIncrement*SegmentsPlaced);
-	//Spotlight->Intensity = CurrentSpotlightIntensity;
+	// Spotlight->Intensity = CurrentSpotlightIntensity;
 	Spotlight->SetIntensity(CurrentSpotlightIntensity);
-	//Spotlight->Intensity = 0.0f;
+	// Spotlight->Intensity = 0.0f;
 	
 	if(GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Flashlight: Inside LightIntensityHandler %f"),Spotlight->Intensity));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("Flashlight: Inside LightIntensityHandler %f"),Spotlight->Intensity));
 	}	
 }
 

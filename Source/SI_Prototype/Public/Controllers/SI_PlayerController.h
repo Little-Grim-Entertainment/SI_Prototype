@@ -101,7 +101,8 @@ public:
 	void AddSecondaryInputMappingByTag(FGameplayTag InMappingTag, FGameplayTag InSecondaryTag);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
-	
+
+
 	void SetFocusedWidget(USI_UserWidget* InWidgetToFocus);
 	
 	UFUNCTION()
@@ -138,6 +139,10 @@ protected:
 	void RequestToggleGizboFollow(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void InitializeGizboAdaptableAction();
+	void CancelGizboAdaptableAction();	
+	void HighlightInteractables();
+	void CancelInteractableHighlight();
 	void RequestGizboUseGadget();
 	void RequestGizboUseGadgetSecondary();
 
@@ -163,7 +168,6 @@ private:
 	USI_GameplayTagManager* SITagManager;
 
 	bool bInMenuMode;
-	bool bUsingAdaptableAction;
 
 	FTimerHandle CameraBlendHandle;
 };
