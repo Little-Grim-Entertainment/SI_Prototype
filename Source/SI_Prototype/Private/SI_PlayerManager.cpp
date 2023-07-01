@@ -119,7 +119,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	if(!IsValid(GetWorld())) return;
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
-	
+
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))

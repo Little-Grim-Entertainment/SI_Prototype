@@ -33,6 +33,10 @@
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "EngineUtils.h" // ActorIterator
 #include "Abilities/SI_GameplayAbility_Observation.h"
+#include "Characters/SI_Gizbo.h"
+
+// todo: delete when gadget system implemented
+#include "Actors/Gadgets/SI_Flashlight.h"
 
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -340,65 +344,64 @@ void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
 	bAdaptableActionMode = false;
-	
-	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
-	{
-		//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
-		GizboManager->GetGizboController()->ToggleMoveTo();
-		GizboManager->CancelUpdateIndicatorPositionTimer();
-		GizboManager->HideMoveToIndicator();
-	}
-	CancelInteractableHighlight();
+	GizboManager->GetGizboController()->ToggleMoveTo();
 }
 
 void ASI_PlayerController::InitializeGizboAdaptableAction()
 {
-	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
-	{
-		ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
-		if(!IsValid(AOSCamera)) return;
-		
-		GizboManager->StartAdaptableAction(AOSCamera, GetPawn(), bMoveToMarker);
-	}
-	HighlightInteractables();
+	ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
+	if(!IsValid(AOSCamera)) return;
 }
 
 void ASI_PlayerController::CancelGizboAdaptableAction()
 {
-	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
-	{
-		GizboManager->CancelUpdateIndicatorPositionTimer();
-		GizboManager->HideMoveToIndicator();
-		GizboManager->GetGizboController()->ToggleWait();
-	}
-	CancelInteractableHighlight();
+	GizboManager->GetGizboController()->ToggleWait();
 }
 
-void ASI_PlayerController::HighlightInteractables()
+void ASI_PlayerController::RequestGizboUseGadget()
 {
-	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		ASI_InteractableActor* HitInteractableActor = *ActorItr;
-		if(FVector::Distance(HitInteractableActor->GetActorLocation(), GetPawn()->GetActorLocation()) < 2000.0f)
-		{//TODO:: Convert distance to a int from MagicNumber
-			HitInteractableActor->HighlightMesh->SetVisibility(true);	
-		}
-		else
-		{
-			HitInteractableActor->HighlightMesh->SetVisibility(false);
-		}
-	}
+	// todo:
+	GizboManager->GetGizboController()->ToggleFollow();
 }
 
-void ASI_PlayerController::CancelInteractableHighlight()
+void ASI_PlayerController::RequestGizboUseGadgetSecondary()
 {
-	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		if(ASI_InteractableActor* HitInteractableActor = *ActorItr)
-		{
-			HitInteractableActor->HighlightMesh->SetVisibility(false);
-		}
-	}
+	// todo:
+	GizboManager->GetGizboController()->ToggleFollow();
+}
+
+void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetTag)
+{
+	FGameplayEventData Payload;
+	Payload.Target = InActor;
+	Payload.EventTag = InGadgetTag;
+	Gizbo->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
+}
+
+void ASI_PlayerController::RequestMultiOptionUp()
+{
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionUp");
+
+	//TODO: Add functionality to collect gadget GameplayTag from quickbind widget
+	RequestGadget(GetPawn(),SITag_Gadget_Flashlight);
+}
+
+void ASI_PlayerController::RequestMutliOptionDown()
+{
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMutliOptionDown");
+
+	//TODO: Add functionality to collect gadget GameplayTag from quickbind widget
+	RequestGadget(GetPawn(),SITag_Ability_Construct_Lockpicks);
+}
+
+void ASI_PlayerController::RequestMultiOptionLeft()
+{
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionLeft");
+}
+
+void ASI_PlayerController::RequestMultiOptionRight()
+{
+	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionRight");
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
