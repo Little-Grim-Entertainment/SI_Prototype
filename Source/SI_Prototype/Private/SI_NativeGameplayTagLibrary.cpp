@@ -38,6 +38,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_OutDoor, "Camera.Mode.OutDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_InDoor, "Camera.Mode.InDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_Observation, "Camera.Mode.Observation")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_PossessMovable, "Camera.Mode.PossessMovable")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget, "Gadget")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_Flashlight, "Gadget.Flashlight")
@@ -53,15 +54,20 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input, "Input")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action, "Input.Action")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interact, "Input.Action.Interact")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ToggleObservationMode, "Input.Action.ToggleObservationMode")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ToggleSystemMenu, "Input.Action.ToggleSystemMenu")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ObserveObject, "Input.Action.ObserveObject")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Media_Skip, "Input.Action.Media.Skip")
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Exit, "Input.Action.Dialogue.Exit")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Next, "Input.Action.Dialogue.Next")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Previous, "Input.Action.Dialogue.Previous")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Exit, "Input.Action.Dialogue.Exit")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_UseGadget, "Input.Action.UseGadget");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_UseGadgetSecondary, "Input.Action.UseGadgetSecondary");	
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Media_Skip, "Input.Action.Media.Skip")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_MultiOption_Down, "Input.Action.MultiOption.Down")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_MultiOption_Left, "Input.Action.MultiOption.Left")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_MultiOption_Right, "Input.Action.MultiOption.Right")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_MultiOption_Up, "Input.Action.MultiOption.Up")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ObserveObject, "Input.Action.ObserveObject")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ToggleObservationMode, "Input.Action.ToggleObservationMode")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ToggleSystemMenu, "Input.Action.ToggleSystemMenu")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_UseGadget, "Input.Action.UseGadget")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_UseGadgetSecondary, "Input.Action.UseGadgetSecondary")
 	
 	// Gizbo Commands
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_ControlsToggle, "Input.Action.Gizbo.ControlsToggle")
@@ -71,19 +77,10 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_UseGadget, "Input.Action.Gizbo.UseGadget");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_UseGadgetSecondary, "Input.Action.Gizbo.UseGadgetSecondary");
 	
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickOne, "Input.Action.Gadget.NickOne");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickTwo, "Input.Action.Gadget.NickTwo");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickThree, "Input.Action.Gadget.NickThree");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_NickFour, "Input.Action.Gadget.NickFour");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboOne, "Input.Action.Gadget.GizboOne");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboTwo, "Input.Action.Gadget.GizboTwo");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboThree, "Input.Action.Gadget.GizboThree");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gadget_GizboFour, "Input.Action.Gadget.GizboFour");
-	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media, "Media")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Cinematic, "Media.Cinematic")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Video, "Media.Video")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_TitleCard, "Media.TitleCard")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Video, "Media.Video")
 
 	// Player State
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player, "Player")
@@ -95,6 +92,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Menu, "Player.State.Menu")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Media, "Player.State.Media")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Observation, "Player.State.Observation")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_PossessMovable, "Player.State.PossessMovable")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_MoveForward, "Input.Axis.1D.MoveForward")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_MoveRight, "Input.Axis.1D.MoveRight")

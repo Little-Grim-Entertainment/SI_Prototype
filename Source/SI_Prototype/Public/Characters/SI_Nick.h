@@ -45,7 +45,7 @@ public:
 
 	// ================== VARIABLES ==================
 
-	UPROPERTY(BlueprintReadOnly, Category = Camera)
+	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UATPCCameraComponent* ATPCCamera;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
@@ -81,7 +81,7 @@ public:
 	USI_NickCharacterData* NickCharacterData;
 	
 	/** Returns CameraBoom SubObject **/
-	FORCEINLINE UATPCCameraComponent* GetATPCCamera() const { return ATPCCamera; }
+	FORCEINLINE UATPCCameraComponent* GetATPCCamera() { return ATPCCamera; }
 	/** Returns FollowCamera SubObject **/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return NickFollowCamera; }
 	/** Returns PerceptionStimuliSourceComponent SubObject **/

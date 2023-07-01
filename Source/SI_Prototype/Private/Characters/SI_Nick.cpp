@@ -47,8 +47,12 @@ ASI_Nick::ASI_Nick()
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<USI_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
-
+	
 	AbilitySystemComponent = CreateDefaultSubobject<USI_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+
+	GetCapsuleComponent()->WakeRigidBody();
+	
+	GetMesh()->WakeRigidBody();
 }
 
 void ASI_Nick::PostInitializeComponents()
@@ -109,8 +113,7 @@ void ASI_Nick::BeginPlay()
 	}
 
 	GiveAbilities();
-
-
+	
 	// ****************** TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED		
 	// Spawn Flashlight at world 0
 	if (FlashlightClass)

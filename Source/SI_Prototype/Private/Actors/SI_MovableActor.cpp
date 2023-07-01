@@ -20,12 +20,6 @@ void ASI_MovableActor::BeginPlay()
 void ASI_MovableActor::OnPossessMovable_Implementation(AActor* Caller)
 {
 	ISI_MovableInterface::OnPossessMovable_Implementation(Caller);
-
-	// Update ghost mesh
-	// Drop Camera Anchor
-	// Possess Camera attached to anchor
-	
-	//Caller->GetInstigatorController()->Possess(this,)
 }
 
 void ASI_MovableActor::OnEndPossessMovable_Implementation(AActor* Caller)

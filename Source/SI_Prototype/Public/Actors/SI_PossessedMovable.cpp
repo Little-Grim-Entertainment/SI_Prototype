@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "ATPCCameraComponent.h"
+#include "SI_NativeGameplayTagLibrary.h"
 
 ASI_PossessedMovable::ASI_PossessedMovable()
 {
@@ -13,9 +14,9 @@ ASI_PossessedMovable::ASI_PossessedMovable()
 
 	ATPCCamera = CreateDefaultSubobject<UATPCCameraComponent>(TEXT("ATPCCamera"));
 	ATPCCamera->SetupAttachment(RootComponent);
-	
+
 	// Create a follow camera
-	PossessedFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("NickFollowCamera"));
+	PossessedFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PossessedFollowCamera"));
 	PossessedFollowCamera->SetupAttachment(ATPCCamera);
 	
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");

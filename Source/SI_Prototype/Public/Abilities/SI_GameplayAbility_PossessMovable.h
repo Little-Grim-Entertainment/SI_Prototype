@@ -6,6 +6,7 @@
 #include "SI_GameplayAbility.h"
 #include "SI_GameplayAbility_PossessMovable.generated.h"
 
+class USI_GameplayTagManager;
 class ASI_PlayerCameraManager;
 class ASI_PlayerController;
 class ASI_Nick;
@@ -40,8 +41,10 @@ protected:
 	TSubclassOf<ASI_PossessedMovable> PossessedMovableClass;
 	UPROPERTY()
 	ASI_PossessedMovable* PossessedMovable;
+	UPROPERTY()
+	USI_GameplayTagManager* SITagManager;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float AdaptableActionMaximumRadius = 500.0f;
+	float AdaptableActionMaximumRadius = 2500.0f;
 	float UpdateIndicatorDelay = 0.001f;
 	FTimerHandle GhostActorPositionTimerHandle;
 };

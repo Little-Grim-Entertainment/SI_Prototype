@@ -34,10 +34,11 @@ protected:
 	USceneComponent* Root;
 	UPROPERTY(EditAnywhere)
 	UStaticMesh* DefaultMesh;
-	UPROPERTY(BlueprintReadOnly, Category = Camera)
+	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UATPCCameraComponent* ATPCCamera;
 
 private:
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* PossessedFollowCamera;
 

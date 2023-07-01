@@ -39,6 +39,7 @@ private:
 	void SetupInterrogationState();
 	void SetupMenuState();
 	void SetupObservationState();
+	void SetupPossessMovableState();
 	
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
@@ -56,5 +57,6 @@ private:
 	FSimpleDelegate MediaStateDelegate;
 	FSimpleDelegate MenuStateDelegate;
 	FSimpleDelegate ObservationStateDelegate;
+	FSimpleDelegate PossessMovableStateDelegate;
 
 };

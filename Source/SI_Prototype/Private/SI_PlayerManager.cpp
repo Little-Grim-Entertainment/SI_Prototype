@@ -38,6 +38,8 @@ void USI_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
+	if(!IsValid(GetWorld())) return;
+	
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (SITagManager->HasParentTag(InAddedTag, SITag_UI_Menu))
@@ -85,6 +87,8 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
+	if(!IsValid(GetWorld())) return;
+	
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
@@ -94,6 +98,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		PlayerController->SetMenuMode(false);
 		return;
 	}
+	
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Screen))
 	{
 		SITagManager->RemoveTag(SITag_Player_State_Inactive);
@@ -124,6 +129,7 @@ void USI_PlayerManager::InitializeDelegates()
 	MediaStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
 	MenuStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
 	ObservationStateDelegate.BindUObject(this, &ThisClass::SetupObservationState);
+	PossessMovableStateDelegate.BindUObject(this, &ThisClass::SetupPossessMovableState);
 	
 }
 
@@ -138,6 +144,7 @@ void USI_PlayerManager::InitializeDelegateMaps()
 	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Menu, MenuStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_PossessMovable, PossessMovableStateDelegate);
 	
 }
 
@@ -172,4 +179,9 @@ void USI_PlayerManager::SetupMenuState()
 void USI_PlayerManager::SetupObservationState()
 {
 	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_Observation, SITag_Camera_Mode);
+}
+
+void USI_PlayerManager::SetupPossessMovableState()
+{
+	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_PossessMovable, SITag_Camera_Mode);
 }

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "SI_InteractionWidget.h"
-#include "SI_MultiOptionInteractionPrompt.generated.h"
+#include "SI_MultiOptionPrompt.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_MultiOptionInteractionPrompt : public USI_InteractionWidget
+class SI_PROTOTYPE_API USI_MultiOptionPrompt : public USI_InteractionWidget
 {
 	GENERATED_BODY()
 };

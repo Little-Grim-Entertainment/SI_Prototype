@@ -104,6 +104,8 @@ public:
 
 
 	void SetFocusedWidget(USI_UserWidget* InWidgetToFocus);
+
+	USI_GameplayTagManager* GetSITagManager() const {return SITagManager;}
 	
 	UFUNCTION()
 	void SetMenuMode(bool bSetMenuMode = false);
@@ -140,22 +142,16 @@ protected:
 	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void InitializeGizboAdaptableAction();
-	void CancelGizboAdaptableAction();	
-	void HighlightInteractables();
-	void CancelInteractableHighlight();
+	void CancelGizboAdaptableAction();
 	void RequestGizboUseGadget();
 	void RequestGizboUseGadgetSecondary();
 
 	//ConstructGadget
 	void RequestGadget(AActor* InActor, FGameplayTag InGadgetTag);
-	void RequestGadgetNickOne();
-	void RequestGadgetNickTwo();
-	void RequestGadgetNickThree();
-	void RequestGadgetNickFour();
-	void RequestGadgetGizboOne();
-	void RequestGadgetGizboTwo();
-	void RequestGadgetGizboThree();
-	void RequestGadgetGizboFour();
+	void RequestMultiOptionUp();
+	void RequestMutliOptionDown();
+	void RequestMultiOptionLeft();
+	void RequestMultiOptionRight();
 
 private:
 

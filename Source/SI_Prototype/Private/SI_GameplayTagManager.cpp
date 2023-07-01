@@ -189,7 +189,3 @@ void USI_GameplayTagManager::InitializeTagContainers()
 		CurrentContainerPair.Value.SetParentTag(CurrentContainerPair.Key);
 	}
 }
-
-
-
-

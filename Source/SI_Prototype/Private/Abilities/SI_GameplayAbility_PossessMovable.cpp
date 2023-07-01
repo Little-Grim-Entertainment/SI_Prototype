@@ -7,6 +7,7 @@
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_Nick.h"
 #include "Controllers/SI_PlayerController.h"
+#include "SI_GameplayTagManager.h"
 
 void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -18,9 +19,13 @@ void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilityS
 	if(!IsValid(PC)) return;
 	SICameraManger = Cast<ASI_PlayerCameraManager>(PC->PlayerCameraManager);
 	if(!IsValid(SICameraManger)) return;
+	SITagManager = PC->GetSITagManager();
+	if(!IsValid(SITagManager))	{return;}
+
 	
 	if(PossessTarget(ActorInfo, TriggerEventData))
 	{
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_PossessMovable, SITag_Player_State);
 		UpdateMoveToLocation();
 	}
 	
@@ -32,6 +37,8 @@ void USI_GameplayAbility_PossessMovable::EndAbility(const FGameplayAbilitySpecHa
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	
+	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
 }
 
 bool USI_GameplayAbility_PossessMovable::PossessTarget(const FGameplayAbilityActorInfo* InActorInfo, const FGameplayEventData* InTriggerEventData)
@@ -57,12 +64,12 @@ ASI_PossessedMovable* USI_GameplayAbility_PossessMovable::SpawnPossessedMovable(
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		PossessedMovable = GetWorld()->SpawnActor<ASI_PossessedMovable>(PossessedMovableClass, InHitLocation, Rotation, SpawnParams);
-	//	PossessedMovable->SetActiveMeshToDefault();
+		PossessedMovable->SetActiveMeshToDefault();
 	}
 	else
 	{
 		PossessedMovable->SetActorHiddenInGame(false);
-		PossessedMovable->SetActorLocation(InHitLocation);
+		PossessedMovable->MeshComponent->SetWorldLocation(InHitLocation);
 	}
 	
 	return PossessedMovable;
@@ -79,7 +86,7 @@ void USI_GameplayAbility_PossessMovable::UpdateMoveToLocation()
 	FHitResult OutHit;
 	
 	bool bBlockingHit = GetWorld()->LineTraceSingleByChannel(OutHit, TraceStart, TraceEnd, ECC_WorldDynamic, QueryParams);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 30.0f, 0, 1.0f);
+	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 30.0f, 0, 1.0f);
 
 	if(bBlockingHit)
 	{

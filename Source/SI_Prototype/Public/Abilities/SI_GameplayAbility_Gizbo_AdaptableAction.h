@@ -6,7 +6,6 @@
 #include "SI_GameplayAbility.h"
 #include "SI_GameplayAbility_Gizbo_AdaptableAction.generated.h"
 
-
 class ASI_Nick;
 class ASI_PlayerController;
 class USI_GameplayAbility_Interact_Pickup;

@@ -27,7 +27,6 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::ActivateAbility(const FGameplayA
 	StartAdaptableAction(Nick);
 }
 
-
 void USI_GameplayAbility_Gizbo_AdaptableAction::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
@@ -49,7 +48,7 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::StartAdaptableAction(const AActo
 	FHitResult OutHit;
 	
 	bool bBlockingHit = GetWorld()->LineTraceSingleByChannel(OutHit, TraceStart, TraceEnd, ECC_WorldDynamic, QueryParams);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 30.0f, 0, 1.0f);
+	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 30.0f, 0, 1.0f);
 
 	if(bBlockingHit)
 	{
@@ -60,7 +59,7 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::StartAdaptableAction(const AActo
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::StartUpdateIndicatorPositionTimer()
 {
-		GetWorld()->GetTimerManager().SetTimer(IndicatorPositionTimerHandle, this, &ThisClass::UpdateMoveToIndicatorPosition, UpdateIndicatorDelay, true);
+	GetWorld()->GetTimerManager().SetTimer(IndicatorPositionTimerHandle, this, &ThisClass::UpdateMoveToIndicatorPosition, UpdateIndicatorDelay, true);
 }
 
 void USI_GameplayAbility_Gizbo_AdaptableAction::CancelUpdateIndicatorPositionTimer()
@@ -77,13 +76,13 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::UpdateMoveToIndicatorPosition() 
 	FVector End = SICameraManger->GetCameraLocation() + SICameraManger->GetActorForwardVector() * AdaptableActionMaximumRadius;
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_GameTraceChannel2);
 
-	//TODO: Liam ... Amend later once GAS is implemented, to check specifically for surfaces that can be traversed.
 	if (HitResult.GetActor())
 	{
 		FVector HitLocation = HitResult.ImpactPoint;
 		
 		if (HitResult.GetActor()->Implements<USI_MovableInterface>())
 		{
+			//TODO: Pace ... This needs to be moved so it is called after an interaction prompt is displayed. 
 			FGameplayEventData Payload;
 			Payload.Target = HitResult.GetActor();
 			Payload.EventTag = SITag_Ability_PossessMovable;
