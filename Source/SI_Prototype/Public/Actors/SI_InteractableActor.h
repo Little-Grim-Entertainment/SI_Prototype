@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/SI_InteractInterface.h"
 #include "SI_InteractableActor.generated.h"
@@ -25,7 +24,7 @@ public:
 	// Sets default values for this actor's properties
 	ASI_InteractableActor();
 
-	UPROPERTY(EditAnywhere, Category = "Mesh")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
 	UStaticMeshComponent* Mesh;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
 	UStaticMeshComponent* HighlightMesh;
@@ -35,8 +34,6 @@ public:
 	UWidgetComponent* InteractionIcon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
 	UWidgetComponent* InteractionPrompt;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
-	FGameplayTagContainer InteractionTags;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
 	USI_AbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY(EditAnywhere, Category = "Abilities")

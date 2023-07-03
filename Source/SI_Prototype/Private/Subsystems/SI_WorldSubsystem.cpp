@@ -43,7 +43,6 @@ void USI_WorldSubsystem::OnGameModeBeginPlay()
 
 void USI_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
-
 }
 
 void USI_WorldSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)

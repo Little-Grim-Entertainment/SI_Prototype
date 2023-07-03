@@ -17,7 +17,8 @@ ASI_GizboController::ASI_GizboController() : ASI_NPCController_Interactable()
 
 void ASI_GizboController::BeginPlay()
 {
-	Super::BeginPlay();	
+	Super::BeginPlay();
+	
 }
 
 void ASI_GizboController::OnPossess(APawn* InPawn)
@@ -186,4 +187,9 @@ void ASI_GizboController::ToggleWait()
 
 	SetLostTarget();
 	UpdateBehaviorTree();
+}
+
+TSubclassOf<ASI_MoveToIndicator> ASI_GizboController::GetMoveToIndicatorClass() const
+{
+	return MoveToIndicatorClass;
 }

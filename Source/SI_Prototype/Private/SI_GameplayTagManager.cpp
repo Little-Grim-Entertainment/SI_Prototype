@@ -175,17 +175,20 @@ FSI_GameplayTagContainer& USI_GameplayTagManager::GetContainerTypeByTag(const FG
 
 void USI_GameplayTagManager::InitializeTagContainers()
 {
-	AllTagContainers.Add(SITag_Camera, CameraTags);
-	AllTagContainers.Add(SITag_Gadget, GadgetTags);
 	AllTagContainers.Add(SITag_Game_State, GameStateTags);
-	AllTagContainers.Add(SITag_Map, LevelTags);
-	AllTagContainers.Add(SITag_Media, MediaTags);
-	AllTagContainers.Add(SITag_Audio_Music, MusicTags);
 	AllTagContainers.Add(SITag_Player_State, PlayerStateTags);
 	AllTagContainers.Add(SITag_UI, UITags);
-	
+	AllTagContainers.Add(SITag_Map, LevelTags);
+	AllTagContainers.Add(SITag_Media, MediaTags);
+	AllTagContainers.Add(SITag_Camera, CameraTags);
+	AllTagContainers.Add(SITag_Audio_Music, MusicTags);
+
 	for (TPair<FGameplayTag, FSI_GameplayTagContainer>& CurrentContainerPair : AllTagContainers)
 	{
 		CurrentContainerPair.Value.SetParentTag(CurrentContainerPair.Key);
 	}
 }
+
+
+
+

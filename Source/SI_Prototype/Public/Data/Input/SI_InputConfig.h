@@ -20,8 +20,7 @@ public:
 	const UInputMappingContext* GetInputMappingByTag(const FGameplayTag& InAssociatedPlayerModeTag, const FGameplayTag& InSecondaryTag = FGameplayTag()) const;
 	const UInputAction* GetInputActionByTag(const FGameplayTag& InInputTag) const;
 
-	const TArray<FSI_InputMapping>& GetPrimaryInputMappings();
-	const TArray<FSI_InputMapping>& GetSecondaryInputMappings();
+	const TArray<FSI_InputMapping>& GetInputMappings();
 	const TArray<FSI_InputAction>& GetBasicInputActions();
 	const TArray<FSI_InputAction>& GetDialogueInputActions();
 	const TArray<FSI_InputAction>& GetMovementInputActions();
@@ -30,10 +29,7 @@ public:
 private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "InputMappings", meta = (TitleProperty = "InputMapping"))
-	TArray<FSI_InputMapping> PrimaryInputMappings;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "InputMappings", meta = (TitleProperty = "InputMapping"))
-	TArray<FSI_InputMapping> SecondaryInputMappings;
+	TArray<FSI_InputMapping> InputMappings;
 		
 	UPROPERTY(EditDefaultsOnly, Category = "InputActions", meta = (TitleProperty = "InputAction"))
 	TArray<FSI_InputAction> BasicInputActions;
