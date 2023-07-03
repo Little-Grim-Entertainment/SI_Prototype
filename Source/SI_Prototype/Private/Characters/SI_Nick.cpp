@@ -15,8 +15,12 @@
 #include "Data/Maps/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
 
+// ******************* TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
+#include "Actors/Gadgets/SI_Flashlight.h"
+#include "Engine/SkeletalMeshSocket.h"
+
 ASI_Nick::ASI_Nick()
-{
+{	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
@@ -43,9 +47,12 @@ ASI_Nick::ASI_Nick()
 	PerceptionStimuliSourceComponent = CreateDefaultSubobject<USI_AIPerceptionStimuliSource>(TEXT("Perception Stimuli Source Component"));
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Sight::StaticClass());
 	PerceptionStimuliSourceComponent->RegisterSense(UAISense_Hearing::StaticClass());
-
+	
 	AbilitySystemComponent = CreateDefaultSubobject<USI_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
+	GetCapsuleComponent()->WakeRigidBody();
+	
+	GetMesh()->WakeRigidBody();
 }
 
 void ASI_Nick::PostInitializeComponents()
@@ -106,8 +113,19 @@ void ASI_Nick::BeginPlay()
 	}
 
 	GiveAbilities();
+	
+	// ****************** TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED		
+	// Spawn Flashlight at world 0
+	if (FlashlightClass)
+	{		
+		FTransform const FlashlightTransform = GetActorTransform();
+		Flashlight = GetWorld()->SpawnActor<ASI_Flashlight>(FlashlightClass, FlashlightTransform);
+		if (IsValid(Flashlight))
+		{								
+			Flashlight->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("gadget_socket"));
+		}				
+	}
 }
-
 
 void ASI_Nick::OnLevelLoaded(USI_MapData* LoadedLevel, bool bShouldFade)
 {
