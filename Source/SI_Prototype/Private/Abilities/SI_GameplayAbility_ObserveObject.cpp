@@ -7,8 +7,8 @@
 #include "Characters/SI_Nick.h"
 
 void USI_GameplayAbility_ObserveObject::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                                   const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-                                                   const FGameplayEventData* TriggerEventData)
+												   const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+												   const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
