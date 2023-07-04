@@ -6,6 +6,7 @@
 #include "ATPCCameraComponent.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
+#include "Camera/CameraComponent.h"
 #include "Characters/SI_Nick.h"
 
 void ASI_PlayerCameraManager::BeginPlay()
@@ -27,9 +28,9 @@ void ASI_PlayerCameraManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Camera)){return;}
 
 	ASI_Nick* Nick = Cast<ASI_Nick>(GetOwningPlayerController()->GetPawn());
-	 if(!IsValid(Nick)) {return;}
+	if(!IsValid(Nick)) {return;}
 	
-	Nick->GetATPCCamera()->SetCameraMode(InAddedTag, false, false);	
+	Nick->GetATPCCamera()->SetCameraMode(InAddedTag, false, false);
 }
 
 void ASI_PlayerCameraManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)

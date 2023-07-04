@@ -38,8 +38,5 @@ protected:
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
 	UFUNCTION()
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag);
-
-
-	
 		
 };

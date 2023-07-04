@@ -8,7 +8,6 @@
 #include "AbilitySystemInterface.h"
 #include "Abilities/SI_GameplayAbility.h"
 #include "Actors/SI_InteractableActor.h"
-#include "Actors/Gadgets/SI_Flashlight.h"
 #include "SI_Nick.generated.h"
 
 class USI_AbilitySystemComponent;
@@ -22,9 +21,6 @@ class USI_AIPerceptionStimuliSource;
 class USI_LevelManager;
 class USI_MapData;
 
-// ****************  TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
-class ASI_Flashlight;
-
 UCLASS()
 class SI_PROTOTYPE_API ASI_Nick : public ASI_Character, public IAbilitySystemInterface
 {
@@ -32,20 +28,11 @@ class SI_PROTOTYPE_API ASI_Nick : public ASI_Character, public IAbilitySystemInt
 	
 public:
 
-	// ****************  TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
-	// *** Need to understand TSubclassOf properly
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASI_Flashlight> FlashlightClass = ASI_Flashlight::StaticClass();
-	UPROPERTY(EditAnywhere)
-	ASI_Flashlight* Flashlight;
-
-
-	
 	ASI_Nick();
 
 	// ================== VARIABLES ==================
 
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UPROPERTY(BlueprintReadOnly, Category = Camera)
 	UATPCCameraComponent* ATPCCamera;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
@@ -55,6 +42,7 @@ public:
 	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
 	
 private:
+
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = AI, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USI_AIPerceptionStimuliSource> PerceptionStimuliSourceComponent = nullptr;
@@ -63,7 +51,7 @@ private:
 	
 	UPROPERTY()
 	USI_LevelManager* LevelManager;
-	UPROPERTY()
+
 	ASI_InteractableActor* CurrentInteractableActor;
 		
 	// ================== FUNCTIONS ==================
@@ -81,12 +69,13 @@ public:
 	USI_NickCharacterData* NickCharacterData;
 	
 	/** Returns CameraBoom SubObject **/
-	FORCEINLINE UATPCCameraComponent* GetATPCCamera() { return ATPCCamera; }
+	FORCEINLINE UATPCCameraComponent* GetATPCCamera() const { return ATPCCamera; }
 	/** Returns FollowCamera SubObject **/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return NickFollowCamera; }
 	/** Returns PerceptionStimuliSourceComponent SubObject **/
 	FORCEINLINE USI_AIPerceptionStimuliSource* GetPerceptionStimuliSource() const { return PerceptionStimuliSourceComponent; }
 	
+
 	/** Turn off visibility of Nick's meshes **/
 	void HideMeshes(bool Value);
 
