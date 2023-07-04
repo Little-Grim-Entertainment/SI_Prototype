@@ -9,7 +9,6 @@
 
 class ASI_NPC;
 class UBehaviorTreeComponent;
-class UBlackboardComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
@@ -34,7 +33,7 @@ protected:
 	virtual void SetSeenTarget(AActor* Actor);
 	virtual void SetLostTarget();
 	//TODO: Will need to add support for AI Perception Teams, if we want NPCs to belong to specific factions, and have interactions between each other.
-
+	
 	UFUNCTION()
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 

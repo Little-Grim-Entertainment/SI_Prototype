@@ -9,17 +9,16 @@
 // Sets default values
 ASI_MoveToIndicator::ASI_MoveToIndicator()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	StimuliSource = CreateDefaultSubobject<USI_AIPerceptionStimuliSource>(TEXT("StimuliSource"));
+	
+	MoveToMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Active Mesh");
+	MoveToMeshComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void ASI_MoveToIndicator::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ASI_MoveToIndicator::SetPerceptionStimuliSource()
@@ -27,17 +26,16 @@ void ASI_MoveToIndicator::SetPerceptionStimuliSource()
 	StimuliSource->RegisterSense(UAISense_Sight::StaticClass());
 }
 
-// Called every frame
-void ASI_MoveToIndicator::Tick(float DeltaTime)
+void ASI_MoveToIndicator::UpdateActiveMesh(UStaticMesh* InMesh)
 {
-	Super::Tick(DeltaTime);
-
+	if(!IsValid(InMesh) || MoveToMeshComponent->GetStaticMesh() == InMesh) return;
+	
+	MoveToMeshComponent->SetStaticMesh(InMesh);
 }
 
-// Called to bind functionality to input
-void ASI_MoveToIndicator::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ASI_MoveToIndicator::SetActiveMeshToDefault()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	if(!IsValid(DefaultMesh) || !IsValid(MoveToMeshComponent)) return;
+	
+	MoveToMeshComponent->SetStaticMesh(DefaultMesh);
 }
-

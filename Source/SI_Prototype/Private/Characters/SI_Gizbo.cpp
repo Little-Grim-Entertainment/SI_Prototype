@@ -3,23 +3,24 @@
 
 #include "Characters/SI_Gizbo.h"
 
-#include "AssetTypeCategories.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "SI_NativeGameplayTagLibrary.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Actors/SI_InteractableActor.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 
+using namespace SI_NativeGameplayTagLibrary;
 
 ASI_Gizbo::ASI_Gizbo()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
 	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
+	AbilitySystemComponent = CreateDefaultSubobject<USI_AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	
 	//Picked up object Dampening;
 	AdjustedDampening = 1000.0f;
-
 	//Furthest distance gizbo can be from object and Interact
 	InteractDistance = 75.0f;
-	
 	// Distance item is held in front of character
 	CarryOffset = 75.0f;	
 }
@@ -32,9 +33,36 @@ void ASI_Gizbo::Tick(float DeltaTime)
 	//Does character have something picked up?
 	if(bIsHoldingItem)
 	{
-		//Move object to Grab location and change its linear dampening
-	//	HeldItemPosition();
+		// Move object to Grab location and change its linear dampening
+		HeldItemPosition();
 	}	
+}
+
+UAbilitySystemComponent* ASI_Gizbo::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+USI_AbilitySystemComponent* ASI_Gizbo::GetSIAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+void ASI_Gizbo::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GiveAbilities();
+}
+
+void ASI_Gizbo::GiveAbilities()
+{
+	if (!IsValid(AbilitySystemComponent)) {return;}
+
+	for (TSubclassOf<USI_GameplayAbility>& Ability : DefaultAbilities)
+	{
+		AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, this));
+	}
 }
 
 void ASI_Gizbo::HeldItemPosition()
@@ -47,7 +75,7 @@ void ASI_Gizbo::HeldItemPosition()
 	PhysicsHandle->SetTargetLocationAndRotation(GetActorLocation() + (GetViewRotation().Vector() * CarryOffset) , CarriedObjectRotation);
 }
 
-void ASI_Gizbo::PickupItem(AActor* InHitActor)
+void ASI_Gizbo::PickupObject(AActor* InHitActor)
 {
 		HeldActor = InHitActor;
 		USkeletalMeshComponent* GizboMesh = GetMesh();
@@ -56,13 +84,19 @@ void ASI_Gizbo::PickupItem(AActor* InHitActor)
 		bIsHoldingItem = true;
 }
 
+void ASI_Gizbo::PushObject(AActor* InHitActor)
+{
+	FAttachmentTransformRules AttachRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
+	AttachToActor(InHitActor, AttachRules);
+}
+
 void ASI_Gizbo::DropItem()
 {
 	HeldActor->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	bIsHoldingItem = false;
 }
 
-void ASI_Gizbo::LocatePickupItem()
+void ASI_Gizbo::LocateInteractable()
 {
 	//Are our hands empty	
 	if(!bIsHoldingItem)
@@ -86,18 +120,27 @@ void ASI_Gizbo::LocatePickupItem()
 		bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, StartLocation, EndLocation, FQuat::Identity, ObjectQueryParams, Shape );
 
 		//Debug Draw
-	//	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
-	//	DrawDebugLine(GetWorld(), StartLocation, EndLocation, LineColor, false, 2.0f, 0, 0.0f);
-	//	DrawDebugSphere(GetWorld(), EndLocation, InteractDistance, 32, LineColor, false, 2.0f);
+		FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+		DrawDebugLine(GetWorld(), StartLocation, EndLocation, LineColor, false, 2.0f, 0, 0.0f);
+		DrawDebugSphere(GetWorld(), EndLocation, InteractDistance, 32, LineColor, false, 2.0f);
 		
 		for (FHitResult Hit : Hits)
 		{
-	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Gizbo: Located %s"), *Hit.GetActor()->GetName()));
-			
+		
 			if(Hit.GetActor()->Implements<USI_InteractInterface>() && Hit.GetActor() != this)
 			{
-				PickupItem(Hit.GetActor());
+				ASI_InteractableActor* HitInteractable = Cast<ASI_InteractableActor>(Hit.GetActor());
+				if(!IsValid(HitInteractable)) return;
+
+				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interact_Pickupable))
+				{
+					PickupObject(HitInteractable);
 					return;
+				}
+				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interact_Pushable) )
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Gizbo: Pushable Located %s"), *Hit.GetActor()->GetName()));
+				}
 			}
 		}
 	}
