@@ -201,15 +201,10 @@ void ASI_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue
 void ASI_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {return;}
-	
-	if(InteractableActor)
-	{
-		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(InteractableActor))
-		{
-			InterfaceActor->Execute_OnInteract(InteractableActor, InteractableActor);
-			OnInteractPressed.Broadcast(InteractableActor, this);
-		}
-	}
+
+	if(!IsValid(SITagManager))	{return;}
+
+	Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
 }
 
 void ASI_PlayerController::RequestToggleObservation()
@@ -236,7 +231,7 @@ void ASI_PlayerController::RequestObserveObject()
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
 	{
-		if (Nick->GetCurrentInteractableActor() != nullptr)
+		if (Nick->GetCurrentObservedActor() != nullptr)
 		{
 			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
 		}
@@ -430,7 +425,7 @@ void ASI_PlayerController::RequestMultiOptionRight()
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	InteractableActor = Cast<ASI_InteractableActor>(InInteractableActor);
+	InteractableActor = InInteractableActor;
 }
 
 void ASI_PlayerController::SetObservableActor(AActor* InObservableActor)
