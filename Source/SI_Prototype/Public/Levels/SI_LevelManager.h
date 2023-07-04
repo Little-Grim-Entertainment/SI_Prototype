@@ -73,7 +73,6 @@ public:
 
 protected:
 	
-	virtual void OnInitGame() override;
 	virtual void OnGameModeBeginPlay() override;
 	virtual void OnPlayerStart() override;
 

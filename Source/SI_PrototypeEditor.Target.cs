@@ -9,7 +9,8 @@ public class SI_PrototypeEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
+		
 		ExtraModuleNames.Add("SI_Prototype");
-		ExtraModuleNames.Add("DialogueSystemEditor");
+		ExtraModuleNames.Add("SI_Editor");
 	}
 }

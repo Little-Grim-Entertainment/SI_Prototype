@@ -14,13 +14,23 @@ void USI_GameInstance::Init()
 {
 	Super::Init();
 	
-	OnGameInstanceInit.Broadcast();
+	OnGameInstanceInitDelegate.Broadcast();
+}
 
-	/*USI_LevelManager* LevelManager = GetSubsystem<USI_LevelManager>();
-	if(IsValid(LevelManager))
-	{
-		FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(LevelManager, &USI_LevelManager::LevelLoaded);
-	}*/
+
+FOnGameInstanceInit& USI_GameInstance::OnGameInstanceInit()
+{
+	return OnGameInstanceInitDelegate;
+}
+
+FOnGameModeBeginPlay& USI_GameInstance::OnGameModeBeginPlay()
+{
+	return OnOnGameModeBeginPlayDelegate;
+}
+
+FOnPlayerStart& USI_GameInstance::OnPlayerStart()
+{
+	return OnOnPlayerStartDelegate;
 }
 
 FOnTagManagerInitialized& USI_GameInstance::OnTagManagerInitialized()
@@ -30,5 +40,6 @@ FOnTagManagerInitialized& USI_GameInstance::OnTagManagerInitialized()
 
 ASI_GameMode* USI_GameInstance::GetGameMode()
 {
-	return Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
+	GameMode = Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
+	return GameMode;
 }

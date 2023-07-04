@@ -95,6 +95,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
+	AActor* GetInteractableActor();
+	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());

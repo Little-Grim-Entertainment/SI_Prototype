@@ -5,29 +5,30 @@
 
 namespace SI_NativeGameplayTagLibrary
 {
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Flashlight, "Ability.Construct.Flashlight");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Lockpicks, "Ability.Construct.Lockpicks");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Follow, "Ability.Follow");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UsePrimary, "Ability.Gadget.UsePrimary");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Flashlight, "Ability.Construct.Flashlight")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Lockpicks, "Ability.Construct.Lockpicks")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Follow, "Ability.Follow")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UsePrimary, "Ability.Gadget.UsePrimary")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UseSecondary, "Ability.Gadget.UseSecondary")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_AdaptableAction, "Ability.Gizbo.AdaptableAction");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_AdaptableActionConfirm, "Ability.Gizbo.AdaptableActionConfirm");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct, "Ability.Gizbo.Construct");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Deconstruct, "Ability.Gizbo.Deconstruct");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_AdaptableAction, "Ability.Gizbo.AdaptableAction")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_AdaptableActionConfirm, "Ability.Gizbo.AdaptableActionConfirm")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct, "Ability.Gizbo.Construct")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Deconstruct, "Ability.Gizbo.Deconstruct")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact, "Ability.Interact")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Drop, "Ability.Interact.Drop");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pickup, "Ability.Interact.Pickup");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pull, "Ability.Interact.Pull");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Push, "Ability.Interact.Push");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_MoveTo, "Ability.MoveTo");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Drop, "Ability.Interact.Drop")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pickup, "Ability.Interact.Pickup")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pull, "Ability.Interact.Pull")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Push, "Ability.Interact.Push")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_MoveTo, "Ability.MoveTo")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Observation, "Ability.Observation")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_ObserveObject, "Ability.ObserveObject")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_PossessMovable, "Ability.PossessMovable")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Wait, "Ability.Wait");
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Wait, "Ability.Wait")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor, "Actor")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Interactable, "Actor.Interactable")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Observable, "Actor.Observable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Interactable, "Actor.Interactable")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio, "Audio")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music, "Audio.Music")
@@ -39,6 +40,9 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_InDoor, "Camera.Mode.InDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_Observation, "Camera.Mode.Observation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_PossessMovable, "Camera.Mode.PossessMovable")
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Debug, "Debug")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Debug_DisableAllMedia, "Debug.DisableAllMedia")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget, "Gadget")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_Flashlight, "Gadget.Flashlight")
@@ -76,6 +80,14 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MoveToConfirm, "Input.Action.Gizbo.MoveToConfirm")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_UseGadget, "Input.Action.Gizbo.UseGadget");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_UseGadgetSecondary, "Input.Action.Gizbo.UseGadgetSecondary");
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_MoveForward, "Input.Axis.1D.MoveForward")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_MoveRight, "Input.Axis.1D.MoveRight")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_TurnRate, "Input.Axis.1D.TurnRate")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_LookUpRate, "Input.Axis.1D.LookUpRate")
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pickupable, "Interact.Pickupable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pushable, "SITag.Interact.Pushable")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media, "Media")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Cinematic, "Media.Cinematic")
@@ -87,6 +99,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State, "Player.State")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Dialogue, "Player.State.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Exploration, "Player.State.Exploration")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_GizboActions, "Player.State.GizboActions")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Inactive, "Player.State.Inactive")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Interrogation, "Player.State.Interrogation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Menu, "Player.State.Menu")
@@ -94,13 +107,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Observation, "Player.State.Observation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_PossessMovable, "Player.State.PossessMovable")
 	
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_MoveForward, "Input.Axis.1D.MoveForward")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_MoveRight, "Input.Axis.1D.MoveRight")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_TurnRate, "Input.Axis.1D.TurnRate")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_LookUpRate, "Input.Axis.1D.LookUpRate")
 
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pickupable, "Interact.Pickupable");
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pushable, "Interact.Pushable");
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI, "UI")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD, "UI.HUD")

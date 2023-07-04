@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/SI_GameplayAbility.h"
+#include "SI_GameplayAbility.h"
 #include "SI_GameplayAbility_Interact.generated.h"
 
 /**
@@ -14,7 +14,7 @@ class SI_PROTOTYPE_API USI_GameplayAbility_Interact : public USI_GameplayAbility
 {
 	GENERATED_BODY()
 
-public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+
 };

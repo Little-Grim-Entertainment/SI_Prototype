@@ -17,12 +17,6 @@
 #include "MediaAssets/Public/MediaSoundComponent.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 
-void USI_MediaManager::OnGameModeBeginPlay()
-{
-	Super::OnGameModeBeginPlay();
-	
-}
-
 void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
@@ -65,6 +59,8 @@ void USI_MediaManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 
 void USI_MediaManager::PlayMedia(USI_MediaDataAsset* InMediaToPlay, FSI_MediaSettings& InMediaSettings)
 {
+	if(ShouldDisableMedia()) {return;}
+	
 	USI_CinematicDataAsset* CinematicDataAsset = Cast<USI_CinematicDataAsset>(InMediaToPlay);
 		
 	if (IsValid(CinematicDataAsset))
@@ -79,7 +75,6 @@ void USI_MediaManager::PlayMedia(USI_MediaDataAsset* InMediaToPlay, FSI_MediaSet
 		}
 		
 		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Pause);
-		if(CvarDisableAllMedia.GetValueOnAnyThread()){SkipMedia(InMediaToPlay);}
 		return;
 	}
 
@@ -97,7 +92,6 @@ void USI_MediaManager::PlayMedia(USI_MediaDataAsset* InMediaToPlay, FSI_MediaSet
 		}
 
 		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Pause);
-		if(CvarDisableAllMedia.GetValueOnAnyThread()){SkipMedia(InMediaToPlay);}
 	}
 }
 
@@ -352,6 +346,14 @@ void USI_MediaManager::OnCinematicEnded()
 	SITagManager->RemoveTag(SITag_Audio_Music_Pause);
 	SITagManager->RemoveTag(SITag_Media_Cinematic);
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
+}
+
+bool USI_MediaManager::ShouldDisableMedia() const
+{
+#if !UE_BUILD_SHIPPING
+	return CvarDisableAllMedia.GetValueOnAnyThread() || SITagManager->HasGameplayTag(SITag_Debug_DisableAllMedia);
+#endif
+	return false;
 }
 
 void USI_MediaManager::DelayedCinematicPlay(USI_MapData* LoadedLevel, bool bShouldFade)
