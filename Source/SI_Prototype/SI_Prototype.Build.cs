@@ -20,6 +20,7 @@ public class SI_Prototype : ModuleRules
 			"Core", 
 			"CoreUObject",
 			"Engine",
+			"GameplayAbilities",
 			"InputCore",
 			"LevelSequence",
 			"MediaAssets",
@@ -28,7 +29,7 @@ public class SI_Prototype : ModuleRules
 			"NavigationSystem", 
 			"Slate", 
 			"SlateCore", 
-			"UMG",
+			"UMG", 
 		});
 	}
 }

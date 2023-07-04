@@ -54,12 +54,14 @@ private:
 	bool CheckContainerForParentTag(const FGameplayTag& InParentTag, const FSI_GameplayTagContainer& InContainerToCheck) const;
 
 	TMap<FGameplayTag, FSI_GameplayTagContainer> AllTagContainers;
-	
+
+	FSI_GameplayTagContainer CameraTags;
+	FSI_GameplayTagContainer GadgetTags;
 	FSI_GameplayTagContainer GameStateTags;
-	FSI_GameplayTagContainer PlayerStateTags;
-	FSI_GameplayTagContainer UITags;
 	FSI_GameplayTagContainer LevelTags;
 	FSI_GameplayTagContainer MediaTags;
-	FSI_GameplayTagContainer CameraTags;
 	FSI_GameplayTagContainer MusicTags;
+	FSI_GameplayTagContainer PlayerStateTags;
+	FSI_GameplayTagContainer UITags;
+
 };
