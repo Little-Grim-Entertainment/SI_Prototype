@@ -35,7 +35,7 @@ const UInputMappingContext* USI_InputConfig::GetInputMappingByTag(const FGamepla
 
 	if (!InAssociatedPlayerModeTag.IsValid()) {return nullptr;}
 	
-	for (FSI_InputMapping CurrentInputMapping: InputMappings)
+	for (FSI_InputMapping CurrentInputMapping: PrimaryInputMappings)
 	{
 		if(CurrentInputMapping.GetAssociatedTag() == InAssociatedPlayerModeTag)
 		{
@@ -74,9 +74,14 @@ const UInputMappingContext* USI_InputConfig::GetInputMappingByTag(const FGamepla
 	return nullptr;
 }
 
-const TArray<FSI_InputMapping>& USI_InputConfig::GetInputMappings()
+const TArray<FSI_InputMapping>& USI_InputConfig::GetPrimaryInputMappings()
 {
-	return InputMappings;
+	return PrimaryInputMappings;
+}
+
+const TArray<FSI_InputMapping>& USI_InputConfig::GetSecondaryInputMappings()
+{
+	return SecondaryInputMappings;
 }
 
 const TArray<FSI_InputAction>& USI_InputConfig::GetBasicInputActions()

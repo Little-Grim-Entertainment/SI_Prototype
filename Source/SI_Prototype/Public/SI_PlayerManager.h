@@ -35,11 +35,11 @@ private:
 
 	void SetupDialogueState();
 	void SetupExplorationState();
-	void SetupGizboActionsState();
 	void SetupInactiveState();	
 	void SetupInterrogationState();
 	void SetupMenuState();
 	void SetupObservationState();
+	void SetupPossessMovableState();
 	
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
@@ -52,11 +52,11 @@ private:
 
 	FSimpleDelegate DialogueStateDelegate;
 	FSimpleDelegate ExplorationStateDelegate;
-	FSimpleDelegate GizboActionsStateDelegate;
 	FSimpleDelegate InactiveStateDelegate;
 	FSimpleDelegate InterrogationStateDelegate;
 	FSimpleDelegate MediaStateDelegate;
 	FSimpleDelegate MenuStateDelegate;
 	FSimpleDelegate ObservationStateDelegate;
+	FSimpleDelegate PossessMovableStateDelegate;
 
 };
