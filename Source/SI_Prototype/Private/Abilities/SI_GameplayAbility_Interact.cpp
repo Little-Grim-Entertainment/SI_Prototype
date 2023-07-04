@@ -2,9 +2,9 @@
 
 
 #include "Abilities/SI_GameplayAbility_Interact.h"
-#include "Interfaces/SI_InteractInterface.h"
-#include "Characters/SI_Nick.h"
+
 #include "Controllers/SI_PlayerController.h"
+#include "Interfaces/SI_InteractInterface.h"
 
 void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                    const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -12,14 +12,15 @@ void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	ASI_PlayerController* Controller = Cast<ASI_PlayerController>(ActorInfo->AvatarActor.Get()->GetInstigatorController());
-	if(!IsValid(Controller)) { return; }
+	ASI_PlayerController* PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
-	if(Controller->GetInteractableActor())
+	if(!IsValid(PlayerController)) { return; }
+
+	if(PlayerController->GetInteractableActor())
 	{
-		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(Controller->GetInteractableActor()))
+		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(PlayerController->GetInteractableActor()))
 		{
-			InterfaceActor->Execute_OnInteract(Controller->GetInteractableActor(), Controller->GetInteractableActor());
+			InterfaceActor->Execute_OnInteract(PlayerController->GetInteractableActor(), PlayerController->GetInteractableActor());
 		}
 	}
 

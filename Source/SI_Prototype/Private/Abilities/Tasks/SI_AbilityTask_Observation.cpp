@@ -54,14 +54,14 @@ void USI_AbilityTask_Observation::StartLineTrace()
 		{
 			IActor->HighlightBeginTimer();
 
-			if(Nick->GetCurrentObservedActor() != IActor)
+			if(Nick->GetCurrentInteractableActor() != IActor)
 			{
-				Nick->SetCurrentObservedActor(IActor);
+				Nick->SetCurrentInteractableActor(IActor);
 			}
 		}
 		else
 		{
-			Nick->SetCurrentObservedActor(nullptr);
+			Nick->SetCurrentInteractableActor(nullptr);
 		}
 	}
 }

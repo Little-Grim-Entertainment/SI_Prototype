@@ -81,8 +81,8 @@ public:
 
 	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
 	void GiveAbilities();
-	ASI_InteractableActor* GetCurrentObservedActor() { return CurrentInteractableActor; }
-	void SetCurrentObservedActor(ASI_InteractableActor* InInteractableActor) { CurrentInteractableActor = InInteractableActor; }
+	ASI_InteractableActor* GetCurrentInteractableActor() { return CurrentInteractableActor; }
+	void SetCurrentInteractableActor(ASI_InteractableActor* InInteractableActor) { CurrentInteractableActor = InInteractableActor; }
 	
 protected:
 
