@@ -24,6 +24,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Interact_Push)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_MoveTo)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Observation)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_ObserveObject)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_PossessMovable)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Wait)
 	
@@ -41,6 +42,9 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Camera_Mode_InDoor)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Camera_Mode_Observation)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Camera_Mode_PossessMovable)
+	
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Debug)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Debug_DisableAllMedia)	
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Gadget)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Gadget_Flashlight)
@@ -53,15 +57,13 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Game_State_Paused)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Game_State_Loading)
 
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Debug);
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Debug_DisableAllMedia);
-
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Interact)
+
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Exit)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Next)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Previous)
-	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Interact)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Media_Skip)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_MultiOption_Down)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_MultiOption_Left)
@@ -72,7 +74,8 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_ToggleSystemMenu)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_UseGadget)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_UseGadgetSecondary)
-	
+
+	// Gizbo Commands
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_ControlsToggle)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_Follow)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Gizbo_MoveTo)
@@ -94,6 +97,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Media_TitleCard)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Media_Video)
 
+	// Player State
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Player_State_Dialogue)

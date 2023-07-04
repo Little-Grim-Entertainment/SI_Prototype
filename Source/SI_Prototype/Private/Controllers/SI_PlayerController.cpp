@@ -119,7 +119,8 @@ void ASI_PlayerController::BeginPlay()
 
 	Nick = Cast<ASI_Nick>(GetCharacter());
 
-	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
+	if (IsValid(GizboManager))
 	{
 		GizboManager->Nick = Cast<ASI_Nick>(GetCharacter());
 	}
@@ -219,7 +220,6 @@ void ASI_PlayerController::RequestInteract()
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	if(!IsValid(SITagManager)) {return;}
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
@@ -313,12 +313,49 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 	}
 }
 
-void ASI_PlayerController::RequestGizboFollowTemp()
+void ASI_PlayerController::RequestUseGadget()
 {
-	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	if(!IsValid(SITagManager)) {return;}
+	
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
 	{
-		GizboManager->GetGizboController()->ToggleFollow();
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gadget_UsePrimary.GetTag().GetSingleTagContainer(), false);
 	}
+	
+	// todo: Delete when gadget system implemented
+	TArray<AActor*> AttachedFlashlights;
+	Nick->GetAttachedActors(AttachedFlashlights, true, false);
+
+	for (auto AttachedFlashlight : AttachedFlashlights)
+	{
+		ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
+		EquippedFlashlight->UsePrimary();			
+	}	
+}
+
+void ASI_PlayerController::RequestUseGadgetSecondary()
+{
+	if(!IsValid(SITagManager)) {return;}
+	
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	{
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gadget_UseSecondary.GetTag().GetSingleTagContainer(), false);
+	}
+
+	// todo: Delete when gadget system implemented
+	TArray<AActor*> AttachedFlashlights;
+	Nick->GetAttachedActors(AttachedFlashlights, true, false);
+
+	for (auto AttachedFlashlight : AttachedFlashlights)
+	{
+		ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
+		EquippedFlashlight->UseSecondary();			
+	}
+}
+
+void ASI_PlayerController::RequestToggleGizboFollow()
+{
+	GizboManager->GetGizboController()->ToggleFollow();
 }
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
