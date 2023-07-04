@@ -29,17 +29,46 @@ const FGameplayTag& USI_PlayerManager::GetPreviousPlayerState() const
 	return PreviousPlayerState;
 }
 
+void USI_PlayerManager::ShowWorld(bool bShouldShow, bool bShouldFade)
+{
+	if (!IsValid(PlayerController)) {return;}
+
+	if(bShouldShow)
+	{
+		if(bShouldFade)
+		{
+			PlayerController->PlayerCameraManager->StartCameraFade(1, 0, .5, FLinearColor::Black, false, true);
+		}
+		else
+		{
+			PlayerController->PlayerCameraManager->StartCameraFade(1, 0, 0, FLinearColor::Black, false, true);
+		}
+	}
+	else
+	{
+		if(bShouldFade)
+		{
+			PlayerController->PlayerCameraManager->StartCameraFade(0, 1, .5, FLinearColor::Black, false, true);
+		}
+		else
+		{
+			PlayerController->PlayerCameraManager->StartCameraFade(0, 1, .0, FLinearColor::Black, false, true);
+		}
+	}
+
+	bShowWorld = bShouldShow;
+}
+
 void USI_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	
-	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 }
 
 void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	if(!IsValid(GetWorld())) return;
-	
+
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (SITagManager->HasParentTag(InAddedTag, SITag_UI_Menu))
@@ -63,8 +92,6 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Player)){return;}
 	
-	Super::OnGameplayTagAdded(InAddedTag);
-
 	if(SITagManager->HasParentTag(InAddedTag, SITag_Player_State))
 	{
 		CurrentPlayerState = InAddedTag;
@@ -89,6 +116,8 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
 	if(!IsValid(GetWorld())) return;
 	
+	Super::OnGameplayTagRemoved(InRemovedTag);
+	
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
@@ -106,9 +135,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	}
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Player)){return;}
-
-	Super::OnGameplayTagRemoved(InRemovedTag);
-
+	
 	if(SITagManager->HasParentTag(InRemovedTag, SITag_Player_State))
 	{
 		PreviousPlayerState = InRemovedTag;
@@ -116,6 +143,24 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 
 	if (!IsValid(PlayerController)){return;}
 	PlayerController->RemoveInputMappingByTag(InRemovedTag);
+}
+
+void USI_PlayerManager::OnPlayerStart()
+{
+	Super::OnPlayerStart();
+
+	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
+	ShowWorld(false, false);
+}
+
+void USI_PlayerManager::OnGameModeBeginPlay()
+{
+	Super::OnGameModeBeginPlay();
+
+	if(!bShowWorld)
+	{
+		ShowWorld(true, true);
+	}
 }
 
 void USI_PlayerManager::InitializeDelegates()

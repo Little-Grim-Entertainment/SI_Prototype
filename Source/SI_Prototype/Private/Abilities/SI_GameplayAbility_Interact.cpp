@@ -2,15 +2,12 @@
 
 
 #include "Abilities/SI_GameplayAbility_Interact.h"
-<<<<<<< HEAD
-
 #include "Controllers/SI_PlayerController.h"
 #include "Interfaces/SI_InteractInterface.h"
-=======
 #include "Actors/SI_InteractableActor.h"
 #include "Interfaces/SI_InteractInterface.h"
 #include "Characters/SI_Nick.h"
->>>>>>> parent of 9b8aad05 (.)
+
 
 void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                    const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -18,7 +15,7 @@ void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-<<<<<<< HEAD
+
 	ASI_PlayerController* PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if(!IsValid(PlayerController)) { return; }
@@ -30,7 +27,7 @@ void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHan
 			InterfaceActor->Execute_OnInteract(PlayerController->GetInteractableActor(), PlayerController->GetInteractableActor());
 		}
 	}
-=======
+
 	ASI_Nick* Nick = Cast<ASI_Nick>(ActorInfo->AvatarActor.Get());
 	if(!IsValid(Nick)) { return; }
 
@@ -38,7 +35,6 @@ void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHan
 	if(!IsValid(ObservableActor)) { return; }
 	
 	ObservableActor->Execute_OnObserved(Cast<UObject>(ObservableActor), ObservableActor);
->>>>>>> parent of 9b8aad05 (.)
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 }

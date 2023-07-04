@@ -4,6 +4,7 @@
 #include "Levels/SI_LevelManager.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
+#include "SI_NativeGameplayTagLibrary.h"
 #include "LevelSequencePlayer.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 #include "Characters/SI_GizboManager.h"
@@ -17,6 +18,7 @@
 #include "Data/Media/SI_CinematicDataAsset.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
+#include "Engine/World.h"
 #include "MediaPlayer.h"
 
 
@@ -27,16 +29,10 @@ USI_LevelManager::USI_LevelManager()
 
 }
 
-void USI_LevelManager::OnInitGame()
-{
-	Super::OnInitGame();
-
-}
-
 void USI_LevelManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
-
+	
 	InitializeMapStates();
 	LevelLoaded(GetWorld());
 }
@@ -44,12 +40,7 @@ void USI_LevelManager::OnGameModeBeginPlay()
 void USI_LevelManager::OnPlayerStart()
 {
 	Super::OnPlayerStart();
-
-	const ASI_PlayerController* PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (IsValid(PlayerController))
-	{
-		PlayerController->PlayerCameraManager->StartCameraFade(0, 1, .01, FLinearColor::Black, false, true);
-	}
+	
 }
 
 void USI_LevelManager::InitializeMapStates()
@@ -77,19 +68,22 @@ void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString In
 	if (!MapStateToLoad.GetMapData()) {return;}
 	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
 
-	if (LoadedMapState->GetMapData()->MapType == SITag_Map_Type_Menu)
+	if(LoadedMapState != nullptr)
 	{
-		SITagManager->RemoveTag(SITag_UI_Menu_Map);
-	}
-
-	if(LoadedMapState->HasOutroMedia())
-	{
-		USI_MediaManager* MediaManager =  GetWorld()->GetSubsystem<USI_MediaManager>();
-		if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
+		if (LoadedMapState->GetMapData()->MapType == SITag_Map_Type_Menu)
 		{
-			MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
-			LoadLevelOnMediaComplete(InLevelToLoadTag, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
-			return;
+			SITagManager->RemoveTag(SITag_UI_Menu_Map);
+		}
+
+		if(LoadedMapState->HasOutroMedia())
+		{
+			USI_MediaManager* MediaManager =  GetWorld()->GetSubsystem<USI_MediaManager>();
+			if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
+			{
+				MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
+				LoadLevelOnMediaComplete(InLevelToLoadTag, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
+				return;
+			}
 		}
 	}
 	
@@ -108,7 +102,10 @@ void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString In
 	const ASI_GameMode* GameMode = GameInstance->GetGameMode();
 	if (!IsValid(GameMode)) {return;}
 
-	SITagManager->ReplaceTagWithSameParent(SITag_Game_State_Loading, SITag_Game_State);
+	if(!SITagManager->HasGameplayTag(SITag_Game_State_Loading))
+	{
+		SITagManager->ReplaceTagWithSameParent(SITag_Game_State_Loading, SITag_Game_State);
+	}
 	
 	if (GetWorld() != MapStateToLoad.GetMapData()->Map.Get())
 	{
@@ -254,19 +251,19 @@ void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 	if (LoadedMapState == nullptr)
 	{
 		LoadedMapState = &GetMapStateByWorld();
-		if (!LoadedMapState->IsStateValid()){return;}
+		if (!LoadedMapState->IsStateValid()) {return;}
 	}
 		
 	SITagManager->ReplaceTagWithSameParent(LoadedMapState->MapData->MapTag, SITag_Map_Title);
 
 	if (LoadedMapState->GetMapData()->MapType == SITag_Map_Type_Menu)
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_Menu_Map);
+		SITagManager->ReplaceTagWithSameParent(SITag_UI_Menu_Map, SITag_UI_Menu);
 	}
 	else
 	{
 		USI_MediaManager* MediaManager =  GetWorld()->GetSubsystem<USI_MediaManager>();
-		if (IsValid(MediaManager) && LoadedMapState->HasIntroMedia() && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedIntroMedia()))
+		if (IsValid(MediaManager) && LoadedMapState->HasIntroMedia() && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedIntroMedia()) && !SITagManager->HasGameplayTag(SITag_Debug_DisableAllMedia))
 		{
 			MediaManager->PlayMedia(LoadedMapState->GetLoadedIntroMedia(), LoadedMapState->GetOutroSettings());
 		}

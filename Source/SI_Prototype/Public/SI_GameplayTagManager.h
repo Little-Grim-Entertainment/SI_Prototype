@@ -63,5 +63,5 @@ private:
 	FSI_GameplayTagContainer MusicTags;
 	FSI_GameplayTagContainer PlayerStateTags;
 	FSI_GameplayTagContainer UITags;
-
+	FSI_GameplayTagContainer DebugTags;
 };

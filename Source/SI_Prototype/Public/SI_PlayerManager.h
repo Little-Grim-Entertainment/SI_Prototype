@@ -22,11 +22,15 @@ public:
 	const FGameplayTag& GetCurrentPlayerState() const;
 	const FGameplayTag& GetPreviousPlayerState() const;
 
+	void ShowWorld(bool bShouldShow, bool bShouldFade);
+
 protected:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	virtual void OnPlayerStart() override;
+	virtual void OnGameModeBeginPlay() override;
 	
 private:
 
@@ -43,6 +47,8 @@ private:
 	
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
+
+	bool bShowWorld = false;
 	
 	FGameplayTag PreviousPlayerState;
 	FGameplayTag CurrentPlayerState;

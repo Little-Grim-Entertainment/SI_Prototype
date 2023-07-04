@@ -34,6 +34,8 @@ void USI_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 
 void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
+	Super::OnGameplayTagAdded(InAddedTag);
+
 	if (SITagManager->HasParentTag(InAddedTag, SITag_Map_Title))
 	{
 		PlayLoadedLevelBackgroundMusic();
@@ -45,8 +47,6 @@ void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		return;
 	}
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Audio_Music)) {return;}
-
-	Super::OnGameplayTagAdded(InAddedTag);
 	
 	if(InAddedTag == SITag_Audio_Music_Pause)
 	{
@@ -56,10 +56,10 @@ void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
-	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Audio_Music)) {return;}
-	
 	Super::OnGameplayTagRemoved(InRemovedTag);
 
+	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Audio_Music)) {return;}
+	
 	if(InRemovedTag == SITag_Audio_Music_Pause)
 	{
 		ResumeMusicWithFade();

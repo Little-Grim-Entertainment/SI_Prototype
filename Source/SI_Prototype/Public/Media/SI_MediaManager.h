@@ -102,14 +102,16 @@ public:
 	UFUNCTION()
 	void OnCinematicEnded();
 
+	UFUNCTION()
+	bool ShouldDisableMedia() const;
+
 protected:
 
-	virtual void OnGameModeBeginPlay() override;
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
 	
 private:
-
+	
 	UPROPERTY()
 	USI_CinematicDataAsset* LoadedCinematic;	
 	UPROPERTY()

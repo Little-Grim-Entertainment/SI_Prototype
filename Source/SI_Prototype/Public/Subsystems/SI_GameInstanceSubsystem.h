@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "SI_GameplayTagTypes.h"
 #include "..\SI_NativeGameplayTagLibrary.h"
 #include "..\Levels\SI_MapGameplayTagLibrary.h"
 #include "SI_GameInstanceSubsystem.generated.h"
@@ -38,13 +39,16 @@ protected:
 	UFUNCTION()
 	virtual void OnGameInstanceInit();
 	UFUNCTION()
-	virtual void OnInitGame();
-	UFUNCTION()
-	virtual void OnPlayerStart();	
-	UFUNCTION()
 	virtual void OnGameModeBeginPlay();
+	UFUNCTION()
+	virtual void OnPlayerStart();
 	UFUNCTION()
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
 	UFUNCTION()
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag);
+
+private:
+
+	FGameplayTag PreviouslyAddedTag;
+	FGameplayTag PreviouslyRemovedTag;
 };

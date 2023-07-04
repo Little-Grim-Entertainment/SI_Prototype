@@ -24,6 +24,9 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_InDoor, "Camera.Mode.InDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_Observation, "Camera.Mode.Observation")
 	
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Debug, "Debug")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Debug_DisableAllMedia, "Debug.DisableAllMedia")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Game, "Game")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Game_State, "Game.State")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Game_State_Playing, "Game.State.Playing")

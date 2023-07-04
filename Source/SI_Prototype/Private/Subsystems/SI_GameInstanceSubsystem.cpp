@@ -18,10 +18,9 @@ void USI_GameInstanceSubsystem::InitializeDelegates()
 {
 	if (!IsValid(GameInstance)){return;}
 
-	GameInstance->OnGameInstanceInit.AddUObject(this, &ThisClass::OnGameInstanceInit);
-	GameInstance->OnPlayerStart.AddUObject(this, &ThisClass::OnGameInstanceInit);
-	GameInstance->OnGameModeBeginPlay.AddUObject(this, &ThisClass::OnGameModeBeginPlay);
-	GameInstance->OnInitGame.AddUObject(this, &ThisClass::OnInitGame);
+	GameInstance->OnGameInstanceInit().AddUObject(this, &ThisClass::OnGameInstanceInit);
+	GameInstance->OnGameModeBeginPlay().AddUObject(this, &ThisClass::OnGameModeBeginPlay);
+	GameInstance->OnPlayerStart().AddUObject(this, &ThisClass::OnPlayerStart);
 }
 
 void USI_GameInstanceSubsystem::InitializeDelegateMaps()
@@ -35,30 +34,28 @@ void USI_GameInstanceSubsystem::OnGameInstanceInit()
 	SITagManager = GameInstance->GetSubsystem<USI_GameplayTagManager>();
 	if (!IsValid(SITagManager)) {return;}
 
-	SITagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
+	SITagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);	
 	SITagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);
 }
 
-void USI_GameInstanceSubsystem::OnInitGame()
+void USI_GameInstanceSubsystem::OnGameModeBeginPlay()
 {
-
 }
 
 void USI_GameInstanceSubsystem::OnPlayerStart()
 {
 }
 
-void USI_GameInstanceSubsystem::OnGameModeBeginPlay()
-{
-
-}
-
 void USI_GameInstanceSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
+	/*if(InAddedTag == PreviouslyAddedTag) {return;}
+	PreviouslyAddedTag = InAddedTag;*/
 }
 
 void USI_GameInstanceSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
+	/*if(InRemovedTag == PreviouslyRemovedTag) {return;}
+	PreviouslyRemovedTag = InRemovedTag;*/
 }
 
 

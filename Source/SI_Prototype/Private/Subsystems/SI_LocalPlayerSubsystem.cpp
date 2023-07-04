@@ -19,8 +19,9 @@ void USI_LocalPlayerSubsystem::InitializeDelegates()
 {
 	if (!IsValid(GameInstance)){return;}
 
-	GameInstance->OnGameModeBeginPlay.AddUObject(this, &ThisClass::OnGameModeBeginPlay);
-
+	GameInstance->OnPlayerStart().AddUObject(this, &ThisClass::OnPlayerStart);
+	GameInstance->OnGameModeBeginPlay().AddUObject(this, &ThisClass::OnGameModeBeginPlay);
+	
 	SITagManager = GameInstance->GetSubsystem<USI_GameplayTagManager>();
 	if (!IsValid(SITagManager)) {return;}
 
@@ -29,6 +30,11 @@ void USI_LocalPlayerSubsystem::InitializeDelegates()
 }
 
 void USI_LocalPlayerSubsystem::InitializeDelegateMaps()
+{
+	
+}
+
+void USI_LocalPlayerSubsystem::OnPlayerStart()
 {
 	
 }
