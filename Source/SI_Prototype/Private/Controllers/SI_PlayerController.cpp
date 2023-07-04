@@ -202,7 +202,7 @@ void ASI_PlayerController::RequestInteract()
 	{
 		OnInteractPressed.Broadcast(InteractableActor, this);
 	}
-	
+
 	if(InteractableActor)
 	{
 		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(InteractableActor))

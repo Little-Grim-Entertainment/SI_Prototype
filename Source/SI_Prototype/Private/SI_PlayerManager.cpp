@@ -68,6 +68,8 @@ void USI_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	if(!IsValid(GetWorld())) return;
+	
+	Super::OnGameplayTagAdded(InAddedTag);
 
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 

@@ -14,8 +14,7 @@ void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHan
                                                    const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-
+	
 	ASI_PlayerController* PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if(!IsValid(PlayerController)) { return; }
