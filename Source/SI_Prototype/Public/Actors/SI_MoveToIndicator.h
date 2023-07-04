@@ -9,30 +9,30 @@
 class USI_AIPerceptionStimuliSource;
 
 UCLASS()
-class SI_PROTOTYPE_API ASI_MoveToIndicator : public AActor
+class SI_PROTOTYPE_API ASI_MoveToIndicator : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
 	ASI_MoveToIndicator();
-	
-	void SetPerceptionStimuliSource();
-	void UpdateActiveMesh(UStaticMesh* InMesh);
-	void SetActiveMeshToDefault();
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* MoveToMeshComponent;
+
+private:
+
+	UPROPERTY(VisibleAnywhere)
+	USI_AIPerceptionStimuliSource* StimuliSource;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
-	USceneComponent* Root;
-	UPROPERTY(EditAnywhere)
-	UStaticMesh* DefaultMesh;
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
-private:
-	UPROPERTY(VisibleAnywhere)
-	USI_AIPerceptionStimuliSource* StimuliSource;
+	void SetPerceptionStimuliSource();
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 };

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Camera/PlayerCameraManager.h"
 #include "SI_PlayerCameraManager.generated.h"
 
@@ -17,14 +16,18 @@ UCLASS()
 class SI_PROTOTYPE_API ASI_PlayerCameraManager : public APlayerCameraManager
 {
 	GENERATED_BODY()
-	
 	UPROPERTY()
 	USI_GameInstance* GameInstance;
 	UPROPERTY()
 	USI_GameplayTagManager* SITagManager;
 
-protected:
 	
+public:
+
+	void ChangeCameraByTag();
+
+protected:
+
 	virtual void BeginPlay() override;
 
 	UFUNCTION()

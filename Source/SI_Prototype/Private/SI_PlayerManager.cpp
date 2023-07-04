@@ -4,9 +4,11 @@
 #include "SI_PlayerManager.h"
 #include "SI_GameplayTagManager.h"
 #include "SI_NativeGameplayTagLibrary.h"
+#include "Components/Actor/SI_EnhancedInputComponent.h"
 #include "Controllers/SI_PlayerController.h"
 #include "Data/Maps/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
+#include "UI/SI_UserWidget.h"
 
 void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 {
@@ -38,8 +40,6 @@ void USI_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
-	if(!IsValid(GetWorld())) return;
-	
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (SITagManager->HasParentTag(InAddedTag, SITag_UI_Menu))
@@ -87,8 +87,6 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
-	if(!IsValid(GetWorld())) return;
-	
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
@@ -98,7 +96,6 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		PlayerController->SetMenuMode(false);
 		return;
 	}
-	
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Screen))
 	{
 		SITagManager->RemoveTag(SITag_Player_State_Inactive);
@@ -124,12 +121,12 @@ void USI_PlayerManager::InitializeDelegates()
 
 	DialogueStateDelegate.BindUObject(this, &ThisClass::SetupDialogueState);
 	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
+	GizboActionsStateDelegate.BindUObject(this, &ThisClass::SetupGizboActionsState);
 	InactiveStateDelegate.BindUObject(this, &ThisClass::SetupInactiveState);
 	InterrogationStateDelegate.BindUObject(this, &ThisClass::SetupInterrogationState);
 	MediaStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
 	MenuStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
 	ObservationStateDelegate.BindUObject(this, &ThisClass::SetupObservationState);
-	PossessMovableStateDelegate.BindUObject(this, &ThisClass::SetupPossessMovableState);
 	
 }
 
@@ -139,12 +136,12 @@ void USI_PlayerManager::InitializeDelegateMaps()
 
 	PlayerDelegateContainer.Add(SITag_Player_State_Dialogue, DialogueStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Exploration, ExplorationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_GizboActions, GizboActionsStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Inactive, InactiveStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Interrogation, InterrogationStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Menu, MenuStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
-	PlayerDelegateContainer.Add(SITag_Player_State_PossessMovable, PossessMovableStateDelegate);
 	
 }
 
@@ -164,6 +161,10 @@ void USI_PlayerManager::SetupExplorationState()
 	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_OutDoor, SITag_Camera_Mode);
 }
 
+void USI_PlayerManager::SetupGizboActionsState()
+{
+}
+
 void USI_PlayerManager::SetupInactiveState()
 {
 }
@@ -179,9 +180,4 @@ void USI_PlayerManager::SetupMenuState()
 void USI_PlayerManager::SetupObservationState()
 {
 	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_Observation, SITag_Camera_Mode);
-}
-
-void USI_PlayerManager::SetupPossessMovableState()
-{
-	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_PossessMovable, SITag_Camera_Mode);
 }
