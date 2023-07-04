@@ -4,6 +4,7 @@
 #include "Actors/Gadgets/SI_Flashlight.h"
 #include "Components/SpotLightComponent.h"
 #include "Actors/Gadgets/SI_FlashlightSegment.h"
+#include "Interfaces/SI_PowerInterface.h"
 
 
 ASI_Flashlight::ASI_Flashlight()
@@ -41,17 +42,23 @@ void ASI_Flashlight::BeginPlay()
 	bFlashlightOn = false;
 }
 
+
 void ASI_Flashlight::UsePrimary()
 {
 	if (bFlashlightOn)
 	{
 		Spotlight->SetHiddenInGame(true);
 		// todo: set emissive property of flashlight glass
+		// todo: Timer for power trace
+		GetWorld()->GetTimerManager().SetTimer(PowerTraceTimerHandle, this, &ASI_Flashlight::ExecuteTrace, 1.0f, true);
 	}
 	else
 	{
 		Spotlight->SetHiddenInGame(false);
 		// todo: set emissive property of flashlight glass
+		// todo: End timer for power trace
+		// end trace loop?
+		// clear timer
 	}
 	bFlashlightOn = !bFlashlightOn;
 }
@@ -90,6 +97,7 @@ void ASI_Flashlight::BindPickUpSegment()
 
 void ASI_Flashlight::PickUpSegment(int InSegmentNumber)
 {	
+	// todo: if 
 	// Todo: Segment number not consistent with order/ unique segment
 	if(GEngine)
 	{
@@ -110,19 +118,54 @@ void ASI_Flashlight::SpawnSegment()
 	{				
 			FTransform const SegmentSpawnTransform = GetActorTransform();
 			FlashlightSegment = GetWorld()->SpawnActor<ASI_FlashlightSegment>(FlashlightSegmentClass, SegmentSpawnTransform);
-			// FlashlightSegment->SegmentNumber = SegmentsPlaced + 1;
+			// todo: set segment unique identifier
 			FlashlightSegment->InitializeSegment(MaxPower/(MaxPlaceableSegments + 1));
 			BindPickUpSegment();
 	}
+	// todo: if (segments placed == max segments placed) spawn segment in front of nick and bind to hand
+	
+}
+
+void ASI_Flashlight::ExecuteTrace()
+{
+	FVector Start = Spotlight->GetComponentLocation();
+	FVector End = Start + Spotlight->GetForwardVector() * 100.0f;
+
+	TArray<FHitResult> HitResults;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	// todo: Dealing with partial obstruction in flashlight beam
+	if (GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, ECC_Visibility, Params))
+	{		
+		for (FHitResult& HitResult : HitResults)
+		{
+			AActor* Actor = HitResult.GetActor();		
+			if(!IsValid(Actor)) {continue;}
+
+			const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(Actor);
+			if(PowerInterfaceActor == nullptr || PowerInterfaceActor->Execute_HasMaxPower(Actor)) {continue;}
+						
+			PowerInterfaceActor->Execute_OnPowerReceived(Actor, this, CurrentPower);	
+			
+			if(GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Red, FString::Printf(TEXT("Flashlight: Hit Actor: %s"),*Actor->GetName()));
+			}			
+		}
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f, 0, 2.0f);
+	}
+	// IF POWER ACTOR IS NULL (THEN RETURN)
+	// IF POWER ACTOR IS HIT ACTOR (THEN RETURN)
+	//
 }
 
 void ASI_Flashlight::LightIntensityHandler()
 {
 	SpotlightIntensityIncrement = MaxSpotlightIntensity/(MaxPlaceableSegments+1);
 	CurrentSpotlightIntensity = MaxSpotlightIntensity - (SpotlightIntensityIncrement*SegmentsPlaced);
-	// Spotlight->Intensity = CurrentSpotlightIntensity;
 	Spotlight->SetIntensity(CurrentSpotlightIntensity);
-	// Spotlight->Intensity = 0.0f;
+	//Spotlight->Oncomp
 	
 	if(GEngine)
 	{

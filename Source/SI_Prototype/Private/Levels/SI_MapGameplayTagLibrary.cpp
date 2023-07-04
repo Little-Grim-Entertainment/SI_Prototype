@@ -22,5 +22,6 @@ namespace SI_MapGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Test_Sandbox, "Map.Title.Test.Sandbox")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Test_AI, "Map.Title.Test.AI")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Test_Industrial, "Map.Title.Test.Industrial")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Test_PowerZone, "Map.Title.Test.PowerZone")
 
 }

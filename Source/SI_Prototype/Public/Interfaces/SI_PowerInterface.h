@@ -26,4 +26,6 @@ public:
 	void OnPowerReceived(AActor* Caller, float InPower);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Power")
 	void OnPowerLost(AActor* Caller, float InPower);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Power")
+	bool HasMaxPower();
 };

@@ -47,11 +47,7 @@ void ASI_FlashlightSegment::OnInteract_Implementation(AActor* Caller)
 
 
 void ASI_FlashlightSegment::RemoveSegment()
-{	
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Segment: Remove segment called"));
-	}
+{		
 	SegmentPickUpDelegate.Execute(SegmentNumber);
 	// todo: Call endoverlap powerinterface?? (WORKING SO FAR)
 	Destroy();
@@ -60,19 +56,25 @@ void ASI_FlashlightSegment::RemoveSegment()
 void ASI_FlashlightSegment::OnPowerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
 {
+	if (!OtherActor->Implements<USI_PowerInterface>()) {return;}
+		
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
 	{
 		PowerInterfaceActor->Execute_OnPowerReceived(OtherActor, this, Power);	
-	}	
+	}		
+		
 }
 
 void ASI_FlashlightSegment::OnPowerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (!OtherActor->Implements<USI_PowerInterface>()) {return;}
+	
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
 	{
-		PowerInterfaceActor->Execute_OnPowerLost(OtherActor, this, Power);	
-	}		
+		PowerInterfaceActor->Execute_OnPowerLost(OtherActor, this, Power);
+	}			
+			
 }
 
 // Called every frame

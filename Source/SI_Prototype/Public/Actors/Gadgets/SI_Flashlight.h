@@ -25,7 +25,15 @@ public:
 	UFUNCTION()
 	void PickUpSegment(int InSegmentNumber);	
 	void SpawnSegment();
+	
+	UFUNCTION()
+	void ExecuteTrace();	
+	// UFUNCTION()
+	// void StopPowerTrace();
+	
 	void LightIntensityHandler();
+
+	
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASI_FlashlightSegment> FlashlightSegmentClass = ASI_FlashlightSegment::StaticClass();
@@ -39,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Power)
 	float CurrentPower;
 
+	UPROPERTY(EditAnywhere, Category = Power)
+	FTimerHandle PowerTraceTimerHandle;
+	
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	bool bFlashlightOn;
 
@@ -48,6 +59,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = SegmentPiece)
 	int MaxPlaceableSegments;
 
+	
 	
 private:
 
@@ -74,10 +86,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	float SpotlightIntensityIncrement;
-
-	
 	
 
 protected:
 	virtual void BeginPlay() override;
+	
 };

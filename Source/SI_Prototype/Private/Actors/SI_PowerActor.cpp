@@ -15,6 +15,7 @@ ASI_PowerActor::ASI_PowerActor()
 	PowerCollisionMesh->SetupAttachment(RootComponent);
 	PowerCollisionMesh->SetCollisionResponseToAllChannels(ECR_Ignore);	// todo: Change when collision needed
 	PowerCollisionMesh->SetCollisionResponseToChannel (ECC_GameTraceChannel3, ECR_Overlap);
+	PowerCollisionMesh->SetCollisionResponseToChannel (ECC_Visibility, ECR_Overlap);	
 	PowerCollisionMesh->SetCollisionObjectType(ECC_GameTraceChannel3);
 	PowerCollisionMesh->bMultiBodyOverlap = true;
 
@@ -37,8 +38,6 @@ void ASI_PowerActor::Tick(float DeltaTime)
 
 void ASI_PowerActor::OnPowerReceived_Implementation(AActor* Caller, float InPower)
 {	
-	ISI_PowerInterface::OnPowerReceived_Implementation(Caller, InPower);
-
 	CurrentPower = CurrentPower + InPower;
 	
 	if(GEngine)
@@ -50,7 +49,6 @@ void ASI_PowerActor::OnPowerReceived_Implementation(AActor* Caller, float InPowe
 
 void ASI_PowerActor::OnPowerLost_Implementation(AActor* Caller, float InPower)
 {
-	ISI_PowerInterface::OnPowerLost_Implementation(Caller, InPower);
 	CurrentPower = CurrentPower - InPower;
 
 	if(GEngine)
@@ -59,6 +57,12 @@ void ASI_PowerActor::OnPowerLost_Implementation(AActor* Caller, float InPower)
 	}
 	UpdatePowerDetails();
 }
+
+bool ASI_PowerActor::HasMaxPower_Implementation()
+{
+	return bIsFullyPowered;
+}
+
 
 void ASI_PowerActor::UpdatePowerDetails()
 {

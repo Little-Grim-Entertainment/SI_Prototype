@@ -44,6 +44,8 @@ public:
 	virtual void OnPowerReceived_Implementation(AActor* Caller, float InPower) override;
 	UFUNCTION()
 	virtual void OnPowerLost_Implementation(AActor* Caller, float InPower) override;
+	UFUNCTION()
+	virtual bool HasMaxPower_Implementation() override;
 
 private:
 	void UpdatePowerDetails();
