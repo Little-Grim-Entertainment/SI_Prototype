@@ -3,7 +3,7 @@
 
 #include "Controllers/SI_PlayerController.h"
 
-#include "AbilitySystemBlueprintLibrary.h"
+#include "ATPCCameraComponent.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
@@ -25,15 +25,14 @@
 #include "UI/SI_HUD.h"
 #include "UI/SI_UIManager.h"
 #include "Data/Input/SI_InputConfig.h"
+#include "SI_Prototype/SI_Prototype.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "SI_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
-#include "Characters/SI_Gizbo.h"
-
-// todo: delete when gadget system implemented
-#include "Actors/Gadgets/SI_Flashlight.h"
+#include "EngineUtils.h" // ActorIterator
+#include "Abilities/SI_GameplayAbility_Observation.h"
 
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -59,14 +58,8 @@ void ASI_PlayerController::SetupInputComponent()
 
 	const USI_InputConfig* InputConfig = EnhancedInputComponent->GetInputConfig();
 	if (!IsValid(InputConfig)) {return;}
-
-	// Axis Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveRight,  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
 	
-	// Nick Action Bindings
+	// Axis Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
@@ -75,22 +68,17 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadget);
-	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
-	
-	// Gizbo Commands Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboFollow); //TODO: Amend later
+	//EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Ongoing, this, &ThisClass::RequestGizboFollowTemp);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestGizboFollowTemp); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadget);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetSecondary);
-
-	// Gadget Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Down, ETriggerEvent::Started, this, &ThisClass::RequestMutliOptionDown);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Right, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Up, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionUp);
-	}
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm); 
+	
+	// Axis Bindings
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveRight,  ETriggerEvent::Triggered, this, &ThisClass::RequestMoveRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
+}
 
 void ASI_PlayerController::BeginPlay()
 {
@@ -99,8 +87,6 @@ void ASI_PlayerController::BeginPlay()
 	const USI_PlayerManager* PlayerManager = GetLocalPlayer()->GetSubsystem<USI_PlayerManager>();
 	if(!IsValid(PlayerManager) || !PlayerManager->GetCurrentPlayerState().IsValid()) {return;}
 
-	SITagManager =  GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-	
 	if(PlayerManager->GetCurrentPlayerState() == SITag_Player_State_Menu)
 	{
 		SetMenuMode(true);
@@ -117,11 +103,10 @@ void ASI_PlayerController::BeginPlay()
 	}
 
 	Nick = Cast<ASI_Nick>(GetCharacter());
-	GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
-	if (IsValid(GizboManager))
+
+	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
-		GizboManager->Nick = Nick;
-		Gizbo = GizboManager->GetGizbo();
+		GizboManager->Nick = Cast<ASI_Nick>(GetCharacter());
 	}
 }
 
@@ -202,14 +187,16 @@ void ASI_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {return;}
 
-	if(!IsValid(SITagManager))	{return;}
-
-	Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
+	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false))
+	{
+		OnInteractPressed.Broadcast(InteractableActor, this);
+	}
 }
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	if(!IsValid(SITagManager))	{return;}
+	USI_GameplayTagManager* SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+	if(!IsValid(SITagManager)) {return;}
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
 	{
@@ -227,14 +214,9 @@ void ASI_PlayerController::RequestToggleObservation()
 
 void ASI_PlayerController::RequestObserveObject()
 {
-	if(!IsValid(SITagManager)) {return;}
-	
-	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
+	if (Nick->GetCurrentInteractableActor() != nullptr)
 	{
-		if (Nick->GetCurrentObservedActor() != nullptr)
-		{
-			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
-		}
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_ObserveObject.GetTag().GetSingleTagContainer(), false);
 	}
 }
 
@@ -303,129 +285,106 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 	}
 }
 
-void ASI_PlayerController::RequestUseGadget()
+void ASI_PlayerController::RequestGizboFollowTemp()
 {
-	if(!IsValid(SITagManager)) {return;}
-	
-	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
 	{
-		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gadget_UsePrimary.GetTag().GetSingleTagContainer(), false);
+		GizboManager->GetGizboController()->ToggleFollow();
 	}
-	
-	// todo: Delete when gadget system implemented
-	TArray<AActor*> AttachedFlashlights;
-	Nick->GetAttachedActors(AttachedFlashlights, true, false);
-
-	for (auto AttachedFlashlight : AttachedFlashlights)
-	{
-			ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
-			EquippedFlashlight->UsePrimary();			
-	}	
-}
-
-void ASI_PlayerController::RequestUseGadgetSecondary()
-{
-
-	if(!IsValid(SITagManager)) {return;}
-	
-	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
-	{
-		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gadget_UseSecondary.GetTag().GetSingleTagContainer(), false);
-	}
-
-	// todo: Delete when gadget system implemented
-	TArray<AActor*> AttachedFlashlights;
-	Nick->GetAttachedActors(AttachedFlashlights, true, false);
-
-	for (auto AttachedFlashlight : AttachedFlashlights)
-	{
-		ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
-		EquippedFlashlight->UseSecondary();			
-	}
-}
-
-void ASI_PlayerController::RequestToggleGizboFollow()
-{
-	GizboManager->GetGizboController()->ToggleFollow();
 }
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-	if(!IsValid(SITagManager)) {return;}
+	bAdaptableActionMode = !bAdaptableActionMode;
 	
-	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	if(bAdaptableActionMode)
 	{
-		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(), false);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
+		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Initiated"), *GetNameSafe(GetPawn()));
+
+		InitializeGizboAdaptableAction();
 	}
-	InitializeGizboAdaptableAction();
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
+		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Cancelled"), *GetNameSafe(GetPawn()));
+
+		CancelGizboAdaptableAction();
+	}
 }
 
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
 	bAdaptableActionMode = false;
-	GizboManager->GetGizboController()->ToggleMoveTo();
+	
+	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	{
+		//Cast<AAoS_MoveToIndicator>(MoveToIndicator)->SetPerceptionStimuliSource();
+		GizboManager->GetGizboController()->ToggleMoveTo();
+		GizboManager->CancelUpdateIndicatorPositionTimer();
+		GizboManager->HideMoveToIndicator();
+	}
+	CancelInteractableHighlight();
 }
 
 void ASI_PlayerController::InitializeGizboAdaptableAction()
 {
-	ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
-	if(!IsValid(AOSCamera)) return;
+	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	{
+		ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
+		if(!IsValid(AOSCamera)) return;
+		
+		GizboManager->StartAdaptableAction(AOSCamera, GetPawn(), bMoveToMarker);
+	}
+	HighlightInteractables();
 }
 
 void ASI_PlayerController::CancelGizboAdaptableAction()
 {
-	GizboManager->GetGizboController()->ToggleWait();
+	if (USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>())
+	{
+		GizboManager->CancelUpdateIndicatorPositionTimer();
+		GizboManager->HideMoveToIndicator();
+		GizboManager->GetGizboController()->ToggleWait();
+	}
+	CancelInteractableHighlight();
 }
 
-void ASI_PlayerController::RequestGizboUseGadget()
+void ASI_PlayerController::HighlightInteractables()
 {
-	// todo:
-	GizboManager->GetGizboController()->ToggleFollow();
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		ASI_InteractableActor* HitInteractableActor = *ActorItr;
+		if(FVector::Distance(HitInteractableActor->GetActorLocation(), GetPawn()->GetActorLocation()) < 2000.0f)
+		{//TODO:: Convert distance to a int from MagicNumber
+			HitInteractableActor->HighlightMesh->SetVisibility(true);	
+		}
+		else
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
+		}
+	}
 }
 
-void ASI_PlayerController::RequestGizboUseGadgetSecondary()
+void ASI_PlayerController::CancelInteractableHighlight()
 {
-	// todo:
-	GizboManager->GetGizboController()->ToggleFollow();
-}
-
-void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetTag)
-{
-	FGameplayEventData Payload;
-	Payload.Target = InActor;
-	Payload.EventTag = InGadgetTag;
-	Gizbo->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
-}
-
-void ASI_PlayerController::RequestMultiOptionUp()
-{
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionUp");
-
-	//TODO: Add functionality to collect gadget GameplayTag from quickbind widget
-	RequestGadget(GetPawn(),SITag_Gadget_Flashlight);
-}
-
-void ASI_PlayerController::RequestMutliOptionDown()
-{
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMutliOptionDown");
-
-	//TODO: Add functionality to collect gadget GameplayTag from quickbind widget
-	RequestGadget(GetPawn(),SITag_Ability_Construct_Lockpicks);
-}
-
-void ASI_PlayerController::RequestMultiOptionLeft()
-{
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionLeft");
-}
-
-void ASI_PlayerController::RequestMultiOptionRight()
-{
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionRight");
+	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		if(ASI_InteractableActor* HitInteractableActor = *ActorItr)
+		{
+			HitInteractableActor->HighlightMesh->SetVisibility(false);
+		}
+	}
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
 	InteractableActor = InInteractableActor;
+}
+
+AActor* ASI_PlayerController::GetInteractableActor()
+{
+	return InteractableActor;
 }
 
 void ASI_PlayerController::SetObservableActor(AActor* InObservableActor)
@@ -441,16 +400,6 @@ void ASI_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag,
 	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);
 	const FModifyContextOptions ModifyContextOptions;
 	EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingToAdd, 0, ModifyContextOptions);
-}
-
-void ASI_PlayerController::AddSecondaryInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
-{
-	if (!InMappingTag.IsValid()) {return;}
-	
-	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);
-	const FModifyContextOptions ModifyContextOptions;
-	EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingToAdd, 1, ModifyContextOptions);
 }
 
 void ASI_PlayerController::RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
@@ -492,27 +441,3 @@ bool ASI_PlayerController::IsInMenuMode() const
 {
 	return bInMenuMode;
 }
-
-
-/* After MoveableObject Possessed
- *	FUNCTION OnButtonPressed for Option 1 Selected
- *
- *	Secondary IMC bound to these functions
- *	
- *	PC Gets the UIManager
- *	Get the OptionWidget (The current one being displayed
- *	Null Check OptionWidget
- *	IF IsValid
- *		Call Option1 (Virtual function in widget)
- */
-
-/*
- * Within the WidgetClass (Child of OptionWidget)
- *
- * FUNCTION Option1
- * GetGizboManager
- * Check For Null
- * Get Gizbo's AbilityComponent
- * Call TryAbility from Tag
- * 
- */
