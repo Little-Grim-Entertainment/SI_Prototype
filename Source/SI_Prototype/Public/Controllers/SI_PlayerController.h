@@ -32,7 +32,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	ASI_InteractableActor* InteractableActor;
+	AActor* InteractableActor;
 	UPROPERTY()
 	AActor* ObservableActor;
 	UPROPERTY()
@@ -94,6 +94,8 @@ public:
 	bool CreateLineTrace(ETraceType DrawDebugType, FVector Start, FVector End, FLinearColor TraceColor, FLinearColor TraceHitColor, FHitResult& HitResults);
 	UFUNCTION(BlueprintCallable)
 	void SetInteractableActor(AActor* InInteractableActor);
+	UFUNCTION(BlueprintCallable)
+	AActor* GetInteractableActor() {return InteractableActor; }
 	UFUNCTION(BlueprintCallable)
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintCallable, Category = "Input")
