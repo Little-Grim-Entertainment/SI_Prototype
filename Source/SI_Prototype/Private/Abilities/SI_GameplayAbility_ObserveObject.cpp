@@ -15,7 +15,7 @@ void USI_GameplayAbility_ObserveObject::ActivateAbility(const FGameplayAbilitySp
 	ASI_Nick* Nick = Cast<ASI_Nick>(ActorInfo->AvatarActor.Get());
 	if(!IsValid(Nick)) { return; }
 
-	ASI_InteractableActor* ObservableActor = Cast<ASI_InteractableActor>(Nick->GetCurrentInteractableActor());
+	ASI_InteractableActor* ObservableActor = Cast<ASI_InteractableActor>(Nick->GetCurrentObservedActor());
 	if(!IsValid(ObservableActor)) { return; }
 	
 	ObservableActor->Execute_OnObserved(Cast<UObject>(ObservableActor), ObservableActor);
