@@ -186,10 +186,21 @@ void ASI_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue
 void ASI_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {return;}
+<<<<<<< HEAD
 
 	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false))
 	{
 		OnInteractPressed.Broadcast(InteractableActor, this);
+=======
+	
+	if(InteractableActor)
+	{
+		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(InteractableActor))
+		{
+			InterfaceActor->Execute_OnInteract(InteractableActor, InteractableActor);
+			OnInteractPressed.Broadcast(InteractableActor, this);
+		}
+>>>>>>> parent of 9b8aad05 (.)
 	}
 }
 
@@ -216,7 +227,14 @@ void ASI_PlayerController::RequestObserveObject()
 {
 	if (Nick->GetCurrentInteractableActor() != nullptr)
 	{
+<<<<<<< HEAD
 		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_ObserveObject.GetTag().GetSingleTagContainer(), false);
+=======
+		if (Nick->GetCurrentInteractableActor() != nullptr)
+		{
+			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
+		}
+>>>>>>> parent of 9b8aad05 (.)
 	}
 }
 
@@ -379,7 +397,7 @@ void ASI_PlayerController::CancelInteractableHighlight()
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	InteractableActor = InInteractableActor;
+	InteractableActor = Cast<ASI_InteractableActor>(InInteractableActor);
 }
 
 AActor* ASI_PlayerController::GetInteractableActor()

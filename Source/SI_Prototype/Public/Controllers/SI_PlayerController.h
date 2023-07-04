@@ -30,7 +30,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	AActor* InteractableActor;
+	ASI_InteractableActor* InteractableActor;
 	UPROPERTY()
 	AActor* ObservableActor;
 	UPROPERTY()
@@ -89,8 +89,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
+<<<<<<< HEAD
 	AActor* GetInteractableActor();
 	UFUNCTION(BlueprintCallable)
+=======
+>>>>>>> parent of 9b8aad05 (.)
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
