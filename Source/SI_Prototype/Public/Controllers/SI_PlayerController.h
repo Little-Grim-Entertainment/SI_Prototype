@@ -89,11 +89,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetInteractableActor(AActor* InInteractableActor);
 	UFUNCTION(BlueprintCallable)
-<<<<<<< HEAD
 	AActor* GetInteractableActor();
 	UFUNCTION(BlueprintCallable)
-=======
->>>>>>> parent of 9b8aad05 (.)
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
