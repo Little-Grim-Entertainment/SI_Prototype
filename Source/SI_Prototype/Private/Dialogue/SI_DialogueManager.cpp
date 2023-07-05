@@ -13,6 +13,8 @@
 void USI_DialogueManager::StartDialogue(USI_CharacterData* InCharacterData)
 {
 	// TO DO: Get GameInstance
+	
+	GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
 	if (!IsValid(GameInstance)) return;
 	USI_CharacterManager* CharacterManager = GameInstance->GetSubsystem<USI_CharacterManager>();
 	if (!IsValid(CharacterManager))
@@ -25,7 +27,7 @@ void USI_DialogueManager::StartDialogue(USI_CharacterData* InCharacterData)
 	// TO DO: need a function that updates the dialogue on the character
     USI_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_CaseManager>();
 	if (!IsValid(CaseManager)) {return;}
-	CurrentCharacterData = InCharacterData;
+	CurrentCharacterData = Cast<USI_CharacterData>(InCharacterData);
 	if (!CurrentCharacterData || !CurrentCharacterData->GetCurrentDialogueData(CaseManager).RelevantDialogue)
 	{
 		StartDefaultDialogue(CurrentCharacterData);
