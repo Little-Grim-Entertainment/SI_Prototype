@@ -183,7 +183,8 @@ void USI_GameplayTagManager::InitializeTagContainers()
 	AllTagContainers.Add(SITag_Audio_Music, MusicTags);
 	AllTagContainers.Add(SITag_Player_State, PlayerStateTags);
 	AllTagContainers.Add(SITag_UI, UITags);
-	
+	AllTagContainers.Add(SITag_Debug, DebugTags);
+
 	for (TPair<FGameplayTag, FSI_GameplayTagContainer>& CurrentContainerPair : AllTagContainers)
 	{
 		CurrentContainerPair.Value.SetParentTag(CurrentContainerPair.Key);

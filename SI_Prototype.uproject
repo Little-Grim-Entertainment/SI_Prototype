@@ -17,6 +17,15 @@
 			]
 		},
 		{
+			"Name": "SI_Editor",
+			"Type": "UncookedOnly",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"SI_Prototype",
+				"UnrealEd"
+			]
+		},
+		{
 			"Name": "DialogueSystemEditor",
 			"Type": "Editor",
 			"LoadingPhase": "Default"

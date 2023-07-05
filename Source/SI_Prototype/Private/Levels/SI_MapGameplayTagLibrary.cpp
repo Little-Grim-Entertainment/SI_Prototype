@@ -15,7 +15,7 @@ namespace SI_MapGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_NovaLuxDistrict_NicksApartment, "Map.Title.NovaLuxDistrict.NicksApartment")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_NovaLuxDistrict_BettyBots, "Map.Title.NovaLuxDistrict.BettyBots")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_NovaLuxDistrict_CherryTree, "Map.Title.NovaLuxDistrict.CherryTree")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Menu_MainMenu, "Map.Title.NovaLuxDistrict.MainMenu")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Menu_MainMenu, "Map.Title.Menu.MainMenu")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Test, "Map.Title.Test")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Map_Title_Test_Bar, "Map.Title.Test.Bar")

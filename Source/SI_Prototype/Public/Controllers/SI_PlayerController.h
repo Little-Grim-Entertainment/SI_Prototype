@@ -32,7 +32,7 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	AActor* InteractableActor;
+	ASI_InteractableActor* InteractableActor;
 	UPROPERTY()
 	AActor* ObservableActor;
 	UPROPERTY()

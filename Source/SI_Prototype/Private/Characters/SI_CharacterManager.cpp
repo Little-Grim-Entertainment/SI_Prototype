@@ -12,6 +12,7 @@ void USI_CharacterManager::OnGameInstanceInit()
 
 	USI_CaseManager* CaseManager = GameInstance->GetSubsystem<USI_CaseManager>();
 	if (!IsValid(CaseManager)) {return;}
+	if(CaseManager->OnPartActivated().IsAlreadyBound(this, &ThisClass::OnPartActivated) && CaseManager->OnPartComplete().IsAlreadyBound(this, &ThisClass::OnPartCompleted)) {return;}
 	
 	CaseManager->OnPartActivated().AddDynamic(this, &ThisClass::OnPartActivated);
 	CaseManager->OnPartComplete().AddDynamic(this, &ThisClass::OnPartCompleted);

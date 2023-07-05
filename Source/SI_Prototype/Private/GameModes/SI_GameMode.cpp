@@ -7,9 +7,11 @@
 #include "Data/Characters/SI_CharacterData.h"
 #include "Data/Input/SI_InputConfig.h"
 #include "Abilities/SI_GameplayAbility.h"
+#include "Debug/SI_DebugManager.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
+#include "Media/SI_MediaManager.h"
 
 ASI_GameMode::ASI_GameMode()
 {
@@ -22,11 +24,16 @@ ASI_GameMode::ASI_GameMode()
 void ASI_GameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
+
+	GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
+	if (!IsValid(GameInstance))	{return;}
+
+	GameInstance->OnGameModeBeginPlay().Broadcast();
 	
-	if (IsValid(GameInstance))
-	{
-		GameInstance->OnInitGame.Broadcast();
-	}	
+	USI_DebugManager* DebugManager = GameInstance->GetSubsystem<USI_DebugManager>();
+	if(!IsValid(DebugManager)) {return;}
+
+	DebugManager->InitializeDebugCommands(Options);
 }
 
 void ASI_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -42,20 +49,11 @@ void ASI_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* New
 	AActor* PlayerStart = FindPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStartTag);
 
 	RestartPlayerAtPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStart);
-	if (IsValid(GameInstance))
+
+	if(IsValid(GameInstance))
 	{
-		GameInstance->OnPlayerStart.Broadcast();
-	}	
-}
-
-void ASI_GameMode::BeginPlay()
-{
-	Super::BeginPlay();
-
-	GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
-	if (!IsValid(GameInstance)){return;}
-
-	GameInstance->OnGameModeBeginPlay.Broadcast();
+		GameInstance->OnPlayerStart().Broadcast();
+	}
 }
 
 APlayerStart* ASI_GameMode::GetPlayerStart(FString InPlayerStartTag) const

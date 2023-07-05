@@ -11,21 +11,20 @@ void USI_WorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
+	if(!IsValid(GameInstance)) {return;}
+
 	InitializeDelegates();
 }
 
 void USI_WorldSubsystem::InitializeDelegates()
 {
-	if (!IsValid(GameInstance)){return;}
-	GameInstance->OnGameModeBeginPlay.AddUObject(this, &ThisClass::OnGameModeBeginPlay);
-	
 	SITagManager = GameInstance->GetSubsystem<USI_GameplayTagManager>();
 	if (!IsValid(SITagManager))
 	{
 		GameInstance->OnTagManagerInitialized().AddUObject(this, &USI_WorldSubsystem::InitializeDelegates);
 		return;
 	}
-
+	
 	SITagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
 	SITagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);
 	InitializeDelegateMaps();
@@ -34,11 +33,6 @@ void USI_WorldSubsystem::InitializeDelegates()
 void USI_WorldSubsystem::InitializeDelegateMaps()
 {
 	
-}
-
-void USI_WorldSubsystem::OnGameModeBeginPlay()
-{
-
 }
 
 void USI_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)

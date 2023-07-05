@@ -32,8 +32,12 @@ protected:
 	virtual void InitializeDelegates();
 	UFUNCTION()
 	virtual void InitializeDelegateMaps();
+
+	UFUNCTION()
+	virtual void OnPlayerStart();
 	UFUNCTION()
 	virtual void OnGameModeBeginPlay();
+
 	UFUNCTION()
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
 	UFUNCTION()

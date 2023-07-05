@@ -8,12 +8,9 @@
 
 class ASI_GameMode;
 
-DECLARE_MULTICAST_DELEGATE(FOnSubsystemBindingsComplete);
 DECLARE_MULTICAST_DELEGATE(FOnGameInstanceInit);
 DECLARE_MULTICAST_DELEGATE(FOnGameModeBeginPlay);
-DECLARE_MULTICAST_DELEGATE(FOnInitGame);
 DECLARE_MULTICAST_DELEGATE(FOnPlayerStart);
-DECLARE_MULTICAST_DELEGATE(FGameModeSet);
 DECLARE_MULTICAST_DELEGATE(FOnTagManagerInitialized);
 
 
@@ -26,12 +23,10 @@ public:
 	
 	USI_GameInstance();
 
-	FOnSubsystemBindingsComplete OnSubsystemBindingsComplete;
-	FOnPlayerStart OnPlayerStart;
-	FOnGameInstanceInit OnGameInstanceInit;
-	FOnGameModeBeginPlay OnGameModeBeginPlay;
-	FOnInitGame OnInitGame;
 
+	FOnGameInstanceInit& OnGameInstanceInit();
+	FOnGameModeBeginPlay& OnGameModeBeginPlay();
+	FOnPlayerStart& OnPlayerStart();
 	FOnTagManagerInitialized& OnTagManagerInitialized();
 
 	UFUNCTION()
@@ -43,8 +38,9 @@ protected:
 	
 private:
 
-	FGameModeSet GameModeSet;
-
+	FOnGameInstanceInit OnGameInstanceInitDelegate;
+	FOnGameModeBeginPlay OnOnGameModeBeginPlayDelegate;
+	FOnPlayerStart OnOnPlayerStartDelegate;
 	FOnTagManagerInitialized OnTagManagerInitializedDelegate;
 	
 	UPROPERTY()

@@ -49,7 +49,7 @@ public:
 	void RemoveCaseTitleCard();
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	USI_UserWidget* CreateSIWidget(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
+	void CreateSIWidget(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveSIWidget(USI_UserWidget* InWidgetPtr);
 	UFUNCTION(BlueprintCallable, Category = "UI")
@@ -82,7 +82,7 @@ public:
 	void OnPartActivated(USI_PartData* ActivatedPart);
 	UFUNCTION()
 	void OnPartCompleted(USI_PartData* CompletedPart);
-
+	
 	UFUNCTION()
 	void AddActiveInteractionWidget(USI_InteractionWidget* InInteractionWidget);
 	UFUNCTION()
@@ -105,10 +105,9 @@ protected:
 
 	virtual void OnGameInstanceInit() override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void OnGameModeBeginPlay() override;
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
-
+	virtual void OnPlayerStart() override;
 	
 	void DisplayDialogueBox();
 	void HideDialogueBox();
@@ -119,6 +118,8 @@ protected:
 private:
 
 	void BindCaseManagerDelegates();
+	void DelayWidgetCreation(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
+	
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
 	
@@ -146,7 +147,8 @@ private:
 
 	FTimerHandle LoadingScreenFadeDelayHandle;
 	FTimerDelegate LoadingScreenFadeDelayDelegate;
-
+	
+	TArray<FSimpleDelegate> WidgetCreationDelayDelegates;
 	FSimpleDelegate TitleCardDelayDelegate;
 
 	TMap<FGameplayTag, FSimpleDelegate> AddUIDelegateContainer;

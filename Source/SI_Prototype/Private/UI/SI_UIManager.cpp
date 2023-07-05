@@ -62,14 +62,10 @@ void USI_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 	
 }
 
-void USI_UIManager::OnGameModeBeginPlay()
-{
-	Super::OnGameModeBeginPlay();
-	
-}
-
 void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
+	Super::OnGameplayTagAdded(InAddedTag);
+
 	if(InAddedTag == SITag_Game_State_Loading)
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_UI_Screen_Loading, SITag_UI);
@@ -78,20 +74,18 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_UI)){return;}
 
 	AddUIDelegateContainer.Find(InAddedTag)->Execute();
-
-	Super::OnGameplayTagAdded(InAddedTag);
 }
 
 void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
+	Super::OnGameplayTagRemoved(InRemovedTag);
+
 	if(InRemovedTag == SITag_Game_State_Loading)
 	{
 		SITagManager->RemoveTag(SITag_UI_Screen_Loading);
 	}
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_UI)){return;}
-
-	Super::OnGameplayTagRemoved(InRemovedTag);
 	
 	if (InRemovedTag == SITag_UI_Screen_Loading)
 	{
@@ -132,6 +126,14 @@ void USI_UIManager::BindCaseManagerDelegates()
 	CaseManager->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);*/
 }
 
+void USI_UIManager::DelayWidgetCreation(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag)
+{
+	FSimpleDelegate NewDelegate;
+	NewDelegate.BindUObject(this, &ThisClass::CreateSIWidget, InWidgetPtr, InWidgetClass, InUITag);
+
+	WidgetCreationDelayDelegates.Add(NewDelegate);
+}
+
 void USI_UIManager::InitializeDelegates()
 {
 	Super::InitializeDelegates();
@@ -159,16 +161,22 @@ void USI_UIManager::InitializeDelegateMaps()
 void USI_UIManager::CreatePlayerHUD()
 {
 	if (!IsValid(GameInstance->GetGameMode()) || IsValid(PlayerHUD)){return;}
-
-	PlayerHUD = Cast<USI_HUD>(CreateSIWidget(PlayerHUD, GameInstance->GetGameMode()->PlayerHUD_Class, SITag_UI_HUD));
+	
+	USI_UserWidget* HudTemp = nullptr;
+	CreateSIWidget(HudTemp, GameInstance->GetGameMode()->PlayerHUD_Class, SITag_UI_HUD);
+	
+	PlayerHUD = Cast<USI_HUD>(HudTemp);
 }
 
 void USI_UIManager::CreateMoviePlayerWidget()
 {
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
+
+	USI_UserWidget* MoviePlayerWidgetTemp = nullptr;
+	CreateSIWidget(MoviePlayerWidgetTemp, GameInstance->GetGameMode()->MoviePlayerWidget, SITag_UI_Screen_Video);
 	
-	MoviePlayerWidget = Cast<USI_MoviePlayerWidget>(CreateSIWidget(MoviePlayerWidget, GameInstance->GetGameMode()->MoviePlayerWidget, SITag_UI_Screen_Video));
+	MoviePlayerWidget = Cast<USI_MoviePlayerWidget>(MoviePlayerWidgetTemp);
 	
 	if (IsValid(MoviePlayerWidget))
 	{
@@ -232,10 +240,16 @@ void USI_UIManager::RemoveCaseTitleCard()
 	CaseManager->OnCaseTitleCardComplete().Broadcast();
 }
 
-USI_UserWidget* USI_UIManager::CreateSIWidget(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag)
+void USI_UIManager::CreateSIWidget(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag)
 {
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(PlayerController) || !IsValid(InWidgetClass)){return nullptr;}
+	if(!IsValid(InWidgetClass)) {return;}
+
+	if (!IsValid(PlayerController))
+	{
+		DelayWidgetCreation(InWidgetPtr, InWidgetClass, InUITag);
+		return;
+	}
 	
 	InWidgetPtr = CreateWidget<USI_UserWidget>(PlayerController, InWidgetClass);
 	if (IsValid(InWidgetPtr))
@@ -248,8 +262,6 @@ USI_UserWidget* USI_UIManager::CreateSIWidget(USI_UserWidget* InWidgetPtr, TSubc
 			PlayerController->SetFocusedWidget(InWidgetPtr);
 		}
 	}
-	
-	return InWidgetPtr;
 }
 
 void USI_UIManager::RemoveSIWidget(USI_UserWidget* InWidgetPtr)
@@ -281,14 +293,14 @@ void USI_UIManager::CreateMapMenu()
 	const USI_MenuMapData* MenuMapData = Cast<USI_MenuMapData>(LevelManager->GetCurrentMap());
 	if (!IsValid(MenuMapData) || !IsValid(MenuMapData->MapMenuWidgetClass)){return;}
 
-	MapMenu = CreateSIWidget(MapMenu, MenuMapData->MapMenuWidgetClass, SITag_UI_Menu_Map);
+	CreateSIWidget(MapMenu, MenuMapData->MapMenuWidgetClass, SITag_UI_Menu_Map);
 }
 
 void USI_UIManager::CreateSystemMenu()
 {
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 
-	SystemMenu = CreateSIWidget(SystemMenu, GameInstance->GetGameMode()->SystemMenuClass, SITag_UI_Menu_System);
+	CreateSIWidget(SystemMenu, GameInstance->GetGameMode()->SystemMenuClass, SITag_UI_Menu_System);
 }
 
 void USI_UIManager::ToggleSystemMenu()
@@ -342,11 +354,12 @@ void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			const int32 RandNumb = FMath::RandRange(0, GameMode->LoadingScreens.Num() - 1);
 			if (const TSubclassOf<USI_UserWidget> SelectedLoadingScreen = GameMode->LoadingScreens[RandNumb])
 			{
-				LoadingScreen = CreateSIWidget(LoadingScreen, SelectedLoadingScreen, SITag_UI_Screen_Loading);
+				CreateSIWidget(LoadingScreen, SelectedLoadingScreen, SITag_UI_Screen_Loading);
 				
 				if (IsValid(LoadingScreen) && IsValid(GameInstance))
 				{
 					GameInstance->GetGameViewportClient()->AddViewportWidgetContent(LoadingScreen->TakeWidget());
+					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Show Loading Screen"));	
 				}
 			}
 		}
@@ -358,11 +371,13 @@ void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			if (bShouldFade)
 			{
 				LoadingScreen->FadeOutWidget();
+				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Fade out Loading Screen"));	
 				LoadingScreen = nullptr;
 			}
 			else
 			{
 				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(LoadingScreen->TakeWidget());
+				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Remove Loading Screen"));	
 				LoadingScreen = nullptr;
 			}
 		}
@@ -433,6 +448,22 @@ void USI_UIManager::OnPartActivated(USI_PartData* ActivatedPart)
 void USI_UIManager::OnPartCompleted(USI_PartData* CompletedPart)
 {
 	
+}
+
+void USI_UIManager::OnPlayerStart()
+{
+	Super::OnPlayerStart();
+
+	for(FSimpleDelegate& CurrentDelegate : WidgetCreationDelayDelegates)
+	{
+		if(CurrentDelegate.IsBound())
+		{
+			CurrentDelegate.Execute();
+			CurrentDelegate.Unbind();
+		}
+	}
+	
+	WidgetCreationDelayDelegates.Empty();
 }
 
 void USI_UIManager::OnObjectiveActivated(USI_ObjectiveData* ActivatedObjective)
