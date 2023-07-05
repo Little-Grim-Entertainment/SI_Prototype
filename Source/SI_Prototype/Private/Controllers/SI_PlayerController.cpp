@@ -3,7 +3,7 @@
 
 #include "Controllers/SI_PlayerController.h"
 
-#include "ATPCCameraComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
@@ -25,14 +25,11 @@
 #include "UI/SI_HUD.h"
 #include "UI/SI_UIManager.h"
 #include "Data/Input/SI_InputConfig.h"
-#include "SI_Prototype/SI_Prototype.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "SI_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
-#include "EngineUtils.h" // ActorIterator
-#include "Abilities/SI_GameplayAbility_Observation.h"
 #include "Characters/SI_Gizbo.h"
 
 // todo: delete when gadget system implemented
@@ -83,8 +80,8 @@ void ASI_PlayerController::SetupInputComponent()
 	
 	// Gizbo Commands Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboFollow); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveTo, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MoveToConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_AdaptableAction, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction); //TODO: Amend later
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_AdaptableActionConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadget);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetSecondary);
 
@@ -93,8 +90,6 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Right, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionRight);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Up, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionUp);
-
-	SITagManager = GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 }
 
 void ASI_PlayerController::BeginPlay()
@@ -104,6 +99,8 @@ void ASI_PlayerController::BeginPlay()
 	const USI_PlayerManager* PlayerManager = GetLocalPlayer()->GetSubsystem<USI_PlayerManager>();
 	if(!IsValid(PlayerManager) || !PlayerManager->GetCurrentPlayerState().IsValid()) {return;}
 
+	SITagManager =  GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
+	
 	if(PlayerManager->GetCurrentPlayerState() == SITag_Player_State_Menu)
 	{
 		SetMenuMode(true);
@@ -120,11 +117,11 @@ void ASI_PlayerController::BeginPlay()
 	}
 
 	Nick = Cast<ASI_Nick>(GetCharacter());
-
 	GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
 	if (IsValid(GizboManager))
 	{
-		GizboManager->Nick = Cast<ASI_Nick>(GetCharacter());
+		GizboManager->Nick = Nick;
+		Gizbo = GizboManager->GetGizbo();
 	}
 }
 
@@ -362,27 +359,17 @@ void ASI_PlayerController::RequestToggleGizboFollow()
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-	bAdaptableActionMode = !bAdaptableActionMode;
+	if(!IsValid(SITagManager)) {return;}
 	
-	if(bAdaptableActionMode)
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
-		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Initiated"), *GetNameSafe(GetPawn()));
-
-		InitializeGizboAdaptableAction();
+		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(), false);
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Gizbo: AdaptableAction")));
-		UE_LOG(LogSIAI, Log, TEXT("%s : SI_PlayerController::RequestToggleGizboAdaptableAction Cancelled"), *GetNameSafe(GetPawn()));
-
-		CancelGizboAdaptableAction();
-	}
+	InitializeGizboAdaptableAction();
 }
 
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
-	bAdaptableActionMode = false;
 	GizboManager->GetGizboController()->ToggleMoveTo();
 }
 
@@ -468,6 +455,16 @@ void ASI_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag,
 	EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingToAdd, 0, ModifyContextOptions);
 }
 
+void ASI_PlayerController::AddSecondaryInputMappingByTag(FGameplayTag InMappingTag, FGameplayTag InSecondaryTag)
+{
+	if (!InMappingTag.IsValid()) {return;}
+	
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);
+	const FModifyContextOptions ModifyContextOptions;
+	EnhancedInputLocalPlayerSubsystem->AddMappingContext(MappingToAdd, 1, ModifyContextOptions);
+}
+
 void ASI_PlayerController::RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
 {
 	if (!InMappingTag.IsValid()) {return;}
@@ -507,3 +504,27 @@ bool ASI_PlayerController::IsInMenuMode() const
 {
 	return bInMenuMode;
 }
+
+//TODO:: Pace ... For MultiOptionWidget Setup
+/* After MoveableObject Possessed
+ *	FUNCTION OnButtonPressed for Option 1 Selected
+ *
+ *	Secondary IMC bound to these functions
+ *	
+ *	PC Gets the UIManager
+ *	Get the OptionWidget (The current one being displayed
+ *	Null Check OptionWidget
+ *	IF IsValid
+ *		Call Option1 (Virtual function in widget)
+ */
+
+/*
+ * Within the WidgetClass (Child of OptionWidget)
+ *
+ * FUNCTION Option1
+ * GetGizboManager
+ * Check For Null
+ * Get Gizbo's AbilityComponent
+ * Call TryAbility from Tag
+ * 
+ */
