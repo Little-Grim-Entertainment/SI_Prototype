@@ -206,15 +206,6 @@ void ASI_PlayerController::RequestInteract()
 	{
 		OnInteractPressed.Broadcast(InteractableActor, this);
 	}
-
-	if(InteractableActor)
-	{
-		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(InteractableActor))
-		{
-			InterfaceActor->Execute_OnInteract(InteractableActor, InteractableActor);
-			OnInteractPressed.Broadcast(InteractableActor, this);
-		}
-	}
 }
 
 void ASI_PlayerController::RequestToggleObservation()
@@ -432,7 +423,7 @@ void ASI_PlayerController::RequestMultiOptionRight()
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
 {
-	InteractableActor = Cast<ASI_InteractableActor>(InInteractableActor);
+	InteractableActor = InInteractableActor;
 }
 
 AActor* ASI_PlayerController::GetInteractableActor()
