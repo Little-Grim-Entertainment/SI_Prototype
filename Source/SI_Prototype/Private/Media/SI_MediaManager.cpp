@@ -10,6 +10,7 @@
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
+#include "Debug/SI_DebugManager.h"
 #include "Controllers/SI_PlayerController.h"
 #include "Data/Media/SI_CinematicDataAsset.h"
 #include "Levels/SI_LevelManager.h"
@@ -351,7 +352,13 @@ void USI_MediaManager::OnCinematicEnded()
 bool USI_MediaManager::ShouldDisableMedia() const
 {
 #if !UE_BUILD_SHIPPING
-	return CvarDisableAllMedia.GetValueOnAnyThread() || SITagManager->HasGameplayTag(SITag_Debug_DisableAllMedia);
+	USI_DebugManager* DebugManager = GameInstance->GetSubsystem<USI_DebugManager>();
+	if(!IsValid(DebugManager)) { return CvarDisableAllMedia.GetValueOnAnyThread() == 1 ? true : false; }
+	
+	const bool bCVarBool = CvarDisableAllMedia.GetValueOnAnyThread() == 1 ? true : false;
+	const FSI_DebugBool* DebugBool = DebugManager->GetDebugBoolByTag(SITag_Debug_DisableAllMedia);
+	
+	return bCVarBool || DebugBool->GetDebugBool();
 #endif
 	return false;
 }

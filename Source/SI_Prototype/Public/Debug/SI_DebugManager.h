@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Subsystems/GameInstanceSubsystem.h"
 #include "SI_DebugTypes.h"
+#include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_DebugManager.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_DebugManager : public UGameInstanceSubsystem
+class SI_PROTOTYPE_API USI_DebugManager : public USI_GameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -25,6 +25,8 @@ public:
 	bool DebugCommandsHaveInitialized() const;
 
 	void CreateDebugBoolType(const FString& InDebugString, const bool bInValue, const FGameplayTag& InAssociatedTag);
+
+	FSI_DebugBool* GetDebugBoolByTag(const FGameplayTag& InAssociatedTag);
 
 protected:
 
