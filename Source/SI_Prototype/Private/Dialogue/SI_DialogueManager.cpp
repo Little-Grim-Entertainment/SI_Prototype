@@ -3,6 +3,7 @@
 
 #include "Dialogue/SI_DialogueManager.h"
 #include "SI_GameInstance.h"
+#include "SI_GameplayTagManager.h"
 #include "Characters/SI_CharacterManager.h"
 #include "Data/Cases/SI_CaseManager.h"
 #include "Data/Characters/SI_CharacterData.h"
@@ -14,8 +15,8 @@ void USI_DialogueManager::StartDialogue(USI_CharacterData* InCharacterData)
 {
 	// TO DO: Get GameInstance
 	
-	GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
-	if (!IsValid(GameInstance)) return;
+	//GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
+	//if (!IsValid(GameInstance)) return;
 	USI_CharacterManager* CharacterManager = GameInstance->GetSubsystem<USI_CharacterManager>();
 	if (!IsValid(CharacterManager))
 	{
@@ -36,7 +37,7 @@ void USI_DialogueManager::StartDialogue(USI_CharacterData* InCharacterData)
 
 	CurrentDialogue = CurrentCharacterData->GetCurrentDialogueData(CaseManager).RelevantDialogue;
 	CurrentDialogue->StartDialogue(CurrentCharacterData, this, CaseManager);
-	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_DialogueMode);
+	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Dialogue, SITag_Player_State);
 }
 
 void USI_DialogueManager::ExitDialogue(UDialogueSessionNode* NewSaveNode, int32 NewAngerLevel)
