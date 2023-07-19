@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SI_PossessedMovable.h"
+#include "Actors/SI_PossessedMovable.h"
 
 #include "Camera/CameraComponent.h"
 #include "ATPCCameraComponent.h"
-#include "SI_NativeGameplayTagLibrary.h"
 
 ASI_PossessedMovable::ASI_PossessedMovable()
 {

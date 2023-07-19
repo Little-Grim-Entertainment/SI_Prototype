@@ -6,6 +6,7 @@
 #include "UI/SI_UserWidget.h"
 #include "SI_HUD.generated.h"
 
+class USI_QuickActionWidget;
 class USI_DialogueBox;
 class USI_CaseManager;
 class USI_CaseData;
@@ -43,6 +44,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	USI_UserWidget* CaseAcceptedWidget;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	USI_QuickActionWidget* QuickActionWidget;
 	
 private:
 

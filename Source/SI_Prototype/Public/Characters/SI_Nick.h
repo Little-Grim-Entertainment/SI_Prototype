@@ -38,8 +38,6 @@ public:
 	TSubclassOf<ASI_Flashlight> FlashlightClass = ASI_Flashlight::StaticClass();
 	UPROPERTY(EditAnywhere)
 	ASI_Flashlight* Flashlight;
-
-
 	
 	ASI_Nick();
 

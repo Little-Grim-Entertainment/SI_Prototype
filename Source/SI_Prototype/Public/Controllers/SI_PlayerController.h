@@ -123,6 +123,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PostInitializeComponents() override;
 	virtual void SetupInputComponent() override;
+	virtual void OnPossess(APawn* InPawn) override;
 	
 	void RequestMoveForward(const FInputActionValue& ActionValue);
 	void RequestMoveRight(const FInputActionValue& ActionValue);
@@ -143,7 +144,6 @@ protected:
 	void RequestToggleGizboFollow(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void InitializeGizboAdaptableAction();
 	void CancelGizboAdaptableAction();
 	void RequestGizboUseGadget();
 	void RequestGizboUseGadgetSecondary();

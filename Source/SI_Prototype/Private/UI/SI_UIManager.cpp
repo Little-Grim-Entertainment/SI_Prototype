@@ -5,6 +5,8 @@
 #include "SI_GameInstance.h"
 
 // Subsystems
+#include "SI_GameplayTagManager.h"
+#include "SI_NativeGameplayTagLibrary.h"
 #include "Data/Cases/SI_CaseManager.h"
 #include "Media/SI_MediaManager.h"
 #include "Levels/SI_LevelManager.h"
@@ -16,8 +18,6 @@
 #include "Data/Cases/SI_ObjectiveData.h"
 
 // UI
-#include "SI_GameplayTagManager.h"
-#include "SI_NativeGameplayTagLibrary.h"
 #include "UI/SI_DialogueBox.h"
 #include "UI/SI_HUD.h"
 #include "UI/SI_UserWidget.h"
@@ -25,14 +25,12 @@
 #include "UI/SI_InteractionWidget.h"
 #include "UI/SI_CaseTitleCard.h"
 #include "UI/SI_SkipWidget.h"
-
+#include "UI/SI_QuickActionWidget.h"
 
 #include "Controllers/SI_PlayerController.h"
 #include "Data/Maps/SI_MenuMapData.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "GameModes/SI_GameMode.h"
-#include "MediaAssets/Public/MediaPlayer.h"
-
 
 #if !UE_BUILD_SHIPPING
 static TAutoConsoleVariable<int32> CvarDisableTitleCard(
@@ -102,6 +100,11 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		RemoveCaseTitleCard();
 		return;
 	}
+	if (InRemovedTag == SITag_UI_HUD_QuickAction)
+	{
+		UpdateQuickActionWidget();
+		return;
+	}
 	
 	RemoveSIWidget(GetWidgetByTag(InRemovedTag));
 	UIWidgetContainer.Remove(InRemovedTag);
@@ -138,11 +141,12 @@ void USI_UIManager::InitializeDelegates()
 {
 	Super::InitializeDelegates();
 	
-	AddMapMenuDelegate.BindUObject(this, &ThisClass::CreateMapMenu);
 	AddHUDDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
 	AddLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, true, true);
-	AddVideoScreenDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
+	AddMapMenuDelegate.BindUObject(this, &ThisClass::CreateMapMenu);
 	AddSystemMenuDelegate.BindUObject(this, &ThisClass::CreateSystemMenu);
+	UpdateQuickActionDelegate.BindUObject(this, &ThisClass::UpdateQuickActionWidget);
+	AddVideoScreenDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
 }
 
 void USI_UIManager::InitializeDelegateMaps()
@@ -154,6 +158,7 @@ void USI_UIManager::InitializeDelegateMaps()
 	AddUIDelegateContainer.Add(SITag_UI_Menu_System, AddSystemMenuDelegate);
 	AddUIDelegateContainer.Add(SITag_UI_Menu_Vendor, AddVendorMenuDelegate);
 	AddUIDelegateContainer.Add(SITag_UI_HUD, AddHUDDelegate);
+	AddUIDelegateContainer.Add(SITag_UI_HUD_QuickAction, UpdateQuickActionDelegate);
 	AddUIDelegateContainer.Add(SITag_UI_Screen_Loading, AddLoadingScreenDelegate);
 	AddUIDelegateContainer.Add(SITag_UI_Screen_Video, AddVideoScreenDelegate);
 }
@@ -342,6 +347,13 @@ void USI_UIManager::RemoveActiveInteractionWidget(USI_InteractionWidget* InInter
 	}
 }
 
+void USI_UIManager::UpdateQuickActionWidget()
+{
+	if (!IsValid(QuickActionWidget)){return;}
+	
+	QuickActionWidget->RefreshQuickActionWidget();
+}
+
 void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 {
 	const ASI_GameMode* GameMode = Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
@@ -462,7 +474,6 @@ void USI_UIManager::OnPlayerStart()
 			CurrentDelegate.Unbind();
 		}
 	}
-	
 	WidgetCreationDelayDelegates.Empty();
 }
 

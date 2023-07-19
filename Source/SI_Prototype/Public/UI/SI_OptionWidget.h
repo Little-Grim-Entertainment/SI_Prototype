@@ -7,6 +7,8 @@
 #include "UI/SI_InteractionWidget.h"
 #include "SI_OptionWidget.generated.h"
 
+class UTextBlock;
+class UImage;
 /**
  * 
  */
@@ -21,5 +23,15 @@ public:
 	virtual void HideWidget_Implementation() override;
 	virtual void RefreshWidget_Implementation() override;
 
+	void SetOptionImage(UTexture2D* InImage);
+	void SetOptionPrompt(FText InPrompt);
+	void SetOptionBinding(FText InBinding);
+	
 	FGameplayTag OptionTag;
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	UImage* IMG_Icon;
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	UTextBlock* TXT_Binding;
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	UTextBlock* TXT_Prompt;
 };

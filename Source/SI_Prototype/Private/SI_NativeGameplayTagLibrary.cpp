@@ -111,6 +111,7 @@ namespace SI_NativeGameplayTagLibrary
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI, "UI")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD, "UI.HUD")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction, "UI.HUD.QuickAction")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu, "UI.Menu")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Map, "UI.Menu.Map")

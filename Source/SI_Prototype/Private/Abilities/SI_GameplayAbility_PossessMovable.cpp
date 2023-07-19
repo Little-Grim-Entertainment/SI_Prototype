@@ -47,6 +47,7 @@ bool USI_GameplayAbility_PossessMovable::PossessTarget(const FGameplayAbilityAct
 	if(!IsValid(PossessedMovable)) return false;
 	
 	PC->Possess(PossessedMovable);
+
 	return true;
 }
 
@@ -91,6 +92,7 @@ void USI_GameplayAbility_PossessMovable::UpdateMoveToLocation()
 	if(bBlockingHit)
 	{
 		PossessedMovable = SpawnPossessedMovable(OutHit.Location);
+		
 		StartUpdateIndicatorPositionTimer();
 	}	
 }

@@ -12,10 +12,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
-#include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_GizboManager.h"
 #include "Media/SI_MediaManager.h"
-#include "Actors/SI_InteractableActor.h"
 #include "Controllers/SI_GizboController.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Data/Media/SI_CinematicDataAsset.h"
@@ -85,11 +83,24 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadget);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetSecondary);
 
-	// Gadget Bindings
+	// MultiAction Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Down, ETriggerEvent::Started, this, &ThisClass::RequestMutliOptionDown);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Right, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionRight);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Up, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionUp);
+}
+
+//TODO: Pace ... THis Function might not be needed just using top try and solve possessing other actors
+void ASI_PlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	if(SITagManager)
+	{
+		SITagManager->AddNewGameplayTag(SITag_Player_State_Exploration);
+	}
+	SetupInputComponent();
+	EnableInput(this);
 }
 
 void ASI_PlayerController::BeginPlay()
@@ -356,18 +367,18 @@ void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 	{
 		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(), false);
 	}
-	InitializeGizboAdaptableAction();
 }
 
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
 	GizboManager->GetGizboController()->ToggleMoveTo();
-}
 
-void ASI_PlayerController::InitializeGizboAdaptableAction()
-{
-	ASI_PlayerCameraManager* AOSCamera = Cast<ASI_PlayerCameraManager>(this->PlayerCameraManager);
-	if(!IsValid(AOSCamera)) return;
+	if(!IsValid(SITagManager)) {return;}
+	
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	{
+//		Nick->GetSIAbilitySystemComponent()->CancelAbilities(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer());
+	}
 }
 
 void ASI_PlayerController::CancelGizboAdaptableAction()
@@ -418,6 +429,7 @@ void ASI_PlayerController::RequestMultiOptionLeft()
 
 void ASI_PlayerController::RequestMultiOptionRight()
 {
+	SITagManager->AddNewGameplayTag(SITag_UI_HUD);
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionRight");
 }
 

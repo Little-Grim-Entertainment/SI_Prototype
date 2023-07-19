@@ -48,7 +48,6 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::StartAdaptableAction(const AActo
 	FHitResult OutHit;
 	
 	bool bBlockingHit = GetWorld()->LineTraceSingleByChannel(OutHit, TraceStart, TraceEnd, ECC_WorldDynamic, QueryParams);
-	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 30.0f, 0, 1.0f);
 
 	if(bBlockingHit)
 	{
@@ -111,7 +110,6 @@ ASI_MoveToIndicator* USI_GameplayAbility_Gizbo_AdaptableAction::SpawnMoveToIndic
 		MoveToIndicator->SetActorHiddenInGame(false);
 		MoveToIndicator->SetActorLocation(InHitLocation);
 	}
-	
 	return MoveToIndicator;
 }
 
