@@ -22,7 +22,6 @@ void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilityS
 	SITagManager = PC->GetSITagManager();
 	if(!IsValid(SITagManager))	{return;}
 
-	
 	if(PossessTarget(ActorInfo, TriggerEventData))
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_PossessMovable, SITag_Player_State);

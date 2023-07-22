@@ -8,6 +8,7 @@
 #include "Characters/SI_Nick.h"
 #include "Controllers/SI_PlayerController.h"
 #include "EngineUtils.h" // ActorIterator
+#include "SI_GameplayTagManager.h"
 #include "Actors/SI_MovableActor.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
@@ -32,7 +33,7 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::EndAbility(const FGameplayAbilit
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	CancelInteractableHighlight();
-	HideMoveToIndicator();
+	DestroyMoveToIndicator();
 	CancelUpdateIndicatorPositionTimer();
 }
 
@@ -51,7 +52,11 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::StartAdaptableAction(const AActo
 
 	if(bBlockingHit)
 	{
-		MoveToIndicator = SpawnMoveToIndicator(OutHit.Location);
+		if(!IsValid(MoveToIndicator))
+		{
+			MoveToIndicator = SpawnMoveToIndicator(OutHit.Location);
+		}
+
 		StartUpdateIndicatorPositionTimer();
 	}	
 }
@@ -81,11 +86,14 @@ void USI_GameplayAbility_Gizbo_AdaptableAction::UpdateMoveToIndicatorPosition() 
 		
 		if (HitResult.GetActor()->Implements<USI_MovableInterface>())
 		{
-			//TODO: Pace ... This needs to be moved so it is called after an interaction prompt is displayed. 
-			FGameplayEventData Payload;
-			Payload.Target = HitResult.GetActor();
-			Payload.EventTag = SITag_Ability_PossessMovable;
-			Nick->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
+			// Update HUD
+			PC->GetSITagManager()->AddNewGameplayTag(SITag_UI_HUD_QuickAction_Movable);
+			
+		//	FGameplayEventData Payload;
+		//	Payload.Target = HitResult.GetActor();
+		//	Payload.EventTag = SITag_Ability_PossessMovable;
+		//	Nick->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
+			
 		}
 	MoveToIndicator->SetActorLocation(HitLocation);
 	}
@@ -113,12 +121,11 @@ ASI_MoveToIndicator* USI_GameplayAbility_Gizbo_AdaptableAction::SpawnMoveToIndic
 	return MoveToIndicator;
 }
 
-void USI_GameplayAbility_Gizbo_AdaptableAction::HideMoveToIndicator()
+void USI_GameplayAbility_Gizbo_AdaptableAction::DestroyMoveToIndicator()
 {
 	if(MoveToIndicator)
 	{
-		MoveToIndicator->SetActorHiddenInGame(true);
-		MoveToIndicator->SetActiveMeshToDefault();
+		MoveToIndicator->Destroy();
 	}
 }
 

@@ -10,15 +10,14 @@
 
 void USI_QuickActionWidget::RefreshQuickActionWidget()
 {
-	// GET current IMC?
-	
+	// GET current IMC?	
 }
 
 void USI_QuickActionWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	EILPS = GetOwningPlayer()->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	EnhancedInputLPS = GetOwningPlayer()->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	
 	UpdateQuickActionUp(QuickActionUpTag);
 	UpdateQuickActionDown(QuickActionDownTag);
@@ -48,7 +47,7 @@ void USI_QuickActionWidget::UpdateQuickActionRight(FGameplayTag InOptionTag)
 
 void USI_QuickActionWidget::UpdateActionByTag(USI_OptionWidget* InOptionWidget, FGameplayTag InOptionTag, UInputAction* InInputAction)
 {
-	TArray<FKey> MappedKey = EILPS->QueryKeysMappedToAction(InInputAction);
+	TArray<FKey> MappedKey = EnhancedInputLPS->QueryKeysMappedToAction(InInputAction);
 	
 	FSI_QuckActionOptions* Row;
 	FName TagName = InOptionTag.GetTagName();
@@ -65,5 +64,4 @@ void USI_QuickActionWidget::UpdateActionByTag(USI_OptionWidget* InOptionWidget, 
 	InOptionWidget->SetVisibility(ESlateVisibility::Collapsed);
 	InOptionWidget->TXT_Prompt->SetText(FText::FromString(""));
 	InOptionWidget->TXT_Binding->SetText(FText::FromString(""));
-
 }

@@ -9,6 +9,8 @@
 #include "Engine/DataTable.h"
 #include "SI_Types.generated.h"
 
+class USI_GameplayAbility;
+class UGameplayAbility;
 class USI_LevelManager;
 class USoundBase;
 class UInputAction;
@@ -290,3 +292,18 @@ struct FSI_QuckActionOptions : public FTableRowBase
 	UTexture2D* QuickActionImage;
 };
 
+USTRUCT(BlueprintType)
+struct FSI_GameplayAbilities
+{
+	GENERATED_BODY()
+
+	FSI_GameplayAbilities();
+	FSI_GameplayAbilities(UGameplayAbility* InGameplayAbility);
+	
+	UGameplayAbility* GetGameplayAbility(const FGameplayTag& InGameplayAbilityTag) const;
+	
+private:
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (Categories = "Ability", AllowPrivateAccess = "true"))
+	TMap<FGameplayTag, TSubclassOf<USI_GameplayAbility>> GameplayAbilities;
+};

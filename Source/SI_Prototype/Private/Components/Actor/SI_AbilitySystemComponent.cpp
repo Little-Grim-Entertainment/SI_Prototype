@@ -3,6 +3,8 @@
 
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
+#include "Abilities/SI_GameplayAbility.h"
+#include "Data/Abilities/SI_GameplayAbilityData.h"
 #include "GameModes/SI_GameMode.h"
 
 
@@ -31,11 +33,7 @@ void USI_AbilitySystemComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	// ...
 }
 
-USI_GameplayAbility* USI_AbilitySystemComponent::GetGameplayAbilityFromTag(FGameplayTag InAbilityTag)
+UGameplayAbility* USI_AbilitySystemComponent::GetGameplayAbilityFromTag(const FGameplayTag InGameplayAbilityTag) const
 {
-	ASI_GameMode* GameMode = Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
-	if(!IsValid(GameMode)) { return nullptr;}
-
-	return GameMode->GetGameplayAbility(InAbilityTag);
+	return GameplayAbilityData->GetGameplayAbilityByTag(InGameplayAbilityTag);
 }
-

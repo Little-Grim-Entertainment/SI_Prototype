@@ -56,8 +56,7 @@ void USI_UIManager::OnGameInstanceInit()
 
 void USI_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::Initialize(Collection);
-	
+	Super::Initialize(Collection);	
 }
 
 void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
@@ -72,7 +71,7 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_UI)){return;}
 
 	AddUIDelegateContainer.Find(InAddedTag)->Execute();
-}
+}	
 
 void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
@@ -501,6 +500,3 @@ USI_HUD* USI_UIManager::GetPlayerHUD()
 {
 	return PlayerHUD;
 }
-
-
-

@@ -62,5 +62,5 @@ protected:
 	UInputAction* QuickActionRightInputAction;
 
 	UPROPERTY()
-	UEnhancedInputLocalPlayerSubsystem* EILPS;
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLPS;
 };

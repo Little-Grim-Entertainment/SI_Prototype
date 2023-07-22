@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "SI_AbilitySystemComponent.generated.h"
 
-
+class USI_GameplayAbilityData;
 class USI_GameplayAbility;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -21,14 +21,14 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	
+
+	UPROPERTY(EditDefaultsOnly)
+	USI_GameplayAbilityData* GameplayAbilityData;	
 
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	USI_GameplayAbility* GetGameplayAbilityFromTag(FGameplayTag InAbilityTag);
-
-
+	UGameplayAbility* GetGameplayAbilityFromTag(const FGameplayTag InGameplayAbilityTag) const;
 };

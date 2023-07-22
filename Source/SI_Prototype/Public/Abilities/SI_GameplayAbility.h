@@ -15,6 +15,4 @@ UCLASS()
 class SI_PROTOTYPE_API USI_GameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
-
-
 };

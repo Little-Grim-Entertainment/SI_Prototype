@@ -33,7 +33,6 @@
 // todo: delete when gadget system implemented
 #include "Actors/Gadgets/SI_Flashlight.h"
 
-
 using namespace SI_NativeGameplayTagLibrary;
 
 ASI_PlayerController::ASI_PlayerController()
@@ -88,19 +87,6 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Right, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionRight);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Up, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionUp);
-}
-
-//TODO: Pace ... THis Function might not be needed just using top try and solve possessing other actors
-void ASI_PlayerController::OnPossess(APawn* InPawn)
-{
-	Super::OnPossess(InPawn);
-
-	if(SITagManager)
-	{
-		SITagManager->AddNewGameplayTag(SITag_Player_State_Exploration);
-	}
-	SetupInputComponent();
-	EnableInput(this);
 }
 
 void ASI_PlayerController::BeginPlay()
@@ -363,27 +349,32 @@ void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
 	if(!IsValid(SITagManager)) {return;}
 	
-	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration) && !bAdaptableActionMode)
 	{
+		bAdaptableActionMode = true;
 		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer(), false);
+	}
+	else if (SITagManager->HasGameplayTag(SITag_Player_State_Exploration) && bAdaptableActionMode)
+	{
+		CancelGizboAdaptableAction();
 	}
 }
 
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
 {
-	GizboManager->GetGizboController()->ToggleMoveTo();
-
 	if(!IsValid(SITagManager)) {return;}
 	
-	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration))
+	if(SITagManager->HasGameplayTag(SITag_Player_State_Exploration) && bAdaptableActionMode)
 	{
 //		Nick->GetSIAbilitySystemComponent()->CancelAbilities(SITag_Ability_Gizbo_AdaptableAction.GetTag().GetSingleTagContainer());
+		bAdaptableActionMode = false;
 	}
 }
 
 void ASI_PlayerController::CancelGizboAdaptableAction()
 {
-	GizboManager->GetGizboController()->ToggleWait();
+	bAdaptableActionMode = false;
+	Nick->GetSIAbilitySystemComponent()->CancelAbility(Nick->GetSIAbilitySystemComponent()->GetGameplayAbilityFromTag(SITag_Ability_Gizbo_AdaptableAction));	
 }
 
 void ASI_PlayerController::RequestGizboUseGadget()

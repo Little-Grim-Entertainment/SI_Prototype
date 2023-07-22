@@ -9,6 +9,7 @@
 #include "InputActionValue.h"
 #include "SI_PlayerController.generated.h"
 
+class UGameplayAbility;
 class USI_GameplayTagManager;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
@@ -123,7 +124,6 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void PostInitializeComponents() override;
 	virtual void SetupInputComponent() override;
-	virtual void OnPossess(APawn* InPawn) override;
 	
 	void RequestMoveForward(const FInputActionValue& ActionValue);
 	void RequestMoveRight(const FInputActionValue& ActionValue);
@@ -164,7 +164,7 @@ private:
 	USI_UserWidget* FocusedWidget;
 	UPROPERTY()
 	USI_GameplayTagManager* SITagManager;
-
+	
 	bool bInMenuMode;
 
 	FTimerHandle CameraBlendHandle;

@@ -34,7 +34,7 @@ protected:
 	void CancelUpdateIndicatorPositionTimer();
 	void UpdateMoveToIndicatorPosition() const;
 	ASI_MoveToIndicator* SpawnMoveToIndicator(const FVector InHitLocation);
-	void HideMoveToIndicator();
+	void DestroyMoveToIndicator();
 	void HighlightInteractables(const AActor* InActor);
 	void CancelInteractableHighlight();
 
