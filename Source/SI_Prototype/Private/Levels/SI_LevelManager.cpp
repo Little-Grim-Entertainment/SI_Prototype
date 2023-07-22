@@ -20,6 +20,7 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Engine/World.h"
 #include "MediaPlayer.h"
+#include "Data/Cases/SI_CaseManager.h"
 
 
 using namespace SI_MapGameplayTagLibrary;
@@ -45,7 +46,10 @@ void USI_LevelManager::OnPlayerStart()
 
 void USI_LevelManager::InitializeMapStates()
 {
-	if(MapStates.Num() > 0) {return;}
+	if(MapStates.Num() > 0)
+	{
+		MapStates.Empty();
+	}
  	const ASI_GameMode* GameMode = Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
 	
 	if (!IsValid(GameMode)) {return;}
@@ -246,14 +250,14 @@ FSI_MapState& USI_LevelManager::GetMapStateFromName(FString InMapName)
 
 void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 {
-	LoadedMapState = LevelStateToLoad.Get();
+	LoadedMapState = LevelStateToLoad;
 
 	if (LoadedMapState == nullptr)
 	{
 		LoadedMapState = &GetMapStateByWorld();
 		if (!LoadedMapState->IsStateValid()) {return;}
 	}
-		
+			
 	SITagManager->ReplaceTagWithSameParent(LoadedMapState->MapData->MapTag, SITag_Map_Title);
 
 	if (LoadedMapState->GetMapData()->MapType == SITag_Map_Type_Menu)
@@ -262,7 +266,12 @@ void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 	}
 	else
 	{
-		USI_MediaManager* MediaManager =  GetWorld()->GetSubsystem<USI_MediaManager>();
+		USI_MediaManager* MediaManager = GetWorld()->GetSubsystem<USI_MediaManager>();
+		USI_CaseManager* CaseManager = GetGameInstance()->GetSubsystem<USI_CaseManager>();
+		if(IsValid(CaseManager))
+		{
+			CaseManager->AssignMedia();
+		}
 		if (IsValid(MediaManager) && LoadedMapState->HasIntroMedia() && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedIntroMedia()) && !SITagManager->HasGameplayTag(SITag_Debug_DisableAllMedia))
 		{
 			MediaManager->PlayMedia(LoadedMapState->GetLoadedIntroMedia(), LoadedMapState->GetOutroSettings());

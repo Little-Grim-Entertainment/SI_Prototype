@@ -49,6 +49,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CompleteObjective(USI_ObjectiveData* ObjectiveToComplete);
 
+	void AssignMedia();
+
 	UFUNCTION(BlueprintPure)
 	FSI_CaseDetails& GetCaseDetails(const USI_CaseData* InCaseData);
 	UFUNCTION(BlueprintPure)
@@ -126,7 +128,6 @@ private:
 	void PostPartCompleted(const USI_PartData* CompletedPart);
 
 	void ActivateObjectives();
-	void AssignObjectiveMedia(USI_LevelManager* InLevelManager);
 	void PostObjectiveCompleted(const USI_ObjectiveData* CompletedObjective);
 	
 	bool CheckForCompletedPart();
