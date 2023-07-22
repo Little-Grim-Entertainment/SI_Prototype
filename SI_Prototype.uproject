@@ -27,8 +27,12 @@
 		},
 		{
 			"Name": "DialogueSystemEditor",
-			"Type": "Editor",
-			"LoadingPhase": "Default"
+			"Type": "UncookedOnly",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"SI_Prototype",
+				"UnrealEd"
+			]
 		}
 	],
 	"Plugins": [
@@ -83,10 +87,6 @@
 		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
-		},
-		{
-			"Name": "TDxUnrealEditor",
-			"Enabled": false
 		},
 		{
 			"Name": "Composure",
