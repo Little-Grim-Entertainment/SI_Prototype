@@ -246,7 +246,7 @@ FSI_MapState& USI_LevelManager::GetMapStateFromName(FString InMapName)
 
 void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 {
-	LoadedMapState = LevelStateToLoad;
+	LoadedMapState = LevelStateToLoad.Get();
 
 	if (LoadedMapState == nullptr)
 	{

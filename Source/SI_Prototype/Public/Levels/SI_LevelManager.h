@@ -83,7 +83,7 @@ private:
 	bool bLevelHasLoaded = false;
 	bool bLoadShouldFade = false;
 
-	FSI_MapState* LevelStateToLoad;
+	TSoftObjectPtr<FSI_MapState> LevelStateToLoad;
 	FSI_MapState* LoadedMapState;
 
 	UPROPERTY()
