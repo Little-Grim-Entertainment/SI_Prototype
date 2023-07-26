@@ -6,6 +6,7 @@
 #include "Actors/Gadgets/SI_FlashlightSegment.h"
 #include "Interfaces/SI_PowerInterface.h"
 
+// TODO: CHANGING CONE SIZE WITH SEGMENTS PLACED
 
 ASI_Flashlight::ASI_Flashlight()
 {	
