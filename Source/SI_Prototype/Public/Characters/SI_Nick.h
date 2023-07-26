@@ -22,7 +22,7 @@ class USI_AIPerceptionStimuliSource;
 class USI_LevelManager;
 class USI_MapData;
 
-// ****************  TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
+// ****************  todo: (Anu) DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
 class ASI_Flashlight;
 
 UCLASS()
@@ -32,8 +32,7 @@ class SI_PROTOTYPE_API ASI_Nick : public ASI_Character, public IAbilitySystemInt
 	
 public:
 
-	// ****************  TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
-	// *** Need to understand TSubclassOf properly
+	// ****************  todo: (Anu) DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASI_Flashlight> FlashlightClass = ASI_Flashlight::StaticClass();
 	UPROPERTY(EditAnywhere)

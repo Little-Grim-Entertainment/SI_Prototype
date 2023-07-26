@@ -310,6 +310,7 @@ void ASI_PlayerController::RequestUseGadget()
 	}
 	
 	// todo: Delete when gadget system implemented
+	// 
 	TArray<AActor*> AttachedFlashlights;
 	Nick->GetAttachedActors(AttachedFlashlights, true, false);
 

@@ -114,8 +114,8 @@ void ASI_Nick::BeginPlay()
 
 	GiveAbilities();
 	
-	// ****************** TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED		
-	// Spawn Flashlight at world 0
+	// todo: (Anu) DELETE WHEN GADGET SYSTEM IS IMPLEMENTED		
+	// todo: (Anu) Spawn Flashlight at world 0
 	if (FlashlightClass)
 	{		
 		FTransform const FlashlightTransform = GetActorTransform();
