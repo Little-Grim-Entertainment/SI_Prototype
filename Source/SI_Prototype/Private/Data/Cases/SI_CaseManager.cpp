@@ -276,6 +276,11 @@ void USI_CaseManager::InitializeCases()
 {
 	const ASI_GameMode* GameMode = Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
 	if (!IsValid(GameMode) || !IsValid(GameMode->CaseList)) {return;}
+
+	if(AllCases.Num() > 0)
+	{
+		AllCases.Empty();
+	}
 	
 	for (USI_CaseData* CurrentCaseData : GameMode->CaseList->GetAllCases())
 	{
@@ -400,19 +405,22 @@ void USI_CaseManager::ActivateObjectives()
 		CurrentObjective.Value.SetIsObjectiveActive(true);
 		ActivePartDetails.GetActiveObjectives().AddUnique(CurrentObjective.Key);
 
-		USI_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
-		if(IsValid(LevelManager) && CurrentObjective.Key->HasLevelMediaAssignments())
+		if(CurrentObjective.Key->HasLevelMediaAssignments())
 		{
-			AssignObjectiveMedia(LevelManager);
+			AssignMedia();
 		}
 		
 		if (ActivePartDetails.GetPartData()->bCompleteObjectivesInOrder) {return;}
 	}
 }
 
-void USI_CaseManager::AssignObjectiveMedia(USI_LevelManager* InLevelManager)
+void USI_CaseManager::AssignMedia()
 {
-	if(!IsValid(InLevelManager)){return;}
+	USI_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
+	if(!IsValid(LevelManager))
+	{
+		return;
+	}
 
 	FSI_PartDetails& ActivePartDetails = GetPartDetails(GetActivePart());
 	
@@ -422,7 +430,7 @@ void USI_CaseManager::AssignObjectiveMedia(USI_LevelManager* InLevelManager)
 		{
 			for (const FSI_LevelMediaAssignment& CurrentMediaAssignment : CurrentObjective.Key->LevelMediaAssignments)
 			{
-				FSI_MapState& AssociatedMapState = InLevelManager->GetMapStateByTag(CurrentMediaAssignment.AssociatedLevelTag);
+				FSI_MapState& AssociatedMapState = LevelManager->GetMapStateByTag(CurrentMediaAssignment.AssociatedLevelTag);
 
 				if(IsValid(CurrentMediaAssignment.IntroCinematic))
 				{
@@ -456,12 +464,6 @@ void USI_CaseManager::PostObjectiveCompleted(const USI_ObjectiveData* CompletedO
 		FSI_PartDetails& ActivePartDetails = GetPartDetails(CurrentActivePart);
 		ActivePartDetails.GetActiveObjectives().Empty();
 		ActivateObjectives();
-		
-		USI_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
-		if(IsValid(LevelManager))
-		{
-			AssignObjectiveMedia(LevelManager);
-		}
 	}
 }
 
