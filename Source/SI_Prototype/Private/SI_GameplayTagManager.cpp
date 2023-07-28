@@ -12,7 +12,17 @@
 void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
 {
 	FSI_GameplayTagContainer& ContainerToAddTo = GetContainerTypeByTag(InGameplayTag);
-	if (!InGameplayTag.IsValid() || ContainerToAddTo.HasTagExact(InGameplayTag)) {return;}
+	if (!InGameplayTag.IsValid()) return;
+	
+	//TODO: Review ...Pace & Jeff is there a better solution for this?
+	if(ContainerToAddTo.HasTagExact(InGameplayTag))
+	{
+		if(HasParentTag(InGameplayTag, SITag_Ability))
+		{
+			RemoveTag(InGameplayTag);
+		}
+		return;
+	}
 
 	ContainerToAddTo.AddTag(InGameplayTag);
 	OnTagAddedDelegate.Broadcast(InGameplayTag);
@@ -22,7 +32,7 @@ void USI_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag)
 {
 	FSI_GameplayTagContainer& ContainerToRemoveFrom = GetContainerTypeByTag(InGameplayTag);
 	if (!ContainerToRemoveFrom.HasTagExact(InGameplayTag)) {return;}
-
+	
 	ContainerToRemoveFrom.RemoveTag(InGameplayTag);
 	OnTagRemovedDelegate.Broadcast(InGameplayTag);
 }

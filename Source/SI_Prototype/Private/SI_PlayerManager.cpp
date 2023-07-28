@@ -122,6 +122,12 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	if(!IsValid(GetWorld())) return;
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
+
+	if(SITagManager->HasParentTag(InRemovedTag, SITag_Ability_Nick))
+	{
+		CurrentAbilityTag = InRemovedTag;
+		TryCancelAbilityByTag();
+	}
 	
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
 	{
@@ -171,7 +177,7 @@ void USI_PlayerManager::InitializeDelegates()
 {
 	Super::InitializeDelegates();
 
-	ActivateAbilityDelegate.BindUObject(this, &ThisClass::ToggleAbilityByTag);
+	ActivateAbilityDelegate.BindUObject(this, &ThisClass::TryActivateAbilityByTag);
 	DialogueStateDelegate.BindUObject(this, &ThisClass::SetupDialogueState);
 	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
 	InactiveStateDelegate.BindUObject(this, &ThisClass::SetupInactiveState);
@@ -199,7 +205,7 @@ void USI_PlayerManager::InitializeDelegateMaps()
 	
 }
 
-void USI_PlayerManager::ToggleAbilityByTag()
+void USI_PlayerManager::TryActivateAbilityByTag()
 {
 	if(!IsValid(NickAbilitySystemComponent))
 	{
@@ -210,21 +216,21 @@ void USI_PlayerManager::ToggleAbilityByTag()
 
 	if(!IsValid(CurrentAbility)) return;
 	
-	if(!ActiveAbilitiesContainer.IsEmpty() && *ActiveAbilitiesContainer.Find(CurrentAbilityTag) == CurrentAbility)
+	if(NickAbilitySystemComponent->TryActivateAbilitiesByTag(CurrentAbilityTag.GetSingleTagContainer(), false))
 	{
-		NickAbilitySystemComponent->CancelAbility(CurrentAbility);
-	}
-	else
-	{
-		TryActivateAbility(CurrentAbilityTag, CurrentAbility);
+		ActiveAbilitiesContainer.Add(CurrentAbilityTag, CurrentAbility);
 	}
 }
 
-void USI_PlayerManager::TryActivateAbility(FGameplayTag& InAbilityTag, USI_GameplayAbility* InGameplayAbility)
-{
-	if(NickAbilitySystemComponent->TryActivateAbilitiesByTag(InAbilityTag.GetSingleTagContainer(), false))
+void USI_PlayerManager::TryCancelAbilityByTag()
+{	
+	USI_GameplayAbility* CurrentAbility = NickAbilitySystemComponent->GetGameplayAbilityByTag(CurrentAbilityTag);
+
+	if(!IsValid(CurrentAbility)) return;
+	
+	if(!ActiveAbilitiesContainer.IsEmpty() && *ActiveAbilitiesContainer.Find(CurrentAbilityTag) == CurrentAbility)
 	{
-		ActiveAbilitiesContainer.Add(InAbilityTag, InGameplayAbility);
+		NickAbilitySystemComponent->CancelAbility(CurrentAbility);
 	}
 }
 

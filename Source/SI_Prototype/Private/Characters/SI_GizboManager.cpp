@@ -90,28 +90,73 @@ void USI_GizboManager::InitializeDelegates()
 	
 	SITagManager = GameInstance->GetSubsystem<USI_GameplayTagManager>();
 	if (!IsValid(SITagManager)) {return;}
+	
+	ActivateAbilityDelegate.BindUObject(this, &ThisClass::TryActivateAbilityByTag);
+}
 
-	SITagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
-	SITagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);	
+void USI_GizboManager::InitializeDelegateMaps()
+{
+	Super::InitializeDelegateMaps();
+
+	GizboDelegateContainer.Add(SITag_Ability_Gizbo, ActivateAbilityDelegate);	
 }
 
 void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	if(!IsValid(GetWorld())) return;
-	
-	Super::OnGameplayTagAdded(InAddedTag);
-
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Ability_Gizbo)){return;}
 	
-	GizboAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
+	Super::OnGameplayTagAdded(InAddedTag);	
+	
+	if (SITagManager->HasParentTag(InAddedTag, SITag_Ability_Gizbo))
+	{
+		CurrentAbilityTag = InAddedTag;
+		GizboDelegateContainer.Find(SITag_Ability_Gizbo)->Execute();
+		return;
+	}
+	
+	GizboDelegateContainer.Find(InAddedTag)->Execute();
 }
 
 void USI_GizboManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
 	if(!IsValid(GetWorld())) return;
+	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Ability_Gizbo)){return;}
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
 
-	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Ability_Gizbo)){return;}
+	if(SITagManager->HasParentTag(InRemovedTag, SITag_Ability_Gizbo))
+	{
+		CurrentAbilityTag = InRemovedTag;
+		TryCancelAbilityByTag();
+	}
+}
+
+void USI_GizboManager::TryActivateAbilityByTag()
+{
+	if(!IsValid(GizboAbilitySystemComponent))
+	{
+		GizboAbilitySystemComponent = GizboCharacter->GetSIAbilitySystemComponent();
+	}
+
+	USI_GameplayAbility* CurrentAbility = GizboAbilitySystemComponent->GetGameplayAbilityByTag(CurrentAbilityTag);
+
+	if(!IsValid(CurrentAbility)) return;
 	
+	if(GizboAbilitySystemComponent->TryActivateAbilitiesByTag(CurrentAbilityTag.GetSingleTagContainer(), false))
+	{
+		ActiveAbilitiesContainer.Add(CurrentAbilityTag, CurrentAbility);
+	}
+}
+
+void USI_GizboManager::TryCancelAbilityByTag()
+{	
+	USI_GameplayAbility* CurrentAbility = GizboAbilitySystemComponent->GetGameplayAbilityByTag(CurrentAbilityTag);
+
+	if(!IsValid(CurrentAbility)) return;
+	
+	if(!ActiveAbilitiesContainer.IsEmpty() && *ActiveAbilitiesContainer.Find(CurrentAbilityTag) == CurrentAbility)
+	{
+		GizboAbilitySystemComponent->CancelAbility(CurrentAbility);
+	}
 }

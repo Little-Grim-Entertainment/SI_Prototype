@@ -7,6 +7,7 @@
 #include "SI_GizboManager.generated.h"
 
 class USI_AbilitySystemComponent;
+class USI_GameplayAbility;
 class ASI_Nick;
 class ASI_Gizbo;
 class ASI_GizboController;
@@ -39,9 +40,12 @@ protected:
 	virtual void OnGameModeBeginPlay() override;
 	
 	virtual void InitializeDelegates() override;
+	void InitializeDelegateMaps();
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
-	
+	void TryActivateAbilityByTag();
+	void TryCancelAbilityByTag();
+
 	UPROPERTY()
 	USI_AbilitySystemComponent* GizboAbilitySystemComponent;
 
@@ -53,4 +57,12 @@ private:
 	ASI_Gizbo* GizboCharacter;
 
 	FString GizboStartTag;
+	
+	FGameplayTag CurrentAbilityTag;
+	
+	TMap<FGameplayTag, FSimpleDelegate> GizboDelegateContainer;
+	TMap<FGameplayTag, USI_GameplayAbility*> ActiveAbilitiesContainer;
+
+	FSimpleDelegate ActivateAbilityDelegate;
+
 };

@@ -37,8 +37,8 @@ private:
 
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
-	void ToggleAbilityByTag();
-	void TryActivateAbility(FGameplayTag& InAbilityTag, USI_GameplayAbility* InGameplayAbility);
+	void TryActivateAbilityByTag();
+	void TryCancelAbilityByTag();
 
 	void SetupDialogueState();
 	void SetupExplorationState();

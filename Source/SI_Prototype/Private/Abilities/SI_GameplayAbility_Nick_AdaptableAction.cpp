@@ -37,6 +37,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::EndAbility(const FGameplayAbility
 	CancelInteractableHighlight();
 	DestroyMoveToIndicator();
 	CancelUpdateIndicatorPositionTimer();
+	PC->GetSITagManager()->RemoveTag(SITag_UI_HUD_QuickAction_Movable);
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::StartAdaptableAction(const AActor* InActor)
