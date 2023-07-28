@@ -101,11 +101,10 @@ public:
 	void SetObservableActor(AActor* InObservableActor);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
-	void AddSecondaryInputMappingByTag(FGameplayTag InMappingTag, FGameplayTag InSecondaryTag);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag = FGameplayTag());
 
-
+	ASI_Nick* GetNick() {return Nick;}
 	void SetFocusedWidget(USI_UserWidget* InWidgetToFocus);
 
 	USI_GameplayTagManager* GetSITagManager() const {return SITagManager;}

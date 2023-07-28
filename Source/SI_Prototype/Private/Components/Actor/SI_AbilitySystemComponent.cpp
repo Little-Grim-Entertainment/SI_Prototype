@@ -3,19 +3,14 @@
 
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
+#include "SI_Types.h"
 #include "Abilities/SI_GameplayAbility.h"
-#include "Data/Abilities/SI_GameplayAbilityData.h"
-#include "GameModes/SI_GameMode.h"
-
 
 // Sets default values for this component's properties
 USI_AbilitySystemComponent::USI_AbilitySystemComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-}
 
+}
 
 // Called when the game starts
 void USI_AbilitySystemComponent::BeginPlay()
@@ -23,17 +18,39 @@ void USI_AbilitySystemComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-
-// Called every frame
-void USI_AbilitySystemComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                               FActorComponentTickFunction* ThisTickFunction)
+void USI_AbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpec)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::OnGiveAbility(AbilitySpec);
+	
+	CurrentSIAbility = FSIGameplayAbilities(Cast<USI_GameplayAbility>(AbilitySpec.Ability), AbilitySpec.Ability->AbilityTags, AbilitySpec.Handle);
 
-	// ...
+	SIAbilitiesArray.AddUnique(FSIGameplayAbilities(CurrentSIAbility));
 }
 
-UGameplayAbility* USI_AbilitySystemComponent::GetGameplayAbilityFromTag(const FGameplayTag InGameplayAbilityTag) const
+FGameplayAbilitySpecHandle* USI_AbilitySystemComponent::GetGameplayAbilitySpecByTag(FGameplayTag InAbilityTag)
 {
-	return GameplayAbilityData->GetGameplayAbilityByTag(InGameplayAbilityTag);
+	if(SIAbilitiesArray.IsEmpty()) return nullptr;
+	
+	for(FSIGameplayAbilities& TempSIAbility : SIAbilitiesArray)
+	{
+		if(TempSIAbility.SIAbilityTagContainer.HasTag(InAbilityTag))
+		{
+			return &TempSIAbility.SIAbilitySpecHandle;
+		}
+	}
+	return nullptr;
+}
+
+USI_GameplayAbility* USI_AbilitySystemComponent::GetGameplayAbilityByTag(FGameplayTag InAbilityTag)
+{
+	if(SIAbilitiesArray.IsEmpty()) return nullptr;
+	
+	for(FSIGameplayAbilities& TempSIAbility : SIAbilitiesArray)
+	{
+		if(TempSIAbility.SIAbilityTagContainer.HasTag(InAbilityTag))
+		{
+			return Cast<USI_GameplayAbility>(TempSIAbility.SIAbility);
+		}
+	}
+	return nullptr;
 }

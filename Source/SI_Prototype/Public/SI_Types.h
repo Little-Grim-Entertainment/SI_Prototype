@@ -7,6 +7,7 @@
 #include "Media\SI_MediaTypes.h"
 #include "SI_GameplayTagTypes.h"
 #include "Engine/DataTable.h"
+#include "GameplayAbilitySpec.h"
 #include "SI_Types.generated.h"
 
 class USI_GameplayAbility;
@@ -293,17 +294,19 @@ struct FSI_QuckActionOptions : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
-struct FSI_GameplayAbilities
+struct FSIGameplayAbilities
 {
 	GENERATED_BODY()
 
-	FSI_GameplayAbilities();
-	FSI_GameplayAbilities(UGameplayAbility* InGameplayAbility);
+	FSIGameplayAbilities() = default;
+	FSIGameplayAbilities(UGameplayAbility* InSIAbility, const FGameplayTagContainer& InSIAbilityTagContainer, const FGameplayAbilitySpecHandle& InSIAbilitySpecHandle);
+
+	bool operator==(const FSIGameplayAbilities& OtherAbility) const;
 	
-	UGameplayAbility* GetGameplayAbility(const FGameplayTag& InGameplayAbilityTag) const;
-	
-private:
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (Categories = "Ability", AllowPrivateAccess = "true"))
-	TMap<FGameplayTag, TSubclassOf<USI_GameplayAbility>> GameplayAbilities;
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities")
+	FGameplayTagContainer SIAbilityTagContainer;
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities")
+	FGameplayAbilitySpecHandle SIAbilitySpecHandle;
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities")
+	UGameplayAbility* SIAbility;
 };

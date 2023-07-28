@@ -10,6 +10,8 @@
 #include "Data/Characters/SI_CharacterData.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameModes/SI_GameMode.h"
+#include "SI_GameplayTagManager.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 
 void USI_GizboManager::SpawnGizbo()
 {
@@ -36,17 +38,22 @@ void USI_GizboManager::SpawnGizbo()
 			GizboCharacter->SetActorRotation(GizboStart->GetActorRotation());
 		}
 	}
-	
-	if (!GizboController && GizboCharacter)
+	if(GizboCharacter)
 	{
-		GizboController = Cast<ASI_GizboController>(GizboCharacter->GetController());
+		GizboAbilitySystemComponent = GizboCharacter->GetSIAbilitySystemComponent();
 	}
-
+	
 	if (GizboController)
 	{
 		GizboController->Possess(GizboCharacter);
 		GizboController->Nick = Nick;
 	}
+		
+	if (!GizboController && GizboCharacter)
+	{
+		GizboController = Cast<ASI_GizboController>(GizboCharacter->GetController());
+	}
+	
 }
 
 void USI_GizboManager::SetGizboStartTag(FString InStartTag)
@@ -77,3 +84,34 @@ void USI_GizboManager::OnGameModeBeginPlay()
 	SpawnGizbo();
 }
 
+void USI_GizboManager::InitializeDelegates()
+{
+	Super::InitializeDelegates();
+	
+	SITagManager = GameInstance->GetSubsystem<USI_GameplayTagManager>();
+	if (!IsValid(SITagManager)) {return;}
+
+	SITagManager->OnTagAdded().AddUObject(this, &ThisClass::OnGameplayTagAdded);
+	SITagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);	
+}
+
+void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+{
+	if(!IsValid(GetWorld())) return;
+	
+	Super::OnGameplayTagAdded(InAddedTag);
+
+	if(!SITagManager->HasParentTag(InAddedTag, SITag_Ability_Gizbo)){return;}
+	
+	GizboAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
+}
+
+void USI_GizboManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+{
+	if(!IsValid(GetWorld())) return;
+	
+	Super::OnGameplayTagRemoved(InRemovedTag);
+
+	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Ability_Gizbo)){return;}
+	
+}

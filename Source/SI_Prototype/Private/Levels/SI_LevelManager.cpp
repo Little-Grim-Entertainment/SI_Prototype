@@ -270,6 +270,7 @@ void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 		else
 		{
 			SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
+			SITagManager->ReplaceTagWithSameParent(SITag_UI_HUD, SITag_UI);
 		}
 	}
 	

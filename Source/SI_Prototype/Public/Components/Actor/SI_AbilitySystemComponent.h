@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "SI_Types.h"
 #include "SI_AbilitySystemComponent.generated.h"
 
-class USI_GameplayAbilityData;
 class USI_GameplayAbility;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -17,18 +17,18 @@ class SI_PROTOTYPE_API USI_AbilitySystemComponent : public UAbilitySystemCompone
 public:
 	// Sets default values for this component's properties
 	USI_AbilitySystemComponent();
+	
+	FGameplayAbilitySpecHandle* GetGameplayAbilitySpecByTag(FGameplayTag InAbilityTag);
+	USI_GameplayAbility* GetGameplayAbilityByTag(FGameplayTag InAbilityTag);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	
+	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
 
-	UPROPERTY(EditDefaultsOnly)
-	USI_GameplayAbilityData* GameplayAbilityData;	
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
-
-	UGameplayAbility* GetGameplayAbilityFromTag(const FGameplayTag InGameplayAbilityTag) const;
+private:
+	FSIGameplayAbilities CurrentSIAbility;
+	
+	TArray<FSIGameplayAbilities> SIAbilitiesArray;
 };

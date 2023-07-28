@@ -26,6 +26,8 @@ public:
 	void SetOptionImage(UTexture2D* InImage);
 	void SetOptionPrompt(FText InPrompt);
 	void SetOptionBinding(FText InBinding);
+
+	FGameplayTag GetOptionTag() const {return OptionTag;}
 	
 	FGameplayTag OptionTag;
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))

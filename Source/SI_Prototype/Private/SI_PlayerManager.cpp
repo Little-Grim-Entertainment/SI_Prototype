@@ -7,6 +7,8 @@
 #include "Controllers/SI_PlayerController.h"
 #include "Data/Maps/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
+#include "Characters/SI_Nick.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 
 void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 {
@@ -15,8 +17,7 @@ void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 	SITagManager->ReplaceTagWithSameParent(InPlayerState, SITag_Player_State);
 
 	PreviousPlayerState = CurrentPlayerState;
-	CurrentPlayerState = InPlayerState;
-	
+	CurrentPlayerState = InPlayerState;	
 }
 
 const FGameplayTag& USI_PlayerManager::GetCurrentPlayerState() const
@@ -61,8 +62,7 @@ void USI_PlayerManager::ShowWorld(bool bShouldShow, bool bShouldFade)
 
 void USI_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::Initialize(Collection);
-	
+	Super::Initialize(Collection);	
 }
 
 void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
@@ -70,9 +70,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	if(!IsValid(GetWorld())) return;
 	
 	Super::OnGameplayTagAdded(InAddedTag);
-
-	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
-
+		
 	if (SITagManager->HasParentTag(InAddedTag, SITag_UI_Menu))
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Menu,SITag_Player_State);
@@ -92,6 +90,12 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		return;
 	}
 	
+	if(SITagManager->HasParentTag(InAddedTag, SITag_Ability_Nick))
+	{
+		CurrentAbilityTag = InAddedTag;
+		PlayerDelegateContainer.Find(SITag_Ability_Nick)->Execute();
+	}
+	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Player)){return;}
 	
 	if(SITagManager->HasParentTag(InAddedTag, SITag_Player_State))
@@ -106,12 +110,11 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		PlayerDelegateContainer.Find(InAddedTag)->Execute();
 		return;
 	}
-
+	
 	PlayerDelegateContainer.Find(InAddedTag)->Execute();
 
 	if (!IsValid(PlayerController)){return;}
 	PlayerController->AddInputMappingByTag(InAddedTag);
-	
 }
 
 void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
@@ -119,9 +122,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	if(!IsValid(GetWorld())) return;
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
-
-	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
-
+	
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
 	{
 		SITagManager->RemoveTag(SITag_Player_State_Menu);
@@ -152,13 +153,14 @@ void USI_PlayerManager::OnPlayerStart()
 	Super::OnPlayerStart();
 
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
+	
 	ShowWorld(false, false);
 }
 
 void USI_PlayerManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
-
+	
 	if(!bShowWorld)
 	{
 		ShowWorld(true, true);
@@ -169,6 +171,7 @@ void USI_PlayerManager::InitializeDelegates()
 {
 	Super::InitializeDelegates();
 
+	ActivateAbilityDelegate.BindUObject(this, &ThisClass::ToggleAbilityByTag);
 	DialogueStateDelegate.BindUObject(this, &ThisClass::SetupDialogueState);
 	ExplorationStateDelegate.BindUObject(this, &ThisClass::SetupExplorationState);
 	InactiveStateDelegate.BindUObject(this, &ThisClass::SetupInactiveState);
@@ -184,6 +187,7 @@ void USI_PlayerManager::InitializeDelegateMaps()
 {
 	Super::InitializeDelegateMaps();
 
+	PlayerDelegateContainer.Add(SITag_Ability_Nick, ActivateAbilityDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Dialogue, DialogueStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Exploration, ExplorationStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Inactive, InactiveStateDelegate);
@@ -193,6 +197,35 @@ void USI_PlayerManager::InitializeDelegateMaps()
 	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_PossessMovable, PossessMovableStateDelegate);
 	
+}
+
+void USI_PlayerManager::ToggleAbilityByTag()
+{
+	if(!IsValid(NickAbilitySystemComponent))
+	{
+		NickAbilitySystemComponent = PlayerController->GetNick()->GetSIAbilitySystemComponent();
+	}
+
+	USI_GameplayAbility* CurrentAbility = NickAbilitySystemComponent->GetGameplayAbilityByTag(CurrentAbilityTag);
+
+	if(!IsValid(CurrentAbility)) return;
+	
+	if(!ActiveAbilitiesContainer.IsEmpty() && *ActiveAbilitiesContainer.Find(CurrentAbilityTag) == CurrentAbility)
+	{
+		NickAbilitySystemComponent->CancelAbility(CurrentAbility);
+	}
+	else
+	{
+		TryActivateAbility(CurrentAbilityTag, CurrentAbility);
+	}
+}
+
+void USI_PlayerManager::TryActivateAbility(FGameplayTag& InAbilityTag, USI_GameplayAbility* InGameplayAbility)
+{
+	if(NickAbilitySystemComponent->TryActivateAbilitiesByTag(InAbilityTag.GetSingleTagContainer(), false))
+	{
+		ActiveAbilitiesContainer.Add(InAbilityTag, InGameplayAbility);
+	}
 }
 
 void USI_PlayerManager::SetupDialogueState()

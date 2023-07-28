@@ -19,7 +19,8 @@ class SI_PROTOTYPE_API USI_QuickActionWidget : public USI_InteractionWidget
 
 public:
 
-	void RefreshQuickActionWidget();
+	void RefreshQuickActionWidget(const FGameplayTag& InUITag);	
+	FGameplayTag GetQuickActionAbilityTag(const FGameplayTag InQuickActionTag) const;
 	
 protected:
 

@@ -6,6 +6,7 @@
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_GizboManager.generated.h"
 
+class USI_AbilitySystemComponent;
 class ASI_Nick;
 class ASI_Gizbo;
 class ASI_GizboController;
@@ -29,15 +30,23 @@ public:
 	void ShowGizbo(bool bShouldHide);
 	UFUNCTION(BlueprintPure, Category = "Gizbo")
 	ASI_GizboController* GetGizboController();
+	
 	UPROPERTY()
 	ASI_Nick* Nick;
 	
 protected:
 
 	virtual void OnGameModeBeginPlay() override;
+	
+	virtual void InitializeDelegates() override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	
+	UPROPERTY()
+	USI_AbilitySystemComponent* GizboAbilitySystemComponent;
 
 private:
-	
+
 	UPROPERTY()
 	ASI_GizboController* GizboController;
 	UPROPERTY()

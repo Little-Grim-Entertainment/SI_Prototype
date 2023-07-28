@@ -19,7 +19,6 @@ void USI_OptionWidget::HideWidget_Implementation()
 void USI_OptionWidget::RefreshWidget_Implementation()
 {
 	Super::RefreshWidget_Implementation();
-	
 }
 
 void USI_OptionWidget::SetOptionImage(UTexture2D* InImage)

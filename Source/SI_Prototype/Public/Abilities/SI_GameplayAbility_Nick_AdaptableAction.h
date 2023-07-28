@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SI_GameplayAbility.h"
-#include "SI_GameplayAbility_Gizbo_AdaptableAction.generated.h"
+#include "SI_GameplayAbility_Nick_AdaptableAction.generated.h"
 
 class ASI_Nick;
 class ASI_PlayerController;
@@ -18,7 +18,7 @@ class ASI_MoveToIndicator;
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_GameplayAbility_Gizbo_AdaptableAction : public USI_GameplayAbility
+class SI_PROTOTYPE_API USI_GameplayAbility_Nick_AdaptableAction : public USI_GameplayAbility
 {
 	GENERATED_BODY()
 
@@ -32,7 +32,7 @@ protected:
 	void StartAdaptableAction(const AActor* InActor);
 	void StartUpdateIndicatorPositionTimer();
 	void CancelUpdateIndicatorPositionTimer();
-	void UpdateMoveToIndicatorPosition() const;
+	void UpdateMoveToIndicatorPosition();
 	ASI_MoveToIndicator* SpawnMoveToIndicator(const FVector InHitLocation);
 	void DestroyMoveToIndicator();
 	void HighlightInteractables(const AActor* InActor);
@@ -61,5 +61,6 @@ protected:
 	ASI_PlayerCameraManager* SICameraManger;
 	float UpdateIndicatorDelay = 0.001f;
 	FTimerHandle IndicatorPositionTimerHandle;
-	bool bIsActive;	
+	bool bIsActive;
+	bool bHitActorIsMovable;
 };

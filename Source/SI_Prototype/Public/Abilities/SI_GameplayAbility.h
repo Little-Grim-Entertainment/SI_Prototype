@@ -6,6 +6,8 @@
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Abilities/GameplayAbility.h"
 #include "SI_GameplayAbility.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActiveSpecHandleDelegate, const FGameplayAbilitySpecHandle&, SpecHandle);
 /**
  * 
  */
@@ -15,4 +17,14 @@ UCLASS()
 class SI_PROTOTYPE_API USI_GameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+	
+public:
+	FActiveSpecHandleDelegate ActiveSpecHandleDelegate;
+
+protected:
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	FGameplayAbilitySpecHandle ActiveSpecHandle;
+
+
 };

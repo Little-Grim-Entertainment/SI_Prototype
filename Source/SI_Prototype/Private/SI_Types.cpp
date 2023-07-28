@@ -11,7 +11,6 @@
 #include "Data/Media/SI_MediaDataAsset.h"
 #include "InputMappingContext.h"
 #include "InputAction.h"
-#include "Abilities/SI_GameplayAbility.h"
 
 FSI_MusicSettings::FSI_MusicSettings()
 {
@@ -443,15 +442,14 @@ bool FSI_MapState::operator!=(const FSI_MapState& OtherMapState) const
 	return MapData != OtherMapState.MapData;
 }
 
-FSI_GameplayAbilities::FSI_GameplayAbilities()
+FSIGameplayAbilities::FSIGameplayAbilities(UGameplayAbility* InSIAbility, const FGameplayTagContainer& InSIAbilityTagContainer, const FGameplayAbilitySpecHandle& InSIAbilitySpecHandle)
 {
+	SIAbilityTagContainer = InSIAbilityTagContainer;
+	SIAbilitySpecHandle = InSIAbilitySpecHandle;
+	SIAbility = InSIAbility;
 }
 
-FSI_GameplayAbilities::FSI_GameplayAbilities(UGameplayAbility* InSIGameplayAbility)
+bool FSIGameplayAbilities::operator==(const FSIGameplayAbilities& OtherAbility) const
 {
-}
-
-UGameplayAbility* FSI_GameplayAbilities::GetGameplayAbility(const FGameplayTag& InGameplayAbilityTag) const
-{
-	return GameplayAbilities.Find(InGameplayAbilityTag)->GetDefaultObject();
+	return SIAbility == OtherAbility.SIAbility;
 }

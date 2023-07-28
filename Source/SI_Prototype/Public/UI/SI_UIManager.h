@@ -91,6 +91,7 @@ public:
 
 	UFUNCTION()
 	void UpdateQuickActionWidget();
+	FGameplayTag GetQuickActionAbilityTag(const FGameplayTag& InQuickActionTag);
 
 	UFUNCTION()
 	void OnObjectiveActivated(USI_ObjectiveData* ActivatedObjective);
@@ -132,6 +133,8 @@ private:
 
 	TMap<FGameplayTag, USI_UserWidget*> UIWidgetContainer;
 
+	FGameplayTag CurrentUITag;
+	
 	UPROPERTY()
 	USI_UserWidget* LoadingScreen;
 	UPROPERTY()

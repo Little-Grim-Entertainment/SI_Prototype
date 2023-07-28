@@ -10,7 +10,6 @@
 #include "Data/Cases/SI_CaseManager.h"
 #include "Media/SI_MediaManager.h"
 #include "Levels/SI_LevelManager.h"
-#include "SI_PlayerManager.h"
 
 // Case Data
 #include "Data/Cases/SI_CaseData.h"
@@ -25,7 +24,6 @@
 #include "UI/SI_InteractionWidget.h"
 #include "UI/SI_CaseTitleCard.h"
 #include "UI/SI_SkipWidget.h"
-#include "UI/SI_QuickActionWidget.h"
 
 #include "Controllers/SI_PlayerController.h"
 #include "Data/Maps/SI_MenuMapData.h"
@@ -44,7 +42,6 @@ static TAutoConsoleVariable<int32> CvarDisableTitleCard(
 
 USI_UIManager::USI_UIManager()
 {
-	
 }
 
 void USI_UIManager::OnGameInstanceInit()
@@ -63,12 +60,25 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
 
+	CurrentUITag = InAddedTag;
+	
 	if(InAddedTag == SITag_Game_State_Loading)
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_UI_Screen_Loading, SITag_UI);
 	}
 	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_UI)){return;}
+	
+	if(SITagManager->HasParentTag(InAddedTag, SITag_UI_HUD_QuickAction))
+	{
+		AddUIDelegateContainer.Find(SITag_UI_HUD_QuickAction)->Execute();
+
+		if(InAddedTag != SITag_UI_HUD_QuickAction_GadgetsOne)
+		{
+			SITagManager->RemoveTag(SITag_UI_HUD_QuickAction_GadgetsOne);
+		}
+		return;
+	}
 
 	AddUIDelegateContainer.Find(InAddedTag)->Execute();
 }	
@@ -99,10 +109,10 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		RemoveCaseTitleCard();
 		return;
 	}
-	if (InRemovedTag == SITag_UI_HUD_QuickAction)
+
+	if(InRemovedTag != SITag_UI_HUD_QuickAction_GadgetsOne && SITagManager->HasParentTag(InRemovedTag, SITag_UI_HUD_QuickAction))
 	{
-		UpdateQuickActionWidget();
-		return;
+		SITagManager->AddNewGameplayTag(SITag_UI_HUD_QuickAction_GadgetsOne);
 	}
 	
 	RemoveSIWidget(GetWidgetByTag(InRemovedTag));
@@ -166,10 +176,7 @@ void USI_UIManager::CreatePlayerHUD()
 {
 	if (!IsValid(GameInstance->GetGameMode()) || IsValid(PlayerHUD)){return;}
 	
-	USI_UserWidget* HudTemp = nullptr;
-	CreateSIWidget(HudTemp, GameInstance->GetGameMode()->PlayerHUD_Class, SITag_UI_HUD);
-	
-	PlayerHUD = Cast<USI_HUD>(HudTemp);
+	CreateSIWidget(PlayerHUD, GameInstance->GetGameMode()->PlayerHUD_Class, SITag_UI_HUD);
 }
 
 void USI_UIManager::CreateMoviePlayerWidget()
@@ -265,6 +272,11 @@ void USI_UIManager::CreateSIWidget(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_
 		{
 			PlayerController->SetFocusedWidget(InWidgetPtr);
 		}
+		
+		if (SITagManager->HasParentTag(InUITag, SITag_UI_HUD))
+		{
+			PlayerHUD = Cast<USI_HUD>(InWidgetPtr);
+		}
 	}
 }
 
@@ -348,9 +360,16 @@ void USI_UIManager::RemoveActiveInteractionWidget(USI_InteractionWidget* InInter
 
 void USI_UIManager::UpdateQuickActionWidget()
 {
-	if (!IsValid(QuickActionWidget)){return;}
+	if(!IsValid(PlayerHUD)){return;}
 	
-	QuickActionWidget->RefreshQuickActionWidget();
+	PlayerHUD->UpdateQuickActionWidget(CurrentUITag);
+}
+
+FGameplayTag USI_UIManager::GetQuickActionAbilityTag(const FGameplayTag& InQuickActionTag)
+{
+	if(!IsValid(PlayerHUD)){return SITag_None;}
+	
+	return PlayerHUD->GetQuickActionAbilityTag(InQuickActionTag);
 }
 
 void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
