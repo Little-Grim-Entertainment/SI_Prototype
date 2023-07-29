@@ -18,14 +18,18 @@ class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 	ASI_Flashlight();	
 
 public:	
-	void UsePrimary();
-	void UseSecondary();
+	virtual void ActivatePrimaryAction() override;
+	virtual void ActivateSecondaryAction() override;
+	virtual void CancelPrimaryAction() override;
+	virtual void CancelSecondaryAction() override;
+	
 	void PlaceSegment();
-	void BindPickUpSegment();		
-	void SpawnSegment();			
+	void BindPickUpSegment();
+	void SpawnSegment();
 	void SpotlightHandler();
 	void PowerIntensityHandler();
 	void DebugSpotlightInfo();
+	
 	UFUNCTION()
 	void PickUpSegment(int InSegmentNumber);
 	

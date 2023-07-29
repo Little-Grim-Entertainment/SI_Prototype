@@ -31,8 +31,7 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsHoldingItem;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
-	USI_AbilitySystemComponent* AbilitySystemComponent;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Abilities)
 	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
 	

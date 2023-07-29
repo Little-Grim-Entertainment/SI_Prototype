@@ -17,18 +17,3 @@ void ASI_Character::BeginPlay()
 	Super::BeginPlay();
 	
 }
-
-// Called every frame
-void ASI_Character::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ASI_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

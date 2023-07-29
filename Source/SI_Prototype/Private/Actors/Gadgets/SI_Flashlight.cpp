@@ -88,25 +88,25 @@ void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-void ASI_Flashlight::UsePrimary()
+void ASI_Flashlight::ActivatePrimaryAction()
 {
 	// todo: check segments placed to see if spotlight turns on/off or final segment turns on/off
-	if (bFlashlightOn)
-	{
-		Spotlight->SetHiddenInGame(true);
-		CollisionCone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		// todo: set emissive property of flashlight glass				
-	}
-	else
-	{
-		Spotlight->SetHiddenInGame(false);
-		CollisionCone->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		// todo: set emissive property of flashlight glass
-	}
-	bFlashlightOn = !bFlashlightOn;
+
+	Spotlight->SetHiddenInGame(false);
+	CollisionCone->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	// todo: set emissive property of flashlight glass
 }
 
-void ASI_Flashlight::UseSecondary()
+void ASI_Flashlight::CancelPrimaryAction()
+{
+	Super::CancelPrimaryAction();
+
+	Spotlight->SetHiddenInGame(true);
+	CollisionCone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// todo: set emissive property of flashlight glass	
+}
+
+void ASI_Flashlight::ActivateSecondaryAction()
 {	
 	if (SegmentsPlaced == MaxPlaceableSegments)
 	 {
@@ -121,6 +121,13 @@ void ASI_Flashlight::UseSecondary()
 	{	
 		PlaceSegment();								
 	}	
+}
+
+void ASI_Flashlight::CancelSecondaryAction()
+{
+	Super::CancelSecondaryAction();
+
+	//Not sure if you need a cancel for this one you can remove if you need to I just put it here in autopilot mode
 }
 
 void ASI_Flashlight::PlaceSegment()

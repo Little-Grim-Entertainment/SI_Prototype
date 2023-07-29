@@ -304,33 +304,12 @@ void ASI_PlayerController::RequestUseGadget()
 {
 	if(!IsValid(SITagManager)) {return;}
 	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_Gadget_UsePrimary);
-	
-	// todo: Delete when gadget system implemented
-	// 
-	TArray<AActor*> AttachedFlashlights;
-	Nick->GetAttachedActors(AttachedFlashlights, true, false);
-
-	for (auto AttachedFlashlight : AttachedFlashlights)
-	{
-		ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
-		EquippedFlashlight->UsePrimary();			
-	}	
 }
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
 {
 	if(!IsValid(SITagManager)) {return;}
 	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_Gadget_UseSecondary);
-
-	// todo: Delete when gadget system implemented
-	TArray<AActor*> AttachedFlashlights;
-	Nick->GetAttachedActors(AttachedFlashlights, true, false);
-
-	for (auto AttachedFlashlight : AttachedFlashlights)
-	{
-		ASI_Flashlight* EquippedFlashlight = Cast<ASI_Flashlight>(AttachedFlashlight);
-		EquippedFlashlight->UseSecondary();			
-	}
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
@@ -341,12 +320,8 @@ void ASI_PlayerController::RequestToggleGizboFollow()
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-
-	//TODO: Find solution to removing tag if it is already there to cancel the ability
-	
 	if(!IsValid(SITagManager)) {return;}
 	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("RequestToggleGizboAdaptableAction"));
 }
 
 void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
@@ -385,36 +360,32 @@ void ASI_PlayerController::RequestMultiOptionUp()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
-	SITagManager->AddNewGameplayTag(AbilityTag);
 	
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionUp");
+	SITagManager->AddNewGameplayTag(AbilityTag);
 }
 
 void ASI_PlayerController::RequestMutliOptionDown()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
-	SITagManager->AddNewGameplayTag(AbilityTag);
 	
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMutliOptionDown");
+	SITagManager->AddNewGameplayTag(AbilityTag);
 }
 
 void ASI_PlayerController::RequestMultiOptionLeft()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
-	SITagManager->AddNewGameplayTag(AbilityTag);
 	
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionLeft");
+	SITagManager->AddNewGameplayTag(AbilityTag);
 }
 
 void ASI_PlayerController::RequestMultiOptionRight()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
-	SITagManager->AddNewGameplayTag(AbilityTag);
 	
-	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Green,"Called: RequestMultiOptionRight");
+	SITagManager->AddNewGameplayTag(AbilityTag);
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)
