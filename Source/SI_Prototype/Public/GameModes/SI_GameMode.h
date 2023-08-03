@@ -7,18 +7,16 @@
 #include "GameFramework/GameMode.h"
 #include "SI_GameMode.generated.h"
 
-class USI_GameplayAbility;
-class USI_CaseList;
-class USI_MoviePlayerWidget;
-class USI_GameInstance;
-class USI_UserWidget;
-class APlayerStart;
 class USI_CharacterData;
-class USI_LevelManager;
+class USI_GameInstance;
+class USI_GameplayAbility;
 class USI_HUD;
+class USI_LevelManager;
+class USI_MoviePlayerWidget;
 class USI_SkipWidget;
-class USI_InputConfig;
-class USI_MapList;
+class USI_UserWidget;
+
+class APlayerStart;
 
 UCLASS()
 class SI_PROTOTYPE_API ASI_GameMode : public AGameMode
@@ -43,16 +41,10 @@ public:
 	TArray<TSubclassOf<USI_UserWidget>> LoadingScreens;
 
 	UPROPERTY(EditAnywhere, Category = Data)
-	USI_InputConfig* InputConfig;
-	UPROPERTY(EditAnywhere, Category = Data)
 	USI_CharacterData* NickSpadeCDA;
 	UPROPERTY(EditAnywhere, Category = Data)
 	USI_CharacterData* GizboCDA;
-	UPROPERTY(EditAnywhere, Category = Data)
-	USI_MapList* MapList;
-	UPROPERTY(EditAnywhere, Category = Data)
-	USI_CaseList* CaseList;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WorldSettings")
 	float TimeModifier = 10.0f;
 	UPROPERTY(EditAnywhere, Category = "Levels")

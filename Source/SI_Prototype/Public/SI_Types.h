@@ -150,9 +150,9 @@ struct FSI_PartDetails
 
 	USI_PartData* GetPartData() const;
 
-	FSI_ObjectiveDetails& GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData);
+	FSI_ObjectiveDetails* GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData);
 
-	TMap<USI_ObjectiveData*, FSI_ObjectiveDetails>& GetPartObjectives();
+	TMap<USI_ObjectiveData*, FSI_ObjectiveDetails*>& GetPartObjectives();
 	TArray<USI_ObjectiveData*> GetActiveObjectives();
 	TArray<USI_ObjectiveData*> GetCompletedObjectives();
 
@@ -165,11 +165,11 @@ private:
 	USI_PartData* PartDataAsset = nullptr;
 
 	UPROPERTY()
-	TMap<USI_ObjectiveData*, FSI_ObjectiveDetails> PartObjectives;
-	UPROPERTY()
 	TArray<USI_ObjectiveData*> ActiveObjectives;
 	UPROPERTY()
 	TArray<USI_ObjectiveData*> CompletedObjectives;
+
+	TMap<USI_ObjectiveData*, FSI_ObjectiveDetails*> PartObjectives;
 
 	bool bIsPartActive = false;
 	bool bIsPartComplete = false;
@@ -196,8 +196,8 @@ struct FSI_CaseDetails
 
 	void ResetCase();
 	
-	FSI_PartDetails& GetPartDetails(const USI_PartData* InPart);
-	TMap<USI_PartData*, FSI_PartDetails>& GetCaseParts();
+	FSI_PartDetails* GetPartDetails(const USI_PartData* InPart);
+	TMap<USI_PartData*, FSI_PartDetails*>& GetCaseParts();
 	USI_PartData* GetActivePart();
 
 	bool operator==(const FSI_CaseDetails& OtherCase) const;
@@ -211,7 +211,7 @@ private:
 	UPROPERTY()
 	USI_PartData* ActivePart = nullptr;
 	
-	TMap<USI_PartData*, FSI_PartDetails> CaseParts;
+	TMap<USI_PartData*, FSI_PartDetails*> CaseParts;
 	
 	UPROPERTY()
 	TArray<USI_PartData*> CompletedParts;

@@ -51,26 +51,26 @@ public:
 
 	void AssignMedia();
 
-	UFUNCTION(BlueprintPure)
-	FSI_CaseDetails& GetCaseDetails(const USI_CaseData* InCaseData);
+	void PlayIntroMedia();
+
 	UFUNCTION(BlueprintPure)
 	USI_CaseData* GetActiveCase();
 	UFUNCTION(BlueprintPure)
-	USI_CaseData* GetCaseByName(const FString InCaseName);
+	USI_PartData* GetActivePart();
+	UFUNCTION(BlueprintPure)
+	TArray<USI_ObjectiveData*> GetActiveObjectives();
+	
+	UFUNCTION(BlueprintPure)
+	USI_CaseData* GetCaseByName(const FString& InCaseName);
 	UFUNCTION(BlueprintPure)
 	TArray<USI_CaseData*> GetAcceptedCases();
 	UFUNCTION(BlueprintPure)
 	TArray<USI_CaseData*> GetCompletedCases();
 
-	UFUNCTION(BlueprintPure)
-	FSI_PartDetails& GetPartDetails(const USI_PartData* InPartData);
-	UFUNCTION(BlueprintPure)
-	USI_PartData* GetActivePart();
-
-	UFUNCTION(BlueprintPure)
-	FSI_ObjectiveDetails& GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData);
-	UFUNCTION(BlueprintPure)
-	TArray<USI_ObjectiveData*> GetActiveObjectives();
+	FSI_CaseDetails* GetCaseDetails(const USI_CaseData* InCaseData);
+	
+	FSI_PartDetails* GetPartDetails(const USI_PartData* InPartData);
+	FSI_ObjectiveDetails* GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData);
 
 	FOnCaseAccepted& OnCaseAccepted();
 	FOnCaseActivated& OnCaseActivated();
@@ -104,7 +104,7 @@ private:
 
 	FOnCaseTitleCardComplete OnCaseTitleCardCompleteDelegate;
 
-	TMap<USI_CaseData*, FSI_CaseDetails> AllCases;
+	TMap<USI_CaseData*, FSI_CaseDetails*> AllCases;
 	
 	UPROPERTY()
 	USI_CaseData* ActiveCase;
@@ -132,4 +132,6 @@ private:
 	
 	bool CheckForCompletedPart();
 	bool CheckForCompletedCase();
+
+	bool bCasesInitialized;
 };

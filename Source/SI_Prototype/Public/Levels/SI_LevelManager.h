@@ -27,13 +27,6 @@ class SI_PROTOTYPE_API USI_LevelManager : public USI_GameInstanceSubsystem
 public:
 
 	USI_LevelManager();
-
-	UPROPERTY(BlueprintAssignable, Category = "Levels")
-	FOnBeginLevelLoad OnBeginLevelLoad;
-	UPROPERTY(BlueprintAssignable, Category = "Levels")
-	FOnLevelLoaded OnLevelLoaded;
-	UPROPERTY(BlueprintAssignable, Category = "Levels")
-	FOnLevelUnloaded OnLevelUnloaded;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	void LoadLevelByTag(FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
@@ -48,28 +41,33 @@ public:
 	void ExecuteLoadLevelOnCinematicComplete();
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	USI_MapData* GetCurrentMap() const;
+	USI_MapData* GetCurrentMap();
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	bool GetLevelHasLoaded() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Levels")
-	FSI_MapState& GetMapStateByTag(const FGameplayTag InMapTag);
-	UFUNCTION(BlueprintCallable, Category = "Levels")
-	FSI_MapState& GetMapStateByWorld();
 
-	UFUNCTION(BlueprintCallable, Category = "Levels")
-	const TArray<FSI_MapState>& GetAllMapStates() const;
+
+	const TArray<FSI_MapState*>& GetAllMapStates() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	TArray<FString>& GetMapNames();
+
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	FSI_MapState& GetMapStateFromName(FString InMapName);
+	USI_MapData* GetMapDataFromName(const FString& InMapName);
+	
+
+	FSI_MapState* GetMapStateByWorld();
+	FSI_MapState* GetMapStateFromName(const FString& InMapName);
+	FSI_MapState* GetMapStateByTag(const FGameplayTag InMapTag);
+	FSI_MapState* GetCurrentLoadedMapState();
+
+	
+	FOnBeginLevelLoad& OnBeginLevelLoad();
+	FOnLevelLoaded& OnLevelLoaded();
+	FOnLevelUnloaded& OnLevelUnloaded();
 	
 	UFUNCTION()
 	void LevelLoaded(UWorld* LoadedWorld);
-
-	UFUNCTION(BlueprintCallable, Category = "Levels")
-	FSI_MapState& GetCurrentLoadedMapState() const;
 
 protected:
 	
@@ -80,16 +78,21 @@ protected:
 
 private:
 
+	FOnBeginLevelLoad OnBeginLevelLoadDelegate;
+	FOnLevelLoaded OnLevelLoadedDelegate;
+	FOnLevelUnloaded OnLevelUnloadedDelegate;
+	
 	bool bLevelHasLoaded = false;
 	bool bLoadShouldFade = false;
+	bool bMapStatesInitialized;;
 
-	FSI_MapState* LevelStateToLoad;
-	FSI_MapState* LoadedMapState;
+	FGameplayTag LevelToLoad;
+	FGameplayTag LoadedLevel;
 
 	UPROPERTY()
 	USI_MapData* MainMenu;
 
-	TArray<FSI_MapState> MapStates;
+	TArray<FSI_MapState*> MapStates;
 	
 	FTimerHandle LoadDelayHandle;
 	FTimerDelegate LoadDelayDelegate;

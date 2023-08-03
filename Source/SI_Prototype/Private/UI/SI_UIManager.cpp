@@ -287,7 +287,7 @@ USI_UserWidget* USI_UIManager::GetWidgetByTag(const FGameplayTag InWidgetTag)
 
 void USI_UIManager::CreateMapMenu()
 {
-	const USI_LevelManager* LevelManager = GameInstance->GetSubsystem<USI_LevelManager>();
+	USI_LevelManager* LevelManager = GameInstance->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(LevelManager) || IsValid(MapMenu)){return;}
 
 	const USI_MenuMapData* MenuMapData = Cast<USI_MenuMapData>(LevelManager->GetCurrentMap());

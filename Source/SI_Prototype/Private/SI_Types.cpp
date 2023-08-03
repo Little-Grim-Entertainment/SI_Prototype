@@ -149,8 +149,8 @@ bool FSI_PartDetails::CompleteObjective(const USI_ObjectiveData* InObjectiveToCo
 	{
 		if (CurrentObjective == InObjectiveToComplete)
 		{
-			FSI_ObjectiveDetails& CurrentObjectiveDetails = GetObjectiveDetails(CurrentObjective);
-			CurrentObjectiveDetails.SetIsObjectiveComplete(true);
+			FSI_ObjectiveDetails* CurrentObjectiveDetails = GetObjectiveDetails(CurrentObjective);
+			CurrentObjectiveDetails->SetIsObjectiveComplete(true);
 			CompletedObjectives.AddUnique(CurrentObjective);
 			ActiveObjectives.Remove(CurrentObjective);
 			return true;
@@ -168,10 +168,10 @@ void FSI_PartDetails::SetIsPartComplete(bool bIsComplete)
 
 void FSI_PartDetails::ResetPart()
 {
-	for (TPair<USI_ObjectiveData*, FSI_ObjectiveDetails>& CurrentPartObjective : PartObjectives)
+	for (TPair<USI_ObjectiveData*, FSI_ObjectiveDetails*>& CurrentPartObjective : PartObjectives)
 	{
 		if(!IsValid(CurrentPartObjective.Key)) {continue;}
-		CurrentPartObjective.Value.ResetObjective();
+		CurrentPartObjective.Value->ResetObjective();
 	}
 
 	ActiveObjectives.Empty();
@@ -205,12 +205,12 @@ USI_PartData* FSI_PartDetails::GetPartData() const
 	return PartDataAsset;
 }
 
-FSI_ObjectiveDetails& FSI_PartDetails::GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData)
+FSI_ObjectiveDetails* FSI_PartDetails::GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData)
 {
 	return *PartObjectives.Find(InObjectiveData);
 }
 
-TMap<USI_ObjectiveData*, FSI_ObjectiveDetails>& FSI_PartDetails::GetPartObjectives()
+TMap<USI_ObjectiveData*, FSI_ObjectiveDetails*>& FSI_PartDetails::GetPartObjectives()
 {
 	return PartObjectives;
 }
@@ -292,10 +292,10 @@ bool FSI_CaseDetails::IsCaseActive() const
 
 void FSI_CaseDetails::ResetCase()
 {
-	for (TPair<USI_PartData*, FSI_PartDetails>& CurrentCasePart : CaseParts)
+	for (const TPair<USI_PartData*, FSI_PartDetails*>& CurrentCasePart : CaseParts)
 	{
 		if(!IsValid(CurrentCasePart.Key)) {continue;}
-		CurrentCasePart.Value.ResetPart();
+		CurrentCasePart.Value->ResetPart();
 	}
 
 	CompletedParts.Empty();
@@ -306,12 +306,12 @@ void FSI_CaseDetails::ResetCase()
 	bIsCaseComplete = false;
 }
 
-FSI_PartDetails& FSI_CaseDetails::GetPartDetails(const USI_PartData* InPart)
+FSI_PartDetails* FSI_CaseDetails::GetPartDetails(const USI_PartData* InPart)
 {
 	return *CaseParts.Find(InPart);
 }
 
-TMap<USI_PartData*, FSI_PartDetails>& FSI_CaseDetails::GetCaseParts()
+TMap<USI_PartData*, FSI_PartDetails*>& FSI_CaseDetails::GetCaseParts()
 {
 	return CaseParts;
 }

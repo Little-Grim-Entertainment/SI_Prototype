@@ -56,6 +56,7 @@ private:
 	TMap<FGameplayTag, FSI_GameplayTagContainer> AllTagContainers;
 
 	FSI_GameplayTagContainer CameraTags;
+	FSI_GameplayTagContainer DebugTags;
 	FSI_GameplayTagContainer GadgetTags;
 	FSI_GameplayTagContainer GameStateTags;
 	FSI_GameplayTagContainer LevelTags;
@@ -63,5 +64,4 @@ private:
 	FSI_GameplayTagContainer MusicTags;
 	FSI_GameplayTagContainer PlayerStateTags;
 	FSI_GameplayTagContainer UITags;
-	FSI_GameplayTagContainer DebugTags;
 };

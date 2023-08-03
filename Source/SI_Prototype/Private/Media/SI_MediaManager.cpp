@@ -114,7 +114,7 @@ void USI_MediaManager::PlayCinematic(USI_CinematicDataAsset* InCinematicToPlay, 
 		if (DelayedCinematicDelegate.IsBound()){DelayedCinematicDelegate.Unbind();}
 		
 		DelayedCinematicDelegate.BindUObject(this, &ThisClass::PlayCinematic, InCinematicToPlay, InCinematicSettings);
-		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedCinematicPlay);
+		LevelManager->OnLevelLoaded().AddDynamic(this, &ThisClass::DelayedCinematicPlay);
 		return;
 	}
 
@@ -146,7 +146,7 @@ void USI_MediaManager::PlayVideo(USI_VideoDataAsset* InVideoToPlay, FSI_VideoSet
 		if (DelayedVideoDelegate.IsBound()){DelayedVideoDelegate.Unbind();}
 		
 		DelayedVideoDelegate.BindUObject(this, &ThisClass::PlayVideo, InVideoToPlay, InVideoSettings);
-		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::DelayedVideoPlay);
+		LevelManager->OnLevelLoaded().AddDynamic(this, &ThisClass::DelayedVideoPlay);
 		return;
 	}
 	

@@ -27,14 +27,19 @@ using namespace SI_MapGameplayTagLibrary;
 
 USI_LevelManager::USI_LevelManager()
 {
-
+	bMapStatesInitialized = false;
 }
 
 void USI_LevelManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
 	
-	InitializeMapStates();
+
+	if(!bMapStatesInitialized)
+	{
+		InitializeMapStates();
+	}
+	
 	LevelLoaded(GetWorld());
 }
 
@@ -50,48 +55,50 @@ void USI_LevelManager::InitializeMapStates()
 	{
 		MapStates.Empty();
 	}
- 	const ASI_GameMode* GameMode = Cast<ASI_GameMode>(GetWorld()->GetAuthGameMode());
+
+	if (!IsValid(GameInstance) || !IsValid(GameInstance->MapList)) {return;}
 	
-	if (!IsValid(GameMode)) {return;}
-	if (!IsValid(GameMode->MapList)) {return;}
-	
-	TArray<USI_MapData*> AllMaps = GameMode->MapList->GetAllMaps();
+	TArray<USI_MapData*> AllMaps = GameInstance->MapList->GetAllMaps();
 	
 	for (USI_MapData* CurrentMapData : AllMaps)
 	{
 		if (!IsValid(CurrentMapData)) {continue;}
 
-		MapStates.Add(FSI_MapState(CurrentMapData));
+		FSI_MapState* NewMapState = new FSI_MapState(CurrentMapData);
+		MapStates.Add(NewMapState);
 	}
+
+	bMapStatesInitialized = true;
 }
 
 void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
-	FSI_MapState& MapStateToLoad = GetMapStateByTag(InLevelToLoadTag);
-	
-	if (!MapStateToLoad.GetMapData()) {return;}
 	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
 
-	if(LoadedMapState != nullptr)
+	if(LoadedLevel.IsValid())
 	{
-		if (LoadedMapState->GetMapData()->MapType == SITag_Map_Type_Menu)
+		FSI_MapState* LoadedMapState = GetMapStateByTag(LoadedLevel);
+		if(LoadedMapState->IsStateValid())
 		{
-			SITagManager->RemoveTag(SITag_UI_Menu_Map);
-		}
-
-		if(LoadedMapState->HasOutroMedia())
-		{
-			USI_MediaManager* MediaManager =  GetWorld()->GetSubsystem<USI_MediaManager>();
-			if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
+			if (LoadedMapState->GetMapData()->MapType == SITag_Map_Type_Menu)
 			{
-				MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
-				LoadLevelOnMediaComplete(InLevelToLoadTag, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
-				return;
+				SITagManager->RemoveTag(SITag_UI_Menu_Map);
+			}
+
+			if(LoadedMapState->HasOutroMedia())
+			{
+				USI_MediaManager* MediaManager =  GetWorld()->GetSubsystem<USI_MediaManager>();
+				if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
+				{
+					MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
+					LoadLevelOnMediaComplete(LevelToLoad, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
+					return;
+				}
 			}
 		}
 	}
-	
-	LevelStateToLoad = &MapStateToLoad;
+
+	LevelToLoad = InLevelToLoadTag;
 	bLoadShouldFade = bShouldFade;
 	bLevelHasLoaded = false;
 
@@ -110,27 +117,29 @@ void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString In
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_Game_State_Loading, SITag_Game_State);
 	}
-	
-	if (GetWorld() != MapStateToLoad.GetMapData()->Map.Get())
+
+	const FSI_MapState* LevelStateToLoad = GetMapStateByTag(LevelToLoad);
+		
+	if (GetWorld() != LevelStateToLoad->GetMapData()->Map.Get())
 	{
 		if (bAllowDelay)
 		{
-			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevelByTag, InLevelToLoadTag, InPlayerStartTag, false, bShouldFade);
+			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevelByTag, LevelToLoad, InPlayerStartTag, false, bShouldFade);
 			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameMode->LevelLoadDelay, false);
-			OnBeginLevelLoad.Broadcast(MapStateToLoad.GetMapData(), bShouldFade);
+			OnBeginLevelLoadDelegate.Broadcast(LevelStateToLoad->GetMapData(), bShouldFade);
 		}
 		else
 		{
-			if (IsValid(MapStateToLoad.GetMapData()))
+			if (IsValid(LevelStateToLoad->GetMapData()))
 			{
 				
-				if (LoadedMapState->IsStateValid())
+				if (LoadedLevel.IsValid())
 				{
-					OnLevelUnloaded.Broadcast(LoadedMapState->GetMapData());
+					OnLevelUnloadedDelegate.Broadcast(GetMapStateByTag(LoadedLevel)->GetMapData());
 				}
 				
 				UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(),LevelStateToLoad->GetMapData()->Map, true, InPlayerStartTag);
-				OnBeginLevelLoad.Broadcast(MapStateToLoad.GetMapData(), bShouldFade);
+				OnBeginLevelLoadDelegate.Broadcast(LevelStateToLoad->GetMapData(), bShouldFade);
 			}
 		}
 	}
@@ -175,9 +184,14 @@ void USI_LevelManager::ExecuteLoadLevelOnCinematicComplete()
 	LoadDelayDelegate.Unbind();
 }
 
-USI_MapData* USI_LevelManager::GetCurrentMap() const
+USI_MapData* USI_LevelManager::GetCurrentMap()
 {
-	return LoadedMapState->GetMapData();
+	if(LoadedLevel.IsValid())
+	{
+		return GetMapStateByTag(LoadedLevel)->GetMapData();
+	}
+	
+	return nullptr;
 }
 
 bool USI_LevelManager::GetLevelHasLoaded() const
@@ -185,31 +199,31 @@ bool USI_LevelManager::GetLevelHasLoaded() const
 	return bLevelHasLoaded;
 }
 
-FSI_MapState& USI_LevelManager::GetMapStateByTag(const FGameplayTag InMapTag)
+FSI_MapState* USI_LevelManager::GetMapStateByTag(const FGameplayTag InMapTag)
 {
 	static FSI_MapState TempMapState = FSI_MapState(nullptr);
 	
-	for (FSI_MapState& CurrentMapState : MapStates)
+	for (FSI_MapState* CurrentMapState : MapStates)
 	{
-		const USI_MapData* CurrentMapData = CurrentMapState.GetMapData();
-		if (!IsValid(CurrentMapData)) {return TempMapState;}
+		const USI_MapData* CurrentMapData = CurrentMapState->GetMapData();
+		if (!IsValid(CurrentMapData)) {return &TempMapState;}
 		
-		if(CurrentMapState.GetMapData()->MapTag == InMapTag)
+		if(CurrentMapState->GetMapData()->MapTag == InMapTag)
 		{
 			return CurrentMapState;
 		}
 	}
 
-	return TempMapState;
+	return &TempMapState;
 }
 
-FSI_MapState& USI_LevelManager::GetMapStateByWorld()
+FSI_MapState* USI_LevelManager::GetMapStateByWorld()
 {
 	const FString MapName = GetWorld()->GetName();
 	return GetMapStateFromName(MapName);
 }
 
-const TArray<FSI_MapState>& USI_LevelManager::GetAllMapStates() const
+const TArray<FSI_MapState*>& USI_LevelManager::GetAllMapStates() const
 {
 	return MapStates;		
 }
@@ -217,19 +231,25 @@ const TArray<FSI_MapState>& USI_LevelManager::GetAllMapStates() const
 TArray<FString>& USI_LevelManager::GetMapNames()
 {
 	static TArray<FString> MapNames;
-	for (const FSI_MapState& CurrentMapState : MapStates)
+	for (const FSI_MapState* CurrentMapState : MapStates)
 	{
-		MapNames.AddUnique(CurrentMapState.GetMapData()->MapName);
+		MapNames.AddUnique(CurrentMapState->GetMapData()->MapName);
 	}
 	
 	return MapNames;
 }
 
-FSI_MapState& USI_LevelManager::GetMapStateFromName(FString InMapName)
+USI_MapData* USI_LevelManager::GetMapDataFromName(const FString& InMapName)
 {
-	for (FSI_MapState& CurrentMapState : MapStates)
+	const FSI_MapState* FoundMapState = GetMapStateFromName(InMapName);
+	return FoundMapState->GetMapData();
+}
+
+FSI_MapState* USI_LevelManager::GetMapStateFromName(const FString& InMapName)
+{
+	for (FSI_MapState* CurrentMapState : MapStates)
 	{
-		FString CurrentMapDataName = CurrentMapState.GetMapData()->GetName();
+		FString CurrentMapDataName = CurrentMapState->GetMapData()->GetName();
 		if(CurrentMapDataName == InMapName)
 		{
 			return CurrentMapState;
@@ -244,18 +264,36 @@ FSI_MapState& USI_LevelManager::GetMapStateFromName(FString InMapName)
 	}
 	
 	static FSI_MapState EmptyMapState;
-	return EmptyMapState;
+	return &EmptyMapState;
+}
+
+FOnBeginLevelLoad& USI_LevelManager::OnBeginLevelLoad()
+{
+	return OnBeginLevelLoadDelegate;
+}
+
+FOnLevelLoaded& USI_LevelManager::OnLevelLoaded()
+{
+	return OnLevelLoadedDelegate;
+}
+
+FOnLevelUnloaded& USI_LevelManager::OnLevelUnloaded()
+{
+	return OnLevelUnloadedDelegate;
 }
 
 
 void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 {
-	LoadedMapState = LevelStateToLoad;
+	LoadedLevel = LevelToLoad;
 
-	if (LoadedMapState == nullptr)
+	FSI_MapState* LoadedMapState = LoadedLevel.IsValid() ? GetMapStateByTag(LoadedLevel) : GetMapStateByWorld();
+
+	if (!LoadedMapState->IsStateValid()) {return;}
+	
+	if(!LoadedLevel.IsValid())
 	{
-		LoadedMapState = &GetMapStateByWorld();
-		if (!LoadedMapState->IsStateValid()) {return;}
+		LoadedLevel = LoadedMapState->MapData->MapTag;
 	}
 			
 	SITagManager->ReplaceTagWithSameParent(LoadedMapState->MapData->MapTag, SITag_Map_Title);
@@ -264,31 +302,18 @@ void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_UI_Menu_Map, SITag_UI_Menu);
 	}
-	else
+	else if(SITagManager->HasGameplayTag(SITag_UI_Menu_Map))
 	{
-		USI_MediaManager* MediaManager = GetWorld()->GetSubsystem<USI_MediaManager>();
-		USI_CaseManager* CaseManager = GetGameInstance()->GetSubsystem<USI_CaseManager>();
-		if(IsValid(CaseManager))
-		{
-			CaseManager->AssignMedia();
-		}
-		if (IsValid(MediaManager) && LoadedMapState->HasIntroMedia() && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedIntroMedia()) && !SITagManager->HasGameplayTag(SITag_Debug_DisableAllMedia))
-		{
-			MediaManager->PlayMedia(LoadedMapState->GetLoadedIntroMedia(), LoadedMapState->GetOutroSettings());
-		}
-		else
-		{
-			SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
-		}
+		SITagManager->RemoveTag(SITag_UI_Menu_Map);
 	}
 	
 	bLevelHasLoaded = true;
 	SITagManager->ReplaceTagWithSameParent(SITag_Game_State_Playing, SITag_Game_State);
 
-	OnLevelLoaded.Broadcast(LoadedMapState->GetMapData(), bLoadShouldFade);
+	OnLevelLoadedDelegate.Broadcast(LoadedMapState->GetMapData(), bLoadShouldFade);
 }
 
-FSI_MapState& USI_LevelManager::GetCurrentLoadedMapState() const
+FSI_MapState* USI_LevelManager::GetCurrentLoadedMapState()
 {
-	return *LoadedMapState;
+	return GetMapStateByTag(LoadedLevel);
 }
