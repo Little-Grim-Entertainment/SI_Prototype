@@ -8,6 +8,8 @@
 
 using namespace SI_NativeGameplayTagLibrary;
 
+DEFINE_LOG_CATEGORY(LogSI_DebugManager);
+
 USI_DebugManager::USI_DebugManager()
 {
 	bDebugCommandsInitialized = false;

@@ -8,6 +8,7 @@
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 
+DEFINE_LOG_CATEGORY(LogSI_GameplayTagManager);
 
 void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
 {

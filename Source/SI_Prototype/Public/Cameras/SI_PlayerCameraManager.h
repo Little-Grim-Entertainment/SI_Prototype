@@ -10,9 +10,9 @@
 class USI_LevelManager;
 class USI_GameInstance;
 class USI_GameplayTagManager;
-/**
- * 
- */
+
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_PlayerCameraManager, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API ASI_PlayerCameraManager : public APlayerCameraManager
 {

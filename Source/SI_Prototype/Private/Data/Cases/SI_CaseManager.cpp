@@ -17,6 +17,8 @@
 #include "SI_PlayerManager.h"
 #include "Data/Maps/SI_MapData.h"
 
+DEFINE_LOG_CATEGORY(LogSI_CaseManager);
+
 USI_CaseManager::USI_CaseManager()
 {
 	bCasesInitialized = false;
@@ -479,6 +481,10 @@ void USI_CaseManager::PlayIntroMedia()
 	if (LoadedMapState->HasIntroMedia() && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedIntroMedia()) && !SITagManager->HasGameplayTag(SITag_Debug_DisableAllMedia))
 	{
 		MediaManager->PlayMedia(LoadedMapState->GetLoadedIntroMedia(), LoadedMapState->GetOutroSettings());
+	}
+	else if(LevelManager->GetCurrentMap()->MapType != SITag_Map_Type_Menu)
+	{
+		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
 	}
 }
 

@@ -44,6 +44,8 @@ static TAutoConsoleVariable<int32> CvarDisableTitleCard(
 	ECVF_Scalability | ECVF_RenderThreadSafe);
 #endif
 
+DEFINE_LOG_CATEGORY(LogSI_UIManager);
+
 USI_UIManager::USI_UIManager()
 {
 	

@@ -22,8 +22,9 @@
 #include "MediaPlayer.h"
 #include "Data/Cases/SI_CaseManager.h"
 
-
 using namespace SI_MapGameplayTagLibrary;
+
+DEFINE_LOG_CATEGORY(LogSI_LevelManager);
 
 USI_LevelManager::USI_LevelManager()
 {

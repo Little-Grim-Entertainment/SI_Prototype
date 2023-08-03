@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Levels/SI_LevelManager.h"
 
+DEFINE_LOG_CATEGORY(LogSI_MusicManager);
 
 USI_MusicManager::USI_MusicManager()
 {
