@@ -15,6 +15,20 @@ void ULGGameplayTagCategoryWidget::AddTagEntry(const FGameplayTag& InGameplayTag
 	NewEntryWidget->SetGameplayTagText(InGameplayTag);
 
 	TagEntriesContainer->AddChild(NewEntryWidget);
+	TagEntries.AddUnique(NewEntryWidget);
+}
+
+bool ULGGameplayTagCategoryWidget::HasTagEntry(const FGameplayTag& InGameplayTag)
+{
+	for(const ULGGameplayTagEntryWidget* CurrentTagEntry : TagEntries)
+	{
+		if(CurrentTagEntry->EntryTag == InGameplayTag)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void ULGGameplayTagCategoryWidget::SetCategoryLabel(const FString& InCategoryLabel)

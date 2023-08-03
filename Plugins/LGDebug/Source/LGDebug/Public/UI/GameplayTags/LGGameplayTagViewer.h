@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "LGGameplayTagViewer.generated.h"
 
+struct FGameplayTagContainer;
 class ULGGameplayTagCategoryWidget;
 class ULGGameplayTagEntryWidget;
 /**
@@ -16,8 +17,10 @@ class LGDEBUG_API ULGGameplayTagViewer : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	
 	UFUNCTION(BlueprintCallable, Category = "GameplayTagDebug")
-	void CreateTagCategory(const FString& InCategoryLabel);
+	ULGGameplayTagCategoryWidget* CreateTagCategory(const FString& InCategoryLabel);
 
 protected:
 
@@ -25,10 +28,14 @@ protected:
 	
 	virtual void InitializeTagCategories();
 
-	void CollapseEmptyCategories();
+	void GenerateEntriesFromTagContainer(ULGGameplayTagCategoryWidget* InCategoryWidget, const FGameplayTagContainer& InTagContainer);
+
+	TArray<ULGGameplayTagCategoryWidget*> TagCategoryWidgets;
+	
+	void UpdateCategoriesVisibility();
 	
 private:
-
+	
 	UPROPERTY(EditAnywhere, Category = "GameplayTagDebug")
 	TSubclassOf<ULGGameplayTagCategoryWidget> TagCategoryWidgetClass;
 	
@@ -37,6 +44,4 @@ private:
 		
 	UPROPERTY(meta = (BindWidget))
 	UPanelWidget* TagListContainer;
-
-	TArray<ULGGameplayTagCategoryWidget*> TagCategoryWidgets;
 };

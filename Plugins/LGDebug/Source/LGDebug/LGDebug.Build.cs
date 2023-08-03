@@ -9,8 +9,8 @@ public class LGDebug : ModuleRules
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PrivateDependencyModuleNames.AddRange(new string[] {
-
-			});
+				"GameplayTags",
+		});
 		
 		PublicDependencyModuleNames.AddRange(new string[] {
 				"Core",

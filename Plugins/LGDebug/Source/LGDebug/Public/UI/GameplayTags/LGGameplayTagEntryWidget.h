@@ -18,6 +18,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GameplayTagDebug")
 	void SetGameplayTagText(const FGameplayTag& InGameplayTag);
+
+	FGameplayTag EntryTag;
 	
 private:
 

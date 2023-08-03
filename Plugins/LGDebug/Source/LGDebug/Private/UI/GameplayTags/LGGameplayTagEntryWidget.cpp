@@ -11,4 +11,5 @@ void ULGGameplayTagEntryWidget::SetGameplayTagText(const FGameplayTag& InGamepla
 	const FString GameplayTagString = InGameplayTag.ToString();
 	
 	GameplayTagText->SetText(FText::FromString(GameplayTagString));
+	EntryTag = InGameplayTag;
 }

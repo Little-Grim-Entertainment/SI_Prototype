@@ -20,15 +20,20 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GameplayTagDebug")
 	void AddTagEntry(const FGameplayTag& InGameplayTag);
+	
+	UFUNCTION(BlueprintCallable, Category = "GameplayTagDebug")
+	bool HasTagEntry(const FGameplayTag& InGameplayTag);
 
 	void SetCategoryLabel(const FString& InCategoryLabel);
 	void SetTagEntryClass(const TSubclassOf<ULGGameplayTagEntryWidget>& InGameplayTagEntryClass);
-
+		
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TXT_CategoryLabel;	
 	
 	UPROPERTY(meta = (BindWidget))
 	UPanelWidget* TagEntriesContainer;
+
+	TArray<ULGGameplayTagEntryWidget*> TagEntries;
 
 private:
 	
