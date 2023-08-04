@@ -71,7 +71,7 @@ protected:
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
 
 private:
-
+	
 	UPROPERTY()
 	USI_LevelManager* LevelManager;
 	UPROPERTY()
