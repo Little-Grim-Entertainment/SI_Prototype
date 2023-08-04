@@ -30,6 +30,7 @@ public class SI_Prototype : ModuleRules
 			"Slate", 
 			"SlateCore", 
 			"UMG", 
+			"LGDebug", 
 		});
 	}
 }

@@ -8,9 +8,8 @@
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_DebugManager.generated.h"
 
-/**
- * 
- */
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_DebugManager, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API USI_DebugManager : public USI_GameInstanceSubsystem
 {

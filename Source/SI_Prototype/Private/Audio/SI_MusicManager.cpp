@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Levels/SI_LevelManager.h"
 
+DEFINE_LOG_CATEGORY(LogSI_MusicManager);
 
 USI_MusicManager::USI_MusicManager()
 {
@@ -68,12 +69,12 @@ void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 
 UAudioComponent* USI_MusicManager::PlayLoadedLevelBackgroundMusic()
 {
-	const USI_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
+	USI_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
 	
 	if (!IsValid(LevelManager)){return nullptr;}
-	if (!LevelManager->GetCurrentLoadedMapState().IsStateValid()){return nullptr;}
+	if (!LevelManager->GetCurrentLoadedMapState()->IsStateValid()){return nullptr;}
 	
-	return PlayBackgroundMusic(LevelManager->GetCurrentLoadedMapState().GetMapData()->BackgroundMusicSettings);
+	return PlayBackgroundMusic(LevelManager->GetCurrentLoadedMapState()->GetMapData()->BackgroundMusicSettings);
 }
 
 UAudioComponent* USI_MusicManager::PlayBackgroundMusic(FSI_MusicSettings InMusicSettings)

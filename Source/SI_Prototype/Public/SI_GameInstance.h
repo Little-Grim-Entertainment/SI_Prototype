@@ -6,6 +6,10 @@
 #include "Engine/GameInstance.h"
 #include "SI_GameInstance.generated.h"
 
+class USI_CaseList;
+class USI_InputConfig;
+class USI_MapList;
+
 class ASI_GameMode;
 
 DECLARE_MULTICAST_DELEGATE(FOnGameInstanceInit);
@@ -23,6 +27,12 @@ public:
 	
 	USI_GameInstance();
 
+	UPROPERTY(EditAnywhere, Category = Data)
+	USI_InputConfig* InputConfig;
+	UPROPERTY(EditAnywhere, Category = Data)
+	USI_MapList* MapList;
+	UPROPERTY(EditAnywhere, Category = Data)
+	USI_CaseList* CaseList;
 
 	FOnGameInstanceInit& OnGameInstanceInit();
 	FOnGameModeBeginPlay& OnGameModeBeginPlay();

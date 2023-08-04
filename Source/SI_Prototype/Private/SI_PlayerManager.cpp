@@ -243,7 +243,7 @@ void USI_PlayerManager::SetupDialogueState()
 void USI_PlayerManager::SetupExplorationState()
 {
 	USI_LevelManager* SILevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
-	if (!IsValid(SILevelManager)){return;}
+	if (!IsValid(SILevelManager) || !IsValid(SILevelManager->GetCurrentMap())){return;}
 	if (SILevelManager->GetCurrentMap()->MapType == SITag_Map_Type_Interior)
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_InDoor, SITag_Camera_Mode);

@@ -13,6 +13,8 @@
 #include "SI_GameplayTagManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
+DEFINE_LOG_CATEGORY(LogSI_GizboManager);
+
 void USI_GizboManager::SpawnGizbo()
 {
 	if (!GameInstance->GetGameMode()->GizboCDA) {return;}

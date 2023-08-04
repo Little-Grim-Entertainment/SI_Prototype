@@ -56,8 +56,6 @@ private:
 	UCameraComponent* NickFollowCamera;
 	
 	UPROPERTY()
-	USI_LevelManager* LevelManager;
-	UPROPERTY()
 	ASI_InteractableActor* CurrentInteractableActor;
 		
 	// ================== FUNCTIONS ==================

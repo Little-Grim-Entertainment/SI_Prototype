@@ -11,9 +11,9 @@ class USI_GameplayAbility;
 class ASI_Nick;
 class ASI_Gizbo;
 class ASI_GizboController;
-/**
- * 
- */
+
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_GizboManager, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API USI_GizboManager : public USI_GameInstanceSubsystem
 {
