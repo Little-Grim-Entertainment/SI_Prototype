@@ -147,21 +147,29 @@ void USI_CheatManager::CheatPauseWorldTimer(bool bShouldPause)
 
 void USI_CheatManager::DebugToggleGameplayTagViewer()
 {
-	if(IsValid(GameplayTagViewer))
+	if(!IsValid(GameInstance)) {return;}
+
+	
+	if(GameInstance->bGameplayTagViewerActive)
 	{
-		GameplayTagViewer->RemoveFromParent();
-		GameplayTagViewer = nullptr;
+		for (TObjectIterator<USI_GameplayTagViewer> It; It; ++It)
+		{
+			if(IsValid(*It))
+			{
+				USI_GameplayTagViewer* GameplayTagViewer = *It;
+				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(GameplayTagViewer->TakeWidget());
+				GameInstance->bGameplayTagViewerActive = false;
+			}
+		}
 	}
 	else
 	{
-		if(!IsValid(GameInstance)) {return;}
-
-		GameplayTagViewer = CreateWidget<USI_GameplayTagViewer>(GameInstance, GameInstance->GameplayTagViewerClass);
-
+		USI_GameplayTagViewer* GameplayTagViewer = GameplayTagViewer = CreateWidget<USI_GameplayTagViewer>(GameInstance, GameInstance->GameplayTagViewerClass);
+		
 		if(IsValid(GameplayTagViewer))
 		{
-			
-			GameplayTagViewer->AddToViewport(99);
+			GameInstance->GetGameViewportClient()->AddViewportWidgetContent(GameplayTagViewer->TakeWidget(), 99);
+			GameInstance->bGameplayTagViewerActive = true;
 		}
 	}
 }

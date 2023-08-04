@@ -46,6 +46,8 @@ public:
 	UFUNCTION()
 	ASI_GameMode* GetGameMode();
 
+	bool bGameplayTagViewerActive;
+
 protected:
 
 	virtual void Init() override;

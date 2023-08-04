@@ -56,8 +56,5 @@ protected:
 private:
 
 	UPROPERTY()
-	USI_GameplayTagViewer* GameplayTagViewer;
-
-	UPROPERTY()
 	USI_GameInstance* GameInstance;
 };
