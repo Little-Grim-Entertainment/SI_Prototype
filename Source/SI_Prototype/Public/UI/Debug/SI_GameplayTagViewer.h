@@ -14,12 +14,18 @@ class SI_PROTOTYPE_API USI_GameplayTagViewer : public ULGGameplayTagViewer
 {
 	GENERATED_BODY()
 
+public:
+	
+	USI_GameplayTagViewer();
+	
 protected:
 
 	virtual void InitializeTagCategories() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
+
+	bool bCategoriesInitialized;
 
 	void UpdateTagEntries();
 

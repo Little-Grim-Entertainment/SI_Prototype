@@ -7,6 +7,7 @@
 #include "SI_CheatManager.generated.h"
 
 class USI_GameInstance;
+class USI_GameplayTagViewer;
 
 
 UCLASS()
@@ -29,7 +30,7 @@ public:
 	void CheatIncreaseSunRotationSpeed(float Percentage);
 	UFUNCTION(exec)
 	void CheatPauseWorldTimer(bool bShouldPause);
-	UFUNCTION(exec)
+
 
 	// Case Manager Cheats
 	void CheatResetCase(const FString& CaseToResetName);
@@ -44,11 +45,18 @@ public:
 	UFUNCTION(exec)
 	void CheatSkipCinematic();
 
+	// Debug Commands
+	UFUNCTION(exec)
+	void DebugToggleGameplayTagViewer();
+
 protected:
 
 	virtual void InitCheatManager() override;
 	
 private:
+
+	UPROPERTY()
+	USI_GameplayTagViewer* GameplayTagViewer;
 
 	UPROPERTY()
 	USI_GameInstance* GameInstance;

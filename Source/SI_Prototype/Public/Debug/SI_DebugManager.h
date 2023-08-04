@@ -8,6 +8,7 @@
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_DebugManager.generated.h"
 
+class USI_GameplayTagViewer;
 DECLARE_LOG_CATEGORY_EXTERN(LogSI_DebugManager, Log, All);
 
 UCLASS()
@@ -26,13 +27,13 @@ public:
 	void CreateDebugBoolType(const FString& InDebugString, const bool bInValue, const FGameplayTag& InAssociatedTag);
 
 	FSI_DebugBool* GetDebugBoolByTag(const FGameplayTag& InAssociatedTag);
-
+	
 protected:
 
 	virtual void Deinitialize() override;
 	
 private:
-	
+
 	bool bDebugCommandsInitialized;
 
 	TMap<FGameplayTag, FSI_DebugVariable*> DebugVariables;
