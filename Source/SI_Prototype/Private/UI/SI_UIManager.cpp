@@ -72,6 +72,11 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_UI_Screen_Loading, SITag_UI);
 	}
+
+	if(InAddedTag == SITag_Player_State_Exploration)
+	{
+		SITagManager->AddNewGameplayTag(SITag_UI_HUD);
+	}
 	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_UI)){return;}
 
@@ -85,6 +90,11 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	if(InRemovedTag == SITag_Game_State_Loading)
 	{
 		SITagManager->RemoveTag(SITag_UI_Screen_Loading);
+	}
+
+	if(InRemovedTag == SITag_Player_State_Exploration)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD);
 	}
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_UI)){return;}
