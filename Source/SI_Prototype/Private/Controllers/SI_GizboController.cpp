@@ -133,14 +133,14 @@ void ASI_GizboController::ToggleFollow()
 	if (!bCanFollow && PossessedNPC->IsPerformingMainAction())
 	{
 		// Stop Gizbo from following Nick
-		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_Nothing);
+		PossessedNPC->SetCurrentBehavior(SITag_Behavior_None);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Follow Action Disabled")));
 		UE_LOG(LogSIAI, Log, TEXT("%s : SI_GizboController::ToggleFollow Follow Action Disabled"), *GetNameSafe(GetPawn()));
 	}
 	else
 	{
 		// Allow Gizbo to follow Nick
-		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_PerformingMainAction);
+		PossessedNPC->SetCurrentBehavior(SITag_Behavior_Default);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Follow Action Enabled")));
 		UE_LOG(LogSIAI, Log, TEXT("%s : SI_GizboController::ToggleFollow Follow Action Enabled"), *GetNameSafe(GetPawn()));
 	}
@@ -156,14 +156,14 @@ void ASI_GizboController::ToggleMoveTo()
 	if (!bCanMoveTo && PossessedNPC->IsMovingToTarget())
 	{
 		// Stop Gizbo from moving to a target
-		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_Nothing);
+		PossessedNPC->SetCurrentBehavior(SITag_Behavior_None);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: MoveTo Action Disabled")));
 		UE_LOG(LogSIAI, Log, TEXT("%s : SI_GizboController::ToggleMoveTo MoveTo Action Disabled"), *GetNameSafe(GetPawn()));
 	}
 	else
 	{
 		// Allow Gizbo to move to a target
-		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_MovingToTarget);
+		PossessedNPC->SetCurrentBehavior(SITag_Behavior_MoveTo);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: MoveTo Action Enabled")));
 		UE_LOG(LogSIAI, Log, TEXT("%s : SI_GizboController::ToggleMoveTo MoveTo Action Enabled"), *GetNameSafe(GetPawn()));
 	}
@@ -179,7 +179,7 @@ void ASI_GizboController::ToggleWait()
 	if (!PossessedNPC->IsDoingNothing())
 	{
 		// Make Gizbo wait for further action
-		PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_Nothing);
+		PossessedNPC->SetCurrentBehavior(SITag_Behavior_None);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Waiting Action Enabled")));
 		UE_LOG(LogSIAI, Log, TEXT("%s : SI_GizboController::ToggleWait Waiting Action Enabled"), *GetNameSafe(GetPawn()));
 	}

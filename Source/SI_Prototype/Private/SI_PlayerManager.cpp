@@ -65,6 +65,7 @@ void USI_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);	
 }
 
+//Called from listener of GameplayTagManager OnTagAddedDelegate.Broadcast() in AddNewGameplayTag()
 void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	if(!IsValid(GetWorld())) return;
@@ -117,6 +118,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	PlayerController->AddInputMappingByTag(InAddedTag);
 }
 
+//Called from listener of GameplayTagManager OnTagRemovedDelegate.Broadcast() in RemoveTag()
 void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
 	if(!IsValid(GetWorld())) return;

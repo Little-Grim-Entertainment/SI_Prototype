@@ -101,6 +101,7 @@ void USI_GizboManager::InitializeDelegateMaps()
 	GizboDelegateContainer.Add(SITag_Ability_Gizbo, ActivateAbilityDelegate);	
 }
 
+//Called from listener of GameplayTagManager OnTagAddedDelegate.Broadcast() in AddNewGameplayTag()
 void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	if(!IsValid(GetWorld())) return;
@@ -118,6 +119,7 @@ void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	GizboDelegateContainer.Find(InAddedTag)->Execute();
 }
 
+//Called from listener of GameplayTagManager OnTagRemovedDelegate.Broadcast() in RemoveTag()
 void USI_GizboManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
 	if(!IsValid(GetWorld())) return;

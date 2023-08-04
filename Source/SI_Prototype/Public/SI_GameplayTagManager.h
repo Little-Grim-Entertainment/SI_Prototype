@@ -16,25 +16,34 @@ class SI_PROTOTYPE_API USI_GameplayTagManager : public USI_GameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-
+	// Used to register the tag manager with the gameplay tag manager which then broadcasts
+	// the OnTagAdded and OnTagRemoved delegates when tags are added or removed.
 	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	void AddNewGameplayTag(const FGameplayTag& InGameplayTag);
 	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	void RemoveTag(const FGameplayTag& InGameplayTag);
 	
 	void ClearAllTagsFromContainer(FSI_GameplayTagContainer& InContainerToClear);
-	
+
+	// Receives InNewTag and replaces it with InParentTag
 	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	void ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag);
-	
+
+	//Removes InOldTag and adds InNewTag
 	bool SwapTags(const FGameplayTag& InOldTag, const FGameplayTag& InNewTag);
 
+	//Loops through containers to see if the tag is in its container
 	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	bool HasGameplayTag(const FGameplayTag& InGameplayTag);
+
+	//Loops through the TagNames and compares them by character for a match 
 	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
 	bool HasParentTag(const FGameplayTag& InTagToCheck, const FGameplayTag& InParentTag) const;
-	
+
+	// Returns map of all GameplayTagContainers by Tag
 	TMap<FGameplayTag, FSI_GameplayTagContainer>& GetAllTagContainers();
+
+	// Loops through TagContainersMap and returns the proper container 
 	FSI_GameplayTagContainer& GetContainerTypeByTag(const FGameplayTag& InGameplayTag);
 
 	FOnTagAdded& OnTagAdded();

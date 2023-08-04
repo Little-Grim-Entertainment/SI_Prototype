@@ -49,7 +49,6 @@ void USI_GameplayTagManager::ClearAllTagsFromContainer(FSI_GameplayTagContainer&
 
 void USI_GameplayTagManager::ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag)
 {
-	
 	const FSI_GameplayTagContainer& TagTypeContainer = GetContainerTypeByTag(InNewTag);
 
 	if(TagTypeContainer.HasTagExact(InNewTag)){return;}

@@ -55,7 +55,7 @@ void USI_UIManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);	
 }
-
+//Called from listener of GameplayTagManager OnTagAddedDelegate.Broadcast() in AddNewGameplayTag()
 void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
@@ -82,7 +82,7 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 	AddUIDelegateContainer.Find(InAddedTag)->Execute();
 }	
-
+//Called from listener of GameplayTagManager OnTagRemovedDelegate.Broadcast() in RemoveTag()
 void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
 	Super::OnGameplayTagRemoved(InRemovedTag);

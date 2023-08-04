@@ -17,7 +17,6 @@
 
 // ******************* TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
 #include "Actors/Gadgets/SI_Flashlight.h"
-#include "Engine/SkeletalMeshSocket.h"
 
 ASI_Nick::ASI_Nick()
 {	

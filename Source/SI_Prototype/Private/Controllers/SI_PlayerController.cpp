@@ -14,7 +14,6 @@
 #include "InputAction.h"
 #include "Characters/SI_GizboManager.h"
 #include "Media/SI_MediaManager.h"
-#include "Controllers/SI_GizboController.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Data/Media/SI_CinematicDataAsset.h"
 #include "Dialogue/SI_DialogueManager.h"
@@ -29,9 +28,6 @@
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Characters/SI_Gizbo.h"
-
-// todo: delete when gadget system implemented
-#include "Actors/Gadgets/SI_Flashlight.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 

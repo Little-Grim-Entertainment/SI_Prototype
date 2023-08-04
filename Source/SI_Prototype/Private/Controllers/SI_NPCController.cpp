@@ -2,6 +2,8 @@
 
 
 #include "Controllers/SI_NPCController.h"
+
+#include "SI_NativeGameplayTagLibrary.h"
 #include "Characters/SI_NPC.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -9,6 +11,8 @@
 #include "SI_Prototype/SI_Prototype.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
+
+using namespace SI_NativeGameplayTagLibrary;
 
 ASI_NPCController::ASI_NPCController()
 {
@@ -81,7 +85,7 @@ void ASI_NPCController::OnPossess(APawn* InPawn)
 	// Only possess once all checks have passed.
 	Super::OnPossess(InPawn);
 
-	PossessedNPC->SetCurrentBehavior(ECurrentBehavior::CB_PerformingMainAction);
+	PossessedNPC->SetCurrentBehavior(SITag_Behavior_Default);
 	PerceptionComp->Activate(true);
 	RunBehaviorTree(MainTree);
 	//TODO: Ask NPC to set blackboard values etc.
