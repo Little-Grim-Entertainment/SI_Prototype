@@ -8,6 +8,7 @@
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 
+DEFINE_LOG_CATEGORY(LogSI_GameplayTagManager);
 
 void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
 {
@@ -94,11 +95,11 @@ bool USI_GameplayTagManager::HasGameplayTag(const FGameplayTag& InGameplayTag)
 
 bool USI_GameplayTagManager::HasParentTag(const FGameplayTag& InTagToCheck, const FGameplayTag& InParentTag) const
 {
-	if (!InParentTag.IsValid())
+	if (!InParentTag.IsValid() || !InTagToCheck.IsValid())
 	{
 		return false;
 	}
-
+	
 	const FString ParentTagString = InParentTag.ToString();
 	const FString TraitTagString = InTagToCheck.ToString();
 

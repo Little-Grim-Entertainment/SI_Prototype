@@ -10,6 +10,8 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnTagAdded, const FGameplayTag& AddedTag);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnTagRemoved, const FGameplayTag& RemovedTag);
 
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_GameplayTagManager, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API USI_GameplayTagManager : public USI_GameInstanceSubsystem
 {
@@ -46,6 +48,16 @@ protected:
 	
 private:
 
+	FSI_GameplayTagContainer CameraTags;
+	FSI_GameplayTagContainer DebugTags;
+	FSI_GameplayTagContainer GadgetTags;
+	FSI_GameplayTagContainer GameStateTags;
+	FSI_GameplayTagContainer LevelTags;
+	FSI_GameplayTagContainer MediaTags;
+	FSI_GameplayTagContainer MusicTags;
+	FSI_GameplayTagContainer PlayerStateTags;
+	FSI_GameplayTagContainer UITags;
+
 	FOnTagAdded OnTagAddedDelegate;
 	FOnTagRemoved OnTagRemovedDelegate;
 
@@ -54,14 +66,4 @@ private:
 	bool CheckContainerForParentTag(const FGameplayTag& InParentTag, const FSI_GameplayTagContainer& InContainerToCheck) const;
 
 	TMap<FGameplayTag, FSI_GameplayTagContainer> AllTagContainers;
-
-	FSI_GameplayTagContainer CameraTags;
-	FSI_GameplayTagContainer GadgetTags;
-	FSI_GameplayTagContainer GameStateTags;
-	FSI_GameplayTagContainer LevelTags;
-	FSI_GameplayTagContainer MediaTags;
-	FSI_GameplayTagContainer MusicTags;
-	FSI_GameplayTagContainer PlayerStateTags;
-	FSI_GameplayTagContainer UITags;
-	FSI_GameplayTagContainer DebugTags;
 };

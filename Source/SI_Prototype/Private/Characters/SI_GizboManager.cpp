@@ -11,6 +11,8 @@
 #include "GameFramework/PlayerStart.h"
 #include "GameModes/SI_GameMode.h"
 
+DEFINE_LOG_CATEGORY(LogSI_GizboManager);
+
 void USI_GizboManager::SpawnGizbo()
 {
 	if (!GameInstance->GetGameMode()->GizboCDA) {return;}

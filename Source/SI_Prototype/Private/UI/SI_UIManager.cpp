@@ -44,6 +44,8 @@ static TAutoConsoleVariable<int32> CvarDisableTitleCard(
 	ECVF_Scalability | ECVF_RenderThreadSafe);
 #endif
 
+DEFINE_LOG_CATEGORY(LogSI_UIManager);
+
 USI_UIManager::USI_UIManager()
 {
 	
@@ -70,6 +72,11 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_UI_Screen_Loading, SITag_UI);
 	}
+
+	if(InAddedTag == SITag_Player_State_Exploration)
+	{
+		SITagManager->AddNewGameplayTag(SITag_UI_HUD);
+	}
 	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_UI)){return;}
 
@@ -83,6 +90,11 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	if(InRemovedTag == SITag_Game_State_Loading)
 	{
 		SITagManager->RemoveTag(SITag_UI_Screen_Loading);
+	}
+
+	if(InRemovedTag == SITag_Player_State_Exploration)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD);
 	}
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_UI)){return;}
@@ -287,7 +299,7 @@ USI_UserWidget* USI_UIManager::GetWidgetByTag(const FGameplayTag InWidgetTag)
 
 void USI_UIManager::CreateMapMenu()
 {
-	const USI_LevelManager* LevelManager = GameInstance->GetSubsystem<USI_LevelManager>();
+	USI_LevelManager* LevelManager = GameInstance->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(LevelManager) || IsValid(MapMenu)){return;}
 
 	const USI_MenuMapData* MenuMapData = Cast<USI_MenuMapData>(LevelManager->GetCurrentMap());

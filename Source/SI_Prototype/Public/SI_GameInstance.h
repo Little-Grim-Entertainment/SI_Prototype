@@ -6,6 +6,11 @@
 #include "Engine/GameInstance.h"
 #include "SI_GameInstance.generated.h"
 
+class USI_CaseList;
+class USI_InputConfig;
+class USI_MapList;
+class USI_GameplayTagViewer;
+
 class ASI_GameMode;
 
 DECLARE_MULTICAST_DELEGATE(FOnGameInstanceInit);
@@ -23,6 +28,15 @@ public:
 	
 	USI_GameInstance();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes)
+	TSubclassOf<USI_GameplayTagViewer> GameplayTagViewerClass;
+	
+	UPROPERTY(EditAnywhere, Category = Data)
+	USI_InputConfig* InputConfig;
+	UPROPERTY(EditAnywhere, Category = Data)
+	USI_MapList* MapList;
+	UPROPERTY(EditAnywhere, Category = Data)
+	USI_CaseList* CaseList;
 
 	FOnGameInstanceInit& OnGameInstanceInit();
 	FOnGameModeBeginPlay& OnGameModeBeginPlay();
@@ -31,6 +45,8 @@ public:
 
 	UFUNCTION()
 	ASI_GameMode* GetGameMode();
+
+	bool bGameplayTagViewerActive;
 
 protected:
 

@@ -5,8 +5,11 @@
 #include "SI_GameplayTagManager.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/Debug/SI_GameplayTagViewer.h"
 
 using namespace SI_NativeGameplayTagLibrary;
+
+DEFINE_LOG_CATEGORY(LogSI_DebugManager);
 
 USI_DebugManager::USI_DebugManager()
 {
