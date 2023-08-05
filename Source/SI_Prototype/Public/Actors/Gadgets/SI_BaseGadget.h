@@ -9,6 +9,8 @@
 /**
  * 
  */
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_Gadget, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API ASI_BaseGadget : public AActor
 {

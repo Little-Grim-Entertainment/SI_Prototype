@@ -2,3 +2,6 @@
 
 
 #include "Abilities/Tasks/SI_AbilityTask.h"
+#include "LG_DebugMacros.h"
+
+DEFINE_LOG_CATEGORY(LogSI_AbilityTask);

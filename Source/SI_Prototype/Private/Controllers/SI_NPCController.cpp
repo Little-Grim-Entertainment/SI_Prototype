@@ -38,7 +38,7 @@ void ASI_NPCController::OnPossess(APawn* InPawn)
 	PossessedNPC = Cast<ASI_NPC>(InPawn);
 	if (!IsValid(PossessedNPC))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s SI_NPCController::OnPossess PossessedNPC is not valid"), *GetNameSafe(InPawn));
+		UE_LOG(LogSI_AI, Error, TEXT("%s SI_NPCController::OnPossess PossessedNPC is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
 	
@@ -46,39 +46,39 @@ void ASI_NPCController::OnPossess(APawn* InPawn)
 
 	if (!IsValid(MainTree))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s : SI_NPCController::OnPossess MainTree is not valid"), *GetNameSafe(InPawn));
+		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess MainTree is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
 
 #if WITH_EDITORONLY_DATA
 	if (!IsValid(MainTree->BTGraph))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s : SI_NPCController::OnPossess MainTree->BTGraph is not valid"), *GetNameSafe(InPawn));
+		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess MainTree->BTGraph is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
 #endif
 
 	if (!IsValid(PerceptionComp))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s : SI_NPCController::OnPossess PerceptionComp is not valid"), *GetNameSafe(InPawn));
+		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess PerceptionComp is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
 
 	if (!IsValid(SightConfig))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s : SI_NPCController::OnPossess SightConfig is not valid"), *GetNameSafe(InPawn));
+		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess SightConfig is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
 
 	if (!IsValid(HearingConfig))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s : SI_NPCController::OnPossess HearingConfig is not valid"), *GetNameSafe(InPawn));
+		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess HearingConfig is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
 	
 	if (!IsValid(GetWorld()))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s : SI_NPCController::OnPossess World is not valid"), *GetNameSafe(InPawn));
+		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess World is not valid"), *GetNameSafe(InPawn));
 		return;
 	}
 	
@@ -96,7 +96,7 @@ void ASI_NPCController::UpdateBehaviorTree()
 {
 	if (!IsValid(PossessedNPC))
 	{
-		UE_LOG(LogSIAI, VeryVerbose, TEXT("%s : SI_NPCController::UpdateBehaviorTree PossessedNPC reference is not valid"), *GetNameSafe(GetPawn()));
+		UE_LOG(LogSI_AI, VeryVerbose, TEXT("%s : SI_NPCController::UpdateBehaviorTree PossessedNPC reference is not valid"), *GetNameSafe(GetPawn()));
 		return;
 	}
 
@@ -114,11 +114,11 @@ void ASI_NPCController::UpdateBehaviorTree()
 
 	if (!IsValid(SelectedTree) || !IsValid(SelectedTree->BlackboardAsset))
 	{
-		UE_LOG(LogSIAI, Error, TEXT("%s : SI_NPCController::UpdateBehaviorTree SelectedTree is not valid"), *GetNameSafe(GetPawn()));
+		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::UpdateBehaviorTree SelectedTree is not valid"), *GetNameSafe(GetPawn()));
 		return;
 	}
 
-	UE_LOG(LogSIAI, VeryVerbose, TEXT("%s : SI_NPCController::UpdateBehaviorTree Running Behavior Tree : %s"), *GetNameSafe(GetPawn()), *SelectedTree->GetName());
+	UE_LOG(LogSI_AI, VeryVerbose, TEXT("%s : SI_NPCController::UpdateBehaviorTree Running Behavior Tree : %s"), *GetNameSafe(GetPawn()), *SelectedTree->GetName());
 
 	// Handles BehaviorTreeComponent and BlackboardComponent internally
 	RunBehaviorTree(SelectedTree);

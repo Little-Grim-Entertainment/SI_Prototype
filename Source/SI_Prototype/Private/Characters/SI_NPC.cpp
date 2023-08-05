@@ -21,7 +21,7 @@ UBehaviorTree* ASI_NPC::GetNothingTree() const
 {
 	if (IsValid(NothingTree)) { return NothingTree; }
 	
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetNothingTree NothingTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetNothingTree NothingTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
@@ -29,7 +29,7 @@ UBehaviorTree* ASI_NPC::GetWanderingTree() const
 {
 	if (IsValid(WanderingTree)) { return WanderingTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetWanderingTree WanderingTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetWanderingTree WanderingTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
@@ -37,7 +37,7 @@ UBehaviorTree* ASI_NPC::GetPatrollingTree() const
 {
 	if (IsValid(PatrollingTree)) { return PatrollingTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetPatrollingTree PatrollingTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetPatrollingTree PatrollingTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
@@ -45,7 +45,7 @@ UBehaviorTree* ASI_NPC::GetMovingToTargetTree() const
 {
 	if (IsValid(MovingToTargetTree)) { return MovingToTargetTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetMovingToTargetTree MovingToTargetTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetMovingToTargetTree MovingToTargetTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
@@ -53,7 +53,7 @@ UBehaviorTree* ASI_NPC::GetMainTree() const
 {
 	if (IsValid(DefaultTree)) { return DefaultTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetMainTree MainTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetMainTree MainTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 

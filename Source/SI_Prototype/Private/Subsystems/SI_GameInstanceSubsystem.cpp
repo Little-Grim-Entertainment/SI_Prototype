@@ -2,8 +2,12 @@
 
 
 #include "Subsystems/SI_GameInstanceSubsystem.h"
+
+#include "LG_DebugMacros.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
+
+DEFINE_LOG_CATEGORY(LogSI_GameInstanceSubsystem);
 
 void USI_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
