@@ -14,6 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicPaused);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicStopped);
 
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_MusicManager, Log, All);
 
 // This system is responsible for playing, stopping, and pausing the game music
 

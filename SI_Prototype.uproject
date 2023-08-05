@@ -91,6 +91,10 @@
 		{
 			"Name": "Composure",
 			"Enabled": true
+		},
+		{
+			"Name": "LGDebug",
+			"Enabled": true
 		}
 	]
 }

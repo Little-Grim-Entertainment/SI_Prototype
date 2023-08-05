@@ -97,19 +97,17 @@ void ASI_Nick::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
-	if (!IsValid(GameInstance)) {return;}
 
-	LevelManager = GameInstance->GetSubsystem<USI_LevelManager>();
+	USI_LevelManager* LevelManager = GetGameInstance()->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(LevelManager)){return;}
 
 	if(LevelManager->GetLevelHasLoaded())
 	{
-		OnLevelLoaded(LevelManager->GetCurrentLoadedMapState().GetMapData());
+		OnLevelLoaded(LevelManager->GetCurrentLoadedMapState()->GetMapData());
 	}
 	else
 	{
-		LevelManager->OnLevelLoaded.AddDynamic(this, &ThisClass::OnLevelLoaded);	
+		LevelManager->OnLevelLoaded().AddDynamic(this, &ThisClass::OnLevelLoaded);	
 	}
 
 	GiveAbilities();

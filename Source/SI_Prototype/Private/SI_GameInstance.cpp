@@ -6,7 +6,8 @@
 #include "Levels/SI_LevelManager.h"
 
 USI_GameInstance::USI_GameInstance()
-{	
+{
+	bGameplayTagViewerActive = false;
 	GameMode = nullptr;
 }
 

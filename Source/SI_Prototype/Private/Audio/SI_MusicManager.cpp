@@ -10,7 +10,11 @@
 #include "GameModes/SI_GameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Levels/SI_LevelManager.h"
+#include "Audio/SI_MusicGameplayTagLibrary.h"
 
+DEFINE_LOG_CATEGORY(LogSI_MusicManager);
+
+using namespace SI_MusicGameplayTagLibrary;
 
 USI_MusicManager::USI_MusicManager()
 {
@@ -68,12 +72,12 @@ void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 
 UAudioComponent* USI_MusicManager::PlayLoadedLevelBackgroundMusic()
 {
-	const USI_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
+	USI_LevelManager* LevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
 	
 	if (!IsValid(LevelManager)){return nullptr;}
-	if (!LevelManager->GetCurrentLoadedMapState().IsStateValid()){return nullptr;}
+	if (!LevelManager->GetCurrentLoadedMapState()->IsStateValid()){return nullptr;}
 	
-	return PlayBackgroundMusic(LevelManager->GetCurrentLoadedMapState().GetMapData()->BackgroundMusicSettings);
+	return PlayBackgroundMusic(LevelManager->GetCurrentLoadedMapState()->GetMapData()->BackgroundMusicSettings);
 }
 
 UAudioComponent* USI_MusicManager::PlayBackgroundMusic(FSI_MusicSettings InMusicSettings)
@@ -109,7 +113,9 @@ UAudioComponent* USI_MusicManager::PlayBackgroundMusic(FSI_MusicSettings InMusic
 		{
 			BackgroundMusic->Play();
 		}
-				
+
+		SITagManager->AddNewGameplayTag(InMusicSettings.MusicTag);
+		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Playing);
 		OnBackgroundMusicStarted.Broadcast();
 		bMusicIsPlaying = true;
 		bMusicIsPaused = false;
@@ -174,8 +180,10 @@ void USI_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLev
 		if (!bMusicIsPaused)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(MusicTimecode);
+			SITagManager->RemoveTag(CurrentMusicSettings.MusicTag);
 			OnBackgroundMusicStopped.Broadcast();
 		}
+		SITagManager->RemoveTag(SITag_Audio_Music_Playing);
 		BackgroundMusic->DestroyComponent();
 		bMusicIsPlaying = false;
 	}
