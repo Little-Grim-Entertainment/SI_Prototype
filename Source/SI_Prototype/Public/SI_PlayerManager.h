@@ -53,6 +53,7 @@ private:
 	FGameplayTag PreviousPlayerState;
 	FGameplayTag CurrentPlayerState;
 	FGameplayTag SecondaryMediaTag;
+	FGameplayTag SecondaryMenuTag;
 
 	TMap<FGameplayTag, FSimpleDelegate> PlayerDelegateContainer;
 

@@ -75,6 +75,10 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 	if (SITagManager->HasParentTag(InAddedTag, SITag_UI_Menu))
 	{
+		if(InAddedTag == SITag_UI_Menu_System)
+		{
+			SecondaryMenuTag = InAddedTag;
+		}	
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Menu,SITag_Player_State);
 		if (!IsValid(PlayerController)){return;}
 		PlayerController->SetMenuMode(true);
@@ -107,6 +111,14 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		return;
 	}
 
+	if(InAddedTag == SITag_Player_State_Menu)
+	{
+		if (!IsValid(PlayerController)){return;}
+		PlayerController->AddInputMappingByTag(InAddedTag, SecondaryMenuTag);
+		PlayerDelegateContainer.Find(InAddedTag)->Execute();
+		return;
+	}
+
 	PlayerDelegateContainer.Find(InAddedTag)->Execute();
 
 	if (!IsValid(PlayerController)){return;}
@@ -124,9 +136,23 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 
 	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
 	{
-		SITagManager->RemoveTag(SITag_Player_State_Menu);
+		SecondaryMenuTag = FGameplayTag();
+		if(InRemovedTag == SITag_UI_Menu_Map)
+		{
+			SITagManager->RemoveTag(SITag_Player_State_Menu);
+		}
+		else
+		{
+			SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
+		}
 		if (!IsValid(PlayerController)){return;}
 		PlayerController->SetMenuMode(false);
+		return;
+	}
+
+	if (SITagManager->HasParentTag(InRemovedTag, SITag_Media))
+	{
+		SecondaryMediaTag = FGameplayTag();
 		return;
 	}
 	

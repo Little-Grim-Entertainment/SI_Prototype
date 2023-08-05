@@ -154,7 +154,7 @@ void USI_UIManager::InitializeDelegates()
 	AddHUDDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
 	AddLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, true, true);
 	AddVideoScreenDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
-	AddSystemMenuDelegate.BindUObject(this, &ThisClass::CreateSystemMenu);
+	AddSystemMenuDelegate.BindUObject(this, &ThisClass::ToggleSystemMenu);
 }
 
 void USI_UIManager::InitializeDelegateMaps()
@@ -319,9 +319,11 @@ void USI_UIManager::ToggleSystemMenu()
 {
 	if (!IsValid(SystemMenu))
 	{
+		CreateSystemMenu();
 	}
 	else
 	{
+		SystemMenu->RemoveFromParent();
 	}
 }
 
