@@ -61,6 +61,7 @@ private:
 	FGameplayTag CurrentPlayerState;
 	FGameplayTag CurrentAbilityTag;
 	FGameplayTag SecondaryMediaTag;
+	FGameplayTag SecondaryMenuTag;
 
 	TMap<FGameplayTag, FSimpleDelegate> PlayerDelegateContainer;
 	TMap<FGameplayTag, USI_GameplayAbility*> ActiveAbilitiesContainer;

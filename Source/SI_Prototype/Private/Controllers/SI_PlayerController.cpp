@@ -293,10 +293,15 @@ void ASI_PlayerController::RequestExitDialogue()
 
 void ASI_PlayerController::RequestToggleSystemMenu()
 {
-	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
-	if (IsValid(UIManager))
+	if(!IsValid(SITagManager)) {return;}
+	
+	if(SITagManager->HasGameplayTag(SITag_UI_Menu_System))
 	{
-		UIManager->ToggleSystemMenu();
+		SITagManager->RemoveTag(SITag_UI_Menu_System);
+	}
+	else
+	{
+		SITagManager->ReplaceTagWithSameParent(SITag_UI_Menu_System, SITag_UI_Menu);
 	}
 }
 
