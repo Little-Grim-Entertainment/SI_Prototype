@@ -3,6 +3,7 @@
 
 #include "GameModes/SI_GameMode.h"
 
+#include "EngineUtils.h"
 #include "SI_GameInstance.h"
 #include "Data/Characters/SI_CharacterData.h"
 #include "Data/Input/SI_InputConfig.h"
@@ -40,12 +41,20 @@ void ASI_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* New
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 
 	FString PlayerStartTag = UKismetStringLibrary::GetSubstring(OptionsString, 1, OptionsString.Len() - 1);
-	if (PlayerStartTag == FString(""))
+	if (PlayerStartTag.IsEmpty())
 	{
 		PlayerStartTag = "Nick_DefaultSpawn";
 	}
 	
 	AActor* PlayerStart = FindPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStartTag);
+
+	const APlayerStart* PlayerStartActor = Cast<APlayerStart>(PlayerStart);
+
+	if(IsValid(PlayerStartActor) && PlayerStartActor->PlayerStartTag != FName(*PlayerStartTag))
+	{
+		PlayerStartTag = "Nick_DefaultSpawn";
+		PlayerStart = FindPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStartTag);
+	}
 
 	RestartPlayerAtPlayerStart(GetWorld()->GetFirstPlayerController(), PlayerStart);
 

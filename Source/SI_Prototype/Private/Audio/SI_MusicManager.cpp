@@ -10,8 +10,11 @@
 #include "GameModes/SI_GameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Levels/SI_LevelManager.h"
+#include "Audio/SI_MusicGameplayTagLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogSI_MusicManager);
+
+using namespace SI_MusicGameplayTagLibrary;
 
 USI_MusicManager::USI_MusicManager()
 {
@@ -110,7 +113,9 @@ UAudioComponent* USI_MusicManager::PlayBackgroundMusic(FSI_MusicSettings InMusic
 		{
 			BackgroundMusic->Play();
 		}
-				
+
+		SITagManager->AddNewGameplayTag(InMusicSettings.MusicTag);
+		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Playing);
 		OnBackgroundMusicStarted.Broadcast();
 		bMusicIsPlaying = true;
 		bMusicIsPaused = false;
@@ -175,8 +180,10 @@ void USI_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLev
 		if (!bMusicIsPaused)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(MusicTimecode);
+			SITagManager->RemoveTag(CurrentMusicSettings.MusicTag);
 			OnBackgroundMusicStopped.Broadcast();
 		}
+		SITagManager->RemoveTag(SITag_Audio_Music_Playing);
 		BackgroundMusic->DestroyComponent();
 		bMusicIsPlaying = false;
 	}

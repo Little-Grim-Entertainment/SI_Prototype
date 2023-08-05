@@ -4,11 +4,15 @@
 #include "SI_CheatManager.h"
 #include "World/SI_WorldManager.h"
 #include "SI_GameInstance.h"
+#include "Blueprint/UserWidget.h"
 #include "Media/SI_MediaManager.h"
 #include "Data/Cases/SI_CaseManager.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Data/Media/SI_CinematicDataAsset.h"
+#include "GameModes/SI_GameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/Debug/SI_GameplayTagViewer.h"
+#include "Widgets/SViewport.h"
 
 USI_CheatManager::USI_CheatManager()
 {
@@ -139,4 +143,33 @@ void USI_CheatManager::CheatPauseWorldTimer(bool bShouldPause)
 	USI_WorldManager* WorldManager = GameInstance->GetSubsystem<USI_WorldManager>();
 
 	WorldManager->PauseTimerByName("TimeOfDay", bShouldPause);
+}
+
+void USI_CheatManager::DebugToggleGameplayTagViewer()
+{
+	if(!IsValid(GameInstance)) {return;}
+
+	
+	if(GameInstance->bGameplayTagViewerActive)
+	{
+		for (TObjectIterator<USI_GameplayTagViewer> It; It; ++It)
+		{
+			if(IsValid(*It))
+			{
+				USI_GameplayTagViewer* GameplayTagViewer = *It;
+				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(GameplayTagViewer->TakeWidget());
+				GameInstance->bGameplayTagViewerActive = false;
+			}
+		}
+	}
+	else
+	{
+		USI_GameplayTagViewer* GameplayTagViewer = GameplayTagViewer = CreateWidget<USI_GameplayTagViewer>(GameInstance, GameInstance->GameplayTagViewerClass);
+		
+		if(IsValid(GameplayTagViewer))
+		{
+			GameInstance->GetGameViewportClient()->AddViewportWidgetContent(GameplayTagViewer->TakeWidget(), 99);
+			GameInstance->bGameplayTagViewerActive = true;
+		}
+	}
 }

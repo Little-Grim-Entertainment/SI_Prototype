@@ -31,6 +31,8 @@ struct FSI_MusicSettings
 	FSI_MusicSettings();
 	FSI_MusicSettings(USoundBase* InMusicSource);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music", meta = (Categories = "Audio.Music"))
+	FGameplayTag MusicTag;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
 	USoundBase* MetaSoundSource = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")

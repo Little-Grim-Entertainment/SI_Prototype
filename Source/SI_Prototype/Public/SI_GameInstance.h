@@ -9,6 +9,7 @@
 class USI_CaseList;
 class USI_InputConfig;
 class USI_MapList;
+class USI_GameplayTagViewer;
 
 class ASI_GameMode;
 
@@ -27,6 +28,9 @@ public:
 	
 	USI_GameInstance();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes)
+	TSubclassOf<USI_GameplayTagViewer> GameplayTagViewerClass;
+	
 	UPROPERTY(EditAnywhere, Category = Data)
 	USI_InputConfig* InputConfig;
 	UPROPERTY(EditAnywhere, Category = Data)
@@ -41,6 +45,8 @@ public:
 
 	UFUNCTION()
 	ASI_GameMode* GetGameMode();
+
+	bool bGameplayTagViewerActive;
 
 protected:
 

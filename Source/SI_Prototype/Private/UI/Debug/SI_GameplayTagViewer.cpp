@@ -10,6 +10,11 @@
 #include "UI/GameplayTags/LGGameplayTagEntryWidget.h"
 #include "SI_NativeGameplayTagLibrary.h"
 
+USI_GameplayTagViewer::USI_GameplayTagViewer()
+{
+	bCategoriesInitialized = false;
+}
+
 void USI_GameplayTagViewer::InitializeTagCategories()
 {
 	Super::InitializeTagCategories();
@@ -18,14 +23,33 @@ void USI_GameplayTagViewer::InitializeTagCategories()
 	if(!IsValid(SITagManager)) {return;}
 
 	CameraTags = CreateTagCategory("Camera Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	DebugTags = CreateTagCategory("Debug Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	GadgetTags = CreateTagCategory("Gadget Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	GameStateTags = CreateTagCategory("GameState Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	LevelTags = CreateTagCategory("Level Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	MediaTags = CreateTagCategory("Media Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	MusicTags = CreateTagCategory("Music Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	PlayerStateTags = CreateTagCategory("PlayerState Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
 	UITags = CreateTagCategory("UI Tags");
+	if(!IsValid(CameraTags)) {return;}
+	
+	bCategoriesInitialized = true;
 	
 	UpdateTagEntries();
 }
@@ -34,7 +58,10 @@ void USI_GameplayTagViewer::NativeTick(const FGeometry& MyGeometry, float InDelt
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	UpdateTagEntries();
+	if(bCategoriesInitialized)
+	{
+		UpdateTagEntries();
+	}
 }
 
 void USI_GameplayTagViewer::UpdateTagEntries()
