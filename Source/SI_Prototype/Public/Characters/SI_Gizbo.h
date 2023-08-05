@@ -31,17 +31,21 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsHoldingItem;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
-	USI_AbilitySystemComponent* AbilitySystemComponent;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Abilities)
 	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
 	
 private:
+	// Sets held item's position when picked up
 	void HeldItemPosition();
+	//Attaches item to PhysicsHandle
 	void PickupObject(AActor* InHitActor);
+	//Attach to Item and move it to specified location
 	void PushObject(AActor* InHitActor);
+	//Drops item being held and PhysicsHandle location
 	UFUNCTION(BlueprintCallable)
 	void DropItem();
+	//Fires a trace to locate interactable object
 	UFUNCTION(BlueprintCallable)
 	void LocateInteractable();
 	UPROPERTY(EditAnywhere)

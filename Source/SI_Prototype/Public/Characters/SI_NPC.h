@@ -5,18 +5,12 @@
 #include "CoreMinimal.h"
 #include "Characters/SI_Character.h"
 #include "AIController.h"
+#include "SI_NativeGameplayTagLibrary.h"
 #include "SI_NPC.generated.h"
 
-UENUM(BlueprintType)
-enum class ECurrentBehavior : uint8
-{
-	CB_Nothing					UMETA(DisplayName = "Nothing"),
-	CB_Wandering				UMETA(DisplayName = "Wandering"),
-	CB_Patrolling				UMETA(DisplayName = "Patrolling"),
-	CB_MovingToTarget			UMETA(DisplayName = "Moving to Target"),
-	CB_PerformingMainAction		UMETA(DisplayName = "Performing Main Action")
-};
+using namespace SI_NativeGameplayTagLibrary;
 
+struct FGameplayTagContainer;
 /**
  * Base NPC class for SI Prototype
  */
@@ -44,10 +38,10 @@ public:
 	virtual UBehaviorTree* GetMainTree() const;
 
 	UFUNCTION(BlueprintGetter, Category = "AI")
-	ECurrentBehavior GetCurrentBehavior() const;
+	FGameplayTag& GetCurrentBehaviorTag();
 
 	UFUNCTION(BlueprintSetter, Category = "AI")
-	void SetCurrentBehavior(const ECurrentBehavior NewBehavior);
+	void SetCurrentBehavior(const FGameplayTag NewBehaviorTag);
 
 	UFUNCTION(BlueprintGetter, Category = "AI")
 	bool IsDoingNothing() const;
@@ -78,8 +72,10 @@ protected:
 	TObjectPtr<UBehaviorTree> MovingToTargetTree = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, NoClear, Category = "AI")
-	TObjectPtr<UBehaviorTree> MainTree = nullptr;
+	TObjectPtr<UBehaviorTree> DefaultTree = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
-	ECurrentBehavior CurrentBehavior = ECurrentBehavior::CB_Nothing;
+	FGameplayTag CurrentBehaviorTag = SITag_Behavior;
+
+
 };

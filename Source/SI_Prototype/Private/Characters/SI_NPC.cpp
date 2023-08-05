@@ -4,6 +4,9 @@
 #include "Characters/SI_NPC.h"
 #include "SI_Prototype/SI_Prototype.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "SI_NativeGameplayTagLibrary.h"
+
+using namespace SI_NativeGameplayTagLibrary;
 
 ASI_NPC::ASI_NPC()
 {
@@ -11,14 +14,14 @@ ASI_NPC::ASI_NPC()
 	WanderingTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Wandering Behavior Tree"));
 	PatrollingTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Patrolling Behavior Tree"));
 	MovingToTargetTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Moving To Target Behavior Tree"));
-	MainTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Main Action Behavior Tree"));
+	DefaultTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Main Action Behavior Tree"));
 }
 
 UBehaviorTree* ASI_NPC::GetNothingTree() const
 {
 	if (IsValid(NothingTree)) { return NothingTree; }
 	
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetNothingTree NothingTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetNothingTree NothingTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
@@ -26,7 +29,7 @@ UBehaviorTree* ASI_NPC::GetWanderingTree() const
 {
 	if (IsValid(WanderingTree)) { return WanderingTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetWanderingTree WanderingTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetWanderingTree WanderingTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
@@ -34,7 +37,7 @@ UBehaviorTree* ASI_NPC::GetPatrollingTree() const
 {
 	if (IsValid(PatrollingTree)) { return PatrollingTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetPatrollingTree PatrollingTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetPatrollingTree PatrollingTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
@@ -42,55 +45,52 @@ UBehaviorTree* ASI_NPC::GetMovingToTargetTree() const
 {
 	if (IsValid(MovingToTargetTree)) { return MovingToTargetTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetMovingToTargetTree MovingToTargetTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetMovingToTargetTree MovingToTargetTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
 UBehaviorTree* ASI_NPC::GetMainTree() const
 {
-	if (IsValid(MainTree)) { return MainTree; }
+	if (IsValid(DefaultTree)) { return DefaultTree; }
 		
-	UE_LOG(LogSIAI, Warning, TEXT("%s : SI_NPC::GetMainTree MainTree is not valid"), *GetNameSafe(this));
+	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetMainTree MainTree is not valid"), *GetNameSafe(this));
 	return nullptr;
 }
 
-ECurrentBehavior ASI_NPC::GetCurrentBehavior() const
+FGameplayTag& ASI_NPC::GetCurrentBehaviorTag()
 {
-	return CurrentBehavior;
+	return CurrentBehaviorTag;
 }
 
-void ASI_NPC::SetCurrentBehavior(const ECurrentBehavior NewBehavior)
+void ASI_NPC::SetCurrentBehavior(const FGameplayTag NewBehaviorTag)
 {
-	if (CurrentBehavior != NewBehavior)
+	if (CurrentBehaviorTag != NewBehaviorTag)
 	{
-		//TODO: Might need to refer to the following article, for converting enum values into strings: https://biq.medium.com/type-safe-string-conversions-of-enums-in-unreal-engine-651806fce40
-		UE_LOG(LogSIAI, Display, TEXT("%s : SI_NPC::SetCurrentBehavior Changing CurrentBehavior from %s to %s"),
-			*GetNameSafe(this), *UEnum::GetDisplayValueAsText(CurrentBehavior).ToString(), *UEnum::GetDisplayValueAsText(NewBehavior).ToString());
-		CurrentBehavior = NewBehavior;
+		CurrentBehaviorTag = NewBehaviorTag;
 	}
 }
 
 bool ASI_NPC::IsDoingNothing() const
 {
-	return CurrentBehavior == ECurrentBehavior::CB_Nothing;
+	return CurrentBehaviorTag == SITag_Behavior_None;
 }
 
 bool ASI_NPC::IsWandering() const
 {
-	return CurrentBehavior == ECurrentBehavior::CB_Wandering;
+	return CurrentBehaviorTag == SITag_Behavior_Wandering;
 }
 
 bool ASI_NPC::IsPatrolling() const
 {
-	return CurrentBehavior == ECurrentBehavior::CB_Patrolling;
+	return CurrentBehaviorTag == SITag_Behavior_Patrolling;
 }
 
 bool ASI_NPC::IsMovingToTarget() const
 {
-	return CurrentBehavior == ECurrentBehavior::CB_MovingToTarget;
+	return CurrentBehaviorTag == SITag_Behavior_MoveTo;
 }
 
 bool ASI_NPC::IsPerformingMainAction() const
 {
-	return CurrentBehavior == ECurrentBehavior::CB_PerformingMainAction;
+	return CurrentBehaviorTag == SITag_Behavior_Default;
 }

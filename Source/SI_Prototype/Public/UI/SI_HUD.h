@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/SI_UserWidget.h"
 #include "SI_HUD.generated.h"
 
+class USI_QuickActionWidget;
 class USI_DialogueBox;
 class USI_CaseManager;
 class USI_CaseData;
@@ -27,22 +29,26 @@ public:
 	UFUNCTION(BlueprintCallable)
 	USI_UserWidget* GetReticle() const;
 	
+	void UpdateQuickActionWidget(const FGameplayTag& InUITag);
+
 	UFUNCTION(BlueprintNativeEvent)
 	void OnObjectiveComplete(USI_ObjectiveData* CompletedObjective);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "HUD")
 	void ShowCaseAcceptedWidget();
 
+	FGameplayTag GetQuickActionAbilityTag(const FGameplayTag& InQuickActionTag) const;
+
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	USI_DialogueBox* DialogueBox;
-
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	USI_UserWidget* Reticle;
-	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	USI_UserWidget* CaseAcceptedWidget;
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	USI_QuickActionWidget* QuickActionWidget;
 	
 private:
 

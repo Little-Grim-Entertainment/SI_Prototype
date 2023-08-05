@@ -4,6 +4,7 @@
 #include "UI/SI_HUD.h"
 #include "UI/SI_DialogueBox.h"
 #include "Data/Cases/SI_CaseManager.h"
+#include "UI/SI_QuickActionWidget.h"
 
 USI_HUD::USI_HUD()
 {
@@ -24,6 +25,21 @@ USI_UserWidget* USI_HUD::GetReticle() const
 	return Reticle;
 }
 
+void USI_HUD::UpdateQuickActionWidget(const FGameplayTag& InUITag)
+{
+	if (!IsValid(QuickActionWidget))
+	{
+		CreateWidget(QuickActionWidget);
+	}
+	
+	QuickActionWidget->RefreshQuickActionWidget(InUITag);
+}
+
+FGameplayTag USI_HUD::GetQuickActionAbilityTag(const FGameplayTag& InQuickActionTag) const
+{
+	return QuickActionWidget->GetQuickActionAbilityTag(InQuickActionTag);
+}
+
 void USI_HUD::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -34,6 +50,12 @@ void USI_HUD::NativeConstruct()
 	{
 		SetupBindings();
 	}
+
+	if (!IsValid(QuickActionWidget))
+	{
+		CreateWidget(QuickActionWidget);
+	}
+	QuickActionWidget->RefreshQuickActionWidget(SITag_UI_HUD_QuickAction);
 }
 
 void USI_HUD::SetupBindings()

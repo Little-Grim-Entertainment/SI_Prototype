@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Actors/SI_InteractableActor.h"
 #include "SI_BaseGadget.generated.h"
 
 /**
  * 
  */
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_Gadget, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API ASI_BaseGadget : public AActor
 {
@@ -17,4 +18,9 @@ class SI_PROTOTYPE_API ASI_BaseGadget : public AActor
 
 public:
 	FGameplayTag GadgetIDTag;
+
+	virtual void ActivatePrimaryAction();
+	virtual void ActivateSecondaryAction();
+	virtual void CancelPrimaryAction();
+	virtual void CancelSecondaryAction();
 };

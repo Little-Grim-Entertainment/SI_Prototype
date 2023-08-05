@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Actors/SI_InteractableActor.h"
 #include "Components/SphereComponent.h"
+
 #include "SI_FlashlightSegment.generated.h"
 
 DECLARE_DELEGATE_OneParam(FSegmentPickedUp, int);

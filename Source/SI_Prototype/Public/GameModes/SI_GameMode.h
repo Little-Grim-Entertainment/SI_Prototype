@@ -63,8 +63,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PlayerStart")
 	void RestartNickSpawn();
 
-	USI_GameplayAbility* GetGameplayAbility(FGameplayTag InAbilityTag);
-
 protected:
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
@@ -76,6 +74,4 @@ private:
 	USI_LevelManager* LevelManager;
 	UPROPERTY()
 	USI_GameInstance* GameInstance;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (Categories = "Ability", AllowPrivateAccess = "true"))
-	TMap<FGameplayTag, TSubclassOf<USI_GameplayAbility>> GameplayAbilities;
 };

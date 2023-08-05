@@ -12,7 +12,6 @@
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetStringLibrary.h"
-#include "Media/SI_MediaManager.h"
 
 ASI_GameMode::ASI_GameMode()
 {
@@ -106,9 +105,4 @@ TArray<APlayerStart*> ASI_GameMode::GetAllPlayerStarts() const
 void ASI_GameMode::RestartNickSpawn()
 {
 	HandleStartingNewPlayer(GetWorld()->GetFirstPlayerController());
-}
-
-USI_GameplayAbility* ASI_GameMode::GetGameplayAbility(FGameplayTag InAbilityTag)
-{
-	return GameplayAbilities.Find(InAbilityTag)->GetDefaultObject();
 }

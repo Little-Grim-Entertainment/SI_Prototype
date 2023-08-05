@@ -6,8 +6,12 @@
 #include "Data\Media\SI_MediaDataAsset.h"
 #include "Media\SI_MediaTypes.h"
 #include "SI_GameplayTagTypes.h"
+#include "Engine/DataTable.h"
+#include "GameplayAbilitySpec.h"
 #include "SI_Types.generated.h"
 
+class USI_GameplayAbility;
+class UGameplayAbility;
 class USI_LevelManager;
 class USoundBase;
 class UInputAction;
@@ -274,4 +278,37 @@ struct FSI_MapState
 
 	bool operator==(const FSI_MapState& OtherMapState) const;
 	bool operator!=(const FSI_MapState& OtherMapState) const;
+};
+
+USTRUCT(BlueprintType)
+struct FSI_QuckActionOptions : public FTableRowBase
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag QuickActionTag;
+
+	UPROPERTY(EditDefaultsOnly)
+	FText QuickActionPrompt;
+
+	UPROPERTY(EditAnywhere)
+	UTexture2D* QuickActionImage;
+};
+
+USTRUCT(BlueprintType)
+struct FSIGameplayAbilities
+{
+	GENERATED_BODY()
+
+	FSIGameplayAbilities() = default;
+	FSIGameplayAbilities(UGameplayAbility* InSIAbility, const FGameplayTagContainer& InSIAbilityTagContainer, const FGameplayAbilitySpecHandle& InSIAbilitySpecHandle);
+
+	bool operator==(const FSIGameplayAbilities& OtherAbility) const;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities")
+	FGameplayTagContainer SIAbilityTagContainer;
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities")
+	FGameplayAbilitySpecHandle SIAbilitySpecHandle;
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities")
+	UGameplayAbility* SIAbility;
 };

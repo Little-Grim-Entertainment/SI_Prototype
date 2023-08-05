@@ -28,4 +28,12 @@ public:
 	void OnPowerLost(AActor* Caller, float InPower);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Power")
 	bool HasMaxPower();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Power")
+	bool IsFlashlightSet();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Flashlight")
+	void OnFlashlightPowerReceived(AActor* Caller, float InPower);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Flashlight")
+	void OnFlashlightPowerLost(AActor* Caller, float InPower);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Power")
+	void SetFlashlight(AActor* Caller);
 };

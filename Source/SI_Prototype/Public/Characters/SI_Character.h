@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "SI_Character.generated.h"
 
+class USI_AbilitySystemComponent;
+
 UCLASS()
 class SI_PROTOTYPE_API ASI_Character : public ACharacter
 {
@@ -15,15 +17,13 @@ public:
 	// Sets default values for this character's properties
 	ASI_Character();
 
+	USI_AbilitySystemComponent* GetAbilitySystemComponent() {return AbilitySystemComponent; };
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
+	USI_AbilitySystemComponent* AbilitySystemComponent;
+	
 };
