@@ -30,8 +30,8 @@ public:
 
 	USI_LevelManager();
 	
-	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevelByTag(FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	UFUNCTION(BlueprintCallable, Category = "Levels", meta = (Categories = "Map"))
+	void LoadLevelByTag(FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("Nick_DefaultSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
 
 	UFUNCTION(BlueprintCallable, Category = "Levels")
 	void LoadLevelOnMediaComplete(const FGameplayTag& InLevelToLoadTag, USI_MediaDataAsset* InMediaToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
