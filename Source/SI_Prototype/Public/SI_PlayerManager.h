@@ -13,6 +13,8 @@ class USI_UserWidget;
 class ASI_PlayerController;
 class USI_EnhancedInputComponent;
 
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_PlayerManager, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API USI_PlayerManager : public USI_LocalPlayerSubsystem
 {

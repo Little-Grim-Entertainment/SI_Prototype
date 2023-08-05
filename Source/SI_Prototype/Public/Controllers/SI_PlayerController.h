@@ -7,16 +7,17 @@
 #include "GameFramework/PlayerController.h"
 #include "Components/Actor/SI_LineTraces.h"
 #include "InputActionValue.h"
+#include "LG_DebugMacros.h"
 #include "SI_PlayerController.generated.h"
 
-class UGameplayAbility;
-class USI_GameplayTagManager;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCameraSetup);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPostCameraSetup, AActor*, InNewViewTarget);
 
+class UGameplayAbility;
+class USI_GameplayTagManager;
 class ASI_InteractableActor;
 class ASI_MoveToIndicator;
 class USI_EnhancedInputComponent;
@@ -26,6 +27,8 @@ class USI_GizboManager;
 class ASI_Gizbo;
 class ASI_Nick;
 class USI_HUD;
+
+//DECLARE_LG_LOG_CATEGORY();
 
 UCLASS()
 class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController

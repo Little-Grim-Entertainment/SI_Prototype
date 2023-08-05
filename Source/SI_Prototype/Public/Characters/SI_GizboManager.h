@@ -41,9 +41,14 @@ protected:
 	
 	virtual void InitializeDelegates() override;
 	void InitializeDelegateMaps();
+	
+	// Listens for broadcast of GameplayTag being added to the TagManager and applies logic
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
+	// Listens for broadcast of GameplayTag being added to the TagManager and applies logic
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	// Tries to activate an ability based on the CurrentAbilityTag
 	void TryActivateAbilityByTag();
+	// Tries to cancel an ability based on the CurrentAbilityTag
 	void TryCancelAbilityByTag();
 
 	UPROPERTY()
@@ -57,7 +62,8 @@ private:
 	ASI_Gizbo* GizboCharacter;
 
 	FString GizboStartTag;
-	
+
+	//Current Ability Tag that is updated when an AbilityTag is received from GameplayTagManager
 	FGameplayTag CurrentAbilityTag;
 	
 	TMap<FGameplayTag, FSimpleDelegate> GizboDelegateContainer;

@@ -17,8 +17,11 @@ DEFINE_LOG_CATEGORY(LogSI_GizboManager);
 
 void USI_GizboManager::SpawnGizbo()
 {
-	if (!GameInstance->GetGameMode()->GizboCDA) {return;}
-	if (!GameInstance->GetGameMode()->GizboCDA->CharacterClass){return;}
+	if (!GameInstance->GetGameMode()->GizboCDA)
+		{UE_LOG(LogSI_GizboManager, Error, TEXT("GizboCDA is null unable to spawn gizbo!"));	return;}
+	
+	if (!GameInstance->GetGameMode()->GizboCDA->CharacterClass)
+		{UE_LOG(LogSI_GizboManager, Error, TEXT("GizboCDA->CharacterClass is null unable to spawn gizbo!"));return;}
 
 	if (GizboStartTag == "")
 	{
@@ -75,7 +78,9 @@ ASI_GizboController* USI_GizboManager::GetGizboController()
 
 void USI_GizboManager::ShowGizbo(bool bShouldHide)
 {
-	if (!IsValid(GizboCharacter)) {return;}
+	if (!IsValid(GizboCharacter))
+		{UE_LOG(LogSI_GizboManager, Error, TEXT("GizboCharacter is null unable to show gizbo!")); return;}
+	
 	GizboCharacter->SetActorHiddenInGame(bShouldHide);
 }
 
@@ -91,7 +96,7 @@ void USI_GizboManager::InitializeDelegates()
 	Super::InitializeDelegates();
 	
 	SITagManager = GameInstance->GetSubsystem<USI_GameplayTagManager>();
-	if (!IsValid(SITagManager)) {return;}
+	if (!IsValid(SITagManager)) {UE_LOG(LogSI_GizboManager, Error, TEXT("SITagManager is null unable to initialize delegates!")); return;}
 	
 	ActivateAbilityDelegate.BindUObject(this, &ThisClass::TryActivateAbilityByTag);
 }
@@ -103,10 +108,13 @@ void USI_GizboManager::InitializeDelegateMaps()
 	GizboDelegateContainer.Add(SITag_Ability_Gizbo, ActivateAbilityDelegate);	
 }
 
+//Called from listener of GameplayTagManager OnTagAddedDelegate.Broadcast() in AddNewGameplayTag()
 void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 {
-	if(!IsValid(GetWorld())) return;
-	if(!SITagManager->HasParentTag(InAddedTag, SITag_Ability_Gizbo)){return;}
+	if(!IsValid(GetWorld()))
+		{UE_LOG(LogSI_GizboManager, Error, TEXT("World is null unable to add tag!")); return;}
+	if(!SITagManager->HasParentTag(InAddedTag, SITag_Ability_Gizbo))
+		{UE_LOG(LogSI_GizboManager, VeryVerbose, TEXT("Tag %s is not a child of SITag_Ability_Gizbo!"), *InAddedTag.ToString()); return;}
 	
 	Super::OnGameplayTagAdded(InAddedTag);	
 	
@@ -120,10 +128,13 @@ void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	GizboDelegateContainer.Find(InAddedTag)->Execute();
 }
 
+//Called from listener of GameplayTagManager OnTagRemovedDelegate.Broadcast() in RemoveTag()
 void USI_GizboManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 {
-	if(!IsValid(GetWorld())) return;
-	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Ability_Gizbo)){return;}
+	if(!IsValid(GetWorld()))
+		{UE_LOG(LogSI_GizboManager, Error, TEXT("World is null unable to remove tag!")); return;}
+	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Ability_Gizbo))
+		{UE_LOG(LogSI_GizboManager, VeryVerbose, TEXT("Tag %s is not a child of SITag_Ability_Gizbo!"), *InRemovedTag.ToString()); return;}
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
 
@@ -143,7 +154,8 @@ void USI_GizboManager::TryActivateAbilityByTag()
 
 	USI_GameplayAbility* CurrentAbility = GizboAbilitySystemComponent->GetGameplayAbilityByTag(CurrentAbilityTag);
 
-	if(!IsValid(CurrentAbility)) return;
+	if(!IsValid(CurrentAbility))
+		{UE_LOG(LogSI_GizboManager, Error, TEXT("%s is null unable to activate ability!"), *CurrentAbility->GetName()); return;}
 	
 	if(GizboAbilitySystemComponent->TryActivateAbilitiesByTag(CurrentAbilityTag.GetSingleTagContainer(), false))
 	{
@@ -155,7 +167,8 @@ void USI_GizboManager::TryCancelAbilityByTag()
 {	
 	USI_GameplayAbility* CurrentAbility = GizboAbilitySystemComponent->GetGameplayAbilityByTag(CurrentAbilityTag);
 
-	if(!IsValid(CurrentAbility)) return;
+	if(!IsValid(CurrentAbility))
+		{UE_LOG(LogSI_GizboManager, Error, TEXT("%s is null unable to cancel ability!"), *CurrentAbility->GetName()); return;}
 	
 	if(!ActiveAbilitiesContainer.IsEmpty() && *ActiveAbilitiesContainer.Find(CurrentAbilityTag) == CurrentAbility)
 	{

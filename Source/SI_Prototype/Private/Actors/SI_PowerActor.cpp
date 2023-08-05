@@ -1,7 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Actors/SI_PowerActor.h"
+#include "Actors/Gadgets/SI_Flashlight.h"
+#include "Components/ActorComponent.h"
 #include "Actors/Gadgets/SI_FlashlightSegment.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ASI_PowerActor::ASI_PowerActor()

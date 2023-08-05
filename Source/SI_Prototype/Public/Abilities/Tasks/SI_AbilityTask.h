@@ -9,6 +9,9 @@
 /**
  * 
  */
+
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_AbilityTask, Log, All);
+
 UCLASS()
 class SI_PROTOTYPE_API USI_AbilityTask : public UAbilityTask
 {

@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "SI_InteractableActor.h"
-#include "Components/BoxComponent.h"
-#include "Components/ActorComponent.h"
 #include "Interfaces/SI_PowerInterface.h"
-#include "Actors/Gadgets/SI_Flashlight.h"
 #include "SI_PowerActor.generated.h"
 
+class UBoxComponent;
 class ASI_FlashlightSegment;
 class ASI_Flashlight;
 

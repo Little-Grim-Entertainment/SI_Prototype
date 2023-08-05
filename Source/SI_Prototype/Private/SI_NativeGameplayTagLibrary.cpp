@@ -48,7 +48,16 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music, "Audio.Music")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music_Playing, "Audio.Music.Playing")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music_Pause, "Audio.Music.Pause")
-		
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior, "Behavior")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Default, "Behavior.Default")	
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Following, "Behavior.Following")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_MoveTo, "Behavior.MoveTo")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_None, "Behavior.None")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Patrolling, "Behavior.Patrolling")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Waiting, "Behavior.Waiting")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Wandering, "Behavior.Wandering")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera, "Camera")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode, "Camera.Mode")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_OutDoor, "Camera.Mode.OutDoor")
