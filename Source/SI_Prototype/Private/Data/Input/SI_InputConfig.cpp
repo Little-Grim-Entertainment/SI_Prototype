@@ -2,6 +2,8 @@
 
 
 #include "Data/Input/SI_InputConfig.h"
+#include "SI_GameplayTagManager.h"
+#include "SI_NativeGameplayTagLibrary.h"
 #include "InputAction.h"
 
 
