@@ -22,7 +22,6 @@ void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilityS
 	SITagManager = PC->GetSITagManager();
 	if(!IsValid(SITagManager))	{return;}
 
-	
 	if(PossessTarget(ActorInfo, TriggerEventData))
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_PossessMovable, SITag_Player_State);
@@ -47,6 +46,7 @@ bool USI_GameplayAbility_PossessMovable::PossessTarget(const FGameplayAbilityAct
 	if(!IsValid(PossessedMovable)) return false;
 	
 	PC->Possess(PossessedMovable);
+
 	return true;
 }
 
@@ -91,6 +91,7 @@ void USI_GameplayAbility_PossessMovable::UpdateMoveToLocation()
 	if(bBlockingHit)
 	{
 		PossessedMovable = SpawnPossessedMovable(OutHit.Location);
+		
 		StartUpdateIndicatorPositionTimer();
 	}	
 }

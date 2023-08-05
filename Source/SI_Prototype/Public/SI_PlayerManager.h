@@ -3,12 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Subsystems\SI_LocalPlayerSubsystem.h"
 #include "SI_PlayerManager.generated.h"
 
+class USI_GameplayAbility;
+class USI_AbilitySystemComponent;
 class USI_UserWidget;
 class ASI_PlayerController;
 class USI_EnhancedInputComponent;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_PlayerManager, Log, All);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_PlayerManager : public USI_LocalPlayerSubsystem
@@ -18,10 +23,8 @@ class SI_PROTOTYPE_API USI_PlayerManager : public USI_LocalPlayerSubsystem
 public:
 
 	void RequestNewPlayerState(const FGameplayTag& InPlayerState);
-
 	const FGameplayTag& GetCurrentPlayerState() const;
 	const FGameplayTag& GetPreviousPlayerState() const;
-
 	void ShowWorld(bool bShouldShow, bool bShouldFade);
 
 protected:
@@ -36,6 +39,8 @@ private:
 
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
+	void TryActivateAbilityByTag();
+	void TryCancelAbilityByTag();
 
 	void SetupDialogueState();
 	void SetupExplorationState();
@@ -47,16 +52,21 @@ private:
 	
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
-
+	UPROPERTY()
+	USI_AbilitySystemComponent* NickAbilitySystemComponent;
+	
 	bool bShowWorld = false;
 	
 	FGameplayTag PreviousPlayerState;
 	FGameplayTag CurrentPlayerState;
+	FGameplayTag CurrentAbilityTag;
 	FGameplayTag SecondaryMediaTag;
 	FGameplayTag SecondaryMenuTag;
 
 	TMap<FGameplayTag, FSimpleDelegate> PlayerDelegateContainer;
-
+	TMap<FGameplayTag, USI_GameplayAbility*> ActiveAbilitiesContainer;
+	
+	FSimpleDelegate ActivateAbilityDelegate;
 	FSimpleDelegate DialogueStateDelegate;
 	FSimpleDelegate ExplorationStateDelegate;
 	FSimpleDelegate InactiveStateDelegate;

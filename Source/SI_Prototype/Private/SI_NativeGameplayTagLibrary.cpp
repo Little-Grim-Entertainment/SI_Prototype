@@ -1,30 +1,44 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+
+
 #include "SI_NativeGameplayTagLibrary.h"
 
 namespace SI_NativeGameplayTagLibrary
 {
+	UE_DEFINE_GAMEPLAY_TAG(SITag_None, "None")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Flashlight, "Ability.Construct.Flashlight")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Construct_Lockpicks, "Ability.Construct.Lockpicks")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Follow, "Ability.Follow")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UsePrimary, "Ability.Gadget.UsePrimary")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UseSecondary, "Ability.Gadget.UseSecondary")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_AdaptableAction, "Ability.Gizbo.AdaptableAction")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_AdaptableActionConfirm, "Ability.Gizbo.AdaptableActionConfirm")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick, "Ability.Nick")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Gadget_UsePrimary, "Ability.Nick.Gadget.UsePrimary")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Gadget_UseSecondary, "Ability.Nick.Gadget.UseSecondary")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_AdaptableAction, "Ability.Nick.AdaptableAction")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_AdaptableActionConfirm, "Ability.Nick.AdaptableActionConfirm")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact, "Ability.Nick.Interact")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Drop, "Ability.Nick.Interact.Drop")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Pickup, "Ability.Nick.Interact.Pickup")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Pull, "Ability.Nick.Interact.Pull")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Push, "Ability.Nick.Interact.Push")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Observation, "Ability.Nick.Observation")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_ObserveObject, "Ability.Nick.ObserveObject")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_PossessMovable, "Ability.Nick.PossessMovable")
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo, "Ability.Gizbo")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct_Flashlight, "Ability.Gizbo.Construct.Flashlight")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct_Lockpicks, "Ability.Gizbo.Construct.Lockpicks")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Follow, "Ability.Gizbo.Follow")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Gadget_UsePrimary, "Ability.Gizbo.Gadget.UsePrimary")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Gadget_UseSecondary, "Ability.Gizbo.Gadget.UseSecondary")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct, "Ability.Gizbo.Construct")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Deconstruct, "Ability.Gizbo.Deconstruct")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact, "Ability.Interact")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Drop, "Ability.Interact.Drop")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pickup, "Ability.Interact.Pickup")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pull, "Ability.Interact.Pull")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Push, "Ability.Interact.Push")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_MoveTo, "Ability.MoveTo")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Observation, "Ability.Observation")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_ObserveObject, "Ability.ObserveObject")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_PossessMovable, "Ability.PossessMovable")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Wait, "Ability.Wait")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Interact, "Ability.Gizbo.Interact")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Interact_Drop, "Ability.Gizbo.Interact.Drop")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Interact_Pickup, "Ability.Gizbo.Interact.Pickup")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Interact_Pull, "Ability.Gizbo.Interact.Pull")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Interact_Push, "Ability.Gizbo.Interact.Push")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_MoveTo, "Ability.Gizbo.MoveTo")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Wait, "Ability.Gizbo.Wait")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor, "Actor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Actor_Observable, "Actor.Observable")
@@ -34,7 +48,16 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music, "Audio.Music")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music_Playing, "Audio.Music.Playing")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Audio_Music_Pause, "Audio.Music.Pause")
-		
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior, "Behavior")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Default, "Behavior.Default")	
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Following, "Behavior.Following")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_MoveTo, "Behavior.MoveTo")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_None, "Behavior.None")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Patrolling, "Behavior.Patrolling")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Waiting, "Behavior.Waiting")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Behavior_Wandering, "Behavior.Wandering")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera, "Camera")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode, "Camera.Mode")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_OutDoor, "Camera.Mode.OutDoor")
@@ -48,7 +71,6 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget, "Gadget")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_Flashlight, "Gadget.Flashlight")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_Lockpicks, "Gadget.Lockpicks")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_NONE, "Gadget.NONE")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Game, "Game")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Game_State, "Game.State")
@@ -60,6 +82,8 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action, "Input.Action")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interact, "Input.Action.Interact")
 
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_AdaptableAction, "Input.Action.AdaptableAction")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_AdaptableActionConfirm, "Input.Action.AdaptableActionConfirm")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Exit, "Input.Action.Dialogue.Exit")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Next, "Input.Action.Dialogue.Next")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Previous, "Input.Action.Dialogue.Previous")
@@ -75,8 +99,6 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_UseGadgetSecondary, "Input.Action.UseGadgetSecondary")
 	
 	// Gizbo Commands
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_AdaptableAction, "Input.Action.Gizbo.AdaptableAction")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_AdaptableActionConfirm, "Input.Action.Gizbo.AdaptableActionConfirm")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_ControlsToggle, "Input.Action.Gizbo.ControlsToggle")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_Follow, "Input.Action.Gizbo.Follow")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_UseGadget, "Input.Action.Gizbo.UseGadget");
@@ -108,10 +130,12 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Observation, "Player.State.Observation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_PossessMovable, "Player.State.PossessMovable")
 	
-
-	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI, "UI")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD, "UI.HUD")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction, "UI.HUD.QuickAction")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_Movable, "UI.HUD.QuickAction.Movable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_GadgetsOne, "UI.HUD.QuickAction.GadgetsOne")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_GadgetsTwo, "UI.HUD.QuickAction.GadgetsTwo")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu, "UI.Menu")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Map, "UI.Menu.Map")

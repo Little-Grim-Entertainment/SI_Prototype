@@ -26,8 +26,10 @@ ASI_FlashlightSegment::ASI_FlashlightSegment()
 	
 	Pointlight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Point Light"));
 	Pointlight->SetupAttachment(RootComponent);
-	PointlightIntensity = 500.0f;
+	PointlightIntensity = 2000.0f;
 	Pointlight->SetIntensity(PointlightIntensity);
+	Pointlight->SetAttenuationRadius(1000);
+	Pointlight->SetSourceRadius(200);
 }
 
 // Called when the game starts or when spawned
@@ -35,8 +37,6 @@ void ASI_FlashlightSegment::BeginPlay()
 {
 	Super::BeginPlay();	
 }
-
-
 
 void ASI_FlashlightSegment::OnInteract_Implementation(AActor* Caller)
 {
@@ -49,7 +49,6 @@ void ASI_FlashlightSegment::OnInteract_Implementation(AActor* Caller)
 void ASI_FlashlightSegment::RemoveSegment()
 {		
 	SegmentPickUpDelegate.Execute(SegmentNumber);
-	// todo: Call endoverlap powerinterface?? (WORKING SO FAR)
 	Destroy();
 }
 

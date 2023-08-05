@@ -442,3 +442,14 @@ bool FSI_MapState::operator!=(const FSI_MapState& OtherMapState) const
 	return MapData != OtherMapState.MapData;
 }
 
+FSIGameplayAbilities::FSIGameplayAbilities(UGameplayAbility* InSIAbility, const FGameplayTagContainer& InSIAbilityTagContainer, const FGameplayAbilitySpecHandle& InSIAbilitySpecHandle)
+{
+	SIAbilityTagContainer = InSIAbilityTagContainer;
+	SIAbilitySpecHandle = InSIAbilitySpecHandle;
+	SIAbility = InSIAbility;
+}
+
+bool FSIGameplayAbilities::operator==(const FSIGameplayAbilities& OtherAbility) const
+{
+	return SIAbility == OtherAbility.SIAbility;
+}

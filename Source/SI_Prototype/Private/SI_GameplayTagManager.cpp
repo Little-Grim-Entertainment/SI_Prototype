@@ -13,7 +13,17 @@ DEFINE_LOG_CATEGORY(LogSI_GameplayTagManager);
 void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
 {
 	FSI_GameplayTagContainer& ContainerToAddTo = GetContainerTypeByTag(InGameplayTag);
-	if (!InGameplayTag.IsValid() || ContainerToAddTo.HasTagExact(InGameplayTag)) {return;}
+	if (!InGameplayTag.IsValid()) return;
+	
+	//TODO: Review ...Pace & Jeff is there a better solution for this?
+	if(ContainerToAddTo.HasTagExact(InGameplayTag))
+	{
+		if(HasParentTag(InGameplayTag, SITag_Ability))
+		{
+			RemoveTag(InGameplayTag);
+		}
+		return;
+	}
 
 	ContainerToAddTo.AddTag(InGameplayTag);
 	OnTagAddedDelegate.Broadcast(InGameplayTag);
@@ -23,7 +33,7 @@ void USI_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag)
 {
 	FSI_GameplayTagContainer& ContainerToRemoveFrom = GetContainerTypeByTag(InGameplayTag);
 	if (!ContainerToRemoveFrom.HasTagExact(InGameplayTag)) {return;}
-
+	
 	ContainerToRemoveFrom.RemoveTag(InGameplayTag);
 	OnTagRemovedDelegate.Broadcast(InGameplayTag);
 }
@@ -40,7 +50,6 @@ void USI_GameplayTagManager::ClearAllTagsFromContainer(FSI_GameplayTagContainer&
 
 void USI_GameplayTagManager::ReplaceTagWithSameParent(const FGameplayTag& InNewTag, const FGameplayTag& InParentTag)
 {
-	
 	const FSI_GameplayTagContainer& TagTypeContainer = GetContainerTypeByTag(InNewTag);
 
 	if(TagTypeContainer.HasTagExact(InNewTag)){return;}
@@ -102,6 +111,8 @@ bool USI_GameplayTagManager::HasParentTag(const FGameplayTag& InTagToCheck, cons
 	
 	const FString ParentTagString = InParentTag.ToString();
 	const FString TraitTagString = InTagToCheck.ToString();
+	
+	if(ParentTagString.Len() > TraitTagString.Len()) return false;
 
 	for (int32 CurrentCharIndex = 0; CurrentCharIndex < ParentTagString.Len(); CurrentCharIndex++)
 	{
@@ -176,7 +187,9 @@ FSI_GameplayTagContainer& USI_GameplayTagManager::GetContainerTypeByTag(const FG
 
 void USI_GameplayTagManager::InitializeTagContainers()
 {
+	AllTagContainers.Add(SITag_Ability, AbilityTags);
 	AllTagContainers.Add(SITag_Camera, CameraTags);
+	AllTagContainers.Add(SITag_Debug, DebugTags);
 	AllTagContainers.Add(SITag_Gadget, GadgetTags);
 	AllTagContainers.Add(SITag_Game_State, GameStateTags);
 	AllTagContainers.Add(SITag_Map, LevelTags);
@@ -184,7 +197,6 @@ void USI_GameplayTagManager::InitializeTagContainers()
 	AllTagContainers.Add(SITag_Audio_Music, MusicTags);
 	AllTagContainers.Add(SITag_Player_State, PlayerStateTags);
 	AllTagContainers.Add(SITag_UI, UITags);
-	AllTagContainers.Add(SITag_Debug, DebugTags);
 
 	for (TPair<FGameplayTag, FSI_GameplayTagContainer>& CurrentContainerPair : AllTagContainers)
 	{

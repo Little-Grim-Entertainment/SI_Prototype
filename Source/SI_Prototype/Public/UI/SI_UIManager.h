@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SI_QuickActionWidget.h"
 #include "TimerManager.h"
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_UIManager.generated.h"
@@ -89,7 +90,11 @@ public:
 	void AddActiveInteractionWidget(USI_InteractionWidget* InInteractionWidget);
 	UFUNCTION()
 	void RemoveActiveInteractionWidget(USI_InteractionWidget* InInteractionWidget);
-	
+
+	UFUNCTION()
+	void UpdateQuickActionWidget();
+	FGameplayTag GetQuickActionAbilityTag(const FGameplayTag& InQuickActionTag);
+
 	UFUNCTION()
 	void OnObjectiveActivated(USI_ObjectiveData* ActivatedObjective);
 	UFUNCTION()
@@ -130,6 +135,8 @@ private:
 
 	TMap<FGameplayTag, USI_UserWidget*> UIWidgetContainer;
 
+	FGameplayTag CurrentUITag;
+	
 	UPROPERTY()
 	USI_UserWidget* LoadingScreen;
 	UPROPERTY()
@@ -145,6 +152,8 @@ private:
 	UPROPERTY()
 	USI_CaseTitleCard* CaseTitleCardWidget;
 	UPROPERTY()
+	USI_QuickActionWidget* QuickActionWidget;
+	UPROPERTY()
 	TArray<USI_InteractionWidget*> ActiveInteractionWidgets;
 
 	FTimerHandle LoadingScreenFadeDelayHandle;
@@ -156,11 +165,11 @@ private:
 	TMap<FGameplayTag, FSimpleDelegate> AddUIDelegateContainer;
 	
 	FSimpleDelegate AddGameMenuDelegate;
-	FSimpleDelegate AddMapMenuDelegate;
-	FSimpleDelegate AddSystemMenuDelegate;
-	FSimpleDelegate AddVendorMenuDelegate;
 	FSimpleDelegate AddHUDDelegate;
 	FSimpleDelegate AddLoadingScreenDelegate;
+	FSimpleDelegate AddMapMenuDelegate;
+	FSimpleDelegate AddSystemMenuDelegate;
+	FSimpleDelegate UpdateQuickActionDelegate;
+	FSimpleDelegate AddVendorMenuDelegate;
 	FSimpleDelegate AddVideoScreenDelegate;
-
 };

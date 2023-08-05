@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/SI_Character.h"
 #include "GameFramework/Pawn.h"
 #include "SI_PossessedMovable.generated.h"
 
@@ -11,7 +12,7 @@ class UATPCCameraComponent;
 class ASI_PlayerCameraManager;
 
 UCLASS()
-class SI_PROTOTYPE_API ASI_PossessedMovable : public APawn
+class SI_PROTOTYPE_API ASI_PossessedMovable : public ASI_Character
 {
 	GENERATED_BODY()
 
