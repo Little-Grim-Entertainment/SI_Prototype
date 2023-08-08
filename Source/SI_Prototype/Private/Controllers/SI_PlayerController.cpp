@@ -18,7 +18,6 @@
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Data/Media/SI_CinematicDataAsset.h"
 #include "Dialogue/SI_DialogueManager.h"
-#include "Dialogue/SI_DialogueSession.h"
 #include "UI/SI_DialogueBox.h"
 #include "UI/SI_HUD.h"
 #include "UI/SI_UIManager.h"
@@ -280,7 +279,7 @@ void ASI_PlayerController::RequestExitDialogue()
 {
 	if (USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>())
 	{
-		DialogueManager->GetCurrentDialogue()->ExitDialogue();
+
 	}
 	if (InteractableActor)
 	{
