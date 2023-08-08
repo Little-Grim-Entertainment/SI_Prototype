@@ -24,15 +24,6 @@
 				"SI_Prototype",
 				"UnrealEd"
 			]
-		},
-		{
-			"Name": "DialogueSystemEditor",
-			"Type": "UncookedOnly",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"SI_Prototype",
-				"UnrealEd"
-			]
 		}
 	],
 	"Plugins": [

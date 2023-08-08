@@ -10,7 +10,6 @@ public class SI_Prototype : ModuleRules
 			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks",
-			"GenericGraphRuntime",
 		});
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 

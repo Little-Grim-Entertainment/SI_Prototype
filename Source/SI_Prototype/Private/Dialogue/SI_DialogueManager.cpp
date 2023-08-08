@@ -7,9 +7,6 @@
 #include "Characters/SI_CharacterManager.h"
 #include "Data/Cases/SI_CaseManager.h"
 #include "Data/Characters/SI_CharacterData.h"
-#include "Kismet/GameplayStatics.h"
-#include "Dialogue/SI_DialogueSession.h"
-
 
 void USI_DialogueManager::StartDialogue(USI_CharacterData* InCharacterData)
 {
@@ -29,26 +26,22 @@ void USI_DialogueManager::StartDialogue(USI_CharacterData* InCharacterData)
     USI_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_CaseManager>();
 	if (!IsValid(CaseManager)) {return;}
 	CurrentCharacterData = Cast<USI_CharacterData>(InCharacterData);
-	if (!CurrentCharacterData || !CurrentCharacterData->GetCurrentDialogueData(CaseManager).RelevantDialogue)
+	if (!CurrentCharacterData)
 	{
 		StartDefaultDialogue(CurrentCharacterData);
 		return;
 	}
 
-	CurrentDialogue = CurrentCharacterData->GetCurrentDialogueData(CaseManager).RelevantDialogue;
-	CurrentDialogue->StartDialogue(CurrentCharacterData, this, CaseManager);
 	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Dialogue, SITag_Player_State);
 }
 
-void USI_DialogueManager::ExitDialogue(UDialogueSessionNode* NewSaveNode, int32 NewAngerLevel)
+void USI_DialogueManager::ExitDialogue(int32 NewAngerLevel)
 {
 	check(CurrentCharacterData);
     USI_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_CaseManager>();
 	if (!IsValid(CaseManager)) {return;}
 	CurrentCharacterData->GetCurrentDialogueData(CaseManager).AngerLevel = NewAngerLevel;
-	CurrentCharacterData->GetCurrentDialogueData(CaseManager).SavedNode = NewSaveNode;
 
-	CurrentDialogue = nullptr;
 	CurrentCharacterData = nullptr;
 
 	//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
@@ -56,37 +49,27 @@ void USI_DialogueManager::ExitDialogue(UDialogueSessionNode* NewSaveNode, int32 
 
 void USI_DialogueManager::OnNextPressed()
 {
-	if (!CurrentDialogue) { return; }
 
-	CurrentDialogue->SelectEdgeOfType(EEdgeType::Next);
 }
 
 void USI_DialogueManager::OnPreviousPressed()
 {
-	if (!CurrentDialogue) { return; }
 
-	CurrentDialogue->SelectEdgeOfType(EEdgeType::Previous);
 }
 
 void USI_DialogueManager::OnPressPressed()
 {
-	if (!CurrentDialogue) { return; }
 
-	CurrentDialogue->SelectEdgeOfType(EEdgeType::Press);
 }
 
 void USI_DialogueManager::OnTextOptionSelected(FText RelatedText)
 {
-	if (!CurrentDialogue) { return; }
 
-	CurrentDialogue->SelectEdgeOfType(EEdgeType::TextOption, nullptr, RelatedText);
 }
 
 void USI_DialogueManager::OnItemOptionSelected(UObject* RelatedItem)
 {
-	if (!CurrentDialogue) { return; }
 
-	CurrentDialogue->SelectEdgeOfType(EEdgeType::ItemOption, RelatedItem);
 }
 
 
@@ -103,11 +86,6 @@ void USI_DialogueManager::OnInterrogationPressed()
 	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_InterrogationMode);
 }
 
-UDialogueSession* USI_DialogueManager::GetCurrentDialogue()
-{
-	return CurrentDialogue;
-}
-
 void USI_DialogueManager::SetupBindings()
 {
 	// Get the HUD, get the dialogue box, bind u objects (need to make functions UFUNCTIONs)
@@ -115,36 +93,31 @@ void USI_DialogueManager::SetupBindings()
 
 bool USI_DialogueManager::HasNextOption()
 {
-	return (CurrentDialogue != nullptr) && CurrentDialogue->HasEdgeOfType(EEdgeType::Next);
+	return false;
 }
 
 bool USI_DialogueManager::HasPreviousOption()
 {
-	return (CurrentDialogue != nullptr) && CurrentDialogue->HasEdgeOfType(EEdgeType::Previous);
+	return false;
 }
 
 bool USI_DialogueManager::HasPressOption()
 {
-	return (CurrentDialogue != nullptr) && CurrentDialogue->HasEdgeOfType(EEdgeType::Press);
+	return false;
 }
 
 bool USI_DialogueManager::HasTextOptions()
 {
-	return (CurrentDialogue != nullptr) && CurrentDialogue->HasEdgeOfType(EEdgeType::TextOption);
+	return false;
 }
 
 bool USI_DialogueManager::HasItemOptions()
 {
-	return (CurrentDialogue != nullptr) && CurrentDialogue->HasEdgeOfType(EEdgeType::ItemOption);
+	return false;
 }
 
 bool USI_DialogueManager::CanEnterInterrogation()
 {
 	//return (GameInstance->GetPlayerMode() == EPlayerMode::PM_InterrogationMode && CurrentDialogue != nullptr && CurrentDialogue->bIsInterrogationDialogue);
 	return false;
-}
-
-UDialogueSession* USI_DialogueManager::FindDialogue(USI_CaseData* Case, USI_PartData* Part)
-{
-	return nullptr;
 }

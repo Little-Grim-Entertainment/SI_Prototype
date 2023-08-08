@@ -5,7 +5,6 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Dialogue/SI_DialogueManager.h"
-#include "Dialogue/SI_DialogueSession.h"
 
 void USI_DialogueBox::NativeConstruct()
 {
@@ -70,9 +69,7 @@ void USI_DialogueBox::RefreshDialogueBox()
 {
 	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
 	if (!IsValid(DialogueManager)){return;}
-
-	SetCharacterDialogue(DialogueManager->GetCurrentDialogue()->GetText());
-	SetCharacterName(DialogueManager->GetCurrentDialogue()->GetName());
+	
 	ShowNextButton(DialogueManager);
 	ShowPreviousButton(DialogueManager);
 }

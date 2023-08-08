@@ -12,6 +12,5 @@ public class SI_PrototypeEditorTarget : TargetRules
 		
 		ExtraModuleNames.Add("SI_Prototype");
 		ExtraModuleNames.Add("SI_Editor");
-		ExtraModuleNames.Add("DialogueSystemEditor");
 	}
 }

@@ -25,13 +25,10 @@ struct FSI_DialogueData
 	USI_CaseData* Case = nullptr;
 	UPROPERTY(EditAnywhere, meta=(EditCondition="!bIsDefaultDialogue", EditConditionHides))
 	USI_PartData* Part = nullptr;
-	UPROPERTY(EditAnywhere)
-	UDialogueSession* RelevantDialogue = nullptr;
 
 	// --- Saved info --- //
 	UPROPERTY(EditAnywhere)
 	int32 AngerLevel = 0;
-	UDialogueSessionNode* SavedNode = nullptr;
 };
 
 
