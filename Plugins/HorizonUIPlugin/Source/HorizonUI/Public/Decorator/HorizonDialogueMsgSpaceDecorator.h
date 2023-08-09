@@ -18,7 +18,6 @@ public:
 		int32 InCurrentSegInfoIndex, FHorizonDialogueSegmentInfo& InCurrentSegInfo,
 		const TArray<FHorizonDialogueSegmentInfo>& InSegInfos) override;
 
-
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Content")
@@ -26,4 +25,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Content")
 	FText Space = FText::FromString(TEXT(" "));
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Content")
+	bool bDefaultWithSpaceL_AlphabeticOnly = true;
 };

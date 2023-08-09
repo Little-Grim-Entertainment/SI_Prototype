@@ -249,6 +249,30 @@ public:
 		int32 PageIndex = -1;
 };
 
+
+
+USTRUCT(BlueprintType)
+struct FHorizonDialogueBlinkingCursorInfo
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content",
+		meta = (DisplayThumbnail = "true", AllowedClasses = "PaperFlipbook"))
+	TSoftObjectPtr<UPaperFlipbook> Flipbook = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Content")
+	FSlateColor ColorAndOpacity = FLinearColor::White;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Content")
+	bool bUseSize = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Content", meta = (EditCondition = "bUseSize"))
+	FVector2D Size = FVector2D(32, 32);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Content")
+	FVector2D PaddingPos = FVector2D::ZeroVector;
+
+	TWeakObjectPtr<UHorizonFlipbookWidget> WidgetWeakPtr;
+};
 #endif //============================End DialogueText Struct=============================
 
 
@@ -420,6 +444,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void SetTextAndRebuildDialogue(const FText& InText);
 
+
 	/**
 	 * Set Text and try Rebuild Dialogue in next widget tick if CachedGeometry().X > 0, retry otherwise
 	 *
@@ -428,6 +453,12 @@ public:
 	 * @param InText: Text want to rebuild 
 	 */
 	virtual void SetTextAndRebuildDialogue(FText&& InText);
+
+
+
+	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
+	virtual void SetTextAndRebuildDialogueImmediately(const FText& InText);
+	virtual void SetTextAndRebuildDialogueImmediately(FText&& InText);
 
 #endif //============================End DialogueText Method=============================
 
@@ -438,7 +469,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void SetIsDialogueMsgText(bool b);
-	FORCEINLINE bool IsDialogueMsgText() { return bIsDialogueMsgText; };
+	FORCEINLINE bool IsDialogueMsgText() const { return bIsDialogueMsgText; };
 
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void SetDialogueMsgSpeed(float speed, bool bForce = false);
@@ -456,12 +487,12 @@ public:
 
 
 
-	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
-	virtual int32 GetTextLength();
+	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|DialogueMsg")
+	virtual int32 GetTextLength() const;
 
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void RequestRebuildDialogue();
-	virtual bool IsNeedRebuildDialogueMsgText();
+	virtual bool IsNeedRebuildDialogueMsgText() const;
 #endif //============================End DialogueMsg: Setter/Getter=============================
 #if 1 //============================Begin DialogueMsg=============================
 public:
@@ -480,6 +511,7 @@ public:
 
 	virtual void ResetDialogueMsgText();
 
+		UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void RebuildDialogueMsgTextBlock();
 private:
 	void TriggerCustomEventCallback(FHorizonDialogueSegmentInfo& InSegInfo);
@@ -506,19 +538,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void SetIsAutoNextDialogueMsgPage(bool b);
 
-	FORCEINLINE bool IsAutoNextDialogueMsgPage() { return bIsAutoNextDialogueMsgPage; }
+	FORCEINLINE bool IsAutoNextDialogueMsgPage() const { return bIsAutoNextDialogueMsgPage; }
 
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void SetAutoNextDialogueMsgPageIntervalRate(float InAutoNextDialogueMsgPageIntervalRate);
 	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|DialogueMsg")
-	virtual int32 GetCurrentPageTextLength();
+	virtual int32 GetCurrentPageTextLength() const;
 
-	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
-	virtual FText GetPageTextByIndex(int32 PageIndex);
+	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|DialogueMsg")
+	virtual FText GetPageTextByIndex(int32 PageIndex) const;
 
 
 	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|DialogueMsg")
-	virtual int32 GetNumPage();
+	virtual int32 GetNumPage() const;
+
+	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|DialogueMsg")
+	virtual int32 GetNumLine() const;
 
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg", meta = (DeprecatedFunction, DeprecationMessage = "Use SkipCurrentDialoguePage instead"))
 	virtual void SkipCurrentDialogueMsgPageTick();
@@ -526,10 +561,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
 	virtual void SkipCurrentDialoguePage();
 
-	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
-	virtual bool IsDialogueMsgPageEnd();
-	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|DialogueMsg")
-	virtual bool IsDialogueMsgCompleted();
+	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|DialogueMsg")
+	virtual bool IsDialogueMsgPageEnd() const;
+	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|DialogueMsg")
+	virtual bool IsDialogueMsgCompleted() const;
+
+
+	UFUNCTION()
+	virtual UHorizonFlipbookWidget* GetBlinkCursorWidget() const { return BlinkCursorInfo.WidgetWeakPtr.Get(); };
 
 private:
 	void CalculateAutoNextDialogueMsgPageInterval();
@@ -578,6 +617,8 @@ private:
 
 	void LoadSound(FHorizonDialogueSegmentInfo& segInfo, FHorizonDialogueBlockInfo& blockInfo);
 	void SetSegmentColor(int32 segmentIndex, int32 lineIndex, const FSlateColor& InColor);
+
+	//float CalculateAutoSizeMaxPageHeight();
 #endif //============================End Dialogue: Rebuild=============================
 
 
@@ -741,6 +782,16 @@ public:
 	// Hotfix rebuild msg: should set to true if geometry.Size.X is 0 and message didn't appear in some case
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "!bIgnoreTimeDilation"), Category = "Behavior")
 	bool bForceRebuildDialogueMsgText = false;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior")
+	bool bEnableBlinkingCursor = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior", meta = (EditCondition = "bEnableBlinkingCursor"))
+	FHorizonDialogueBlinkingCursorInfo BlinkCursorInfo;
+	
+
+
 #endif //============================End Attribute: Behavior=============================
 #if 1 //============================Begin Attribute: Style=============================
 public:
@@ -832,7 +883,6 @@ private:
 
 	int32 TexLength = 0;
 	float MaxLineWidth = 0.0f;
-
 
 #endif //============================Begin Attribute: Non-Public=============================
 

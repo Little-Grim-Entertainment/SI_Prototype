@@ -3,6 +3,7 @@
 
 #include "Decorator/HorizonDialogueMsgSpaceDecorator.h"
 #include "HorizonUIPrivate.h"
+#include "Widget/HorizonWidgetFunctionLibrary.h"
 
 
 bool UHorizonDialogueMsgSpaceDecorator::BuildSegment_Implementation(UHorizonDialogueMsgTextBlock* InMsgTextBlock,
@@ -12,6 +13,15 @@ bool UHorizonDialogueMsgSpaceDecorator::BuildSegment_Implementation(UHorizonDial
 
 	bool bWithSpaceL = true;
 	bool bWithSpaceR = false;
+
+	if(bDefaultWithSpaceL_AlphabeticOnly)
+	{
+		if (!InCurrentSegInfo.Text.IsEmpty())
+		{
+			bWithSpaceL = UHorizonWidgetFunctionLibrary::IsAlphabetic(InCurrentSegInfo.Text[0]);
+		}
+	}
+
 
 	if (InCurrentSegInfo.Tags.Contains("NoSpace"))
 	{
@@ -55,11 +65,10 @@ bool UHorizonDialogueMsgSpaceDecorator::BuildSegment_Implementation(UHorizonDial
 				bWithSpaceR = true;
 			}
 		}
-
-
 	}
 
 
+	
 	if (bWithSpaceR)
 	{
 		InCurrentSegInfo.Text.Append(Space.ToString());
@@ -81,3 +90,4 @@ bool UHorizonDialogueMsgSpaceDecorator::BuildSegment_Implementation(UHorizonDial
 	return bWithSpaceR || bWithSpaceL;
 
 }
+

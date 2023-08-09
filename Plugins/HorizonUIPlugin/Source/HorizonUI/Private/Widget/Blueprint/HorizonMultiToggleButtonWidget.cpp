@@ -8,8 +8,19 @@
 
 UHorizonMultiToggleButtonWidget::UHorizonMultiToggleButtonWidget()
 {
-	bIsFocusable = true;
+
+#if UE_VERSION_OLDER_THAN(5,1,0)
 	Visibility = ESlateVisibility::Visible;
+#else
+	SetVisibility(ESlateVisibility::Visible);
+#endif
+
+#if UE_VERSION_OLDER_THAN(5,2,0)
+	bIsFocusable = true;
+#else
+	SetIsFocusable(true);
+#endif
+	
 }
 
 void UHorizonMultiToggleButtonWidget::NativeOnInitialized()

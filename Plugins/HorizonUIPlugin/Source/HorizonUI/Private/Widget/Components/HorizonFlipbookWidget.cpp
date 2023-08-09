@@ -155,8 +155,12 @@ void UHorizonFlipbookWidget::SetCurrentImage(float currentDuration)
 				SetBrushFromTexture(Cast<UTexture2D>(atlasData.AtlasTexture));
 				FBox2D UVCoordinates(atlasData.StartUV, atlasData.StartUV + atlasData.SizeUV);
 				UVCoordinates.bIsValid = true;
+#if UE_VERSION_OLDER_THAN(5,2,0)
 				Brush.SetUVRegion(UVCoordinates);
-				
+#else
+				FSlateBrush& slateBrush = const_cast<FSlateBrush&>(GetBrush());
+				slateBrush.SetUVRegion(UVCoordinates);
+#endif
 			}
 		}
 		
