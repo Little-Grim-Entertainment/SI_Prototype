@@ -5,14 +5,14 @@
 #include "ATPCCameraBaseObject.h"
 #include "ATPCOffsetValue.h"
 #include "ATPCTypes.h"
-#include "Engine/EngineTypes.h"
+#include "Engine/HitResult.h"
+#include "EngineDefines.h"
 #include "GameplayTagContainer.h"
 #include "VisualLogger/VisualLoggerDebugSnapshotInterface.h"
-#include "EngineDefines.h"
 
 #include "ATPCCameraLocationObject.generated.h"
 
-enum ERelativeTransformSpace;
+enum ERelativeTransformSpace : int;
 
 struct ADVANCEDTHIRDPERSONCAMERA_API FATPCRuntimeCameraOffsetRotationSettings
 {
@@ -24,13 +24,14 @@ public:
 struct ADVANCEDTHIRDPERSONCAMERA_API FATPCRuntimeCameraToActorRotationSettings
 {
 public:
-	FATPCInterploationSpeed RotationInterplocation = 0.f;
+	FATPCInterploationSpeed RotationInterpolation = 0.f;
 	float LastChangeCameraRotationTime = 0.f;
 	bool bPendingRotationOffset = false;
 };
 
 UCLASS(classGroup = "ATPC")
-class ADVANCEDTHIRDPERSONCAMERA_API UATPCCameraLocationObject : public UATPCCameraBaseObject, public IVisualLoggerDebugSnapshotInterface
+class ADVANCEDTHIRDPERSONCAMERA_API UATPCCameraLocationObject : public UATPCCameraBaseObject
+    , public IVisualLoggerDebugSnapshotInterface
 {
 	GENERATED_BODY()
 public:
@@ -137,9 +138,9 @@ public:
 
 protected:
 	virtual FVector GetAllOldSocketOffsets() const;
-	
+
 	void InternalSetCurrentCameraDistance(float NewDist);
-	
+
 	virtual void ProcessLocationLag(FVector& DesiredLoc, const FVector& ArmOrigin, float DeltaSeconds);
 	virtual void ProcessRotationLag(FRotator& DesiredRotation, float DeltaSeconds);
 
@@ -147,7 +148,7 @@ protected:
 
 	float GetCameraDistanceModifiers() const;
 	float GetTotalCameraDistance() const;
-	
+
 	virtual void UpdateTargetOffsetTarget();
 	virtual void UpdateSocketOffsetTarget();
 
@@ -178,14 +179,14 @@ protected:
 
 	FATPCVectorOffset SocketOffset;
 	FATPCVectorOffset OldSocketOffset;
-	
+
 	FATPCVectorOffset TargetOffset;
 
 	TOptional<FRotator> OverrideCameraRotation;
 
 	FCameraDistanceData CameraDistance;
 	float PitchCameraDistanceModifier;
-	
+
 	bool bEnableRoofCollisionCheckRotationOffset = false;
 	FATPCRuntimeCameraOffsetRotationSettings RuntimeOffsetRotationSettings;
 

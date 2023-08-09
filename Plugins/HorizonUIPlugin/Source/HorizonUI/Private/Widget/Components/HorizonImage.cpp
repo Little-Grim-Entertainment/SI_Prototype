@@ -32,5 +32,10 @@ void UHorizonImage::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 void UHorizonImage::SynchronizeProperties()
 {
 	Super::SynchronizeProperties();
+#if UE_VERSION_OLDER_THAN(5,2,0)
 	Brush.SetUVRegion(UVRegion);
+#else
+	FSlateBrush& slateBrush = const_cast<FSlateBrush&>(GetBrush());
+	slateBrush.SetUVRegion(UVRegion);
+#endif
 }

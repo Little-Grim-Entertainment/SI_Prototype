@@ -2,10 +2,10 @@
 
 #include "ATPCCameraLocationObject.h"
 
-#include "AdvancedThirdPersonCamera.h"
 #include "ATPCCameraComponent.h"
 #include "ATPCCameraModeDataAsset.h"
 #include "ATPCFunctionLibrary.h"
+#include "AdvancedThirdPersonCamera.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Components/CapsuleComponent.h"
 #include "Curves/CurveFloat.h"
@@ -146,7 +146,7 @@ void UATPCCameraLocationObject::OnEnterCameraMode(bool bWithInterpolation)
 		SetCameraDistance(locationSettings.DefaultCameraDistance, bWithInterpolation);
 	}
 
-	RuntimeCameraToActorRotationSettings.RotationInterplocation = cameraModeSettings.RotationSettings.ViewRotationToActorRotationSettings.RotationInterpolation;
+	RuntimeCameraToActorRotationSettings.RotationInterpolation = cameraModeSettings.RotationSettings.ViewRotationToActorRotationSettings.RotationInterpolation;
 
 	SocketOffset.InterploationSpeed = locationSettings.SocketOffsetInterpolation;
 	TargetOffset.InterploationSpeed = locationSettings.TargetOffsetInterpolation;
@@ -181,11 +181,11 @@ FTransform UATPCCameraLocationObject::GetSocketTransform(FName InSocketName, ERe
 		break;
 	}
 	case RTS_Component:
-	default: ;
-	{
-		socketTransform = relativeTransform;
-		break;
-	}
+	default:;
+		{
+			socketTransform = relativeTransform;
+			break;
+		}
 	}
 
 	return socketTransform;
@@ -270,15 +270,14 @@ void UATPCCameraLocationObject::UpdateDesiredArmLocation(bool bDoTrace, bool bDo
 	FVector armOriginWithLag = armOrigin;
 	if (bDoLocationLag)
 	{
-		ProcessLocationLag(armOriginWithLag, armOrigin, DeltaTime);	
+		ProcessLocationLag(armOriginWithLag, armOrigin, DeltaTime);
 	}
 	PreviousArmOrigin = armOriginWithLag;
 
 	UE_VLOG_LOCATION(this, LogATPC, Log, armOrigin, 15, FColor::Orange, TEXT("Arm origin"));
 	UE_VLOG_LOCATION(this, LogATPC, Log, armOriginWithLag, 15, FColor::Green, TEXT("Arm origin lag"));
 
-	auto calcDesiredLocation = [armOriginWithLag, desiredRot](float Distance, FVector SocketOffsets)
-	{
+	auto calcDesiredLocation = [armOriginWithLag, desiredRot](float Distance, FVector SocketOffsets) {
 		FVector desiredLoc = armOriginWithLag;
 		desiredLoc -= desiredRot.Vector() * Distance;
 
@@ -288,32 +287,32 @@ void UATPCCameraLocationObject::UpdateDesiredArmLocation(bool bDoTrace, bool bDo
 
 	const float oldCameraDistance = CameraDistance.CurrentDistance;
 	const FVector desiredLocOldDist = calcDesiredLocation(CameraDistance.CurrentDistance, GetAllOldSocketOffsets());
-	
+
 	PitchCameraDistanceModifier = locationSettings.PitchDistanceCurve != nullptr ? locationSettings.PitchDistanceCurve->GetFloatValue(FRotator::NormalizeAxis(desiredRot.Pitch)) : 0.f;
 
 	auto& cameraMode = GetCamera().GetCurrentCameraMode()->CameraModeSettings;
 	const float targetCameraDistance = GetTotalCameraDistance();
 	const float newCameraDistance = UATPCFunctionLibrary::InterpFloat(CameraDistance.CurrentDistance, targetCameraDistance, DeltaTime, cameraMode.LocationSettings.ZoomInterpolation, false);
-	
+
 	FVector desiredLoc = calcDesiredLocation(newCameraDistance, GetAllSocketOffsets());
-	
+
 	InternalSetCurrentCameraDistance(newCameraDistance);
-	
+
 	const bool bIsPrevCameraFixed = bIsCameraFixed;
-	
+
 	FVector resultLoc = FVector::ZeroVector;
 	if (bDoTrace)
 	{
 		FCollisionQueryParams collisionQueryParams;
 		collisionQueryParams.AddIgnoredActor(GetOwningActor());
-		
+
 		const FVector traceStart = armOrigin;
-		
+
 		FHitResult hitResultOldDist;
 		const FVector traceEndOldDist = desiredLocOldDist;
 		GetWorld()->SweepSingleByChannel(hitResultOldDist, traceStart, traceEndOldDist, FQuat::Identity, locationSettings.ProbeChannel, FCollisionShape::MakeSphere(locationSettings.ProbeSize), collisionQueryParams);
 		UE_VLOG_ARROW(this, LogATPC, Log, traceStart, traceEndOldDist, FColor::Orange, TEXT("Trace old dist"));
-		if(hitResultOldDist.bBlockingHit)
+		if (hitResultOldDist.bBlockingHit)
 		{
 			UE_VLOG_LOCATION(this, LogATPC, Log, hitResultOldDist.Location, locationSettings.ProbeSize, FColor::Orange, TEXT("Blocking hit trace old dist"));
 		}
@@ -322,20 +321,20 @@ void UATPCCameraLocationObject::UpdateDesiredArmLocation(bool bDoTrace, bool bDo
 		const FVector traceEnd = desiredLoc;
 		GetWorld()->SweepSingleByChannel(hitResult, traceStart, traceEnd, FQuat::Identity, locationSettings.ProbeChannel, FCollisionShape::MakeSphere(locationSettings.ProbeSize), collisionQueryParams);
 		UE_VLOG_ARROW(this, LogATPC, Log, traceStart, traceEnd, FColor::Green, TEXT("Trace dist"));
-		if(hitResult.bBlockingHit)
+		if (hitResult.bBlockingHit)
 		{
 			UE_VLOG_LOCATION(this, LogATPC, Log, hitResult.Location, locationSettings.ProbeSize, FColor::Green, TEXT("Blocking hit trace"));
 		}
-		
+
 		//If some modifiers are cause collision it will use modifiers from prev time(if it wasn't collision)
-		if(hitResultOldDist.bBlockingHit != hitResult.bBlockingHit)
+		if (hitResultOldDist.bBlockingHit != hitResult.bBlockingHit)
 		{
 			hitResult = hitResultOldDist;
 			InternalSetCurrentCameraDistance(oldCameraDistance);
 			desiredLoc = desiredLocOldDist;
 			SocketOffset = OldSocketOffset;
 		}
-		
+
 		AddHitResultToDebug(hitResult);
 
 		const bool bIsPrevCameraUsedMovementCollisionTest = bIsCameraUsedMovementCollisionTest;
@@ -368,7 +367,7 @@ void UATPCCameraLocationObject::UpdateDesiredArmLocation(bool bDoTrace, bool bDo
 
 		UnfixedCameraPosition = desiredLoc;
 
-		resultLoc = BlendLocations(desiredLoc, /*armOrigin*/armOriginWithLag, hitResult.bBlockingHit, hitResult.Location, DeltaTime);
+		resultLoc = BlendLocations(desiredLoc, /*armOrigin*/ armOriginWithLag, hitResult.bBlockingHit, hitResult.Location, DeltaTime);
 
 		bIsCameraFixed = hitResult.bBlockingHit && !resultLoc.Equals(desiredLoc);
 	}
@@ -477,7 +476,6 @@ void UATPCCameraLocationObject::AttachCameraToComponent(USceneComponent* InParen
 	}
 }
 
-
 FVector UATPCCameraLocationObject::GetAllOldSocketOffsets() const
 {
 	return OldSocketOffset.Current + FollowTerrainSocketOffset;
@@ -502,7 +500,7 @@ void UATPCCameraLocationObject::ProcessLocationLag(FVector& DesiredLoc, const FV
 
 		return;
 	}
-	
+
 	FVector lagDesiredLocation = DesiredLoc;
 	if (cameraLagSettings.bUseCameraLagSubstepping && DeltaSeconds > cameraLagSettings.CameraLagMaxTimeStep && cameraLagSettings.CameraLagSpeed > 0.f)
 	{
@@ -604,9 +602,9 @@ FVector UATPCCameraLocationObject::BlendLocations(const FVector& DesiredArmLocat
 	if (bHitSomething)
 	{
 		resultLocation = TraceHitLocation;
-		
+
 		InternalSetCurrentCameraDistance(FVector::Dist(ArmOrigin, TraceHitLocation));
-		
+
 		cameraMode.LocationSettings.ZoomInterpolation.ResetCurrentSpeed();
 	}
 	else
@@ -696,7 +694,7 @@ void UATPCCameraLocationObject::ClampCameraRotation(FRotator& Rotation)
 void UATPCCameraLocationObject::GrabDebugSnapshot(FVisualLogEntry* Snapshot) const
 {
 	const FName category = "LocationObject";
-	
+
 	Snapshot->AddText(FString::Printf(TEXT("Camera distance: %f"), CameraDistance.CurrentDistance), category, ELogVerbosity::Log);
 	Snapshot->AddText(FString::Printf(TEXT("Camera location: %s"), *GetCameraLocation().ToString()), category, ELogVerbosity::Log);
 	Snapshot->AddText(FString::Printf(TEXT("Camera fixed: %s"), *LexToString(bIsCameraFixed)), category, ELogVerbosity::Log);
@@ -788,7 +786,7 @@ void UATPCCameraLocationObject::UpdateViewRotationToActorRotationTime(float Delt
 		}
 		else
 		{
-			RuntimeCameraToActorRotationSettings.RotationInterplocation.ResetCurrentSpeed();
+			RuntimeCameraToActorRotationSettings.RotationInterpolation.ResetCurrentSpeed();
 			RuntimeCameraToActorRotationSettings.bPendingRotationOffset = false;
 		}
 
@@ -807,7 +805,7 @@ void UATPCCameraLocationObject::UpdateViewRotationToActorRotation(bool bWithInte
 
 	const float targetYawRotation = GetOwningActor()->GetActorRotation().Yaw;
 
-	const float newViewRotYaw = bWithInterp ? UATPCFunctionLibrary::InterpRotator(FRotator(0.f, viewRot.Yaw, 0.f), FRotator(0.f, targetYawRotation, 0.f), DeltaSeconds, RuntimeCameraToActorRotationSettings.RotationInterplocation).Yaw : targetYawRotation;
+	const float newViewRotYaw = bWithInterp ? UATPCFunctionLibrary::InterpRotator(FRotator(0.f, viewRot.Yaw, 0.f), FRotator(0.f, targetYawRotation, 0.f), DeltaSeconds, RuntimeCameraToActorRotationSettings.RotationInterpolation).Yaw : targetYawRotation;
 
 	viewRot.Yaw = newViewRotYaw;
 	SetViewRotation(viewRot);
@@ -853,18 +851,17 @@ void UATPCCameraLocationObject::ValidateCameraView(bool bWithInterpolation, floa
 			auto& rotationSettings = cameraMode.RotationSettings;
 
 			auto& interpSpeed = rotationSettings.ViewInterpolation;
-			
+
 			bool bAllValuesFullyInterpolated = ValidateRotationValue(rotationSettings.ViewPitchMin, cameraManager->ViewPitchMin, false, DeltaTime, true, interpSpeed);
 			bAllValuesFullyInterpolated &= ValidateRotationValue(rotationSettings.ViewPitchMax, cameraManager->ViewPitchMax, true, DeltaTime, true, interpSpeed);
-			
+
 			bAllValuesFullyInterpolated &= ValidateRotationValue(rotationSettings.ViewYawMin, cameraManager->ViewYawMin, false, DeltaTime, true, interpSpeed);
 			bAllValuesFullyInterpolated &= ValidateRotationValue(rotationSettings.ViewYawMax, cameraManager->ViewYawMax, true, DeltaTime, true, interpSpeed);
 
-			if(bAllValuesFullyInterpolated)
+			if (bAllValuesFullyInterpolated)
 			{
 				interpSpeed.ResetCurrentSpeed();
 			}
-			
 		}
 	}
 }
@@ -876,7 +873,7 @@ bool UATPCCameraLocationObject::ValidateRotationValue(float CompareValue, float&
 		Value = UATPCFunctionLibrary::InterpFloat(Value, CompareValue, DeltaTime, InterpSpeed, false);
 		return FMath::IsNearlyEqual(Value, CompareValue, InterpSpeed.ResetInterpSpeedTolerance);
 	}
-	
+
 	Value = CompareValue;
 	return true;
 }

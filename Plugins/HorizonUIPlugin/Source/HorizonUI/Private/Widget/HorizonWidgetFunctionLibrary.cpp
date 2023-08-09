@@ -5,9 +5,12 @@
 
 #include "Widget/HorizonWidgetFunctionLibrary.h"
 #include "HorizonUIPrivate.h"
-#include "Slate/SObjectWidget.h"
 
-UCanvasPanelSlot* UHorizonWidgetFunctionLibrary::GetParentCanvasPanelSlot(UWidget* pWidget){
+
+
+
+UCanvasPanelSlot* UHorizonWidgetFunctionLibrary::GetParentCanvasPanelSlot(UWidget* pWidget)
+{
 	UCanvasPanelSlot* pPanelSlot = nullptr;
 	//try to find out UCanvasPanelSlot, search from current widget
 	UWidget* pTargetWidget = pWidget;
@@ -34,6 +37,7 @@ UCanvasPanelSlot* UHorizonWidgetFunctionLibrary::GetParentCanvasPanelSlot(UWidge
 	return pPanelSlot;
 
 }
+
 
 #if WITH_EDITOR
 
@@ -369,3 +373,94 @@ int32 UHorizonWidgetFunctionLibrary::GetUserIndex(UWidget* InWidget)
 	}
 	return userIndex;
 }
+
+
+bool UHorizonWidgetFunctionLibrary::IsAlphabetic(int32 InCodePoint)
+{
+	bool bResult = false;
+
+
+	static bool bInit = false;
+	static TArray<FInt32Range, TInlineAllocator<9>> blockRanges;
+	if (!bInit)
+	{
+		bInit = true;
+		// TODO: add more Alphabetic UnicodeBlockRange here
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::BasicLatin).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::Latin1Supplement).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::LatinExtendedA).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::LatinExtendedB).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::Cyrillic).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CyrillicSupplementary).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CyrillicExtendedA).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CyrillicExtendedB).Range);
+		blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CyrillicExtendedC).Range);
+	}
+
+
+
+
+	for(auto& it : blockRanges)
+	{
+		if(it.Contains(InCodePoint))
+		{
+			bResult = true;
+			break;
+		}
+	}
+
+	return bResult;
+}
+
+bool UHorizonWidgetFunctionLibrary::IsIdeographic(int32 InCodePoint)
+{
+	return !IsAlphabetic(InCodePoint);
+}
+
+
+
+//bool UHorizonWidgetFunctionLibrary::IsIdeographic(int32 InCodePoint)
+//{
+	//bool bResult = false;
+	//TArray<FInt32Range, TInlineAllocator<24>> blockRanges;
+	//// CJK
+	//{
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKCompatibility).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKCompatibilityForms).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKCompatibilityIdeographs).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKCompatibilityIdeographsSupplement).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKRadicalsSupplement).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKStrokes).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKSymbolsAndPunctuation).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKUnifiedIdeographs).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKUnifiedIdeographsExtensionA).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKUnifiedIdeographsExtensionB).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKUnifiedIdeographsExtensionC).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKUnifiedIdeographsExtensionD).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::CJKUnifiedIdeographsExtensionE).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::EnclosedCJKLettersAndMonths).Range);
+
+	//}
+	//// Japanese
+	//{
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::Hiragana).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::Katakana).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::KatakanaPhoneticExtensions).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::Kanbun).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::HalfwidthAndFullwidthForms).Range);
+	//}
+
+
+	//// Korean
+	//{
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::HangulJamo).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::HangulJamoExtendedA).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::HangulJamoExtendedB).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::HangulCompatibilityJamo).Range);
+	//	blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::HangulSyllables).Range);
+	//}
+	//
+	//blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::EmoticonsEmoji).Range);
+	//blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::MiscellaneousSymbolsAndPictographs).Range);
+	//blockRanges.Emplace(FUnicodeBlockRange::GetUnicodeBlockRange(EUnicodeBlockRange::OrnamentalDingbats).Range);
+//}

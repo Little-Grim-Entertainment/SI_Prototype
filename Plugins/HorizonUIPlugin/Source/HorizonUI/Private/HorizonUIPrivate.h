@@ -21,7 +21,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Engine/Brush.h"
 #include "Engine/Font.h"
-#include "Engine/Font.h"
+#include "Engine/GameViewportClient.h"
 #include "Fonts/FontMeasure.h"
 #include "Framework/Application/SlateApplication.h"
 #include "GameFramework/WorldSettings.h"
@@ -32,6 +32,7 @@
 #include "Modules/ModuleManager.h"
 #include "PaperFlipbook.h"
 #include "Sound/SoundBase.h"
+#include "TextureResource.h"
 
 // UObject
 #include "UObject/ConstructorHelpers.h"
@@ -47,18 +48,25 @@
 
 //SlateCore
 #include "Fonts/SlateFontInfo.h"
+#include "Fonts/UnicodeBlockRange.h"
+#include "Styling/SlateBrush.h"
 
 //UMG
-#include "UMGStyle.h"
 #include "Blueprint/UserWidget.h"
-#include "Blueprint/WidgetTree.h"
+#include "Blueprint/WidgetBlueprintGeneratedClass.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
-#include "Components/TextBlock.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/CheckBox.h"
 #include "Components/Image.h"
-
+#include "Components/ListView.h"
+#include "Components/ScaleBoxSlot.h"
+#include "Components/SizeBox.h"
+#include "Components/TextBlock.h"
+#include "Components/VerticalBoxSlot.h"
+#include "Slate/SObjectWidget.h"
+#include "UMGStyle.h"
 
 // XmlParser
 #include "XmlParser.h"

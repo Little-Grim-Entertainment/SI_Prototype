@@ -98,4 +98,12 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|Library")
 	static int32 GetUserIndex(UWidget* InWidget);
+
+
+	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|Library")
+	static bool IsAlphabetic(int32 InCodePoint);
+
+	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|Library")
+	static bool IsIdeographic(int32 InCodePoint);
+
 };

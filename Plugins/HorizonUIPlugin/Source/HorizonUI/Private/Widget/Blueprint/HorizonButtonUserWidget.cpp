@@ -9,8 +9,17 @@
 UHorizonButtonUserWidget::UHorizonButtonUserWidget()
 {
 	Text_Main = FText::FromString(TEXT("Text Block"));
-	bIsFocusable = true;
+#if UE_VERSION_OLDER_THAN(5,1,0)
 	Visibility = ESlateVisibility::Visible;
+#else
+	SetVisibility(ESlateVisibility::Visible);
+#endif
+
+#if UE_VERSION_OLDER_THAN(5,2,0)
+	bIsFocusable = true;
+#else
+	SetIsFocusable(true);
+#endif
 }
 
 void UHorizonButtonUserWidget::NativeOnInitialized()
@@ -108,7 +117,11 @@ void UHorizonButtonUserWidget::NativeOnButtonHovered()
 	if (Button_Main)
 	{
 		auto pOwningPlayer = GetOwningPlayer();
+#if UE_VERSION_OLDER_THAN(5,2,0)
 		if (bFocusOnHovered && Button_Main->IsFocusable)
+#else
+		if (bFocusOnHovered && Button_Main->GetIsFocusable())
+#endif
 		{
 			//bButtonFocused = true;
 
@@ -135,7 +148,12 @@ void UHorizonButtonUserWidget::NativeOnButtonUnhovered()
 	if (Button_Main)
 	{
 		auto pOwningPlayer = GetOwningPlayer();
+
+#if UE_VERSION_OLDER_THAN(5,2,0)
 		if (bFocusOnHovered && Button_Main->IsFocusable)
+#else
+		if (bFocusOnHovered && Button_Main->GetIsFocusable())
+#endif
 		{
 			//bButtonFocused = false;
 			if (Button_Main->HasUserFocus(pOwningPlayer))
