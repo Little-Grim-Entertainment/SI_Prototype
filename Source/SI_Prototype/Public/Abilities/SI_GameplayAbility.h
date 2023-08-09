@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Abilities/GameplayAbility.h"
+#include "LG_DebugMacros.h"
 #include "SI_GameplayAbility.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActiveSpecHandleDelegate, const FGameplayAbilitySpecHandle&, SpecHandle);
@@ -12,6 +13,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActiveSpecHandleDelegate, const FGa
  * 
  */
 using namespace SI_NativeGameplayTagLibrary;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_Ability, Log, All);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_GameplayAbility : public UGameplayAbility

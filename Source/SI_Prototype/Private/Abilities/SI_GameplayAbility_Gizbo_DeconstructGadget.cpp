@@ -8,4 +8,5 @@ void USI_GameplayAbility_Gizbo_DeconstructGadget::ActivateAbility(const FGamepla
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	LG_LOG_LOG(LogSI_Ability," Ability Activated");
 }

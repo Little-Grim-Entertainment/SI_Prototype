@@ -8,8 +8,10 @@ void USI_GameplayAbility_Follow::ActivateAbility(const FGameplayAbilitySpecHandl
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	LG_LOG_LOG(LogSI_Ability,"Ability Activated");
+	
+	LG_PRINT(5.f, Red, "Follow Ability Activated");
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Follow Ability Activated"));
 }
 
 void USI_GameplayAbility_Follow::EndAbility(const FGameplayAbilitySpecHandle Handle,

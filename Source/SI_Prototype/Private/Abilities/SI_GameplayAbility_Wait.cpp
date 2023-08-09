@@ -8,8 +8,9 @@ void USI_GameplayAbility_Wait::ActivateAbility(const FGameplayAbilitySpecHandle 
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	LG_LOG_LOG(LogSI_Ability," Ability Activated");
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Wait Ability Activated"));
+	LG_PRINT(5.f, Red, "Wait Ability Activated");
 }
 
 void USI_GameplayAbility_Wait::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -18,5 +19,5 @@ void USI_GameplayAbility_Wait::EndAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Wait Ability Activated"));
+	LG_PRINT(5.f, Red, "Wait Ability Ended");
 }

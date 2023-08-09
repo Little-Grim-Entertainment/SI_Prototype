@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SI_AbilityTask_HighlightInteractables.h"
+#include "Abilities/Tasks/SI_AbilityTask_HighlightInteractables.h"
 
 #include "Actors/SI_InteractableActor.h"
 #include "EngineUtils.h" // ActorIterator
