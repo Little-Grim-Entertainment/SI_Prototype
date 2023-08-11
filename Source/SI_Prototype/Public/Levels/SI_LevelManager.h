@@ -38,8 +38,10 @@ public:
 
 	void LoadLevelOnCinematicComplete(const FGameplayTag& InLevelToLoadTag, const USI_CinematicDataAsset* InCinematicToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
 	void LoadLevelOnVideoComplete(const FGameplayTag& InLevelToLoadTag, const USI_VideoDataAsset* InVideoToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
-	
+
+	UFUNCTION()
 	void ExecuteLoadLevelOnVideoComplete();
+	UFUNCTION()
 	void ExecuteLoadLevelOnCinematicComplete();
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")

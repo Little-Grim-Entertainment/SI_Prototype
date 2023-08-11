@@ -30,7 +30,9 @@ public:
 	
 protected:
 
-	UPROPERTY(meta=(BindWidget))
+	virtual void NativeConstruct() override;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UImage* IMG_Video;
 	
 	void PlayVideo_Implementation();
@@ -40,6 +42,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	UMediaTexture* CurrentMediaTexture;
+	UPROPERTY(BlueprintReadOnly)
+	UMaterial* CurrentMediaMaterial;
 	UPROPERTY(BlueprintReadOnly)
 	UMediaPlayer* CurrentMediaPlayer;
 	UPROPERTY(BlueprintReadOnly)
