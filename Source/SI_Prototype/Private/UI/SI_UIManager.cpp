@@ -73,6 +73,11 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	{
 		SITagManager->AddNewGameplayTag(SITag_UI_HUD);
 	}
+
+	if(InAddedTag == SITag_Media_Video)
+	{
+		SITagManager->AddNewGameplayTag(SITag_UI_Screen_Video);
+	}
 	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_UI)){return;}
 	
@@ -102,6 +107,11 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	if(InRemovedTag == SITag_Player_State_Exploration)
 	{
 		SITagManager->RemoveTag(SITag_UI_HUD);
+	}
+
+	if(InRemovedTag == SITag_Media_Video)
+	{
+		SITagManager->RemoveTag(SITag_UI_Screen_Video);
 	}
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_UI)){return;}

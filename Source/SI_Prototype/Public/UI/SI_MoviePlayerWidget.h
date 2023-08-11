@@ -6,7 +6,7 @@
 #include "UI/SI_UserWidget.h"
 #include "SI_MoviePlayerWidget.generated.h"
 
-	class UMediaSource;
+class UMediaSource;
 class UMediaPlayer;
 class UMediaTexture;
 class UImage;
