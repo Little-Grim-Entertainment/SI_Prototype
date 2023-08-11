@@ -428,7 +428,6 @@ void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 				if (IsValid(LoadingScreen) && IsValid(GameInstance))
 				{
 					GameInstance->GetGameViewportClient()->AddViewportWidgetContent(LoadingScreen->TakeWidget());
-					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Show Loading Screen"));	
 				}
 			}
 		}
