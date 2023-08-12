@@ -73,12 +73,12 @@ void USI_LevelManager::InitializeMapStates()
 	bMapStatesInitialized = true;
 }
 
-void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade, bool bShouldSkipMedia)
 {
-	ExecuteLoadLevelByTag(InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade);
+	ExecuteLoadLevelByTag(InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade, bShouldSkipMedia);
 }
 
-void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTag, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTag, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade, bool bShouldSkipMedia)
 {
 	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
 
@@ -92,7 +92,7 @@ void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTa
 				SITagManager->RemoveTag(SITag_UI_Menu_Map);
 			}
 
-			if(LoadedMapState->HasOutroMedia())
+			if(!bShouldSkipMedia && LoadedMapState->HasOutroMedia())
 			{
 				USI_MediaManager* MediaManager =  GetWorld()->GetSubsystem<USI_MediaManager>();
 				if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
@@ -131,7 +131,7 @@ void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTa
 	{
 		if (bAllowDelay)
 		{
-			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevelByTag, LevelToLoad, InPlayerStartTag, false, bShouldFade);
+			LoadDelayDelegate.BindUObject(this, &ThisClass::LoadLevelByTag, LevelToLoad, InPlayerStartTag, false, bShouldFade, bShouldSkipMedia);
 			GetWorld()->GetTimerManager().SetTimer(LoadDelayHandle, LoadDelayDelegate, GameMode->LevelLoadDelay, false);
 			OnBeginLevelLoadDelegate.Broadcast(LevelStateToLoad->GetMapData(), bShouldFade);
 		}
@@ -152,7 +152,7 @@ void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTa
 	}
 }
 
-void USI_LevelManager::LoadLevelOnMediaComplete(const FGameplayTag& InLevelToLoadTag, USI_MediaDataAsset* InMediaToPlay, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+void USI_LevelManager::LoadLevelOnMediaComplete(const FGameplayTag& InLevelToLoadTag, USI_MediaDataAsset* InMediaToPlay, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade, bool bShouldSkipMedia)
 {
 	if (const USI_CinematicDataAsset* CinematicDataAsset = Cast<USI_CinematicDataAsset>(InMediaToPlay))
 	{
@@ -164,16 +164,16 @@ void USI_LevelManager::LoadLevelOnMediaComplete(const FGameplayTag& InLevelToLoa
 	}
 }
 
-void USI_LevelManager::LoadLevelOnVideoComplete(const FGameplayTag& InLevelToLoadTag, const USI_VideoDataAsset* InVideoToPlay, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+void USI_LevelManager::LoadLevelOnVideoComplete(const FGameplayTag& InLevelToLoadTag, const USI_VideoDataAsset* InVideoToPlay, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade, bool bShouldSkipMedia)
 {
-	LoadDelayDelegate.BindUObject(this, &USI_LevelManager::LoadLevelByTag, InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade);
+	LoadDelayDelegate.BindUObject(this, &USI_LevelManager::LoadLevelByTag, InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade, bShouldSkipMedia);
 	InVideoToPlay->MediaPlayer->OnEndReached.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
 	InVideoToPlay->MediaPlayer->OnMediaClosed.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnVideoComplete);
 }
 
-void USI_LevelManager::LoadLevelOnCinematicComplete(const FGameplayTag& InLevelToLoadTag, const USI_CinematicDataAsset* InCinematicToPlay, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+void USI_LevelManager::LoadLevelOnCinematicComplete(const FGameplayTag& InLevelToLoadTag, const USI_CinematicDataAsset* InCinematicToPlay, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade, bool bShouldSkipMedia)
 {
-	LoadDelayDelegate.BindUObject(this, &USI_LevelManager::LoadLevelByTag, InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade);
+	LoadDelayDelegate.BindUObject(this, &USI_LevelManager::LoadLevelByTag, InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade, bShouldSkipMedia);
 	InCinematicToPlay->CinematicPlayer->OnFinished.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);
 	InCinematicToPlay->CinematicPlayer->OnStop.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);
 }
