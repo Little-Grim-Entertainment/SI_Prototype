@@ -23,6 +23,7 @@
 #include "Data/Cases/SI_CaseManager.h"
 
 using namespace SI_MapGameplayTagLibrary;
+using namespace SI_NativeGameplayTagLibrary;
 
 DEFINE_LOG_CATEGORY(LogSI_LevelManager);
 
@@ -74,6 +75,11 @@ void USI_LevelManager::InitializeMapStates()
 
 void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
+	ExecuteLoadLevelByTag(InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade);
+}
+
+void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTag, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
+{
 	if (LoadDelayDelegate.IsBound()){LoadDelayDelegate.Unbind();}
 
 	if(LoadedLevel.IsValid())
@@ -92,7 +98,7 @@ void USI_LevelManager::LoadLevelByTag(FGameplayTag InLevelToLoadTag,  FString In
 				if (IsValid(MediaManager) && !MediaManager->HasMediaPlayed(LoadedMapState->GetLoadedOutroMedia()))
 				{
 					MediaManager->PlayMedia(LoadedMapState->GetLoadedOutroMedia(), LoadedMapState->GetOutroSettings());
-					LoadLevelOnMediaComplete(LevelToLoad, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
+					LoadLevelOnMediaComplete(InLevelToLoadTag, LoadedMapState->GetLoadedOutroMedia(), InPlayerStartTag, bAllowDelay, bShouldFade);
 					return;
 				}
 			}
@@ -167,7 +173,6 @@ void USI_LevelManager::LoadLevelOnVideoComplete(const FGameplayTag& InLevelToLoa
 
 void USI_LevelManager::LoadLevelOnCinematicComplete(const FGameplayTag& InLevelToLoadTag, const USI_CinematicDataAsset* InCinematicToPlay, const FString& InPlayerStartTag, bool bAllowDelay, bool bShouldFade)
 {
-	//GameInstance->SetPreviousPlayerMode(EPlayerMode::PM_LevelLoadingMode);
 	LoadDelayDelegate.BindUObject(this, &USI_LevelManager::LoadLevelByTag, InLevelToLoadTag, InPlayerStartTag, bAllowDelay, bShouldFade);
 	InCinematicToPlay->CinematicPlayer->OnFinished.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);
 	InCinematicToPlay->CinematicPlayer->OnStop.AddDynamic(this, &ThisClass::ExecuteLoadLevelOnCinematicComplete);

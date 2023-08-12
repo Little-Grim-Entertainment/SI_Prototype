@@ -82,6 +82,8 @@ protected:
 
 private:
 
+	void ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTag, const FString& InPlayerStartTag = FString(TEXT("Nick_DefaultSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+
 	FOnBeginLevelLoad OnBeginLevelLoadDelegate;
 	FOnLevelLoaded OnLevelLoadedDelegate;
 	FOnLevelUnloaded OnLevelUnloadedDelegate;

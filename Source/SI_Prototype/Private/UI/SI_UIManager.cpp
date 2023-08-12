@@ -439,13 +439,11 @@ void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			if (bShouldFade)
 			{
 				LoadingScreen->FadeOutWidget();
-				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Fade out Loading Screen"));	
 				LoadingScreen = nullptr;
 			}
 			else
 			{
 				GameInstance->GetGameViewportClient()->RemoveViewportWidgetContent(LoadingScreen->TakeWidget());
-				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Remove Loading Screen"));	
 				LoadingScreen = nullptr;
 			}
 		}
