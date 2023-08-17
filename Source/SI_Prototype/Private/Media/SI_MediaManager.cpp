@@ -133,7 +133,7 @@ void USI_MediaManager::PlayVideo(USI_VideoDataAsset* InVideoToPlay, FSI_VideoSet
 	
 	LoadedVideo = InVideoToPlay;
 
-	if (!IsValid(GameInstance) || !IsValid(LoadedVideo)){return;}
+	if (!IsValid(GameInstance)/* || !IsValid(LoadedVideo)*/){return;}
 
 	LoadedVideo->bCanRepeat = InVideoSettings.bShouldRepeat;
 	LoadedVideo->MediaPlayer->SetNativeVolume(InVideoSettings.Volume);
@@ -165,7 +165,7 @@ void USI_MediaManager::PlayVideo(USI_VideoDataAsset* InVideoToPlay, FSI_VideoSet
 	LoadedVideo->MediaPlayer->OnMediaClosed.AddDynamic(this, &ThisClass::USI_MediaManager::OnVideoSkipped);
 	
 	// Note: Playing the actual video file happens in the widget blueprint
-	LoadedVideo->MediaPlayer->Play();
+	//LoadedVideo->MediaPlayer->Play();
 	
 	SITagManager->ReplaceTagWithSameParent(SITag_Media_Video, SITag_Media);
 	OnVideoBeginPlay.Broadcast(LoadedVideo);

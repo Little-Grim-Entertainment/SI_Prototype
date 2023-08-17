@@ -11,6 +11,8 @@
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Levels/SI_LevelManager.h"
+#include "Levels/SI_MapGameplayTagLibrary.h"
+#include "SI_NativeGameplayTagLibrary.h"
 
 
 ASI_LevelTransition::ASI_LevelTransition()

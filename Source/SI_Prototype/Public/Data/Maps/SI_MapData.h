@@ -22,7 +22,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails")
 	FString MapName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails", meta=(Categories = "Map"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails", meta=(Categories = "Map.Title"))
 	FGameplayTag MapTag;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MapDetails", meta=(Categories = "Map.Type"))
 	FGameplayTag MapType;
