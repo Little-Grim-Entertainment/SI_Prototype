@@ -8,6 +8,7 @@
 #include "Abilities/SI_GameplayAbility.h"
 #include "SI_Gizbo.generated.h"
 
+class ASI_GizboController;
 class UPhysicsHandleComponent;
 class USI_AbilitySystemComponent;
 
@@ -22,7 +23,7 @@ class SI_PROTOTYPE_API ASI_Gizbo : public ASI_NPC_Interactable , public IAbility
 public:
 	ASI_Gizbo();
 	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
-
+	
 protected:
 	virtual void BeginPlay() override;
 	void Tick(float DeltaTime);
@@ -30,12 +31,13 @@ protected:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	UPROPERTY(BlueprintReadOnly)
-	bool bIsHoldingItem;
+	bool bIsHoldingItem;	
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Abilities)
 	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
 	
 private:
+	
 	// Sets held item's position when picked up
 	void HeldItemPosition();
 	//Attaches item to PhysicsHandle

@@ -6,6 +6,7 @@
 #include "LG_DebugMacros.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
+#include "Characters/SI_GizboManager.h"
 
 DEFINE_LOG_CATEGORY(LogSI_GameInstanceSubsystem);
 
@@ -35,6 +36,8 @@ void USI_GameInstanceSubsystem::OnGameInstanceInit()
 {
 	if(Cast<USI_GameplayTagManager>(this) || !IsValid(GameInstance)) {return;}
 
+	GizboManager = GameInstance->GetSubsystem<USI_GizboManager>();
+	
 	SITagManager = GameInstance->GetSubsystem<USI_GameplayTagManager>();
 	if (!IsValid(SITagManager)) {return;}
 

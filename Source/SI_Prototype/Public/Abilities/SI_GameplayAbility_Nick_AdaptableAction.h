@@ -6,9 +6,12 @@
 #include "SI_GameplayAbility.h"
 #include "SI_GameplayAbility_Nick_AdaptableAction.generated.h"
 
-class USI_AbilityTask_HighlightInteractables;
-class USI_AbilityTask_UpdateMoveToIndicator;
 
+class USI_AbilityTask_WaitCancelConfirmTagAdded;
+class ASI_Nick;
+class ASI_PlayerController;
+class ASI_PlayerCameraManager;
+class ASI_MoveToIndicator;
 /**
  * 
  */
@@ -21,10 +24,40 @@ public:
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	TSubclassOf<ASI_MoveToIndicator> GetMoveToIndicatorClass() const { return MoveToIndicatorClass;}
 
-private:
+protected:
+	
+	void StartAdaptableAction(const AActor* InActor);
+	void StartUpdateIndicatorPositionTimer();
+	void CancelUpdateIndicatorPositionTimer();
+	void UpdateMoveToIndicatorPosition();
+	ASI_MoveToIndicator* SpawnMoveToIndicator(const FVector InHitLocation);
+	void DestroyMoveToIndicator();
+	void HighlightInteractables(const AActor* InActor);
+	void CancelInteractableHighlight();
+	UFUNCTION()
+	void ConfirmTagReceived();
+	UFUNCTION()
+	void CancelTagReceived();
+	
 	UPROPERTY()
-	USI_AbilityTask_UpdateMoveToIndicator* UpdateMoveToIndicatorTask;
+	USI_AbilityTask_WaitCancelConfirmTagAdded* WaitCancelConfirmTagAddedTask;
+	
 	UPROPERTY()
-	USI_AbilityTask_HighlightInteractables* HighlightInteractablesTask;
+	ASI_Nick* Nick;
+	UPROPERTY()
+	ASI_PlayerController* PC;
+	UPROPERTY()
+	ASI_MoveToIndicator* MoveToIndicator;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
+	float AdaptableActionMaximumRadius = 2000.0f;
+	UPROPERTY()
+	ASI_PlayerCameraManager* SICameraManger;
+	float UpdateIndicatorDelay = 0.001f;
+	FTimerHandle IndicatorPositionTimerHandle;
+	bool bIsActive;
+	bool bHitActorIsMovable;
 };

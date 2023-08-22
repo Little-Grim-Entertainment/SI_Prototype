@@ -109,7 +109,7 @@ void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTa
 	bLoadShouldFade = bShouldFade;
 	bLevelHasLoaded = false;
 
-	USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
+	GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
 	if(IsValid(GizboManager))
 	{
 		FString GizboStartTag = InPlayerStartTag;

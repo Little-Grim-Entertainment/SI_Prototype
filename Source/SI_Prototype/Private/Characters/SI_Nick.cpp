@@ -79,12 +79,14 @@ void ASI_Nick::HideMeshes(bool Value)
 
 USI_AbilitySystemComponent* ASI_Nick::GetSIAbilitySystemComponent() const
 {
+	if (!IsValid(AbilitySystemComponent)) {LG_LOG(LogTemp, Error, "AbilitySystemComponent is invalid") return nullptr;}
+	
 	return AbilitySystemComponent;
 }
 
 void ASI_Nick::GiveAbilities()
 {
-	if (!IsValid(AbilitySystemComponent)) {return;}
+	if (!IsValid(AbilitySystemComponent)) {LG_LOG(LogTemp, Error, "AbilitySystemComponent is invalid") return;}
 
 	for (TSubclassOf<USI_GameplayAbility>& Ability : DefaultAbilities)
 	{
@@ -126,7 +128,7 @@ void ASI_Nick::BeginPlay()
 
 void ASI_Nick::OnLevelLoaded(USI_MapData* LoadedLevel, bool bShouldFade)
 {
-	if (!IsValid(NickCharacterData)) {return;}
+	if (!IsValid(NickCharacterData)) {LG_LOG(LogTemp, Error, "NickCharacterData is invalid") return;}
 
 	FString MapName;
 	

@@ -13,8 +13,12 @@ UCLASS()
 class SI_PROTOTYPE_API USI_AbilityTask_HighlightInteractables : public USI_AbilityTask
 {
 	GENERATED_BODY()
-public: 
-	USI_AbilityTask_HighlightInteractables* ObservationTask(UGameplayAbility* OwningAbility);
+
+	USI_AbilityTask_HighlightInteractables(const FObjectInitializer& ObjectInitializer);
+	
+public:
+	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
+	static USI_AbilityTask_HighlightInteractables* HighlightInteractablesTask(UGameplayAbility* OwningAbility);
 
 protected:
 	virtual void Activate() override;

@@ -27,7 +27,8 @@ public class SI_Prototype : ModuleRules
 			"MovieScene", 
 			"NavigationSystem", 
 			"Slate", 
-			"SlateCore", 
+			"SlateCore",
+			"StateTreeModule",
 			"UMG", 
 			"LGDebug", 
 		});

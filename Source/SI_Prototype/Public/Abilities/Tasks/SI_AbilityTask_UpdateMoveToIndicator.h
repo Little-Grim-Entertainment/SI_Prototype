@@ -18,7 +18,10 @@ class SI_PROTOTYPE_API USI_AbilityTask_UpdateMoveToIndicator : public USI_Abilit
 {
 	GENERATED_BODY()
 
-public:
+	USI_AbilityTask_UpdateMoveToIndicator(const FObjectInitializer& ObjectInitializer);
+	public:	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
+	static USI_AbilityTask_UpdateMoveToIndicator* UpdateMoveToIndicatorTask(UGameplayAbility* OwningAbility);
+
 	virtual void Activate() override;
 	virtual void TickTask(float DeltaTime) override;
 	
@@ -27,9 +30,6 @@ protected:
 	ASI_MoveToIndicator* SpawnMoveToIndicator(FVector InHitLocation);
 	TSubclassOf<ASI_MoveToIndicator> GetMoveToIndicatorClass() const { return MoveToIndicatorClass;}
 	void DestroyMoveToIndicator();
-	void StartAdaptableAction(const AActor* InActor);
-	void StartUpdateIndicatorPositionTimer();
-	void CancelUpdateIndicatorPositionTimer();
 	void UpdateMoveToIndicatorPosition();
 	
 	UPROPERTY()
@@ -44,7 +44,8 @@ protected:
 	ASI_Nick* Nick;
 	UPROPERTY()
 	ASI_PlayerController* PC;
-	
+
+	UGameplayAbility* OwningAbility;
 	bool bIsActive;
 	bool bHitActorIsMovable;
 	float UpdateIndicatorDelay = 0.001f;

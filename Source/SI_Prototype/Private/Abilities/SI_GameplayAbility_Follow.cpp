@@ -20,5 +20,5 @@ void USI_GameplayAbility_Follow::EndAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Follow Ability Ended"));
+	LG_PRINT(5.f, Red, "Follow Ability Ended");
 }

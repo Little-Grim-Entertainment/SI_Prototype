@@ -29,46 +29,21 @@ public:
 	ASI_Gizbo* GetGizbo();
 	UFUNCTION(BlueprintCallable, Category = "Gizbo")
 	void ShowGizbo(bool bShouldHide);
-	UFUNCTION(BlueprintPure, Category = "Gizbo")
-	ASI_GizboController* GetGizboController();
-	
-	UPROPERTY()
-	ASI_Nick* Nick;
+	UFUNCTION(BlueprintCallable, Category = "Gizbo")
+	USI_AbilitySystemComponent* GetGizboASC() {return GizboAbilitySystemComponent;}
+
 	
 protected:
 
 	virtual void OnGameModeBeginPlay() override;
-	
-	virtual void InitializeDelegates() override;
-	void InitializeDelegateMaps();
-	
-	// Listens for broadcast of GameplayTag being added to the TagManager and applies logic
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
-	// Listens for broadcast of GameplayTag being added to the TagManager and applies logic
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
-	// Tries to activate an ability based on the CurrentAbilityTag
-	void TryActivateAbilityByTag();
-	// Tries to cancel an ability based on the CurrentAbilityTag
-	void TryCancelAbilityByTag();
 
 	UPROPERTY()
 	USI_AbilitySystemComponent* GizboAbilitySystemComponent;
 
 private:
-
-	UPROPERTY()
-	ASI_GizboController* GizboController;
+	
 	UPROPERTY()
 	ASI_Gizbo* GizboCharacter;
 
 	FString GizboStartTag;
-
-	//Current Ability Tag that is updated when an AbilityTag is received from GameplayTagManager
-	FGameplayTag CurrentAbilityTag;
-	
-	TMap<FGameplayTag, FSimpleDelegate> GizboDelegateContainer;
-	TMap<FGameplayTag, USI_GameplayAbility*> ActiveAbilitiesContainer;
-
-	FSimpleDelegate ActivateAbilityDelegate;
-
 };

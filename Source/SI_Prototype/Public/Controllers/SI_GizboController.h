@@ -11,7 +11,7 @@ class ASI_MoveToIndicator;
 /**
  * AI Controller specifically for Gizbo, dervied from base NPC Controllers, for SI Prototype
  */
-UCLASS()
+UCLASS(Blueprintable)
 class SI_PROTOTYPE_API ASI_GizboController : public ASI_NPCController_Interactable
 {
 	GENERATED_BODY()

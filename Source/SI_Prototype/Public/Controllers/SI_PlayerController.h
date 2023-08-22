@@ -145,8 +145,8 @@ protected:
 	// Gizbo
 	void RequestToggleGizboFollow(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
 	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void CancelGizboAdaptableAction();
+	void RequestConfirmAbility(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
+	void RequestCancelAbility();
 	void RequestGizboUseGadget();
 	void RequestGizboUseGadgetSecondary();
 

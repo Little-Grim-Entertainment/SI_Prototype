@@ -28,7 +28,6 @@
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Characters/SI_Gizbo.h"
-#include "Kismet/ImportanceSamplingLibrary.h"
 #include "SI_Prototype/SI_Prototype.h"
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -64,8 +63,9 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
 	
 	// Nick Action Bindings
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_CancelAbility, ETriggerEvent::Started, this, &ThisClass::RequestCancelAbility);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableAction, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableActionConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ConfirmAbility, ETriggerEvent::Started, this, &ThisClass::RequestConfirmAbility);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
@@ -92,7 +92,7 @@ void ASI_PlayerController::SetupInputComponent()
 void ASI_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	const USI_PlayerManager* PlayerManager = GetLocalPlayer()->GetSubsystem<USI_PlayerManager>();
 	if(!IsValid(PlayerManager) || !PlayerManager->GetCurrentPlayerState().IsValid())
 		{LG_LOG(LogSI_Controller, Error, "PlayerManager is null or PlayerState is Invalid") return;}
@@ -118,7 +118,6 @@ void ASI_PlayerController::BeginPlay()
 	GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
 	if (IsValid(GizboManager))
 	{
-		GizboManager->Nick = Nick;
 		Gizbo = GizboManager->GetGizbo();
 	}
 }
@@ -334,18 +333,18 @@ void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction);
 }
 
-void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
+void ASI_PlayerController::RequestConfirmAbility()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableActionConfirm);
+ 	SITagManager->AddNewGameplayTag(SITag_Ability_Confirm);
 }
 
-void ASI_PlayerController::CancelGizboAdaptableAction()
+void ASI_PlayerController::RequestCancelAbility()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->RemoveTag(SITag_Ability_Nick_AdaptableAction);	
+	SITagManager->AddNewGameplayTag(SITag_Ability_Cancel);	
 }
 
 void ASI_PlayerController::RequestGizboUseGadget()

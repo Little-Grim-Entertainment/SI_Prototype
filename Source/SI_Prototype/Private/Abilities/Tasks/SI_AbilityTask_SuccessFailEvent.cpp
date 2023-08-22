@@ -7,16 +7,18 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
-USI_AbilityTask_SuccessFailEvent::USI_AbilityTask_SuccessFailEvent(const FObjectInitializer& ObjectInitializer)
+USI_AbilityTask_WaitSuccessFailEvent::USI_AbilityTask_WaitSuccessFailEvent(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
 {
-
+	OnlyMatchExact = true;
+	OnlyTriggerOnce = true;
 }
 
-USI_AbilityTask_SuccessFailEvent* USI_AbilityTask_SuccessFailEvent::WaitGameplayEvent(UGameplayAbility* OwningAbility, FGameplayTag Tag, AActor* OptionalExternalTarget, bool OnlyTriggerOnce, bool OnlyMatchExact)
+USI_AbilityTask_WaitSuccessFailEvent* USI_AbilityTask_WaitSuccessFailEvent::WaitSuccessFailEvent(UGameplayAbility* OwningAbility, FGameplayTag SuccessTag, FGameplayTag FailedTag, AActor* OptionalExternalTarget, bool OnlyTriggerOnce, bool OnlyMatchExact)
 {
-	USI_AbilityTask_SuccessFailEvent* MyObj = NewAbilityTask<USI_AbilityTask_SuccessFailEvent>(OwningAbility);
-	MyObj->Tag = Tag;
+	USI_AbilityTask_WaitSuccessFailEvent* MyObj = NewAbilityTask<USI_AbilityTask_WaitSuccessFailEvent>(OwningAbility);
+	MyObj->SuccessTag = SuccessTag;
+	MyObj->FailedTag = FailedTag;
 	MyObj->SetExternalTarget(OptionalExternalTarget);
 	MyObj->OnlyTriggerOnce = OnlyTriggerOnce;
 	MyObj->OnlyMatchExact = OnlyMatchExact;
@@ -24,42 +26,38 @@ USI_AbilityTask_SuccessFailEvent* USI_AbilityTask_SuccessFailEvent::WaitGameplay
 	return MyObj;
 }
 
-void USI_AbilityTask_SuccessFailEvent::Activate()
+void USI_AbilityTask_WaitSuccessFailEvent::Activate()
 {
 	USI_AbilitySystemComponent* ASC = Cast<USI_AbilitySystemComponent>(GetTargetASC());
 	if (ASC)
 	{
 		if (OnlyMatchExact)
 		{
-			SuccessEventHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).AddUObject(this, &USI_AbilityTask_SuccessFailEvent::GameplayEventCallback);
+			SuccessEventHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(SuccessTag).AddUObject(this, &USI_AbilityTask_WaitSuccessFailEvent::SuccessEventCallback);
+			FailedEventHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(FailedTag).AddUObject(this, &USI_AbilityTask_WaitSuccessFailEvent::FailedEventCallback);
+	
 		}
 		else
 		{
-			SuccessEventHandle = ASC->AddGameplayEventTagContainerDelegate(FGameplayTagContainer(Tag), FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &USI_AbilityTask_SuccessFailEvent::GameplayEventContainerCallback));
+			SuccessEventHandle = ASC->AddGameplayEventTagContainerDelegate(FGameplayTagContainer(SuccessTag), FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &USI_AbilityTask_WaitSuccessFailEvent::SuccessEventContainerCallback));
+			FailedEventHandle = ASC->AddGameplayEventTagContainerDelegate(FGameplayTagContainer(FailedTag), FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &USI_AbilityTask_WaitSuccessFailEvent::FailedEventContainerCallback));
+	
 		}	
 	}
-
-	if (ASC)
-	{
-		if (OnlyMatchExact)
-		{
-			FailedEventHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).AddUObject(this, &USI_AbilityTask_SuccessFailEvent::GameplayEventCallback);
-		}
-		else
-		{
-			FailedEventHandle = ASC->AddGameplayEventTagContainerDelegate(FGameplayTagContainer(Tag), FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &USI_AbilityTask_SuccessFailEvent::GameplayEventContainerCallback));
-		}	
-	}
-
 	Super::Activate();
 }
 
-void USI_AbilityTask_SuccessFailEvent::GameplayEventCallback(const FGameplayEventData* Payload)
+void USI_AbilityTask_WaitSuccessFailEvent::SuccessEventCallback(const FGameplayEventData* Payload)
 {
-	GameplayEventContainerCallback(Tag, Payload);
+	SuccessEventContainerCallback(SuccessTag, Payload);
 }
 
-void USI_AbilityTask_SuccessFailEvent::GameplayEventContainerCallback(FGameplayTag MatchingTag, const FGameplayEventData* Payload)
+void USI_AbilityTask_WaitSuccessFailEvent::FailedEventCallback(const FGameplayEventData* Payload)
+{
+	SuccessEventContainerCallback(FailedTag, Payload);
+}
+
+void USI_AbilityTask_WaitSuccessFailEvent::SuccessEventContainerCallback(FGameplayTag MatchingTag, const FGameplayEventData* Payload)
 {
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
@@ -73,37 +71,41 @@ void USI_AbilityTask_SuccessFailEvent::GameplayEventContainerCallback(FGameplayT
 	}
 }
 
-void USI_AbilityTask_SuccessFailEvent::SetExternalTarget(AActor* Actor)
+void USI_AbilityTask_WaitSuccessFailEvent::FailedEventContainerCallback(FGameplayTag MatchingTag, const FGameplayEventData* Payload)
+{
+	if (ShouldBroadcastAbilityTaskDelegates())
+	{
+		FGameplayEventData TempPayload = *Payload;
+		TempPayload.EventTag = MatchingTag;
+		FailedEventReceived.Broadcast(MoveTemp(TempPayload));
+	}
+	if (OnlyTriggerOnce)
+	{
+		EndTask();
+	}
+}
+
+void USI_AbilityTask_WaitSuccessFailEvent::SetExternalTarget(AActor* Actor)
 {
 	if (Actor)
 	{
 		UseExternalTarget = true;
-		OptionalExternalTarget = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Actor);
+		OptionalExternalTarget = GetSIAbilitySystemComponentFromActor(Actor);
 	}
 }
 
-UAbilitySystemComponent* USI_AbilityTask_SuccessFailEvent::GetTargetASC()
+void USI_AbilityTask_WaitSuccessFailEvent::OnDestroy(bool AbilityEnding)
 {
-	if (UseExternalTarget)
-	{
-		return OptionalExternalTarget;
-	}
-
-	return nullptr; //AbilitySystemComponent;
-}
-
-void USI_AbilityTask_SuccessFailEvent::OnDestroy(bool AbilityEnding)
-{
-	UAbilitySystemComponent* ASC = GetTargetASC();
+	USI_AbilitySystemComponent* ASC = GetTargetASC();
 	if (ASC && SuccessEventHandle.IsValid())
 	{
 		if (OnlyMatchExact)
 		{
-			ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).Remove(SuccessEventHandle);
+			ASC->GenericGameplayEventCallbacks.FindOrAdd(SuccessTag).Remove(SuccessEventHandle);
 		}
 		else
 		{
-			ASC->RemoveGameplayEventTagContainerDelegate(FGameplayTagContainer(Tag), SuccessEventHandle);
+			ASC->RemoveGameplayEventTagContainerDelegate(FGameplayTagContainer(SuccessTag), SuccessEventHandle);
 		}
 		
 	}
@@ -112,11 +114,11 @@ void USI_AbilityTask_SuccessFailEvent::OnDestroy(bool AbilityEnding)
 	{
 		if (OnlyMatchExact)
 		{
-			ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).Remove(FailedEventHandle);
+			ASC->GenericGameplayEventCallbacks.FindOrAdd(FailedTag).Remove(FailedEventHandle);
 		}
 		else
 		{
-			ASC->RemoveGameplayEventTagContainerDelegate(FGameplayTagContainer(Tag), FailedEventHandle);
+			ASC->RemoveGameplayEventTagContainerDelegate(FGameplayTagContainer(FailedTag), FailedEventHandle);
 		}
 		
 	}

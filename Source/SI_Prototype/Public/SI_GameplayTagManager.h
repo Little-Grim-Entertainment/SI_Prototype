@@ -57,7 +57,6 @@ protected:
 	
 private:
 
-	FSI_GameplayTagContainer AbilityTags;
 	FSI_GameplayTagContainer CameraTags;
 	FSI_GameplayTagContainer DebugTags;
 	FSI_GameplayTagContainer GadgetTags;
