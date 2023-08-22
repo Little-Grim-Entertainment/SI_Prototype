@@ -38,10 +38,20 @@ void USI_MoviePlayerWidget::SetMediaSource(UMediaSource* InMediaSource)
 	}
 }
 
+void USI_MoviePlayerWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if(IsValid(CurrentMediaMaterial))
+	{
+	}
+}
+
 void USI_MoviePlayerWidget::PlayVideo_Implementation()
 {
 	if (!IsValid(CurrentMediaPlayer) || !IsValid(CurrentMediaSource)) {return;}
-	
+
+	CurrentMediaPlayer->OpenSource(CurrentMediaSource);
 }
 
 void USI_MoviePlayerWidget::OnVideoStopped_Implementation()

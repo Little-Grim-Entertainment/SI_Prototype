@@ -31,15 +31,17 @@ public:
 	USI_LevelManager();
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels", meta = (Categories = "Map"))
-	void LoadLevelByTag(FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("Nick_DefaultSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelByTag(FGameplayTag InLevelToLoadTag, FString InPlayerStartTag = FString(TEXT("Nick_DefaultSpawn")), bool bAllowDelay = true, bool bShouldFade = true, bool bShouldSkipMedia = false);
 
 	UFUNCTION(BlueprintCallable, Category = "Levels")
-	void LoadLevelOnMediaComplete(const FGameplayTag& InLevelToLoadTag, USI_MediaDataAsset* InMediaToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
+	void LoadLevelOnMediaComplete(const FGameplayTag& InLevelToLoadTag, USI_MediaDataAsset* InMediaToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true, bool bShouldSkipMedia = false);
 
-	void LoadLevelOnCinematicComplete(const FGameplayTag& InLevelToLoadTag, const USI_CinematicDataAsset* InCinematicToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
-	void LoadLevelOnVideoComplete(const FGameplayTag& InLevelToLoadTag, const USI_VideoDataAsset* InVideoToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true);
-	
+	void LoadLevelOnCinematicComplete(const FGameplayTag& InLevelToLoadTag, const USI_CinematicDataAsset* InCinematicToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true, bool bShouldSkipMedia = false);
+	void LoadLevelOnVideoComplete(const FGameplayTag& InLevelToLoadTag, const USI_VideoDataAsset* InVideoToPlay, const FString& InPlayerStartTag = FString(TEXT("NickSpawn")), bool bAllowDelay = true, bool bShouldFade = true, bool bShouldSkipMedia = false);
+
+	UFUNCTION()
 	void ExecuteLoadLevelOnVideoComplete();
+	UFUNCTION()
 	void ExecuteLoadLevelOnCinematicComplete();
 	
 	UFUNCTION(BlueprintCallable, Category = "Levels")
@@ -79,6 +81,8 @@ protected:
 	virtual void InitializeMapStates();
 
 private:
+
+	void ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTag, const FString& InPlayerStartTag = FString(TEXT("Nick_DefaultSpawn")), bool bAllowDelay = true, bool bShouldFade = true, bool bShouldSkipMedia = false);
 
 	FOnBeginLevelLoad OnBeginLevelLoadDelegate;
 	FOnLevelLoaded OnLevelLoadedDelegate;

@@ -298,8 +298,8 @@ void USI_CaseManager::InitializeCases()
 	{
 		if (!IsValid(CurrentCaseData)) {continue;}
 
-		static FSI_CaseDetails NewCaseDetails = FSI_CaseDetails(CurrentCaseData);
-		AllCases.Add(CurrentCaseData, &NewCaseDetails);
+		FSI_CaseDetails* NewCaseDetails = new FSI_CaseDetails(CurrentCaseData);
+		AllCases.Add(CurrentCaseData, NewCaseDetails);
 	}
 	
 	InitializeParts();
@@ -315,8 +315,8 @@ void USI_CaseManager::InitializeParts()
 		{
 			if (!IsValid(CurrentPart)){continue;}
 
-			static FSI_PartDetails NewPartDetails = FSI_PartDetails(CurrentPart);
-			CurrentCase.Value->GetCaseParts().Add(CurrentPart, &NewPartDetails);
+			FSI_PartDetails* NewPartDetails = new FSI_PartDetails(CurrentPart);
+			CurrentCase.Value->GetCaseParts().Add(CurrentPart, NewPartDetails);
 		}
 	}
 	
@@ -333,8 +333,8 @@ void USI_CaseManager::InitializeObjectives()
 			{
 				if (!IsValid(CurrentObjective)){continue;}
 
-				static FSI_ObjectiveDetails NewObjectiveDetails = FSI_ObjectiveDetails(CurrentObjective);
-				CurrentPart.Value->GetPartObjectives().Add(CurrentObjective, &NewObjectiveDetails);
+				FSI_ObjectiveDetails* NewObjectiveDetails = new FSI_ObjectiveDetails(CurrentObjective);
+				CurrentPart.Value->GetPartObjectives().Add(CurrentObjective, NewObjectiveDetails);
 			}
 		}
 	}
@@ -377,6 +377,7 @@ void USI_CaseManager::ActivatePart()
 			ActiveCastDetails->SetActivePart(CurrentPart.Key);
 			OnPartActivatedDelegate.Broadcast(CurrentPart.Key);
 			PostPartActivated(CurrentPart.Key);
+			return;
 		}
 	}
 }
@@ -459,7 +460,7 @@ void USI_CaseManager::AssignMedia()
 				{
 					AssociatedMapState->LoadedOutroMedia = CurrentMediaAssignment.OutroCinematic;
 				}
-				else if (IsValid(CurrentMediaAssignment.IntroVideo))
+				else if (IsValid(CurrentMediaAssignment.OutroVideo))
 				{
 					AssociatedMapState->LoadedOutroMedia = CurrentMediaAssignment.OutroVideo;
 				}

@@ -50,9 +50,10 @@ public:
 	void CreateCaseTitleCard(USI_CaseData* InCase, bool bShouldFadeIn = false);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveCaseTitleCard();
-	
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void CreateSIWidget(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
+	USI_UserWidget* CreateSIWidget(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void CreateSIWidgetAndAddToViewport(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveSIWidget(USI_UserWidget* InWidgetPtr);
 	UFUNCTION(BlueprintCallable, Category = "UI")
@@ -125,7 +126,7 @@ protected:
 private:
 
 	void BindCaseManagerDelegates();
-	void DelayWidgetCreation(USI_UserWidget* InWidgetPtr, TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
+	void DelayWidgetCreation(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
 	
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
