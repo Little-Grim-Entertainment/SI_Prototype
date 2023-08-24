@@ -18,10 +18,10 @@ class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 	ASI_Flashlight();	
 
 public:	
-	virtual void ActivatePrimaryAction() override;
-	virtual void ActivateSecondaryAction() override;
-	virtual void CancelPrimaryAction() override;
-	virtual void CancelSecondaryAction() override;
+	virtual void ActivatePrimaryAction_Implementation() override;
+	virtual void ActivateSecondaryAction_Implementation() override;
+	virtual void CancelPrimaryAction_Implementation() override;
+	virtual void CancelSecondaryAction_Implementation() override;
 	
 	void PlaceSegment();
 	void BindPickUpSegment();

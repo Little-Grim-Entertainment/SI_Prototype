@@ -201,7 +201,7 @@ void ASI_PlayerController::RequestInteract()
 
 	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_Interact.GetTag().GetSingleTagContainer(), false))
 	{
-		OnInteractPressed.Broadcast(InteractableActor, this);
+		OnInteractPressed.Broadcast(InteractableActor, Nick);
 	}
 }
 

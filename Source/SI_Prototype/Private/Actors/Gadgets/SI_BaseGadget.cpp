@@ -8,18 +8,18 @@
 
 DEFINE_LOG_CATEGORY(LogSI_Gadget);
 
-void ASI_BaseGadget::ActivatePrimaryAction()
+void ASI_BaseGadget::ActivatePrimaryAction_Implementation()
 {
 }
 
-void ASI_BaseGadget::ActivateSecondaryAction()
+void ASI_BaseGadget::ActivateSecondaryAction_Implementation()
 {
 }
 
-void ASI_BaseGadget::CancelPrimaryAction()
+void ASI_BaseGadget::CancelPrimaryAction_Implementation()
 {
 }
 
-void ASI_BaseGadget::CancelSecondaryAction()
+void ASI_BaseGadget::CancelSecondaryAction_Implementation()
 {
 }

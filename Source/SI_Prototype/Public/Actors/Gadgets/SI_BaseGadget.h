@@ -19,8 +19,16 @@ class SI_PROTOTYPE_API ASI_BaseGadget : public AActor
 public:
 	FGameplayTag GadgetIDTag;
 
-	virtual void ActivatePrimaryAction();
-	virtual void ActivateSecondaryAction();
-	virtual void CancelPrimaryAction();
-	virtual void CancelSecondaryAction();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void ActivatePrimaryAction();
+	virtual void ActivatePrimaryAction_Implementation();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void ActivateSecondaryAction();
+	virtual void ActivateSecondaryAction_Implementation();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void CancelPrimaryAction();
+	virtual void CancelPrimaryAction_Implementation();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void CancelSecondaryAction();
+	virtual void CancelSecondaryAction_Implementation();
 };
