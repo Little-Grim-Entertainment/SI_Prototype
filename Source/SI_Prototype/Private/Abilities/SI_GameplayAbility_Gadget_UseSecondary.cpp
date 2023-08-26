@@ -17,6 +17,7 @@ void USI_GameplayAbility_Gadget_UseSecondary::ActivateAbility(const FGameplayAbi
 
 	for (auto AttachedActor : AttachedActors)
 	{
+		// Todo: (Anu) Does this need an IsValid check?
 		EquippedGadget = Cast<ASI_BaseGadget>(AttachedActor);
 		EquippedGadget->ActivateSecondaryAction();			
 	}

@@ -32,7 +32,6 @@ ASI_PowerActor::ASI_PowerActor()
 void ASI_PowerActor::BeginPlay()
 {
 	Super::BeginPlay();
-	// todo: Final version: consider getting reference to flashlight hidden somewhere in world
 }
 
 // Called every frame
@@ -85,14 +84,14 @@ void ASI_PowerActor::SetFlashlight_Implementation(AActor* Caller)
 
 void ASI_PowerActor::OnFlashlightPowerReceived_Implementation(AActor* Caller, float InPower)
 {
-	// 1. Start trace timer
+	// LT01. Start Line Trace timer [LT = Line Trace process flow]
 	ExecuteTrace();
 	GetWorld()->GetTimerManager().SetTimer(PowerTraceTimerHandle, this, &ASI_PowerActor::ExecuteTrace, 2.0f, true);	
 }
 
 void ASI_PowerActor::OnFlashlightPowerLost_Implementation(AActor* Caller, float InPower)
 {
-	// 5. End trace timer
+	// LT05. End Line Trace timer
 	GetWorldTimerManager().ClearTimer(PowerTraceTimerHandle);
 	if (bIsFlashlightPowered)
 	{
@@ -104,7 +103,7 @@ void ASI_PowerActor::OnFlashlightPowerLost_Implementation(AActor* Caller, float 
 
 void ASI_PowerActor::ExecuteTrace()
 {
-	// 2. Find Flashlight and Power Actor positions
+	// LT02. Find Flashlight and Power Actor positions
 	FVector Start = this->GetActorLocation();
 	FVector End = Flashlight->FirstSegment->GetComponentLocation();
 	
@@ -112,11 +111,11 @@ void ASI_PowerActor::ExecuteTrace()
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 
-	// 3. Linetrace  between Flashlight and Power Actor
+	// LT03. Line Trace  between Flashlight and Power Actor
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
 	DrawDebugLine(GetWorld(), Start, End, HitResult.bBlockingHit ? FColor::Red : FColor::Green, false, 1.0f, 0, 5.0f);
 
-	// 4. Check to see if actor hit is Flashlight
+	// LT04. Check to see if actor hit is Flashlight
 	AActor* HitActor = HitResult.GetActor();
 	if (HitActor == Flashlight)
 	{
@@ -127,11 +126,12 @@ void ASI_PowerActor::ExecuteTrace()
 			CurrentPower = CurrentPower + FlashlightPowerContribution;
 			bIsFlashlightPowered = true;
 		}
-		// If Power Actor is currently Flashlight powered
+		// Else (if) Power Actor is currently Flashlight powered
 		else
 		{
-			// todo: instead of checking for change every trace, use delegate to update flashlight contribution on segement drop/ pickup
-			// Check to see if the Power of the Flashlight is different from what we've added to Current Power
+			// Todo [1]: instead of checking for change every trace, use delegate to update flashlight contribution on segment drop/ pickup
+			// Todo: Let the delegate broadcast update the FlashlightPowerContribution and then recalculate current power and UPDATE POWER DETAILS
+			// Check to see if the Power of the Flashlight is different from what we're adding to Current Power
 			if (FlashlightPowerContribution != Flashlight->CurrentPower)
 			{
 				CurrentPower = CurrentPower - (FlashlightPowerContribution - Flashlight->CurrentPower);
@@ -139,6 +139,7 @@ void ASI_PowerActor::ExecuteTrace()
 			}
 		}		
 	}
+	// Else (if) flashlight is no longer in direct line, remove Flashlight contribution from current power
 	else
 	{
 		CurrentPower = CurrentPower - FlashlightPowerContribution;
@@ -159,6 +160,7 @@ void ASI_PowerActor::UpdatePowerDetails()
 	}
 	else
 	{
+		// Todo: Not sure if we need to set it to zero.. could it cause calculation problems later?
 		if (CurrentPower < 0)
 		{
 			CurrentPower = 0;

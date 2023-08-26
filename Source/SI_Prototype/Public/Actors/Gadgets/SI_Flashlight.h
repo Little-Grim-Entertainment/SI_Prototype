@@ -18,7 +18,7 @@ class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 	ASI_Flashlight();	
 
 public:	
-	virtual void ActivatePrimaryAction_Implementation() override;
+	void ActivatePrimaryAction_Implementation();
 	virtual void ActivateSecondaryAction_Implementation() override;
 	virtual void CancelPrimaryAction_Implementation() override;
 	virtual void CancelSecondaryAction_Implementation() override;
@@ -27,7 +27,7 @@ public:
 	void BindPickUpSegment();
 	void SpawnSegment();
 	void SpotlightHandler();
-	void PowerIntensityHandler();
+	void PowerCalculationHandler();
 	void DebugSpotlightInfo();
 	
 	UFUNCTION()

@@ -127,7 +127,7 @@ void ASI_Flashlight::CancelSecondaryAction_Implementation()
 {
 	Super::CancelSecondaryAction();
 
-	//Not sure if you need a cancel for this one you can remove if you need to I just put it here in autopilot mode
+	// Not sure if you need a cancel for this one you can remove if you need to I just put it here in autopilot mode
 }
 
 void ASI_Flashlight::PlaceSegment()
@@ -136,7 +136,7 @@ void ASI_Flashlight::PlaceSegment()
 	// FlashlightMeshHandler(-)
 	SpawnSegment();		
 	SpotlightHandler();
-	PowerIntensityHandler();	
+	PowerCalculationHandler();	
 	// ChangeGadgetIconHandler();
 }
 
@@ -149,16 +149,11 @@ void ASI_Flashlight::PickUpSegment(int InSegmentNumber)
 {	
 	// todo: if 
 	// Todo: Segment number not consistent with order/ unique segment
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Flashlight: Picked up segment %d"), InSegmentNumber));
-	}
 	// PlayAnimation;
 	// DestroyOverlappingSegment;
 	// FlashlightMeshHandler(+)
 	SegmentsPlaced--;
 	SpotlightHandler();
-	//  todo 1:PowerIntensityHandler();
 	// GadgetIconHandler();
 }
 
@@ -178,16 +173,16 @@ void ASI_Flashlight::SpawnSegment()
 void ASI_Flashlight::SpotlightHandler()
 {
 	// Adjust Spotlight Details	
-	Spotlight->SetInnerConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/MaxPlaceableSegments+1) * SegmentsPlaced);
-	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/MaxPlaceableSegments+1) * SegmentsPlaced);	
+	Spotlight->SetInnerConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);
+	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);	
 		
 	// Print Debug Info
 	DebugSpotlightInfo();		
 }
 
-void ASI_Flashlight::PowerIntensityHandler()
+void ASI_Flashlight::PowerCalculationHandler()
 {
-	CurrentPower = (MaxPower - (MaxPower/MaxPlaceableSegments+1) * SegmentsPlaced);
+	CurrentPower = (MaxPower - (MaxPower/(MaxPlaceableSegments+1)) * SegmentsPlaced);
 }
 
 void ASI_Flashlight::DebugSpotlightInfo()
