@@ -92,16 +92,22 @@ void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 void ASI_Flashlight::ActivatePrimaryAction_Implementation()
 {
 	// todo: check segments placed to see if spotlight turns on/off or final segment turns on/off
-
-	Spotlight->SetHiddenInGame(false);
-	CollisionCone->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	// todo: set emissive property of flashlight glass
+	if(!bFlashlightOn)
+	{
+		Spotlight->SetHiddenInGame(false);
+		CollisionCone->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		bFlashlightOn = true;
+	}
+	else
+	{
+		CancelPrimaryAction();
+		bFlashlightOn = false;
+	}
+		// todo: set emissive property of flashlight glass
 }
 
 void ASI_Flashlight::CancelPrimaryAction_Implementation()
 {
-	Super::CancelPrimaryAction();
-
 	Spotlight->SetHiddenInGame(true);
 	CollisionCone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// todo: set emissive property of flashlight glass	

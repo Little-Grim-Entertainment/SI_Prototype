@@ -19,9 +19,12 @@ void USI_GameplayAbility_Gadget_UsePrimary::ActivateAbility(const FGameplayAbili
 
 	for (auto AttachedActor : AttachedActors)
 	{
-		// Todo: (Anu) Does this need an IsValid check?
 		EquippedGadget = Cast<ASI_BaseGadget>(AttachedActor);
-		EquippedGadget->ActivatePrimaryAction();			
+		
+		if(IsValid(EquippedGadget))
+		{
+			EquippedGadget->ActivatePrimaryAction();
+		}
 	}
 	
 }
