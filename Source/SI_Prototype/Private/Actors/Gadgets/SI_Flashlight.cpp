@@ -39,7 +39,7 @@ ASI_Flashlight::ASI_Flashlight()
 	SegmentsPlaced = 0;
 	MaxPlaceableSegments = 3;
 	MaxSpotlightIntensity = 20000.0f;
-	MaxSpotlightConeAngle = 40.0f;
+	MaxSpotlightConeAngle = 40.0f;	// Collision cone dimensions are hard coded for 40.0f MaxSpotLightConeAngle
 	MaxSpotlightAttenuationRadius = 2000;
 
 	// APPLY DEFAULTS	
@@ -65,6 +65,7 @@ void ASI_Flashlight::OnConeBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (!OtherActor->Implements<USI_PowerInterface>()) {return;}
+	
 	
 	// Ensure that the Power Actor has a reference to this Flashlight before passing power
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
@@ -110,10 +111,7 @@ void ASI_Flashlight::ActivateSecondaryAction_Implementation()
 {	
 	if (SegmentsPlaced == MaxPlaceableSegments)
 	 {
-		if(GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Cannot place any more Flashlight Segments"));
-		}
+		LG_PRINT(15.0f, Yellow, "Cannot place any more Flashlight Segments");
 		// Trigger audio/ visual notification to player that no more segments can be placed
 		// todo: Fire beam between all segments
 	 }
@@ -123,13 +121,6 @@ void ASI_Flashlight::ActivateSecondaryAction_Implementation()
 	}	
 }
 
-void ASI_Flashlight::CancelSecondaryAction_Implementation()
-{
-	Super::CancelSecondaryAction();
-
-	// Not sure if you need a cancel for this one you can remove if you need to I just put it here in autopilot mode
-}
-
 void ASI_Flashlight::PlaceSegment()
 {
 	// PlayAnimation;	
@@ -137,7 +128,7 @@ void ASI_Flashlight::PlaceSegment()
 	SpawnSegment();		
 	SpotlightHandler();
 	PowerCalculationHandler();	
-	// ChangeGadgetIconHandler();
+	// GadgetIconHandler();
 }
 
 void ASI_Flashlight::BindPickUpSegment()
@@ -154,6 +145,7 @@ void ASI_Flashlight::PickUpSegment(int InSegmentNumber)
 	// FlashlightMeshHandler(+)
 	SegmentsPlaced--;
 	SpotlightHandler();
+	PowerCalculationHandler();	
 	// GadgetIconHandler();
 }
 

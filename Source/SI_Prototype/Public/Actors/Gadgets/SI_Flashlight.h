@@ -9,7 +9,6 @@
 
 class USpotLightComponent;
 
-
 UCLASS()
 class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 {
@@ -21,7 +20,6 @@ public:
 	void ActivatePrimaryAction_Implementation();
 	virtual void ActivateSecondaryAction_Implementation() override;
 	virtual void CancelPrimaryAction_Implementation() override;
-	virtual void CancelSecondaryAction_Implementation() override;
 	
 	void PlaceSegment();
 	void BindPickUpSegment();

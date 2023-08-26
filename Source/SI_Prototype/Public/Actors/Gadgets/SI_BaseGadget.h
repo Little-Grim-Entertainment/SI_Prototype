@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "LG_DebugMacros.h"
 #include "SI_BaseGadget.generated.h"
 
 /**

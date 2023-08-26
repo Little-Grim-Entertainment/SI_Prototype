@@ -180,9 +180,6 @@ void ASI_PowerActor::PrintDebug()
 	if(GEngine)
 	{		
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Power Actor: Current Power: %f"), CurrentPower));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Power Actor: bIsFlashlightPowered: %hd"), bIsFlashlightPowered));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Power Actor: FlashlightPowerContribution: %f"), FlashlightPowerContribution));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Power Actor: bIsFullyPowered: %hd"), bIsFullyPowered));
 	}
 	
 }
