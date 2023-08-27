@@ -12,6 +12,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Cancel)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Confirm)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_HoldConfirm)
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Nick)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Nick_Gadget_UsePrimary)
@@ -87,6 +88,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_AdaptableAction)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_CancelAbility)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_ConfirmAbility)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_HoldConfirmAbility)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Exit)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Next)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Input_Action_Dialogue_Previous)

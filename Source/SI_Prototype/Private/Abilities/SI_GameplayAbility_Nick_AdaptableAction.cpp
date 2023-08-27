@@ -9,7 +9,7 @@
 #include "Controllers/SI_PlayerController.h"
 #include "EngineUtils.h" // ActorIterator
 #include "SI_GameplayTagManager.h"
-#include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmTagAdded.h"
+#include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Actors/SI_MovableActor.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
@@ -25,10 +25,11 @@ void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAb
 	SICameraManger = Cast<ASI_PlayerCameraManager>(PC->PlayerCameraManager);
 	if(!IsValid(SICameraManger)) return;
 
-	WaitCancelConfirmTagAddedTask = USI_AbilityTask_WaitCancelConfirmTagAdded::WaitCancelConfirmGameplayTagAdd(this, SITag_Ability_Cancel, SITag_Ability_Confirm, nullptr, true);
-	WaitCancelConfirmTagAddedTask->CancelTagAdded.AddDynamic(this, &ThisClass::CancelTagReceived);
-	WaitCancelConfirmTagAddedTask->ConfirmTagAdded.AddDynamic(this, &ThisClass::ConfirmTagReceived);
-	WaitCancelConfirmTagAddedTask->ReadyForActivation();
+	WaitCancelConfirmHoldTagAddedTask = USI_AbilityTask_WaitCancelConfirmHoldTagAdded::WaitCancelConfirmGameplayTagAdd(this, SITag_Ability_Cancel, SITag_Ability_Confirm, SITag_Ability_HoldConfirm, nullptr, true);
+	WaitCancelConfirmHoldTagAddedTask->CancelTagAdded.AddDynamic(this, &ThisClass::CancelTagReceived);
+	WaitCancelConfirmHoldTagAddedTask->ConfirmTagAdded.AddDynamic(this, &ThisClass::ConfirmTagReceived);
+	WaitCancelConfirmHoldTagAddedTask->HoldConfirmTagAdded.AddDynamic(this, &ThisClass::HoldConfirmTagReceived);
+	WaitCancelConfirmHoldTagAddedTask->ReadyForActivation();
 	
 	HighlightInteractables(Nick);
 	StartAdaptableAction(Nick);
@@ -45,9 +46,9 @@ void USI_GameplayAbility_Nick_AdaptableAction::EndAbility(const FGameplayAbility
 	{
 		PC->GetSITagManager()->RemoveTag(SITag_UI_HUD_QuickAction_Movable);
 	}
-	if(IsValid(WaitCancelConfirmTagAddedTask))
+	if(IsValid(WaitCancelConfirmHoldTagAddedTask))
 	{
-		WaitCancelConfirmTagAddedTask->EndTask();
+		WaitCancelConfirmHoldTagAddedTask->EndTask();
 	}
 	LG_PRINT(5.f, Green ,"EndAbility");
 }
@@ -178,16 +179,25 @@ void USI_GameplayAbility_Nick_AdaptableAction::CancelInteractableHighlight()
 	}
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
-{
-	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
-	
-	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
-}
-
 void USI_GameplayAbility_Nick_AdaptableAction::CancelTagReceived()
 {
 	LG_PRINT(5.f, Green ,"CancelTagReceived");
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
+
+void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
+{
+	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
+	
+//	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
+}
+
+void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
+{
+	LG_PRINT(5.f, Green ,"HoldConfirmTagReceived");
+	
+	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
+}
+
+
