@@ -13,9 +13,11 @@ ASI_CameraGadget::ASI_CameraGadget()
 	CameraBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CameraBase"));
 	CameraLens = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CameraLens"));
 	CameraFlash = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CameraFlash"));
+	Film = CreateDefaultSubobject<USceneComponent>(TEXT("Film"));
 	CameraBase->SetupAttachment(RootComponent);
 	CameraLens->SetupAttachment(CameraBase);
 	CameraFlash->SetupAttachment(CameraBase);
+	Film->SetupAttachment(CameraBase);
 }
 
 // Called when the game starts or when spawned
