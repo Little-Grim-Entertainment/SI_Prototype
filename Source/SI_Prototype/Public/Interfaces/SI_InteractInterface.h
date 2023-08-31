@@ -8,6 +8,7 @@
 
 class UWidgetComponent;
 
+
 UINTERFACE(MinimalAPI)
 class USI_InteractInterface : public UInterface
 {

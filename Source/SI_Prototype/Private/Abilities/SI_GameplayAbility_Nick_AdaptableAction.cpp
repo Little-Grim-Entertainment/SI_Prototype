@@ -11,6 +11,8 @@
 #include "SI_GameplayTagManager.h"
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Actors/SI_MovableActor.h"
+#include "Characters/SI_Gizbo.h"
+#include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
 
@@ -24,6 +26,10 @@ void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAb
 	if(!IsValid(PC)) return;
 	SICameraManger = Cast<ASI_PlayerCameraManager>(PC->PlayerCameraManager);
 	if(!IsValid(SICameraManger)) return;
+
+	USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
+	if(!IsValid(GizboManager)) {LG_LOG(LogSI_Ability, Error, "GizboManager is invalid") return;}
+	Gizbo = GizboManager->GetGizbo();
 
 	WaitCancelConfirmHoldTagAddedTask = USI_AbilityTask_WaitCancelConfirmHoldTagAdded::WaitCancelConfirmGameplayTagAdd(this, SITag_Ability_Cancel, SITag_Ability_Confirm, SITag_Ability_HoldConfirm, nullptr, true);
 	WaitCancelConfirmHoldTagAddedTask->CancelTagAdded.AddDynamic(this, &ThisClass::CancelTagReceived);
@@ -119,6 +125,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::UpdateMoveToIndicatorPosition()
 		}
 		
 		MoveToIndicator->SetActorLocation(HitLocation);
+		MoveToIndicator->SetActorRotation(Nick->GetActorRotation());
 	}
 }
 
@@ -132,7 +139,7 @@ ASI_MoveToIndicator* USI_GameplayAbility_Nick_AdaptableAction::SpawnMoveToIndica
 	
 	if(!IsValid(MoveToIndicator))
 	{
-		FRotator Rotation = FRotator();
+		FRotator Rotation = FRotator(0,0,0);
 		MoveToIndicator = GetWorld()->SpawnActor<ASI_MoveToIndicator>(MoveToIndicatorClass, InHitLocation, Rotation);
 		MoveToIndicator->SetActiveMeshToDefault();
 	}
@@ -190,12 +197,28 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 {
 	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
 	
-//	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
+	/* //TODO: [Pace] ... Implement when StateTree bug is resolved
+	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
+	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
+
+	//AIAbility->Execute_OnUpdateTarget(this, MoveToIndicator->GetActorLocation()); */
+	//TODO: [Pace] ...remove this line when StateTree c++ corrected
+	Gizbo->MoveToLocation = MoveToIndicator->GetActorLocation();
+	
+	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Gizbo_MoveTo);
+	
+	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 {
 	LG_PRINT(5.f, Green ,"HoldConfirmTagReceived");
+	
+	FGameplayEventData Payload;
+	Payload.OptionalObject = MoveToIndicator;
+	Payload.EventTag = SITag_Ability_Nick_AdaptableAction_CommandRotation;
+	Nick->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
+//	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction_CommandRotation);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

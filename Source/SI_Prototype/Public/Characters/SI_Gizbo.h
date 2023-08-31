@@ -23,6 +23,13 @@ class SI_PROTOTYPE_API ASI_Gizbo : public ASI_NPC_Interactable , public IAbility
 public:
 	ASI_Gizbo();
 	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
+
+	UPROPERTY(BlueprintReadOnly)
+	FVector MoveToLocation;
+	UPROPERTY(BlueprintReadOnly)
+	bool bDirectedRotation;
+	UPROPERTY(BlueprintReadOnly)
+	FRotator MoveToRotation;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -53,7 +60,7 @@ private:
 	
 	UPROPERTY(EditAnywhere)
 	UPhysicsHandleComponent* PhysicsHandle;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Gizbo Item Interaction")
 	float InteractDistance;
 	UPROPERTY(EditAnywhere, Category = "Gizbo Item Interaction")
