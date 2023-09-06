@@ -16,6 +16,9 @@ public:
 	// Sets default values for this actor's properties
 	ASI_CameraGadget();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Film)
+	USceneComponent* Film;
+
 private:
 	UPROPERTY(EditAnywhere, Category = Mesh)
 	UStaticMeshComponent* CameraBase;
@@ -23,6 +26,7 @@ private:
 	UStaticMeshComponent* CameraLens;
 	UPROPERTY(EditAnywhere, Category = Mesh)
 	UStaticMeshComponent* CameraFlash;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
