@@ -18,7 +18,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Gadget_UsePrimary, "Ability.Nick.Gadget.UsePrimary")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Gadget_UseSecondary, "Ability.Nick.Gadget.UseSecondary")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_AdaptableAction, "Ability.Nick.AdaptableAction")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_AdaptableAction_CommandRotation, "Ability.Nick.AdaptableAction.CommandRotation")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_CommandRotation, "Ability.Nick.CommandRotation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact, "Ability.Nick.Interact")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Drop, "Ability.Nick.Interact.Drop")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Pickup, "Ability.Nick.Interact.Pickup")

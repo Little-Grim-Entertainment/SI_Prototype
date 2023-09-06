@@ -6,10 +6,13 @@
 #include "GameFramework/Pawn.h"
 #include "SI_MoveToIndicator.generated.h"
 
+class UCameraComponent;
+class ASI_PlayerCameraManager;
+class UATPCCameraComponent;
 class USI_AIPerceptionStimuliSource;
 
 UCLASS()
-class SI_PROTOTYPE_API ASI_MoveToIndicator : public AActor
+class SI_PROTOTYPE_API ASI_MoveToIndicator : public APawn
 {
 	GENERATED_BODY()
 
@@ -35,4 +38,16 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere)
 	USI_AIPerceptionStimuliSource* StimuliSource;
+
+protected:
+
+	UPROPERTY()
+	ASI_PlayerCameraManager* PlayerCameraManager;
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UATPCCameraComponent* ATPCCamera;
+
+private:
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* PossessedFollowCamera;
 };

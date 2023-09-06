@@ -214,13 +214,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 {
 	LG_PRINT(5.f, Green ,"HoldConfirmTagReceived");
 	
-	FGameplayEventData Payload;
-	Payload.OptionalObject = MoveToIndicator;
-	Payload.EventTag = SITag_Ability_Nick_AdaptableAction_CommandRotation;
-	Nick->GetSIAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
-//	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction_CommandRotation);
+	PC->Possess(MoveToIndicator);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
-
-

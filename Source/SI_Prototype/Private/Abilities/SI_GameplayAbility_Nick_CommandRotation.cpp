@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Abilities/SI_GameplayAbility_Nick_AdaptableAction_CommandRotation.h"
+#include "Abilities/SI_GameplayAbility_Nick_CommandRotation.h"
 
 #include "Actors/SI_MoveToIndicator.h"
 #include "SI_GameplayTagManager.h"
 #include "Characters/SI_Gizbo.h"
 #include "Characters/SI_GizboManager.h"
 
-void USI_GameplayAbility_Nick_AdaptableAction_CommandRotation::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void USI_GameplayAbility_Nick_CommandRotation::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
@@ -37,9 +37,10 @@ void USI_GameplayAbility_Nick_AdaptableAction_CommandRotation::ActivateAbility(c
 	
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction_CommandRotation::EndAbility(const FGameplayAbilitySpecHandle Handle,
+void USI_GameplayAbility_Nick_CommandRotation::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	
 }

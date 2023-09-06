@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "SI_GameplayAbility.h"
 #include "Interfaces/SI_AIInterface.h"
-#include "SI_GameplayAbility_Nick_AdaptableAction_CommandRotation.generated.h"
+#include "SI_GameplayAbility_Nick_CommandRotation.generated.h"
 
 class ASI_MoveToIndicator;
 class ASI_Gizbo;
@@ -14,7 +14,7 @@ class ASI_RotationIndicator;
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_GameplayAbility_Nick_AdaptableAction_CommandRotation : public USI_GameplayAbility, public ISI_AIInterface
+class SI_PROTOTYPE_API USI_GameplayAbility_Nick_CommandRotation : public USI_GameplayAbility, public ISI_AIInterface
 {
 	GENERATED_BODY()
 
@@ -29,8 +29,6 @@ protected:
 	ASI_Gizbo* Gizbo;
 	UPROPERTY()
 	ASI_MoveToIndicator* MoveToIndicator;
-	UPROPERTY()
-	ASI_RotationIndicator* RotationIndicator;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASI_RotationIndicator> RotationIndicatorClass;
 	
