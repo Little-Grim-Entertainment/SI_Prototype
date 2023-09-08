@@ -237,8 +237,8 @@ void USI_UIManager::CreatePlayerHUD()
 	if(!IsValid(PlayerHUD))
 	{
 		FSimpleDelegate LoadingScreenDelayDelegate;
-		LoadingScreenFadeDelayDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
-		DelayWidgetCreation(LoadingScreenFadeDelayDelegate);
+		LoadingScreenDelayDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
+		DelayWidgetCreation(LoadingScreenDelayDelegate);
 		return;
 	}
 	
@@ -479,8 +479,8 @@ void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 				if(!IsValid(LoadingScreen))
 				{
 					FSimpleDelegate LoadingScreenDelayDelegate;
-					LoadingScreenFadeDelayDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, bShouldDisplay, bShouldFade);
-					DelayWidgetCreation(LoadingScreenFadeDelayDelegate);
+					LoadingScreenDelayDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, bShouldDisplay, bShouldFade);
+					DelayWidgetCreation(LoadingScreenDelayDelegate);
 					return;
 				}
 
