@@ -17,7 +17,7 @@ class SI_PROTOTYPE_API USI_CaseTitleCard : public USI_UserWidget
 
 public:
 	
-	void ShowTitleCard(FText InCaseTitle, UTexture2D* InCaseBackground, USoundBase* InTitleMusic, float InDisplayTime = 7.0f, bool bInShouldFade = false);
+	void ShowTitleCard(UTexture2D* InCaseBackground, USoundBase* InTitleMusic, float InDisplayTime = 7.0f, bool bInShouldFade = false);
 	void HideTitleCard();
 
 	UFUNCTION(BlueprintPure, Category = "Music")
@@ -26,9 +26,7 @@ public:
 	bool GetShouldFadeIn() const {return bShouldFadeIn;}
 
 protected:
-		
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	UTextBlock* TXT_CaseTitle;
+
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UImage* IMG_CaseBackground;
 

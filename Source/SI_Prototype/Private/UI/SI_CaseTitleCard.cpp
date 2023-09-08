@@ -7,11 +7,10 @@
 #include "Components/TextBlock.h"
 
 
-void USI_CaseTitleCard::ShowTitleCard(FText InCaseTitle, UTexture2D* InCaseBackground, USoundBase* InTitleMusic, float InDisplayTime, bool bInShouldFade)
+void USI_CaseTitleCard::ShowTitleCard(UTexture2D* InCaseBackground, USoundBase* InTitleMusic, float InDisplayTime, bool bInShouldFade)
 {
 	if (!IsValid(InCaseBackground)) {return;}
 	
-	TXT_CaseTitle->SetText(InCaseTitle);
 	IMG_CaseBackground->SetBrushFromTexture(InCaseBackground);
 	TitleMusic = InTitleMusic;
 	bShouldFadeIn = bInShouldFade;
