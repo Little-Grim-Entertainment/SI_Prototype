@@ -8,7 +8,7 @@ void USI_GameplayAbility_Interact_Pickup::ActivateAbility(const FGameplayAbility
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
+	LG_LOG_LOG(LogSI_Ability," Ability Activated");
 	//Debug Message
 }
 

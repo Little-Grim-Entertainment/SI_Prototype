@@ -11,12 +11,13 @@ void USI_GameplayAbility_ObserveObject::ActivateAbility(const FGameplayAbilitySp
                                                    const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
+	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	
 	ASI_Nick* Nick = Cast<ASI_Nick>(ActorInfo->AvatarActor.Get());
-	if(!IsValid(Nick)) { return; }
+	if(!IsValid(Nick)) {LG_LOG_LOG(LogSI_Ability,"Nick is not valid");return; }
 
 	ASI_InteractableActor* ObservableActor = Cast<ASI_InteractableActor>(Nick->GetCurrentInteractableActor());
-	if(!IsValid(ObservableActor)) { return; }
+	if(!IsValid(ObservableActor)) {LG_LOG_LOG(LogSI_Ability,"ObservableActor is not valid");return; }
 	
 	ObservableActor->Execute_OnObserved(Cast<UObject>(ObservableActor), ObservableActor);
 

@@ -88,7 +88,7 @@ void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-void ASI_Flashlight::ActivatePrimaryAction()
+void ASI_Flashlight::ActivatePrimaryAction_Implementation()
 {
 	// todo: check segments placed to see if spotlight turns on/off or final segment turns on/off
 
@@ -97,7 +97,7 @@ void ASI_Flashlight::ActivatePrimaryAction()
 	// todo: set emissive property of flashlight glass
 }
 
-void ASI_Flashlight::CancelPrimaryAction()
+void ASI_Flashlight::CancelPrimaryAction_Implementation()
 {
 	Super::CancelPrimaryAction();
 
@@ -106,7 +106,7 @@ void ASI_Flashlight::CancelPrimaryAction()
 	// todo: set emissive property of flashlight glass	
 }
 
-void ASI_Flashlight::ActivateSecondaryAction()
+void ASI_Flashlight::ActivateSecondaryAction_Implementation()
 {	
 	if (SegmentsPlaced == MaxPlaceableSegments)
 	 {
@@ -123,7 +123,7 @@ void ASI_Flashlight::ActivateSecondaryAction()
 	}	
 }
 
-void ASI_Flashlight::CancelSecondaryAction()
+void ASI_Flashlight::CancelSecondaryAction_Implementation()
 {
 	Super::CancelSecondaryAction();
 

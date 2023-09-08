@@ -8,7 +8,8 @@
 #include "SI_LocalPlayerSubsystem.generated.h"
 
 enum class EPlayerMode : uint8;
-
+class USI_PlayerManager;
+class USI_AbilityManager;
 class USI_GameInstance;
 class USI_GameplayTagManager;
 
@@ -25,6 +26,10 @@ protected:
 	USI_GameInstance* GameInstance;
 	UPROPERTY()
 	USI_GameplayTagManager* SITagManager;
+	UPROPERTY()
+	USI_PlayerManager* PlayerManager;
+	UPROPERTY()
+	USI_AbilityManager* AbilityManager;
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;	
 

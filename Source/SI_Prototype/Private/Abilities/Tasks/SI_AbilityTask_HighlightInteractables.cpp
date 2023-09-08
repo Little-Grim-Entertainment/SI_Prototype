@@ -1,18 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SI_AbilityTask_HighlightInteractables.h"
+#include "Abilities/Tasks/SI_AbilityTask_HighlightInteractables.h"
 
 #include "Actors/SI_InteractableActor.h"
 #include "EngineUtils.h" // ActorIterator
 
-USI_AbilityTask_HighlightInteractables* USI_AbilityTask_HighlightInteractables::ObservationTask(UGameplayAbility* InOwningAbility)
+USI_AbilityTask_HighlightInteractables::USI_AbilityTask_HighlightInteractables(
+	const FObjectInitializer& ObjectInitializer)
 {
-	USI_AbilityTask_HighlightInteractables* HighlightInteractables = NewAbilityTask<USI_AbilityTask_HighlightInteractables>(InOwningAbility);
+}
 
-	HighlightInteractables->OwningAbility = InOwningAbility;
+USI_AbilityTask_HighlightInteractables* USI_AbilityTask_HighlightInteractables::HighlightInteractablesTask(UGameplayAbility* InOwningAbility)
+{
+	USI_AbilityTask_HighlightInteractables* HighlightInteractablesTask = NewAbilityTask<USI_AbilityTask_HighlightInteractables>(InOwningAbility);
 
-	return HighlightInteractables;
+	HighlightInteractablesTask->OwningAbility = InOwningAbility;
+
+	return HighlightInteractablesTask;
 }
 
 void USI_AbilityTask_HighlightInteractables::Activate()

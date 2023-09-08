@@ -38,6 +38,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	ASI_Flashlight* Flashlight;
 	
+	UPROPERTY(EditAnywhere)
+	ASI_BaseGadget* Gadget;
 	ASI_Nick();
 
 	// ================== VARIABLES ==================

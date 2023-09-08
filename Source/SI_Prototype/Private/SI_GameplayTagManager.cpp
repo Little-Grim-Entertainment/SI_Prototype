@@ -3,6 +3,7 @@
 
 #include "SI_GameplayTagManager.h"
 
+#include "LG_DebugMacros.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagTypes.h"
 #include "SI_NativeGameplayTagLibrary.h"
@@ -14,14 +15,11 @@ void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag
 {
 	FSI_GameplayTagContainer& ContainerToAddTo = GetContainerTypeByTag(InGameplayTag);
 	if (!InGameplayTag.IsValid()) return;
-	
-	//TODO: Review ...Pace & Jeff is there a better solution for this?
-	if(ContainerToAddTo.HasTagExact(InGameplayTag))
+
+	if(HasParentTag(InGameplayTag, SITag_Ability))
 	{
-		if(HasParentTag(InGameplayTag, SITag_Ability))
-		{
-			RemoveTag(InGameplayTag);
-		}
+		LG_LOG(LogSI_GameplayTagManager, Log, "Ability Tag Added: %s", *InGameplayTag.ToString());
+		OnTagAddedDelegate.Broadcast(InGameplayTag);
 		return;
 	}
 
@@ -187,7 +185,6 @@ FSI_GameplayTagContainer& USI_GameplayTagManager::GetContainerTypeByTag(const FG
 
 void USI_GameplayTagManager::InitializeTagContainers()
 {
-	AllTagContainers.Add(SITag_Ability, AbilityTags);
 	AllTagContainers.Add(SITag_Camera, CameraTags);
 	AllTagContainers.Add(SITag_Debug, DebugTags);
 	AllTagContainers.Add(SITag_Gadget, GadgetTags);

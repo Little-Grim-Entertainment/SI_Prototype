@@ -4,7 +4,8 @@
 #include "Subsystems/SI_LocalPlayerSubsystem.h"
 #include "SI_GameInstance.h"
 #include "SI_GameplayTagManager.h"
-
+#include "SI_PlayerManager.h"
+#include "SI_AbilityManager.h"
 
 void USI_LocalPlayerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -36,7 +37,8 @@ void USI_LocalPlayerSubsystem::InitializeDelegateMaps()
 
 void USI_LocalPlayerSubsystem::OnPlayerStart()
 {
-	
+	 PlayerManager = GetLocalPlayer()->GetSubsystem<USI_PlayerManager>();
+	AbilityManager = GetLocalPlayer()->GetSubsystem<USI_AbilityManager>();
 }
 
 void USI_LocalPlayerSubsystem::OnGameModeBeginPlay()

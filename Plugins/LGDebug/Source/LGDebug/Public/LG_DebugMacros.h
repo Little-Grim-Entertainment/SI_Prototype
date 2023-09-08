@@ -23,7 +23,7 @@
  */
 
 /* Log macro. Style: ClassName::FunctionName Format. */
-#define LG_LOG(CategoryName, Verbosity, Message, ...) UE_LOG(CategoryName, Verbosity, TEXT("%s: %s"), *CURRENT_CLASS_FUNCTION_LINE, TEXT(Message), ##__VA_ARGS__ )
+#define LG_LOG(CategoryName, Verbosity, FormatString, ...) UE_LOG(CategoryName, Verbosity, TEXT("%s: %s"), *CURRENT_CLASS_FUNCTION_LINE, *FString::Printf(TEXT(FormatString), ##__VA_ARGS__ ))
 
 /* Log macro. Style: ClassName::FunctionName (Line) Message. */
 #define LG_LOG_LOG(CategoryName, FormatString , ...) UE_LOG(CategoryName, Log, TEXT("%s: %s"), *CURRENT_CLASS_FUNCTION_LINE, *FString::Printf(TEXT(FormatString), ##__VA_ARGS__ ) )

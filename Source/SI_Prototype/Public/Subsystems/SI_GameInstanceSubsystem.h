@@ -9,11 +9,12 @@
 #include "..\Levels\SI_MapGameplayTagLibrary.h"
 #include "SI_GameInstanceSubsystem.generated.h"
 
-enum class EPlayerMode : uint8;
 
+//enum class EPlayerMode : uint8;
 class USI_GameInstance;
 class ASI_GameMode;
 class USI_GameplayTagManager;
+class USI_GizboManager;
 
 using namespace SI_NativeGameplayTagLibrary;
 using namespace SI_MapGameplayTagLibrary;
@@ -31,6 +32,9 @@ protected:
 	USI_GameInstance* GameInstance;
 	UPROPERTY()
 	USI_GameplayTagManager* SITagManager;
+	UPROPERTY()
+	USI_GizboManager* GizboManager;
+
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 

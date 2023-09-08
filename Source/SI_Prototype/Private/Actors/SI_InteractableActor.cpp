@@ -6,7 +6,6 @@
 #include "Characters/SI_Nick.h"
 #include "Components/WidgetComponent.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
-#include "UI/SI_InteractionIcon.h"
 #include "UI/SI_InteractionPrompt.h"
 #include "SI_NativeGameplayTagLibrary.h"
 
@@ -76,7 +75,6 @@ void ASI_InteractableActor::PostInitializeComponents()
 void ASI_InteractableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ASI_InteractableActor::OnBeginOverlap(ASI_Nick* InNickActor)

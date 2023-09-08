@@ -10,6 +10,8 @@ public class SI_Prototype : ModuleRules
 			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks",
+			"GameplayStateTreeModule",
+			"StateTreeModule"
 		});
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -27,7 +29,7 @@ public class SI_Prototype : ModuleRules
 			"MovieScene", 
 			"NavigationSystem", 
 			"Slate", 
-			"SlateCore", 
+			"SlateCore",
 			"UMG", 
 			"LGDebug", 
 		});

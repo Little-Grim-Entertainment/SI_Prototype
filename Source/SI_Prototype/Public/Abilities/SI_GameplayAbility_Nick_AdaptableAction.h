@@ -4,21 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "SI_GameplayAbility.h"
+#include "Interfaces/SI_AIInterface.h"
 #include "SI_GameplayAbility_Nick_AdaptableAction.generated.h"
 
+
+class ASI_Gizbo;
+class USI_AbilityTask_WaitCancelConfirmHoldTagAdded;
 class ASI_Nick;
 class ASI_PlayerController;
-class USI_GameplayAbility_Interact_Pickup;
-class USI_GameplayAbility_Interact_Drop;
-class USI_GameplayAbility_Interact_Push;
-class USI_GameplayAbility_Interact_Pull;
 class ASI_PlayerCameraManager;
 class ASI_MoveToIndicator;
 /**
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_GameplayAbility_Nick_AdaptableAction : public USI_GameplayAbility
+class SI_PROTOTYPE_API USI_GameplayAbility_Nick_AdaptableAction : public USI_GameplayAbility, public ISI_AIInterface
 {
 	GENERATED_BODY()
 
@@ -29,6 +29,7 @@ public:
 	TSubclassOf<ASI_MoveToIndicator> GetMoveToIndicatorClass() const { return MoveToIndicatorClass;}
 
 protected:
+	
 	void StartAdaptableAction(const AActor* InActor);
 	void StartUpdateIndicatorPositionTimer();
 	void CancelUpdateIndicatorPositionTimer();
@@ -37,18 +38,20 @@ protected:
 	void DestroyMoveToIndicator();
 	void HighlightInteractables(const AActor* InActor);
 	void CancelInteractableHighlight();
-
+	UFUNCTION()
+	void CancelTagReceived();
+	UFUNCTION()
+	void ConfirmTagReceived();
+	UFUNCTION()
+	void HoldConfirmTagReceived();
+	
 	UPROPERTY()
-	USI_GameplayAbility_Interact_Pull* PullAbility;
-	UPROPERTY()
-	USI_GameplayAbility_Interact_Push* PushAbility;
-	UPROPERTY()
-	USI_GameplayAbility_Interact_Drop* DropAbility;
-	UPROPERTY()
-	USI_GameplayAbility_Interact_Pickup* PickupAbility;
-
+	USI_AbilityTask_WaitCancelConfirmHoldTagAdded* WaitCancelConfirmHoldTagAddedTask;
+	
 	UPROPERTY()
 	ASI_Nick* Nick;
+	UPROPERTY()
+	ASI_Gizbo* Gizbo;
 	UPROPERTY()
 	ASI_PlayerController* PC;
 	UPROPERTY()

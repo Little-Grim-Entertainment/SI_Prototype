@@ -9,7 +9,6 @@
 // Sets default values for this component's properties
 USI_AbilitySystemComponent::USI_AbilitySystemComponent()
 {
-
 }
 
 // Called when the game starts

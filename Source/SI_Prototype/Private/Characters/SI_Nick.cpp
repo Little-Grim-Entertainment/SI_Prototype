@@ -79,12 +79,14 @@ void ASI_Nick::HideMeshes(bool Value)
 
 USI_AbilitySystemComponent* ASI_Nick::GetSIAbilitySystemComponent() const
 {
+	if (!IsValid(AbilitySystemComponent)) {LG_LOG(LogTemp, Error, "AbilitySystemComponent is invalid") return nullptr;}
+	
 	return AbilitySystemComponent;
 }
 
 void ASI_Nick::GiveAbilities()
 {
-	if (!IsValid(AbilitySystemComponent)) {return;}
+	if (!IsValid(AbilitySystemComponent)) {LG_LOG(LogTemp, Error, "AbilitySystemComponent is invalid") return;}
 
 	for (TSubclassOf<USI_GameplayAbility>& Ability : DefaultAbilities)
 	{
@@ -113,7 +115,7 @@ void ASI_Nick::BeginPlay()
 	
 	// todo: (Anu) DELETE WHEN GADGET SYSTEM IS IMPLEMENTED		
 	// todo: (Anu) Spawn Flashlight at world 0
-	if (FlashlightClass)
+	/**if (FlashlightClass)
 	{		
 		FTransform const FlashlightTransform = GetActorTransform();
 		Flashlight = GetWorld()->SpawnActor<ASI_Flashlight>(FlashlightClass, FlashlightTransform);
@@ -121,12 +123,12 @@ void ASI_Nick::BeginPlay()
 		{								
 			Flashlight->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("gadget_socket"));
 		}				
-	}
+	}**/
 }
 
 void ASI_Nick::OnLevelLoaded(USI_MapData* LoadedLevel, bool bShouldFade)
 {
-	if (!IsValid(NickCharacterData)) {return;}
+	if (!IsValid(NickCharacterData)) {LG_LOG(LogTemp, Error, "NickCharacterData is invalid") return;}
 
 	FString MapName;
 	

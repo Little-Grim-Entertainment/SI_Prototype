@@ -3,13 +3,21 @@
 
 #include "Abilities/SI_GameplayAbility_Wait.h"
 
+#include "Characters/SI_NPC.h"
+
 void USI_GameplayAbility_Wait::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	const FGameplayEventData* TriggerEventData)
+                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                               const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	LG_LOG_LOG(LogSI_Ability," Ability Activated");
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Wait Ability Activated"));
+	LG_PRINT(5.f, Red, "Wait Ability Activated");
+
+	ASI_NPC* Actor = Cast<ASI_NPC>(ActorInfo->OwnerActor);
+	if(!IsValid(Actor)) {LG_LOG(LogSI_Ability, Error, "Actor is not valid"); return;}
+
+	Actor->SetCurrentBehavior(SITag_Behavior_Waiting);
 }
 
 void USI_GameplayAbility_Wait::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -18,5 +26,5 @@ void USI_GameplayAbility_Wait::EndAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Wait Ability Activated"));
+	LG_PRINT(5.f, Red, "Wait Ability Ended");
 }

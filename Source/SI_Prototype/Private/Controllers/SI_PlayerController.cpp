@@ -51,10 +51,10 @@ void ASI_PlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	USI_EnhancedInputComponent* EnhancedInputComponent = Cast<USI_EnhancedInputComponent>(InputComponent);
-	if (!IsValid(EnhancedInputComponent)){return;}
+	if (!IsValid(EnhancedInputComponent)){LG_LOG(LogSI_Controller, Error, "EnhancedInputComponent is null") return;}
 
 	const USI_InputConfig* InputConfig = EnhancedInputComponent->GetInputConfig();
-	if (!IsValid(InputConfig)) {return;}
+	if (!IsValid(InputConfig)) {LG_LOG(LogSI_Controller, Error, "InputConfig is null") return;}
 
 	// Axis Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_MoveForward, ETriggerEvent::Triggered, this, &ThisClass::RequestMoveForward);
@@ -63,8 +63,16 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
 	
 	// Nick Action Bindings
+	/*	These bindings are for the ability system.
+	 *	Cancel is set to started so it activates as soon as you press the input.
+	 *	Confirm is set to triggered on release of the input
+	 *	HoldConfirm is set to triggered after holding the input for a set amount of time 
+	 */  
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_CancelAbility, ETriggerEvent::Started, this, &ThisClass::RequestCancelAbility);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ConfirmAbility, ETriggerEvent::Triggered, this, &ThisClass::RequestConfirmAbility);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_HoldConfirmAbility, ETriggerEvent::Triggered, this, &ThisClass::RequestHoldConfirmAbility);
+	
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableAction, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableActionConfirm, ETriggerEvent::Started, this, &ThisClass::RequestGizboAdaptableActionConfirm);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
@@ -73,12 +81,12 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadget);
+	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetPrimary);
 	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
 	
 	// Gizbo Commands Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboFollow); //TODO: Amend later
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadget);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetPrimary);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetSecondary);
 
 	// MultiAction Bindings
@@ -91,9 +99,10 @@ void ASI_PlayerController::SetupInputComponent()
 void ASI_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	const USI_PlayerManager* PlayerManager = GetLocalPlayer()->GetSubsystem<USI_PlayerManager>();
-	if(!IsValid(PlayerManager) || !PlayerManager->GetCurrentPlayerState().IsValid()) {return;}
+	if(!IsValid(PlayerManager) || !PlayerManager->GetCurrentPlayerState().IsValid())
+		{LG_LOG(LogSI_Controller, Error, "PlayerManager is null or PlayerState is Invalid") return;}
 
 	SITagManager =  GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	
@@ -116,7 +125,6 @@ void ASI_PlayerController::BeginPlay()
 	GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
 	if (IsValid(GizboManager))
 	{
-		GizboManager->Nick = Nick;
 		Gizbo = GizboManager->GetGizbo();
 	}
 }
@@ -141,7 +149,7 @@ void ASI_PlayerController::PostInitializeComponents()
 
 void ASI_PlayerController::RequestMoveForward(const FInputActionValue& ActionValue)
 {
-	if  (!bPlayerCanMove || !GetPawn()) return;
+	if  (!bPlayerCanMove || !GetPawn()) {LG_LOG(LogSI_Controller, Error, "Player Cannot Move or Pawn is null cannot move") return;}
 
 	const float Value = ActionValue.Get<FInputActionValue::Axis1D>();
 	
@@ -159,7 +167,7 @@ void ASI_PlayerController::RequestMoveForward(const FInputActionValue& ActionVal
 
 void ASI_PlayerController::RequestMoveRight(const FInputActionValue& ActionValue)
 {
-	if  (!bPlayerCanMove || !GetPawn()) return;
+	if  (!bPlayerCanMove || !GetPawn()) {LG_LOG(LogSI_Controller, Error, "SITagManager is null cannot verify tag") return;}
 
 	const float Value = ActionValue.Get<FInputActionValue::Axis1D>();
 
@@ -178,7 +186,7 @@ void ASI_PlayerController::RequestMoveRight(const FInputActionValue& ActionValue
 
 void ASI_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 {
-	if (!bPlayerCanTurn || !GetPawn()) return;
+	if (!bPlayerCanTurn || !GetPawn()) {LG_LOG(LogSI_Controller, Error, "SITagManager is null cannot verify tag") return;}
 
 	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
 	
@@ -187,7 +195,7 @@ void ASI_PlayerController::RequestLookUp(const FInputActionValue& ActionValue)
 
 void ASI_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue)
 {
-	if  (!bPlayerCanTurn || !GetPawn()) return;
+	if  (!bPlayerCanTurn || !GetPawn()) {LG_LOG(LogSI_Controller, Error, "Player Cannot Turn or Pawn is null cannot turn") return;}
 
 	const float AxisValue = ActionValue.Get<FInputActionValue::Axis1D>();
 
@@ -196,17 +204,17 @@ void ASI_PlayerController::RequestTurnRight(const FInputActionValue& ActionValue
 
 void ASI_PlayerController::RequestInteract()
 {
-	if (!GetPawn()) {return;}
+	if (!GetPawn()) {LG_LOG(LogSI_Controller, Error, "Pawn is null cannot interact") return;}
 
 	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_Interact.GetTag().GetSingleTagContainer(), false))
 	{
-		OnInteractPressed.Broadcast(InteractableActor, this);
+		OnInteractPressed.Broadcast(InteractableActor, Nick);
 	}
 }
 
 void ASI_PlayerController::RequestToggleObservation()
 {
-	if(!IsValid(SITagManager)) {return;}
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager is null cannot verify tag") return;}
 	
 	if(SITagManager->HasGameplayTag(SITag_Player_State_Observation))
 	{
@@ -292,7 +300,7 @@ void ASI_PlayerController::RequestExitDialogue()
 
 void ASI_PlayerController::RequestToggleSystemMenu()
 {
-	if(!IsValid(SITagManager)) {return;}
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager is null cannot verify tag") return;}
 	
 	if(SITagManager->HasGameplayTag(SITag_UI_Menu_System))
 	{
@@ -304,51 +312,66 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 	}
 }
 
-void ASI_PlayerController::RequestUseGadget()
+void ASI_PlayerController::RequestUseGadgetPrimary()
 {
-	if(!IsValid(SITagManager)) {return;}
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
 	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_Gadget_UsePrimary);
 }
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
 {
-	if(!IsValid(SITagManager)) {return;}
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
 	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_Gadget_UseSecondary);
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
 {
-	if(!IsValid(SITagManager)) {return;}
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
 	SITagManager->AddNewGameplayTag(SITag_Ability_Gizbo_Follow);
 }
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-	if(!IsValid(SITagManager)) {return;}
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
 	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction);
 }
 
-void ASI_PlayerController::RequestGizboAdaptableActionConfirm()
+void ASI_PlayerController::RequestCancelAbility()
 {
-	if(!IsValid(SITagManager)) {return;}	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableActionConfirm);
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
+	SITagManager->AddNewGameplayTag(SITag_Ability_Cancel);	
 }
 
-void ASI_PlayerController::CancelGizboAdaptableAction()
+void ASI_PlayerController::RequestConfirmAbility()
 {
-	if(!IsValid(SITagManager)) {return;}	
-	SITagManager->RemoveTag(SITag_Ability_Nick_AdaptableAction);	
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
+ 	SITagManager->AddNewGameplayTag(SITag_Ability_Confirm);
 }
 
-void ASI_PlayerController::RequestGizboUseGadget()
+void ASI_PlayerController::RequestHoldConfirmAbility()
 {
-	if(!IsValid(SITagManager)) {return;}	
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
+	SITagManager->AddNewGameplayTag(SITag_Ability_HoldConfirm);
+}
+
+void ASI_PlayerController::RequestGizboUseGadgetPrimary()
+{
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
 	SITagManager->AddNewGameplayTag(SITag_Ability_Gizbo_Gadget_UsePrimary);
 }
 
 void ASI_PlayerController::RequestGizboUseGadgetSecondary()
 {
-	if(!IsValid(SITagManager)) {return;}	
+	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	
 	SITagManager->AddNewGameplayTag(SITag_Ability_Gizbo_Gadget_UseSecondary);
 }
 
@@ -363,6 +386,8 @@ void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetT
 void ASI_PlayerController::RequestMultiOptionUp()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogSI_Controller, Error, "UIManager Is Null cannot retrieve tag") return;}
+	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
 	
 	SITagManager->AddNewGameplayTag(AbilityTag);
@@ -371,6 +396,8 @@ void ASI_PlayerController::RequestMultiOptionUp()
 void ASI_PlayerController::RequestMutliOptionDown()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogSI_Controller, Error, "UIManager Is Null cannot retrieve tag") return;}
+	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
 	
 	SITagManager->AddNewGameplayTag(AbilityTag);
@@ -379,6 +406,8 @@ void ASI_PlayerController::RequestMutliOptionDown()
 void ASI_PlayerController::RequestMultiOptionLeft()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogSI_Controller, Error, "UIManager Is Null cannot retrieve tag") return;}
+	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
 	
 	SITagManager->AddNewGameplayTag(AbilityTag);
@@ -387,6 +416,8 @@ void ASI_PlayerController::RequestMultiOptionLeft()
 void ASI_PlayerController::RequestMultiOptionRight()
 {
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogSI_Controller, Error, "UIManager Is Null cannot retrieve tag") return;}
+	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
 	
 	SITagManager->AddNewGameplayTag(AbilityTag);
@@ -409,7 +440,7 @@ void ASI_PlayerController::SetObservableActor(AActor* InObservableActor)
 
 void ASI_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
 {
-	if (!InMappingTag.IsValid()) {return;}
+	if (!InMappingTag.IsValid()) {LG_LOG(LogSI_Controller, Error, "InMappingTag Is invalid cannot add InputMapping") return;}
 	
 	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	const UInputMappingContext* MappingToAdd = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);
@@ -419,7 +450,7 @@ void ASI_PlayerController::AddInputMappingByTag(const FGameplayTag InMappingTag,
 
 void ASI_PlayerController::RemoveInputMappingByTag(const FGameplayTag InMappingTag, const FGameplayTag InSecondaryTag)
 {
-	if (!InMappingTag.IsValid()) {return;}
+	if (!InMappingTag.IsValid()) {LG_LOG(LogSI_Controller, Error, "InMappingTag Is invalid cannot add InputMapping") return;}
 	
 	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	const UInputMappingContext* MappingToRemove = EnhancedInputSettings->GetInputConfig()->GetInputMappingByTag(InMappingTag, InSecondaryTag);

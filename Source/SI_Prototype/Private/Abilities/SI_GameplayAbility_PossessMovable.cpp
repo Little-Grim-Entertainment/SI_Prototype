@@ -12,7 +12,8 @@
 void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
+	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	
 	Nick = Cast<ASI_Nick>(ActorInfo->OwnerActor);
 	if(!IsValid(Nick)) return;
 	PC = Cast<ASI_PlayerController>(Nick->GetController());

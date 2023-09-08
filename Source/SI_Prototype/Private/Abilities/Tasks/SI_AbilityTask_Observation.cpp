@@ -14,11 +14,11 @@ USI_AbilityTask_Observation::USI_AbilityTask_Observation(const FObjectInitialize
 	bTickingTask = true;
 }
 
-USI_AbilityTask_Observation* USI_AbilityTask_Observation::ObservationTask(UGameplayAbility* OwningAbility)
+USI_AbilityTask_Observation* USI_AbilityTask_Observation::ObservationTask(UGameplayAbility* InOwningAbility)
 {
-	USI_AbilityTask_Observation* ObservationTask = NewAbilityTask<USI_AbilityTask_Observation>(OwningAbility);
+	USI_AbilityTask_Observation* ObservationTask = NewAbilityTask<USI_AbilityTask_Observation>(InOwningAbility);
 
-	ObservationTask->OwningAbility = OwningAbility;
+	ObservationTask->OwningAbility = InOwningAbility;
 		
 	return ObservationTask;
 }
@@ -28,8 +28,9 @@ void USI_AbilityTask_Observation::Activate()
 	Super::Activate();
 
 	PlayerController = OwningAbility->GetOwningActorFromActorInfo()->GetInstigatorController<APlayerController>();
-
+	if(!IsValid(PlayerController)) {LG_LOG(LogSI_Ability, Error, "PlayerController is not valid"); return; }
 	Nick = Cast<ASI_Nick>(PlayerController->GetPawn());
+	if(!IsValid(Nick)) {LG_LOG(LogSI_Ability, Error, "Nick is not valid"); return; }
 }
 
 void USI_AbilityTask_Observation::TickTask(float DeltaTime)

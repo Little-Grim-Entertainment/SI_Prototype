@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/Actor/SI_AbilitySystemComponent.h"
-#include "Subsystems\SI_LocalPlayerSubsystem.h"
+#include "Subsystems/SI_LocalPlayerSubsystem.h"
 #include "SI_PlayerManager.generated.h"
 
 class USI_GameplayAbility;
@@ -26,6 +25,7 @@ public:
 	const FGameplayTag& GetCurrentPlayerState() const;
 	const FGameplayTag& GetPreviousPlayerState() const;
 	void ShowWorld(bool bShouldShow, bool bShouldFade);
+	USI_AbilitySystemComponent* GetNickAbilitySystemComponent();
 
 protected:
 
@@ -39,8 +39,6 @@ private:
 
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
-	void TryActivateAbilityByTag();
-	void TryCancelAbilityByTag();
 
 	void SetupDialogueState();
 	void SetupExplorationState();
@@ -59,14 +57,11 @@ private:
 	
 	FGameplayTag PreviousPlayerState;
 	FGameplayTag CurrentPlayerState;
-	FGameplayTag CurrentAbilityTag;
 	FGameplayTag SecondaryMediaTag;
 	FGameplayTag SecondaryMenuTag;
 
 	TMap<FGameplayTag, FSimpleDelegate> PlayerDelegateContainer;
-	TMap<FGameplayTag, USI_GameplayAbility*> ActiveAbilitiesContainer;
 	
-	FSimpleDelegate ActivateAbilityDelegate;
 	FSimpleDelegate DialogueStateDelegate;
 	FSimpleDelegate ExplorationStateDelegate;
 	FSimpleDelegate InactiveStateDelegate;

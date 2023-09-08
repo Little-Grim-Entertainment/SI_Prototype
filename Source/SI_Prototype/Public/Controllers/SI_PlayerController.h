@@ -139,15 +139,16 @@ protected:
 	void RequestPreviousDialogue();
 	void RequestExitDialogue();
 	void RequestToggleSystemMenu();
-	void RequestUseGadget();
+	void RequestUseGadgetPrimary();
 	void RequestUseGadgetSecondary();
+	void RequestCancelAbility();
+	void RequestConfirmAbility();
+	void RequestHoldConfirmAbility(); 
 	
 	// Gizbo
-	void RequestToggleGizboFollow(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestToggleGizboAdaptableAction();//TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void RequestGizboAdaptableActionConfirm(); //TODO: Amend later once the radial menu for Gizbo commands has been implemented
-	void CancelGizboAdaptableAction();
-	void RequestGizboUseGadget();
+	void RequestToggleGizboFollow(); 
+	void RequestToggleGizboAdaptableAction();
+	void RequestGizboUseGadgetPrimary();
 	void RequestGizboUseGadgetSecondary();
 
 	//ConstructGadget

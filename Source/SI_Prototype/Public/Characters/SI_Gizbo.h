@@ -8,6 +8,7 @@
 #include "Abilities/SI_GameplayAbility.h"
 #include "SI_Gizbo.generated.h"
 
+class ASI_GizboController;
 class UPhysicsHandleComponent;
 class USI_AbilitySystemComponent;
 
@@ -23,6 +24,13 @@ public:
 	ASI_Gizbo();
 	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
 
+	UPROPERTY(BlueprintReadOnly)
+	FVector MoveToLocation;
+	UPROPERTY(BlueprintReadOnly)
+	bool bDirectedRotation;
+	UPROPERTY(BlueprintReadOnly)
+	FRotator MoveToRotation;
+	
 protected:
 	virtual void BeginPlay() override;
 	void Tick(float DeltaTime);
@@ -30,12 +38,13 @@ protected:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	UPROPERTY(BlueprintReadOnly)
-	bool bIsHoldingItem;
+	bool bIsHoldingItem;	
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = Abilities)
 	TArray<TSubclassOf<USI_GameplayAbility>> DefaultAbilities;
 	
 private:
+	
 	// Sets held item's position when picked up
 	void HeldItemPosition();
 	//Attaches item to PhysicsHandle
@@ -48,9 +57,10 @@ private:
 	//Fires a trace to locate interactable object
 	UFUNCTION(BlueprintCallable)
 	void LocateInteractable();
+	
 	UPROPERTY(EditAnywhere)
 	UPhysicsHandleComponent* PhysicsHandle;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Gizbo Item Interaction")
 	float InteractDistance;
 	UPROPERTY(EditAnywhere, Category = "Gizbo Item Interaction")
@@ -59,7 +69,6 @@ private:
 	float AdjustedDampening;
 	// Used to restore item state after Gizbo drops it
 	float DefaultDampening;
-	
 	UPROPERTY()
 	UPrimitiveComponent* ObjectBeingCarried;
 	UPROPERTY()
