@@ -11,7 +11,9 @@
 #include "Data/Media/SI_CinematicDataAsset.h"
 #include "GameModes/SI_GameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/SI_UIManager.h"
 #include "UI/Debug/SI_GameplayTagViewer.h"
+#include "SI_GameplayTagManager.h"
 #include "Widgets/SViewport.h"
 
 USI_CheatManager::USI_CheatManager()
@@ -37,6 +39,7 @@ void USI_CheatManager::InitCheatManager()
 	Super::InitCheatManager();
 	
 	GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
+	SITagManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 }
 
 
@@ -92,6 +95,34 @@ void USI_CheatManager::CheatSkipCinematic()
 			MediaManager->SkipMedia(MediaManager->GetLoadedCinematic());
 		}
 	}
+}
+
+void USI_CheatManager::CheatHideHud(const bool bShouldHide)
+{
+	if (!IsValid(SITagManager)) {return;}
+	
+	if(bShouldHide)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD);
+	}
+	else
+	{
+		SITagManager->AddNewGameplayTag(SITag_UI_HUD);
+	}		
+}
+
+void USI_CheatManager::CheatHideMapMenu(const bool bShouldHide)
+{
+	if (!IsValid(SITagManager)) {return;}
+	
+	if(bShouldHide)
+	{
+		SITagManager->RemoveTag(SITag_UI_Menu_Map);
+	}
+	else
+	{
+		SITagManager->AddNewGameplayTag(SITag_UI_Menu_Map);
+	}	
 }
 
 void USI_CheatManager::CheatSetTimeStamp(FString Day, int32 Hour, int32 Minutes, FString AMPM)

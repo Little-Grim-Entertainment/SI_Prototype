@@ -53,8 +53,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	USI_UserWidget* CreateSIWidget(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	void CreateSIWidgetAndAddToViewport(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
-	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveSIWidget(USI_UserWidget* InWidgetPtr);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	USI_UserWidget* GetWidgetByTag(const FGameplayTag InWidgetTag);
@@ -69,7 +67,7 @@ public:
 	void ToggleSystemMenu();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	USI_SkipWidget* CreateSkipWidget();
+	void CreateSkipWidget();
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
@@ -109,6 +107,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "PlayerHUD")
 	USI_HUD* GetPlayerHUD();
 
+	UFUNCTION(BlueprintPure, Category = "PlayerHUD")
+	USI_UserWidget* GetSIWidget(const FGameplayTag& InWidgetTag) const;
+
 protected:
 
 	virtual void OnGameInstanceInit() override;
@@ -126,7 +127,10 @@ protected:
 private:
 
 	void BindCaseManagerDelegates();
-	void DelayWidgetCreation(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
+	void DelayWidgetCreation(const FSimpleDelegate& InDelegate);
+
+	void ShowPlayerHUD(bool bShouldShow);
+	void ShowMapMenu(bool bShouldShow);
 	
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
@@ -134,6 +138,7 @@ private:
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
 
+	UPROPERTY()
 	TMap<FGameplayTag, USI_UserWidget*> UIWidgetContainer;
 
 	FGameplayTag CurrentUITag;

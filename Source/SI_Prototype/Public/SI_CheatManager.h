@@ -7,6 +7,7 @@
 #include "SI_CheatManager.generated.h"
 
 class USI_GameInstance;
+class USI_GameplayTagManager;
 class USI_GameplayTagViewer;
 
 
@@ -44,6 +45,10 @@ public:
 	void CheatSkipVideo();
 	UFUNCTION(exec)
 	void CheatSkipCinematic();
+	UFUNCTION(exec)
+	void CheatHideHud(const bool bShouldHide);
+	UFUNCTION(exec)
+	void CheatHideMapMenu(const bool bShouldHide);
 
 	// Debug Commands
 	UFUNCTION(exec)
@@ -57,4 +62,6 @@ private:
 
 	UPROPERTY()
 	USI_GameInstance* GameInstance;
+	UPROPERTY()
+	USI_GameplayTagManager* SITagManager;
 };

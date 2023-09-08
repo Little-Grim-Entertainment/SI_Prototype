@@ -133,6 +133,18 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		return;
 	}
 
+	if (InRemovedTag == SITag_UI_HUD)
+	{
+		ShowPlayerHUD(false);
+		return;
+	}
+
+	if (InRemovedTag == SITag_UI_Menu_Map)
+	{
+		ShowMapMenu(false);
+		return;
+	}
+
 	if(InRemovedTag != SITag_UI_HUD_QuickAction_GadgetsOne && SITagManager->HasParentTag(InRemovedTag, SITag_UI_HUD_QuickAction))
 	{
 		SITagManager->AddNewGameplayTag(SITag_UI_HUD_QuickAction_GadgetsOne);
@@ -161,12 +173,34 @@ void USI_UIManager::BindCaseManagerDelegates()
 	CaseManager->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);*/
 }
 
-void USI_UIManager::DelayWidgetCreation(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag)
+void USI_UIManager::DelayWidgetCreation(const FSimpleDelegate& InDelegate)
 {
-	FSimpleDelegate NewDelegate;
-	NewDelegate.BindUObject(this, &ThisClass::CreateSIWidgetAndAddToViewport, InWidgetClass, InUITag);
+	WidgetCreationDelayDelegates.Add(InDelegate);
+}
 
-	WidgetCreationDelayDelegates.Add(NewDelegate);
+void USI_UIManager::ShowPlayerHUD(bool bShouldShow)
+{
+	if(!IsValid(PlayerHUD) && bShouldShow)
+	{
+		CreatePlayerHUD();
+	}
+	else if(IsValid(PlayerHUD) && !bShouldShow)
+	{
+		PlayerHUD->RemoveFromParent();
+	}
+}
+
+void USI_UIManager::ShowMapMenu(bool bShouldShow)
+{
+	if(!IsValid(MapMenu) && bShouldShow)
+	{
+		CreateMapMenu();
+	}
+	else if(IsValid(MapMenu) && !bShouldShow)
+	{
+		MapMenu->RemoveFromParent();
+		MapMenu = nullptr;
+	}
 }
 
 void USI_UIManager::InitializeDelegates()
@@ -200,10 +234,15 @@ void USI_UIManager::CreatePlayerHUD()
 	if (!IsValid(GameInstance->GetGameMode()) || IsValid(PlayerHUD)){return;}
 	
 	PlayerHUD = Cast<USI_HUD>(CreateSIWidget(GameInstance->GetGameMode()->PlayerHUD_Class, SITag_UI_HUD));
-	if(IsValid(PlayerHUD))
+	if(!IsValid(PlayerHUD))
 	{
-		PlayerHUD->AddToViewport();
+		FSimpleDelegate LoadingScreenDelayDelegate;
+		LoadingScreenFadeDelayDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
+		DelayWidgetCreation(LoadingScreenFadeDelayDelegate);
+		return;
 	}
+	
+	PlayerHUD->AddToViewport();
 }
 
 void USI_UIManager::CreateMoviePlayerWidget()
@@ -213,21 +252,26 @@ void USI_UIManager::CreateMoviePlayerWidget()
 
 	MoviePlayerWidget = Cast<USI_MoviePlayerWidget>(CreateSIWidget(GameInstance->GetGameMode()->MoviePlayerWidget, SITag_UI_Screen_Video));
 	
-	if (IsValid(MoviePlayerWidget))
+	if (!IsValid(MoviePlayerWidget))
 	{
-		const USI_MediaManager* MediaManager = GetWorld()->GetSubsystem<USI_MediaManager>();
-		if (IsValid(MediaManager) && IsValid(MediaManager->GetLoadedVideo()))
-		{
-			MoviePlayerWidget->SetMediaTexture(MediaManager->GetLoadedVideo()->MediaTexture);
-			MoviePlayerWidget->SetMediaPlayer(MediaManager->GetLoadedVideo()->MediaPlayer);
-			MoviePlayerWidget->SetMediaSource(MediaManager->GetLoadedVideo()->MediaSource);
-			MoviePlayerWidget->AddToViewport();
-			MoviePlayerWidget->PlayVideo();
-		}
-		else
-		{
+		FSimpleDelegate MoviePlayerDelayDelegate;
+		MoviePlayerDelayDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
+		DelayWidgetCreation(MoviePlayerDelayDelegate);
+		return;
+	}
+
+	const USI_MediaManager* MediaManager = GetWorld()->GetSubsystem<USI_MediaManager>();
+	if (IsValid(MediaManager) && IsValid(MediaManager->GetLoadedVideo()))
+	{
+		MoviePlayerWidget->SetMediaTexture(MediaManager->GetLoadedVideo()->MediaTexture);
+		MoviePlayerWidget->SetMediaPlayer(MediaManager->GetLoadedVideo()->MediaPlayer);
+		MoviePlayerWidget->SetMediaSource(MediaManager->GetLoadedVideo()->MediaSource);
+		MoviePlayerWidget->AddToViewport();
+		MoviePlayerWidget->PlayVideo();
+	}
+	else
+	{
 			
-		}
 	}
 }
 
@@ -258,11 +302,16 @@ void USI_UIManager::CreateCaseTitleCard(USI_CaseData* InCase, bool bShouldFadeIn
 	if (!IsValid(InCase)) {return;}
 
 	CaseTitleCardWidget = CreateWidget<USI_CaseTitleCard>(GetWorld()->GetFirstPlayerController(), InCase->TitleCardWidget);
-	if (IsValid(CaseTitleCardWidget))
+	if (!IsValid(CaseTitleCardWidget))
 	{
-		CaseTitleCardWidget->AddToViewport();
-		CaseTitleCardWidget->ShowTitleCard(InCase->CaseName, InCase->TitleCardBackground, InCase->TitleCardMusic, InCase->TitleCardLength, bShouldFadeIn);
+		FSimpleDelegate CaseTitleCardDelayDelegate;
+		CaseTitleCardDelayDelegate.BindUObject(this, &ThisClass::CreateCaseTitleCard, InCase, bShouldFadeIn);
+		DelayWidgetCreation(CaseTitleCardDelayDelegate);
+		return;
 	}
+
+	CaseTitleCardWidget->AddToViewport();
+	CaseTitleCardWidget->ShowTitleCard(InCase->TitleCardBackground, InCase->TitleCardMusic, InCase->TitleCardLength, bShouldFadeIn);
 }
 
 void USI_UIManager::RemoveCaseTitleCard()
@@ -282,31 +331,21 @@ USI_UserWidget* USI_UIManager::CreateSIWidget(TSubclassOf<USI_UserWidget> InWidg
 
 	if (!IsValid(PlayerController))
 	{
-		DelayWidgetCreation(InWidgetClass, InUITag);
 		return nullptr;
 	}
 	
-	USI_UserWidget* SIWidget = CreateWidget<USI_UserWidget>(PlayerController, InWidgetClass);
-	if (IsValid(SIWidget))
+	USI_UserWidget* NewWidgetPtr = CreateWidget<USI_UserWidget>(PlayerController, InWidgetClass);
+	if (IsValid(NewWidgetPtr))
 	{
-		UIWidgetContainer.Add(InUITag, SIWidget);
+		UIWidgetContainer.Add(InUITag, NewWidgetPtr);
 		
 		if (SITagManager->HasParentTag(InUITag, SITag_UI_Menu))
 		{
-			PlayerController->SetFocusedWidget(SIWidget);
+			PlayerController->SetFocusedWidget(NewWidgetPtr);
 		}
 	}
 
-	return SIWidget;
-}
-
-void USI_UIManager::CreateSIWidgetAndAddToViewport(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag)
-{
-	USI_UserWidget* SIWidget = CreateSIWidget(InWidgetClass, InUITag);
-	if(IsValid(SIWidget))
-	{
-		SIWidget->AddToViewport();
-	}
+	return NewWidgetPtr;
 }
 
 void USI_UIManager::RemoveSIWidget(USI_UserWidget* InWidgetPtr)
@@ -339,10 +378,15 @@ void USI_UIManager::CreateMapMenu()
 	if (!IsValid(MenuMapData) || !IsValid(MenuMapData->MapMenuWidgetClass)){return;}
 
 	MapMenu = CreateSIWidget(MenuMapData->MapMenuWidgetClass, SITag_UI_Menu_Map);
-	if(IsValid(MapMenu))
+	if(!IsValid(MapMenu))
 	{
-		MapMenu->AddToViewport();
+		FSimpleDelegate MapMenuDelayDelegate;
+		MapMenuDelayDelegate.BindUObject(this, &ThisClass::CreateMapMenu);
+		DelayWidgetCreation(MapMenuDelayDelegate);
+		return;
 	}
+	
+	MapMenu->AddToViewport();
 }
 
 void USI_UIManager::CreateSystemMenu()
@@ -350,10 +394,15 @@ void USI_UIManager::CreateSystemMenu()
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 
 	SystemMenu = CreateSIWidget(GameInstance->GetGameMode()->SystemMenuClass, SITag_UI_Menu_System);
-	if(IsValid(SystemMenu))
+	if(!IsValid(SystemMenu))
 	{
-		SystemMenu->AddToViewport();
+		FSimpleDelegate SystemMenuDelayDelegate;
+		SystemMenuDelayDelegate.BindUObject(this, &ThisClass::CreateSystemMenu);
+		DelayWidgetCreation(SystemMenuDelayDelegate);
+		return;
 	}
+	
+	SystemMenu->AddToViewport();
 }
 
 void USI_UIManager::ToggleSystemMenu()
@@ -368,17 +417,20 @@ void USI_UIManager::ToggleSystemMenu()
 	}
 }
 
-USI_SkipWidget* USI_UIManager::CreateSkipWidget()
+void USI_UIManager::CreateSkipWidget()
 {
-	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!IsValid(PlayerController) || !IsValid(GameInstance->GetGameMode())){return nullptr;}
+	if (!IsValid(GameInstance->GetGameMode())){return;}
 	
-	SkipWidget = CreateWidget<USI_SkipWidget>(PlayerController,  GameInstance->GetGameMode()->SkipWidget);
-	if (IsValid(SkipWidget))
+	SkipWidget = Cast<USI_SkipWidget>(CreateSIWidget(GameInstance->GetGameMode()->SkipWidget, SITag_UI_Prompt_Skip));
+	if (!IsValid(SkipWidget))
 	{
-		SkipWidget->AddToViewport();
+		FSimpleDelegate SkipWidgetDelayDelegate;
+		SkipWidgetDelayDelegate.BindUObject(this, &ThisClass::CreateSkipWidget);
+		DelayWidgetCreation(SkipWidgetDelayDelegate);
+		return;
 	}
-	return SkipWidget;
+	
+	SkipWidget->AddToViewport();
 }
 
 void USI_UIManager::AddActiveInteractionWidget(USI_InteractionWidget* InInteractionWidget)
@@ -424,8 +476,15 @@ void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			if (const TSubclassOf<USI_UserWidget> SelectedLoadingScreen = GameMode->LoadingScreens[RandNumb])
 			{
 				LoadingScreen = CreateSIWidget(SelectedLoadingScreen, SITag_UI_Screen_Loading);
-				
-				if (IsValid(LoadingScreen) && IsValid(GameInstance))
+				if(!IsValid(LoadingScreen))
+				{
+					FSimpleDelegate LoadingScreenDelayDelegate;
+					LoadingScreenFadeDelayDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, bShouldDisplay, bShouldFade);
+					DelayWidgetCreation(LoadingScreenFadeDelayDelegate);
+					return;
+				}
+
+				if(IsValid(GameInstance))
 				{
 					GameInstance->GetGameViewportClient()->AddViewportWidgetContent(LoadingScreen->TakeWidget());
 				}
@@ -554,4 +613,9 @@ USI_MoviePlayerWidget* USI_UIManager::GetMoviePlayerWidget() const
 USI_HUD* USI_UIManager::GetPlayerHUD()
 {
 	return PlayerHUD;
+}
+
+USI_UserWidget* USI_UIManager::GetSIWidget(const FGameplayTag& InWidgetTag) const
+{
+	return *UIWidgetContainer.Find(InWidgetTag); 
 }
