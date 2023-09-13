@@ -49,7 +49,17 @@ void UHorizonTileView::OnWidgetRebuilt()
 {
 	Super::OnWidgetRebuilt();
 	InitListItem();
-	SynchronizeProperties();
+	switch (RefreshBehavior)
+	{
+	case EHorizonTileViewRefreshBehavior::ScrollToTop:
+		ScrollToTop();
+		break;
+	case EHorizonTileViewRefreshBehavior::ScrollToBottom:
+		ScrollToBottom();
+		break;
+	default:
+		break;
+	}
 
 }
 
@@ -226,6 +236,19 @@ UHorizonListViewItemWidget* UHorizonTileView::BP_GetEntryWidgetFromItem(UObject*
 {
 	return GetEntryWidgetFromItem<UHorizonListViewItemWidget>(InItem);
 }
+
+
+void UHorizonTileView::RemoveItemAndKeepSelectedIndex(UObject* InItem)
+{
+	int32 currentSelectedIndex = GetIndexForItem(GetSelectedItem());
+	RemoveItem(InItem);
+	if (currentSelectedIndex >= GetNumItems())
+	{
+		currentSelectedIndex = GetNumItems() - 1;
+	}
+	SetSelectedIndex(currentSelectedIndex);
+}
+
 
 #if WITH_EDITOR
 
