@@ -15,6 +15,14 @@
 // HorizonUI
 #include "HorizonTileView.generated.h"
 
+
+UENUM(BlueprintType)
+enum class EHorizonTileViewRefreshBehavior : uint8
+{
+	None,
+	ScrollToTop,
+	ScrollToBottom,
+};
 /**
  * 
  */
@@ -76,6 +84,9 @@ public:
 	virtual void InitListItem();
 	UFUNCTION(BlueprintPure, Category = "HorizonPlugin|UI|TileView", meta = (DisplayName = "GetEntryWidgetFromItem"))
 	virtual UHorizonListViewItemWidget* BP_GetEntryWidgetFromItem(UObject* InItem);
+
+	UFUNCTION(BlueprintCallable, Category = "HorizonPlugin|UI|TileView")
+	virtual void RemoveItemAndKeepSelectedIndex(UObject* InItem);
 #if WITH_EDITOR
 public:
 	//~ Begin UObject Interface
@@ -114,6 +125,10 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnItemEvent OnItemClickedEvent;
 	FOnItemEventNative OnItemClickedEventNative;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorizonPlugin|UI|TileView")
+	EHorizonTileViewRefreshBehavior RefreshBehavior = EHorizonTileViewRefreshBehavior::ScrollToBottom;
 private:
 	TWeakObjectPtr<UObject> PreviousSelectedItem;
 	int32 RequestedItemSelectionIndex = -1;
