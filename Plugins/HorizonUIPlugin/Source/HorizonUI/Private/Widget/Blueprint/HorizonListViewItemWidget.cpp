@@ -65,8 +65,12 @@ void UHorizonListViewItemWidget::NativeOnListItemObjectSet(UObject* InListItemOb
 void UHorizonListViewItemWidget::SynchronizeProperties()
 {
 	Super::SynchronizeProperties();
-	NativeOnListItemObjectSet(GetListItem());
-	OnSynchronizeProperties();
+	auto pItem = GetListItem();
+	if (pItem)
+	{
+		NativeOnListItemObjectSet(pItem);
+		OnSynchronizeProperties();
+	}
 }
 
 bool UHorizonListViewItemWidget::IsHovered() const

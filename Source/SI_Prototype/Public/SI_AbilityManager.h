@@ -37,5 +37,4 @@ protected:
 	UPROPERTY()
 	USI_AbilitySystemComponent* NickAbilitySystemComponent;
 	
-	
 };

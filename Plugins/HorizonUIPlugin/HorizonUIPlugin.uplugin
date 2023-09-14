@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 303,
-	"VersionName": "5.2.0",
+	"Version": 304,
+	"VersionName": "5.3.0",
 	"FriendlyName": "Horizon UI Plugin",
 	"Description": "Horizon UMG extension for UE4",
 	"Category": "Horizon",
@@ -10,7 +10,7 @@
 	"DocsURL": "https://github.com/dorgonman/HorizonUIPluginDemo",
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/8b94d073d32443b497d4a9e8b1e210f7",
 	"SupportURL": "http://dorgon.horizon-studio.net",
-	"EngineVersion": "5.2.0",
+	"EngineVersion": "5.3.0",
 	"CanContainContent": true,
 	"Installed": true,
 	"Modules": [

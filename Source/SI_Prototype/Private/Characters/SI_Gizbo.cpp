@@ -53,6 +53,7 @@ void ASI_Gizbo::BeginPlay()
 	Super::BeginPlay();
 
 	GiveAbilities();
+	CurrentBehaviorTag = SITag_Behavior_Following;
 }
 
 void ASI_Gizbo::GiveAbilities()

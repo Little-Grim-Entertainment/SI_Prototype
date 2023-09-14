@@ -18,7 +18,7 @@ void USI_AbilityManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	
 	Super::OnGameplayTagAdded(InAddedTag);
 		
-	if(InAddedTag == SITag_Ability_Cancel || InAddedTag == SITag_Ability_Confirm)
+	if(InAddedTag == SITag_Ability_Cancel || InAddedTag == SITag_Ability_Confirm || InAddedTag == SITag_Ability_HoldConfirm)
 	{
 		AddRemoveLooseAbilityTags(InAddedTag);
 		return;

@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "SI_GameplayAbility.h"
+#include "Interfaces/SI_AIInterface.h"
 #include "SI_GameplayAbility_Nick_AdaptableAction.generated.h"
 
 
-class USI_AbilityTask_WaitCancelConfirmTagAdded;
+class ASI_Gizbo;
+class USI_AbilityTask_WaitCancelConfirmHoldTagAdded;
 class ASI_Nick;
 class ASI_PlayerController;
 class ASI_PlayerCameraManager;
@@ -16,7 +18,7 @@ class ASI_MoveToIndicator;
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_GameplayAbility_Nick_AdaptableAction : public USI_GameplayAbility
+class SI_PROTOTYPE_API USI_GameplayAbility_Nick_AdaptableAction : public USI_GameplayAbility, public ISI_AIInterface
 {
 	GENERATED_BODY()
 
@@ -37,15 +39,19 @@ protected:
 	void HighlightInteractables(const AActor* InActor);
 	void CancelInteractableHighlight();
 	UFUNCTION()
+	void CancelTagReceived();
+	UFUNCTION()
 	void ConfirmTagReceived();
 	UFUNCTION()
-	void CancelTagReceived();
+	void HoldConfirmTagReceived();
 	
 	UPROPERTY()
-	USI_AbilityTask_WaitCancelConfirmTagAdded* WaitCancelConfirmTagAddedTask;
+	USI_AbilityTask_WaitCancelConfirmHoldTagAdded* WaitCancelConfirmHoldTagAddedTask;
 	
 	UPROPERTY()
 	ASI_Nick* Nick;
+	UPROPERTY()
+	ASI_Gizbo* Gizbo;
 	UPROPERTY()
 	ASI_PlayerController* PC;
 	UPROPERTY()

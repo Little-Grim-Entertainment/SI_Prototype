@@ -11,12 +11,14 @@ namespace SI_NativeGameplayTagLibrary
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability, "Ability")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Cancel, "Ability.Cancel")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Confirm, "Ability.Nick.Confirm")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Confirm, "Ability.Confirm")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_HoldConfirm, "Ability.HoldConfirm")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick, "Ability.Nick")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Gadget_UsePrimary, "Ability.Nick.Gadget.UsePrimary")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Gadget_UseSecondary, "Ability.Nick.Gadget.UseSecondary")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_AdaptableAction, "Ability.Nick.AdaptableAction")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_CommandRotation, "Ability.Nick.CommandRotation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact, "Ability.Nick.Interact")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Drop, "Ability.Nick.Interact.Drop")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Interact_Pickup, "Ability.Nick.Interact.Pickup")
@@ -87,6 +89,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_AdaptableAction, "Input.Action.AdaptableAction")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_CancelAbility, "Input.Action.CancelAbility")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ConfirmAbility, "Input.Action.ConfirmAbility")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_HoldConfirmAbility, "Input.Action.HoldConfirmAbility")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Exit, "Input.Action.Dialogue.Exit")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Next, "Input.Action.Dialogue.Next")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Previous, "Input.Action.Dialogue.Previous")
