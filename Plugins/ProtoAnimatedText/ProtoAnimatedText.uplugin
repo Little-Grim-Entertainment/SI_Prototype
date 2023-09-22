@@ -1,0 +1,26 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.03",
+	"FriendlyName": "Proto Animated Text",
+	"Description": "Animated rich text extension for UMG",
+	"Category": "Other",
+	"CreatedBy": "PROTO",
+	"CreatedByURL": "https://www.protowlf.com/",
+	"DocsURL": "https://docs.google.com/document/d/1iiYzNDsoYkToq-LQqwR2EIE-WRfuvTC_45zh47OvYMg/edit?usp=sharing",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/0dd4efc6c34b46cab7d195a0002ecf01",
+	"SupportURL": "",
+	"EngineVersion": "5.3.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "ProtoAnimatedText",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}
