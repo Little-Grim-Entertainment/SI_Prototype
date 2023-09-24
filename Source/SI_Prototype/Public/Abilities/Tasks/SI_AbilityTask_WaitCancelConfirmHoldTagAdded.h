@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "SI_AbilityTask.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayTag.h"
 #include "SI_AbilityTask_WaitCancelConfirmHoldTagAdded.generated.h"
 
 class USI_AbilityManager;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaitGameplayTagDelegate);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_AbilityTask_WaitCancelConfirmHoldTagAdded : public USI_AbilityTask
