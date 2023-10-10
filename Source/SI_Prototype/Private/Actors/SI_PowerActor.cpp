@@ -84,15 +84,15 @@ void ASI_PowerActor::SetFlashlight_Implementation(AActor* Caller)
 
 void ASI_PowerActor::OnFlashlightPowerReceived_Implementation(AActor* Caller, float InPower)
 {
-	// LT01. Start Line Trace timer [LT = Line Trace process flow]
+	
 	ExecuteTrace();
-	GetWorld()->GetTimerManager().SetTimer(PowerTraceTimerHandle, this, &ASI_PowerActor::ExecuteTrace, 2.0f, true);	
+	//GetWorld()->GetTimerManager().SetTimer(PowerTraceTimerHandle, this, &ASI_PowerActor::ExecuteTrace, 2.0f, true);	
 }
 
 void ASI_PowerActor::OnFlashlightPowerLost_Implementation(AActor* Caller, float InPower)
 {
 	// LT05. End Line Trace timer
-	GetWorldTimerManager().ClearTimer(PowerTraceTimerHandle);
+	//GetWorldTimerManager().ClearTimer(PowerTraceTimerHandle);
 	if (bIsFlashlightPowered)
 	{
 		CurrentPower = CurrentPower - FlashlightPowerContribution;

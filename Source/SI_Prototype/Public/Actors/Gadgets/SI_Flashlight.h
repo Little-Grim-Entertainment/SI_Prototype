@@ -8,6 +8,7 @@
 #include "SI_Flashlight.generated.h"
 
 class USpotLightComponent;
+class ISI_PowerInterface;
 
 UCLASS()
 class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
@@ -17,25 +18,37 @@ class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 	ASI_Flashlight();	
 
 public:	
+	// GAMEPLAY ABILITY SYSTEM CALLS
 	void ActivatePrimaryAction_Implementation();
 	virtual void ActivateSecondaryAction_Implementation() override;
-	virtual void CancelPrimaryAction_Implementation() override;
-	
+	virtual void CancelPrimaryAction_Implementation() override;	
+
+	// PUBLIC FUNCTIONS
 	void PlaceSegment();
 	void BindPickUpSegment();
 	void SpawnSegment();
 	void SpotlightHandler();
 	void PowerCalculationHandler();
 	void DebugSpotlightInfo();
-	
+
+	// PUBLIC UFUNCTIONS
+	// TODO: Can adjust to non-UFunction
 	UFUNCTION()
 	void PickUpSegment(int InSegmentNumber);
+
+	// PUBLIC VARIABLES
 	
+	// Timer
+	UPROPERTY(EditAnywhere, Category = Power)
+	FTimerHandle FlashlightTraceTimerHandle;
+	
+	// Class References
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASI_FlashlightSegment> FlashlightSegmentClass = ASI_FlashlightSegment::StaticClass();
 	UPROPERTY(EditAnywhere)
 	ASI_FlashlightSegment* FlashlightSegment;
 	
+	// Public Variables
 	UPROPERTY(EditAnywhere, Category = Power)
 	float MaxPower;
 	UPROPERTY(EditAnywhere, Category = Power)
@@ -55,7 +68,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = Mesh)
 	UStaticMeshComponent* FirstSegment;
 	
-private:	
+private:
+	// STATIC MESHES
 	UPROPERTY(EditAnywhere, Category = Mesh)
 	UStaticMeshComponent* SecondSegment;	
 	UPROPERTY(EditAnywhere, Category = Mesh)
@@ -68,6 +82,10 @@ private:
 	USceneComponent* ConeRootSC;
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	UStaticMeshComponent* CollisionCone;
+
+	// PRIVATE VARIABLES
+	UPROPERTY(EditAnywhere, Category = Power)
+	TArray<const ISI_PowerInterface*> PowerActorsHit;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -75,5 +93,6 @@ protected:
 	void OnConeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	UFUNCTION()
 	void OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
+	UFUNCTION()
+	void ExecuteTrace();
 };

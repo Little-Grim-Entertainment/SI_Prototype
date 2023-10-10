@@ -64,10 +64,34 @@ void ASI_Flashlight::BeginPlay()
 void ASI_Flashlight::OnConeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// If other actor doesn't implement PowerInterface then return
 	if (!OtherActor->Implements<USI_PowerInterface>()) {return;}
 	
+	// LT01. [LT = Line Trace process flow] 
+	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
+	{
+		// Add Overlapping Power Actors to array
+		PowerActorsHit.Add(PowerInterfaceActor);
+
+		// Execute trace for instant power actor calculation
+		ExecuteTrace();
+		
+		// Start timer if timer has not been set
+		if (!GetWorldTimerManager().IsTimerActive(FlashlightTraceTimerHandle))
+		{
+			GetWorld()->GetTimerManager().SetTimer(FlashlightTraceTimerHandle, this, &ASI_Flashlight::ExecuteTrace, 0.5f, true);
+		}
+		
+		// > Line trace to object
+		// ON END OVERLAP - Find matching object in array and end timer
+		// then remove struct from array
+		
+		// AddPowerActorToArray
+		PowerActorsHit.Add(PowerInterfaceActor);
+		
+	}
 	
-	// Ensure that the Power Actor has a reference to this Flashlight before passing power
+	/*// Ensure that the Power Actor has a reference to this Flashlight before passing power
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
 	{
 		if (!PowerInterfaceActor->Execute_IsFlashlightSet(OtherActor))
@@ -75,7 +99,7 @@ void ASI_Flashlight::OnConeBeginOverlap(UPrimitiveComponent* OverlappedComponent
 			PowerInterfaceActor->Execute_SetFlashlight(OtherActor, this);
 		}
 		PowerInterfaceActor->Execute_OnFlashlightPowerReceived(OtherActor, this, CurrentPower);	
-	}	
+	}	*/
 }
 
 void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -87,6 +111,17 @@ void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		PowerInterfaceActor->Execute_OnFlashlightPowerLost(OtherActor, this, CurrentPower);
 	}
+}
+
+void ASI_Flashlight::ExecuteTrace()
+{
+	// For each power actor in the array
+		// Fire Multiline Trace
+			// Fill hit results in array
+			// If first element (i = 0) is a power actor then pass power
+			
+	
+	
 }
 
 void ASI_Flashlight::ActivatePrimaryAction_Implementation()
