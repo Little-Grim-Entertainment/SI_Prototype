@@ -21,6 +21,7 @@ class SI_PROTOTYPE_API ASI_FlashlightSegment : public ASI_InteractableActor
 public:
 	ASI_FlashlightSegment();
 
+	// TODO: Remove?
 	FSegmentPickedUp SegmentPickUpDelegate;	
 	
 	UPROPERTY(EditAnywhere, Category = LightDome)

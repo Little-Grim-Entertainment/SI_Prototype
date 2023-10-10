@@ -44,8 +44,11 @@ public:
 	UMaterialInstance* MaterialPoweredOff;
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	UMaterialInstance* MaterialPoweredOn;
+	// Todo: delete (shifted to flashlight)
+	/*
 	UPROPERTY(EditAnywhere, Category = Power)
 	FTimerHandle PowerTraceTimerHandle;
+	*/
 	
 protected:
 	// Called when the game starts or when spawned
