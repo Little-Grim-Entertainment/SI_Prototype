@@ -27,6 +27,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Observation, "Ability.Nick.Observation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_ObserveObject, "Ability.Nick.ObserveObject")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_PossessMovable, "Ability.Nick.PossessMovable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_SetAIRotation, "Ability.Nick.SetAIRotation")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo, "Ability.Gizbo")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gizbo_Construct_Flashlight, "Ability.Gizbo.Construct.Flashlight")

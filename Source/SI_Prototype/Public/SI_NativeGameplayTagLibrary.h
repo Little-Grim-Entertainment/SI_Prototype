@@ -27,6 +27,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Nick_Observation)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Nick_ObserveObject)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Nick_PossessMovable)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Nick_SetAIRotation)
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gizbo)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Ability_Gizbo_Construct_Flashlight)

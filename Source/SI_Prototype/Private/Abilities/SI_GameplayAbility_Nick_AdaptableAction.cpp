@@ -11,7 +11,6 @@
 #include "SI_GameplayTagManager.h"
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Actors/SI_MovableActor.h"
-#include "Characters/SI_Gizbo.h"
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
@@ -197,14 +196,10 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 {
 	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
 	
-	/* //TODO: [Pace] ... Implement when StateTree bug is resolved
 	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
 	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
 
-	//AIAbility->Execute_OnUpdateTarget(this, MoveToIndicator->GetActorLocation()); */
-	//TODO: [Pace] ...remove this line when StateTree c++ corrected
-	Gizbo->MoveToLocation = MoveToIndicator->GetActorLocation();
-	
+	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());	
 	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Gizbo_MoveTo);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
@@ -213,8 +208,12 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 {
 	LG_PRINT(5.f, Green ,"HoldConfirmTagReceived");
+
+	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
+	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
 	
-	PC->Possess(MoveToIndicator);
-	
+	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());
+	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Nick_SetAIRotation);
+
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

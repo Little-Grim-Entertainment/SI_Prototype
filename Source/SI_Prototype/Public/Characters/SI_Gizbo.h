@@ -23,13 +23,6 @@ class SI_PROTOTYPE_API ASI_Gizbo : public ASI_NPC_Interactable , public IAbility
 public:
 	ASI_Gizbo();
 	USI_AbilitySystemComponent* GetSIAbilitySystemComponent() const;
-
-	UPROPERTY(BlueprintReadOnly)
-	FVector MoveToLocation;
-	UPROPERTY(BlueprintReadOnly)
-	bool bDirectedRotation;
-	UPROPERTY(BlueprintReadOnly)
-	FRotator MoveToRotation;
 	
 protected:
 	virtual void BeginPlay() override;

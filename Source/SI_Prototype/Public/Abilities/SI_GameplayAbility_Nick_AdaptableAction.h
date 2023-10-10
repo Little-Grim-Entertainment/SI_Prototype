@@ -7,7 +7,6 @@
 #include "Interfaces/SI_AIInterface.h"
 #include "SI_GameplayAbility_Nick_AdaptableAction.generated.h"
 
-
 class ASI_Gizbo;
 class USI_AbilityTask_WaitCancelConfirmHoldTagAdded;
 class ASI_Nick;
