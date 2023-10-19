@@ -85,7 +85,7 @@ private:
 
 	// PRIVATE VARIABLES
 	UPROPERTY(EditAnywhere, Category = Power)
-	TArray<const ISI_PowerInterface*> PowerActorsHit;
+	TArray<AActor*> PowerActorsHit;
 	
 protected:
 	virtual void BeginPlay() override;

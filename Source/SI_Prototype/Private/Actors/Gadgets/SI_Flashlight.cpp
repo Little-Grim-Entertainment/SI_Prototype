@@ -68,28 +68,22 @@ void ASI_Flashlight::OnConeBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	if (!OtherActor->Implements<USI_PowerInterface>()) {return;}
 	
 	// LT01. [LT = Line Trace process flow] 
-	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
-	{
-		// Add Overlapping Power Actors to array
-		PowerActorsHit.Add(PowerInterfaceActor);
+	// Add Overlapping Power Actors to array
+	PowerActorsHit.Add(OtherActor);
 
-		// Execute trace for instant power actor calculation
-		ExecuteTrace();
-		
-		// Start timer if timer has not been set
-		if (!GetWorldTimerManager().IsTimerActive(FlashlightTraceTimerHandle))
-		{
-			GetWorld()->GetTimerManager().SetTimer(FlashlightTraceTimerHandle, this, &ASI_Flashlight::ExecuteTrace, 0.5f, true);
-		}
-		
-		// > Line trace to object
-		// ON END OVERLAP - Find matching object in array and end timer
-		// then remove struct from array
-		
-		// AddPowerActorToArray
-		PowerActorsHit.Add(PowerInterfaceActor);
-		
+	// Execute trace for instant power actor calculation
+	ExecuteTrace();
+	
+	// Start timer if timer has not been set
+	if (!GetWorldTimerManager().IsTimerActive(FlashlightTraceTimerHandle))
+	{
+		GetWorld()->GetTimerManager().SetTimer(FlashlightTraceTimerHandle, this, &ASI_Flashlight::ExecuteTrace, 0.5f, true);
 	}
+
+	// TODO: See steps below
+	// > Line trace to object
+	// ON END OVERLAP - Find matching object in array and end timer
+	
 	
 	/*// Ensure that the Power Actor has a reference to this Flashlight before passing power
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
@@ -115,13 +109,87 @@ void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 
 void ASI_Flashlight::ExecuteTrace()
 {
+	// LT02. Fire Line Trace to each Power Actor in array
+	
 	// For each power actor in the array
-		// Fire Multiline Trace
-			// Fill hit results in array
-			// If first element (i = 0) is a power actor then pass power
+	for (const AActor* PowerActor : PowerActorsHit)
+	{
+		// Check if power actor is valid
+		if (PowerActor)
+		{
+			// Prepare the multi-line trace 
+			TArray<FHitResult> HitResults;
+			FCollisionQueryParams QueryParams;
+			QueryParams.AddIgnoredActor(this);
+			QueryParams.AddIgnoredActor(FlashlightSegment);
+			FVector Start = this->GetActorLocation();
+			FVector End = PowerActor->GetActorLocation();
 			
+			// Fire the multi-line trace
+			bool bHit = GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, ECC_Visibility, QueryParams);
+
+			// If the trace hit 
+			if (bHit)
+			{
+				// If power actor is first actor hit then pass power
+				if (HitResults[0].GetActor() == PowerActor)
+				{
+					// Todo: Execute power_received interface implementation
+					// Correct FlashlightPowerContribution every time
+					
+				}
+				// Else remove power contribution of flashlight
+				else
+				{
+					// Todo: Execute power_lost interface implementation
+					// Adjust FlashlightPowerContribution to be zero
+				}
+			}
+		}
+	}
 	
+	/*// LT02. Find Flashlight and Power Actor positions
+	FVector Start = this->GetActorLocation();
+	FVector End = Flashlight->FirstSegment->GetComponentLocation();
 	
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	// LT03. Line Trace  between Flashlight and Power Actor
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
+	DrawDebugLine(GetWorld(), Start, End, HitResult.bBlockingHit ? FColor::Red : FColor::Green, false, 1.0f, 0, 5.0f);
+
+	// LT04. Check to see if actor hit is Flashlight
+	AActor* HitActor = HitResult.GetActor();
+	if (HitActor == Flashlight)
+	{
+		// If Power Actor is not currently Flashlight powered
+		if (!bIsFlashlightPowered)
+		{
+			FlashlightPowerContribution = Flashlight->CurrentPower;
+			CurrentPower = CurrentPower + FlashlightPowerContribution;
+			bIsFlashlightPowered = true;
+		}
+		// Else (if) Power Actor is currently Flashlight powered
+		else
+		{
+			// Todo [1]: instead of checking for change every trace, use delegate to update flashlight contribution on segment drop/ pickup
+			// Todo: Let the delegate broadcast update the FlashlightPowerContribution and then recalculate current power and UPDATE POWER DETAILS
+			// Check to see if the Power of the Flashlight is different from what we're adding to Current Power
+			if (FlashlightPowerContribution != Flashlight->CurrentPower)
+			{
+				CurrentPower = CurrentPower - (FlashlightPowerContribution - Flashlight->CurrentPower);
+				FlashlightPowerContribution = Flashlight->CurrentPower;
+			}
+		}		
+	}
+	// Else (if) flashlight is no longer in direct line, remove Flashlight contribution from current power
+	else
+	{
+		CurrentPower = CurrentPower - FlashlightPowerContribution;
+		bIsFlashlightPowered = false;	
+	}*/
 }
 
 void ASI_Flashlight::ActivatePrimaryAction_Implementation()

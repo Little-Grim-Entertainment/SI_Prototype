@@ -38,6 +38,8 @@ public:
 	bool bIsFlashlightSet;
 	UPROPERTY(EditAnywhere, Category = Flashlight)
 	float FlashlightPowerContribution;
+	UPROPERTY(EditAnywhere, Category = Flashlight)
+	float SegmentPowerContribution;
 	
 	
 	UPROPERTY(EditAnywhere, Category = "Materials")
@@ -75,10 +77,10 @@ public:
 	UFUNCTION()
 	void ExecuteTrace();
 
+
 private:
 	void UpdatePowerDetails();
 	// todo: remove debug function on completion
 	UFUNCTION()
 	void PrintDebug();
 };
-

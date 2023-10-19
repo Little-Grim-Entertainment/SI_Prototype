@@ -42,37 +42,35 @@ void ASI_PowerActor::Tick(float DeltaTime)
 
 void ASI_PowerActor::OnPowerReceived_Implementation(AActor* Caller, float InPower)
 {
-	CurrentPower = CurrentPower + InPower;
-	
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Power Actor: Received Power. Current Power: %f"), CurrentPower));
-	}
+	// Todo: Rename interface calls to be segment power and flashlight power
+	// Adjust Segment Contribution
+	SegmentPowerContribution = SegmentPowerContribution + InPower;
 	
 	UpdatePowerDetails();
 }
 
 void ASI_PowerActor::OnPowerLost_Implementation(AActor* Caller, float InPower)
 {	
-	CurrentPower = CurrentPower - InPower;
-
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Power Actor: Lost Power. Current Power: %f"), CurrentPower));
-	}
+	// Todo: Rename interface calls to be segment power and flashlight power
+	// Adjust Segment Contribution
+	SegmentPowerContribution = SegmentPowerContribution - InPower;
+	
 	UpdatePowerDetails();	
 }
 
+// Todo: Remove? Is this step required?
 bool ASI_PowerActor::HasMaxPower_Implementation()
 {
 	return bIsFullyPowered;
 }
 
+// todo: REMOVE
 bool ASI_PowerActor::IsFlashlightSet_Implementation()
 {
 	return bIsFlashlightSet;
 }
 
+// todo: REMOVE
 void ASI_PowerActor::SetFlashlight_Implementation(AActor* Caller)
 {
 	if (ASI_Flashlight* FlashlightActor = Cast<ASI_Flashlight>(Caller))
@@ -83,24 +81,26 @@ void ASI_PowerActor::SetFlashlight_Implementation(AActor* Caller)
 }
 
 void ASI_PowerActor::OnFlashlightPowerReceived_Implementation(AActor* Caller, float InPower)
-{
-	
-	ExecuteTrace();
-	//GetWorld()->GetTimerManager().SetTimer(PowerTraceTimerHandle, this, &ASI_PowerActor::ExecuteTrace, 2.0f, true);	
+{	
+	// Adjust Flashlight Contribution if changed
+	if (!FlashlightPowerContribution == InPower)
+	{
+		FlashlightPowerContribution = InPower;
+		bIsFlashlightPowered = true;	
+		UpdatePowerDetails();
+	}	
 }
 
+// Todo: Adjust to REMOVE InPower in interface call (not needed atm)
 void ASI_PowerActor::OnFlashlightPowerLost_Implementation(AActor* Caller, float InPower)
 {
-	// LT05. End Line Trace timer
-	//GetWorldTimerManager().ClearTimer(PowerTraceTimerHandle);
-	if (bIsFlashlightPowered)
-	{
-		CurrentPower = CurrentPower - FlashlightPowerContribution;
-		bIsFlashlightPowered = false;	
-	}
-	UpdatePowerDetails();
+	// Set Flashlight Contribution to zero
+	FlashlightPowerContribution = 0;
+	bIsFlashlightPowered = false;	
+	UpdatePowerDetails();	
 }
 
+// todo: REMOVE
 void ASI_PowerActor::ExecuteTrace()
 {
 	// LT02. Find Flashlight and Power Actor positions
@@ -150,6 +150,13 @@ void ASI_PowerActor::ExecuteTrace()
 
 void ASI_PowerActor::UpdatePowerDetails()
 {
+	// Recalculate current power
+	CurrentPower = SegmentPowerContribution + FlashlightPowerContribution;
+
+	// Todo: Update UI power indicator
+	
+	
+	// If power requirements are met
 	if (CurrentPower >= RequiredPower)
 	{
 		bIsFullyPowered = true;
@@ -158,6 +165,7 @@ void ASI_PowerActor::UpdatePowerDetails()
 		// todo: delete material change when implementation complete
 		Mesh->SetMaterial(0, MaterialPoweredOn);
 	}
+	// Else power requirements are not met
 	else
 	{
 		// Todo: Not sure if we need to set it to zero.. could it cause calculation problems later?
@@ -171,7 +179,7 @@ void ASI_PowerActor::UpdatePowerDetails()
 		// todo: delete material change when implementation complete
 		Mesh->SetMaterial(0, MaterialPoweredOff);
 	}
-	// Update UI power indicator
+	
 	PrintDebug();
 }
 
