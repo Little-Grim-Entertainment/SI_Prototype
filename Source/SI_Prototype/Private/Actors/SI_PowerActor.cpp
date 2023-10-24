@@ -16,7 +16,7 @@ ASI_PowerActor::ASI_PowerActor()
 	PowerCollisionMesh->SetupAttachment(RootComponent);
 	PowerCollisionMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 	PowerCollisionMesh->SetCollisionResponseToChannel (ECC_GameTraceChannel3, ECR_Overlap);
-	PowerCollisionMesh->SetCollisionResponseToChannel (ECC_Visibility, ECR_Overlap);	
+	PowerCollisionMesh->SetCollisionResponseToChannel (ECC_Visibility, ECR_Ignore);	
 	PowerCollisionMesh->SetCollisionObjectType(ECC_GameTraceChannel3);
 	PowerCollisionMesh->bMultiBodyOverlap = true;
 
@@ -44,7 +44,7 @@ void ASI_PowerActor::OnPowerReceived_Implementation(AActor* Caller, float InPowe
 {
 	// Todo: Rename interface calls to be segment power and flashlight power
 	// Adjust Segment Contribution
-	SegmentPowerContribution = SegmentPowerContribution + InPower;
+	SegmentPowerContribution += InPower;
 	
 	UpdatePowerDetails();
 }
@@ -53,99 +53,29 @@ void ASI_PowerActor::OnPowerLost_Implementation(AActor* Caller, float InPower)
 {	
 	// Todo: Rename interface calls to be segment power and flashlight power
 	// Adjust Segment Contribution
-	SegmentPowerContribution = SegmentPowerContribution - InPower;
+	SegmentPowerContribution -= InPower;
 	
 	UpdatePowerDetails();	
 }
 
-// Todo: Remove? Is this step required?
-bool ASI_PowerActor::HasMaxPower_Implementation()
-{
-	return bIsFullyPowered;
-}
-
-// todo: REMOVE
-bool ASI_PowerActor::IsFlashlightSet_Implementation()
-{
-	return bIsFlashlightSet;
-}
-
-// todo: REMOVE
-void ASI_PowerActor::SetFlashlight_Implementation(AActor* Caller)
-{
-	if (ASI_Flashlight* FlashlightActor = Cast<ASI_Flashlight>(Caller))
-	{
-		Flashlight = FlashlightActor;
-		bIsFlashlightSet = true;
-	}	
-}
-
 void ASI_PowerActor::OnFlashlightPowerReceived_Implementation(AActor* Caller, float InPower)
 {	
-	// Adjust Flashlight Contribution if changed
-	if (!FlashlightPowerContribution == InPower)
+	// Adjust Flashlight contribution if changed
+	if (FlashlightPowerContribution != InPower)
 	{
 		FlashlightPowerContribution = InPower;
-		bIsFlashlightPowered = true;	
-		UpdatePowerDetails();
-	}	
+		bIsFlashlightPowered = true;		
+	}
+	UpdatePowerDetails();
 }
 
 // Todo: Adjust to REMOVE InPower in interface call (not needed atm)
 void ASI_PowerActor::OnFlashlightPowerLost_Implementation(AActor* Caller, float InPower)
 {
-	// Set Flashlight Contribution to zero
+	// Set Flashlight contribution to zero
 	FlashlightPowerContribution = 0;
 	bIsFlashlightPowered = false;	
 	UpdatePowerDetails();	
-}
-
-// todo: REMOVE
-void ASI_PowerActor::ExecuteTrace()
-{
-	// LT02. Find Flashlight and Power Actor positions
-	FVector Start = this->GetActorLocation();
-	FVector End = Flashlight->FirstSegment->GetComponentLocation();
-	
-	FHitResult HitResult;
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-
-	// LT03. Line Trace  between Flashlight and Power Actor
-	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
-	DrawDebugLine(GetWorld(), Start, End, HitResult.bBlockingHit ? FColor::Red : FColor::Green, false, 1.0f, 0, 5.0f);
-
-	// LT04. Check to see if actor hit is Flashlight
-	AActor* HitActor = HitResult.GetActor();
-	if (HitActor == Flashlight)
-	{
-		// If Power Actor is not currently Flashlight powered
-		if (!bIsFlashlightPowered)
-		{
-			FlashlightPowerContribution = Flashlight->CurrentPower;
-			CurrentPower = CurrentPower + FlashlightPowerContribution;
-			bIsFlashlightPowered = true;
-		}
-		// Else (if) Power Actor is currently Flashlight powered
-		else
-		{
-			// Todo [1]: instead of checking for change every trace, use delegate to update flashlight contribution on segment drop/ pickup
-			// Todo: Let the delegate broadcast update the FlashlightPowerContribution and then recalculate current power and UPDATE POWER DETAILS
-			// Check to see if the Power of the Flashlight is different from what we're adding to Current Power
-			if (FlashlightPowerContribution != Flashlight->CurrentPower)
-			{
-				CurrentPower = CurrentPower - (FlashlightPowerContribution - Flashlight->CurrentPower);
-				FlashlightPowerContribution = Flashlight->CurrentPower;
-			}
-		}		
-	}
-	// Else (if) flashlight is no longer in direct line, remove Flashlight contribution from current power
-	else
-	{
-		CurrentPower = CurrentPower - FlashlightPowerContribution;
-		bIsFlashlightPowered = false;	
-	}
-	UpdatePowerDetails();
 }
 
 void ASI_PowerActor::UpdatePowerDetails()
@@ -162,7 +92,7 @@ void ASI_PowerActor::UpdatePowerDetails()
 		bIsFullyPowered = true;
 		// Trigger 'fully-powered' animation
 		// Turn on powered features
-		// todo: delete material change when implementation complete
+		// todo: delete material change when implementation complete//todo: ?????????????????????????????????????????????
 		Mesh->SetMaterial(0, MaterialPoweredOn);
 	}
 	// Else power requirements are not met

@@ -86,6 +86,8 @@ private:
 	// PRIVATE VARIABLES
 	UPROPERTY(EditAnywhere, Category = Power)
 	TArray<AActor*> PowerActorsHit;
+	UPROPERTY(EditAnywhere, Category = Spotlight)
+	FVector ConeRootScale;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -94,5 +96,5 @@ protected:
 	UFUNCTION()
 	void OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	UFUNCTION()
-	void ExecuteTrace();
+	void ExecuteTrace();	
 };

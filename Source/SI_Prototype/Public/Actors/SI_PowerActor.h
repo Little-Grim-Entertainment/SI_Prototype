@@ -46,11 +46,6 @@ public:
 	UMaterialInstance* MaterialPoweredOff;
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	UMaterialInstance* MaterialPoweredOn;
-	// Todo: delete (shifted to flashlight)
-	/*
-	UPROPERTY(EditAnywhere, Category = Power)
-	FTimerHandle PowerTraceTimerHandle;
-	*/
 	
 protected:
 	// Called when the game starts or when spawned
@@ -65,18 +60,9 @@ public:
 	UFUNCTION()
 	virtual void OnPowerLost_Implementation(AActor* Caller, float InPower) override;
 	UFUNCTION()
-	virtual bool HasMaxPower_Implementation() override;
-	UFUNCTION()
-	virtual bool IsFlashlightSet_Implementation() override;
-	UFUNCTION()
-	virtual void SetFlashlight_Implementation(AActor* Caller) override;
-	UFUNCTION()
 	virtual void OnFlashlightPowerReceived_Implementation(AActor* Caller, float InPower) override;
 	UFUNCTION()
 	virtual void OnFlashlightPowerLost_Implementation(AActor* Caller, float InPower) override;
-	UFUNCTION()
-	void ExecuteTrace();
-
 
 private:
 	void UpdatePowerDetails();

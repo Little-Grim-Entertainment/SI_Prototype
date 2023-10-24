@@ -5,6 +5,8 @@
 #include "Components/SpotLightComponent.h"
 #include "Actors/Gadgets/SI_FlashlightSegment.h"
 #include "Interfaces/SI_PowerInterface.h"
+#include "DrawDebugHelpers.h"
+#include "Actors/SI_PowerActor.h"
 
 // TODO: CHANGING CONE SIZE WITH SEGMENTS PLACED
 
@@ -46,7 +48,9 @@ ASI_Flashlight::ASI_Flashlight()
 	Spotlight->SetIntensity(MaxSpotlightIntensity);		
 	Spotlight->SetInnerConeAngle(MaxSpotlightConeAngle);
 	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle);	
-	Spotlight->SetAttenuationRadius(MaxSpotlightAttenuationRadius);	
+	Spotlight->SetAttenuationRadius(MaxSpotlightAttenuationRadius);
+
+	ConeRootScale = FVector(25.75f,25.75f,15.3f);
 }
 
 void ASI_Flashlight::BeginPlay()
@@ -103,20 +107,27 @@ void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 	
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
 	{
+		PowerActorsHit.Remove(OtherActor);
 		PowerInterfaceActor->Execute_OnFlashlightPowerLost(OtherActor, this, CurrentPower);
 	}
 }
 
 void ASI_Flashlight::ExecuteTrace()
 {
-	// LT02. Fire Line Trace to each Power Actor in array
-	
+	// LT02. Fire Line Trace to each Power Actor in array	
 	// For each power actor in the array
-	for (const AActor* PowerActor : PowerActorsHit)
+	for (AActor* PowerActor : PowerActorsHit)
 	{
 		// Check if power actor is valid
 		if (PowerActor)
-		{
+		{			
+			ASI_PowerActor* Powpow = Cast<ASI_PowerActor>(PowerActor);
+			
+			/*//Calling and trying to cast the blueprint as UNameplateController:
+			ConstructorHelpers::FObjectFinder<UMaterialInstance> PowMaterialRef(TEXT("Blueprint'Content/SI/Materials/Gadgets/MI_PowerEmissive_Green'"));
+			UMaterialInstance* PowMaterial = PowMaterialRef.Object;
+			Powpow->Mesh->SetMaterial(0, PowMaterial);*/
+			
 			// Prepare the multi-line trace 
 			TArray<FHitResult> HitResults;
 			FCollisionQueryParams QueryParams;
@@ -127,6 +138,7 @@ void ASI_Flashlight::ExecuteTrace()
 			
 			// Fire the multi-line trace
 			bool bHit = GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, ECC_Visibility, QueryParams);
+			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 0.5f, 0, 4.0f);
 
 			// If the trace hit 
 			if (bHit)
@@ -134,15 +146,16 @@ void ASI_Flashlight::ExecuteTrace()
 				// If power actor is first actor hit then pass power
 				if (HitResults[0].GetActor() == PowerActor)
 				{
-					// Todo: Execute power_received interface implementation
-					// Correct FlashlightPowerContribution every time
-					
+					// Execute interface call to pass power
+					const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(PowerActor);					
+					PowerInterfaceActor->Execute_OnFlashlightPowerReceived(PowerActor, this, CurrentPower);						
 				}
 				// Else remove power contribution of flashlight
 				else
 				{
-					// Todo: Execute power_lost interface implementation
-					// Adjust FlashlightPowerContribution to be zero
+					// Execute interface call to pass power
+					const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(PowerActor);
+					PowerInterfaceActor->Execute_OnFlashlightPowerLost(PowerActor, this, CurrentPower);
 				}
 			}
 		}
@@ -275,8 +288,26 @@ void ASI_Flashlight::SpotlightHandler()
 {
 	// Adjust Spotlight Details	
 	Spotlight->SetInnerConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);
-	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);	
-		
+	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);
+
+	// Adjust collision cone size to match
+	if (SegmentsPlaced == 0)
+	{
+		ConeRootScale = FVector(25.75f,25.75f,15.3f);
+	}
+	else if (SegmentsPlaced == 1)
+	{
+		ConeRootScale = FVector(25.75f,25.75f,15.3f);
+	}
+	else if (SegmentsPlaced == 2)
+	{
+		ConeRootScale = FVector(25.75f,25.75f,15.3f);
+	}
+	else
+	{
+		ConeRootScale = FVector(25.75f,25.75f,15.3f);
+	}
+	
 	// Print Debug Info
 	DebugSpotlightInfo();		
 }
