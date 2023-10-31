@@ -46,6 +46,7 @@ private:
 	void SetupInterrogationState();
 	void SetupMenuState();
 	void SetupObservationState();
+	void SetupPossessIndicatorState();
 	void SetupPossessMovableState();
 	
 	UPROPERTY()
@@ -70,5 +71,6 @@ private:
 	FSimpleDelegate MenuStateDelegate;
 	FSimpleDelegate ObservationStateDelegate;
 	FSimpleDelegate PossessMovableStateDelegate;
+	FSimpleDelegate PossessIndicatorStateDelegate;
 
 };

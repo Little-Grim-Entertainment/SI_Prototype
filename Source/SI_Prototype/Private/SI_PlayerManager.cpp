@@ -100,12 +100,12 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		PlayerController->SetMenuMode(true);
 		return;
 	}
-	if (SITagManager->HasParentTag(InAddedTag, SITag_UI_Screen))
+	if(SITagManager->HasParentTag(InAddedTag, SITag_UI_Screen))
 	{
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Inactive,SITag_Player_State);
 		return;
 	}
-	if (SITagManager->HasParentTag(InAddedTag, SITag_Media))
+	if(SITagManager->HasParentTag(InAddedTag, SITag_Media))
 	{
 		SecondaryMediaTag = InAddedTag;
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Media,SITag_Player_State);
@@ -140,7 +140,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 
 	PlayerDelegateContainer.Find(InAddedTag)->Execute();
 
-	if (!IsValid(PlayerController))
+	if(!IsValid(PlayerController))
 		{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to add input!")); return; }
 
 	PlayerController->AddInputMappingByTag(InAddedTag);
@@ -154,7 +154,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
 	
-	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
+	if(SITagManager->HasParentTag(InRemovedTag, SITag_UI_Menu))
 	{
 		SecondaryMenuTag = FGameplayTag();
 		if(InRemovedTag == SITag_UI_Menu_Map)
@@ -172,13 +172,13 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		return;
 	}
 
-	if (SITagManager->HasParentTag(InRemovedTag, SITag_Media))
+	if(SITagManager->HasParentTag(InRemovedTag, SITag_Media))
 	{
 		SecondaryMediaTag = FGameplayTag();
 		return;
 	}
 	
-	if (SITagManager->HasParentTag(InRemovedTag, SITag_UI_Screen))
+	if(SITagManager->HasParentTag(InRemovedTag, SITag_UI_Screen))
 	{
 		SITagManager->RemoveTag(SITag_Player_State_Inactive);
 		return;
@@ -192,7 +192,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
 		PreviousPlayerState = InRemovedTag;
 	}
 
-	if (!IsValid(PlayerController))
+	if(!IsValid(PlayerController))
 		{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to remove input!")); return;}
 
 	PlayerController->RemoveInputMappingByTag(InRemovedTag);
@@ -229,6 +229,7 @@ void USI_PlayerManager::InitializeDelegates()
 	MenuStateDelegate.BindUObject(this, &ThisClass::SetupMenuState);
 	ObservationStateDelegate.BindUObject(this, &ThisClass::SetupObservationState);
 	PossessMovableStateDelegate.BindUObject(this, &ThisClass::SetupPossessMovableState);
+	PossessIndicatorStateDelegate.BindUObject(this, &ThisClass::SetupPossessIndicatorState);
 	
 }
 
@@ -243,8 +244,8 @@ void USI_PlayerManager::InitializeDelegateMaps()
 	PlayerDelegateContainer.Add(SITag_Player_State_Media, MediaStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Menu, MenuStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_Observation, ObservationStateDelegate);
+	PlayerDelegateContainer.Add(SITag_Player_State_PossessIndicator, PossessIndicatorStateDelegate);
 	PlayerDelegateContainer.Add(SITag_Player_State_PossessMovable, PossessMovableStateDelegate);
-	
 }
 
 
@@ -281,6 +282,10 @@ void USI_PlayerManager::SetupMenuState()
 void USI_PlayerManager::SetupObservationState()
 {
 	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_Observation, SITag_Camera_Mode);
+}
+
+void USI_PlayerManager::SetupPossessIndicatorState()
+{
 }
 
 void USI_PlayerManager::SetupPossessMovableState()

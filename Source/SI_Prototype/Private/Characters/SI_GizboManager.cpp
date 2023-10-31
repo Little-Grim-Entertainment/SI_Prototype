@@ -65,6 +65,17 @@ void USI_GizboManager::ShowGizbo(bool bShouldHide)
 	GizboCharacter->SetActorHiddenInGame(bShouldHide);
 }
 
+void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+{
+	Super::OnGameplayTagAdded(InAddedTag);
+
+	if(SITagManager->HasParentTag(InAddedTag, SITag_Behavior))
+	{
+		SITagManager->ReplaceTagWithSameParent(InAddedTag, SITag_Behavior);
+		return;
+	}
+}
+
 void USI_GizboManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();

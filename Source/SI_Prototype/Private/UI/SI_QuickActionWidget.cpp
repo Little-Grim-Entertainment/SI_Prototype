@@ -15,8 +15,8 @@ void USI_QuickActionWidget::RefreshQuickActionWidget(const FGameplayTag& InUITag
 {
 	if (InUITag == SITag_UI_HUD_QuickAction_GadgetsOne)
 	{
-		UpdateQuickActionUp(SITag_Ability_Gizbo_Follow);
-		UpdateQuickActionDown(SITag_Ability_Gizbo_Wait);
+		UpdateQuickActionUp(SITag_Ability_Follow);
+		UpdateQuickActionDown(SITag_Ability_Wait);
 		UpdateQuickActionLeft(SITag_Ability_Gizbo_Construct_Flashlight);
 		UpdateQuickActionRight(SITag_Ability_Gizbo_Construct_Lockpicks);
 	}
@@ -27,7 +27,6 @@ void USI_QuickActionWidget::RefreshQuickActionWidget(const FGameplayTag& InUITag
 		UpdateQuickActionLeft(SITag_None);
 		UpdateQuickActionRight(SITag_Ability_Nick_PossessMovable);
 	}
-
 }
 
 void USI_QuickActionWidget::NativeConstruct()

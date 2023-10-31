@@ -200,7 +200,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
 
 	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());	
-	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Gizbo_MoveTo);
+	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_MoveTo);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
@@ -213,7 +213,6 @@ void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
 	
 	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());
-	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Nick_SetAIRotation);
-
+	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

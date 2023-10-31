@@ -31,7 +31,7 @@ public:
 	void ShowGizbo(bool bShouldHide);
 	UFUNCTION(BlueprintCallable, Category = "Gizbo")
 	USI_AbilitySystemComponent* GetGizboASC() {return GizboAbilitySystemComponent;}
-
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
 	
 protected:
 

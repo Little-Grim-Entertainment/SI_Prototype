@@ -206,7 +206,7 @@ void ASI_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {LG_LOG(LogSI_Controller, Error, "Pawn is null cannot interact") return;}
 
-	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_Interact.GetTag().GetSingleTagContainer(), false))
+	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false))
 	{
 		OnInteractPressed.Broadcast(InteractableActor, Nick);
 	}
@@ -237,7 +237,7 @@ void ASI_PlayerController::RequestObserveObject()
 		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_ObserveObject.GetTag().GetSingleTagContainer(), false);
 		if (Nick->GetCurrentInteractableActor() != nullptr)
 		{
-			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_Interact.GetTag().GetSingleTagContainer(), false);
+			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
 		}
 	}
 }
@@ -316,21 +316,21 @@ void ASI_PlayerController::RequestUseGadgetPrimary()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_Gadget_UsePrimary);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary);
 }
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_Gadget_UseSecondary);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary);
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gizbo_Follow);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Follow);
 }
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
@@ -365,14 +365,14 @@ void ASI_PlayerController::RequestGizboUseGadgetPrimary()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gizbo_Gadget_UsePrimary);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary);
 }
 
 void ASI_PlayerController::RequestGizboUseGadgetSecondary()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gizbo_Gadget_UseSecondary);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary);
 }
 
 void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetTag)
