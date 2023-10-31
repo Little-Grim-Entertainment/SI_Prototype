@@ -34,13 +34,11 @@ void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag)
 		GetAbilitySystemComponents();
 	}
 	
-	if(!IsValid(NickAbilitySystemComponent))
-		{LG_LOG(LogSI_AbilityManager, Error, "NickAbilitySystemComponent is null unable to activate ability!") return;}
-	if(!IsValid(GizboAbilitySystemComponent))
-		{LG_LOG(LogSI_AbilityManager, Error, "GizboAbilitySystemComponent is null unable to activate ability!") return;}
-	
 	if(SITagManager->HasParentTag(InAddedTag,SITag_Ability_Nick))
 	{
+		if(!IsValid(NickAbilitySystemComponent))
+		{LG_LOG(LogSI_AbilityManager, Error, "NickAbilitySystemComponent is null unable to activate ability!") return;}
+		
 		USI_GameplayAbility* CurrentAbility = NickAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
 	
 		if(!IsValid(CurrentAbility))
@@ -51,6 +49,9 @@ void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag)
 	}
 	else if(SITagManager->HasParentTag(InAddedTag,SITag_Ability_Gizbo))
 	{
+		if(!IsValid(GizboAbilitySystemComponent))
+		{LG_LOG(LogSI_AbilityManager, Error, "GizboAbilitySystemComponent is null unable to activate ability!") return;}
+
 		USI_GameplayAbility* CurrentAbility = GizboAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
 
 		if(!IsValid(CurrentAbility))

@@ -10,7 +10,6 @@
 class USpotLightComponent;
 class ISI_PowerInterface;
 
-
 UCLASS()
 class SI_PROTOTYPE_API ASI_Flashlight : public ASI_BaseGadget
 {
@@ -29,7 +28,7 @@ public:
 	void BindPickUpSegment();
 	void SpawnSegment();
 	void SpotlightHandler();
-	void PowerIntensityHandler();
+	void PowerCalculationHandler();
 	void DebugSpotlightInfo();
 
 	// PUBLIC UFUNCTIONS
@@ -86,7 +85,9 @@ private:
 
 	// PRIVATE VARIABLES
 	UPROPERTY(EditAnywhere, Category = Power)
-	TArray<const ISI_PowerInterface*> PowerActorsHit;
+	TArray<AActor*> PowerActorsHit;
+	UPROPERTY(EditAnywhere, Category = Spotlight)
+	FVector ConeRootScale;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -95,5 +96,5 @@ protected:
 	UFUNCTION()
 	void OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	UFUNCTION()
-	void ExecuteTrace();
+	void ExecuteTrace();	
 };

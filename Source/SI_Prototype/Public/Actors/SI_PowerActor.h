@@ -26,9 +26,9 @@ public:
 	// todo: declare flashlight variable
 	UPROPERTY(EditAnywhere, Category = PowerCollisionMesh)
 	UBoxComponent* PowerCollisionMesh;
-	UPROPERTY(EditAnywhere, Category = Power)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Power)
 	float CurrentPower;	
-	UPROPERTY(EditAnywhere, Category = Power)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Power)
 	float RequiredPower;
 	UPROPERTY(EditAnywhere, Category = Power)
 	bool bIsFullyPowered;
@@ -38,17 +38,14 @@ public:
 	bool bIsFlashlightSet;
 	UPROPERTY(EditAnywhere, Category = Flashlight)
 	float FlashlightPowerContribution;
+	UPROPERTY(EditAnywhere, Category = Flashlight)
+	float SegmentPowerContribution;
 	
 	
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	UMaterialInstance* MaterialPoweredOff;
 	UPROPERTY(EditAnywhere, Category = "Materials")
 	UMaterialInstance* MaterialPoweredOn;
-	// Todo: delete (shifted to flashlight)
-	/*
-	UPROPERTY(EditAnywhere, Category = Power)
-	FTimerHandle PowerTraceTimerHandle;
-	*/
 	
 protected:
 	// Called when the game starts or when spawned
@@ -63,17 +60,9 @@ public:
 	UFUNCTION()
 	virtual void OnPowerLost_Implementation(AActor* Caller, float InPower) override;
 	UFUNCTION()
-	virtual bool HasMaxPower_Implementation() override;
-	UFUNCTION()
-	virtual bool IsFlashlightSet_Implementation() override;
-	UFUNCTION()
-	virtual void SetFlashlight_Implementation(AActor* Caller) override;
-	UFUNCTION()
 	virtual void OnFlashlightPowerReceived_Implementation(AActor* Caller, float InPower) override;
 	UFUNCTION()
 	virtual void OnFlashlightPowerLost_Implementation(AActor* Caller, float InPower) override;
-	UFUNCTION()
-	void ExecuteTrace();
 
 private:
 	void UpdatePowerDetails();
@@ -81,4 +70,3 @@ private:
 	UFUNCTION()
 	void PrintDebug();
 };
-
