@@ -121,13 +121,6 @@ void ASI_Flashlight::ExecuteTrace()
 		// Check if power actor is valid
 		if (PowerActor)
 		{			
-			ASI_PowerActor* Powpow = Cast<ASI_PowerActor>(PowerActor);
-			
-			/*//Calling and trying to cast the blueprint as UNameplateController:
-			ConstructorHelpers::FObjectFinder<UMaterialInstance> PowMaterialRef(TEXT("Blueprint'Content/SI/Materials/Gadgets/MI_PowerEmissive_Green'"));
-			UMaterialInstance* PowMaterial = PowMaterialRef.Object;
-			Powpow->Mesh->SetMaterial(0, PowMaterial);*/
-			
 			// Prepare the multi-line trace 
 			TArray<FHitResult> HitResults;
 			FCollisionQueryParams QueryParams;
@@ -160,49 +153,6 @@ void ASI_Flashlight::ExecuteTrace()
 			}
 		}
 	}
-	
-	/*// LT02. Find Flashlight and Power Actor positions
-	FVector Start = this->GetActorLocation();
-	FVector End = Flashlight->FirstSegment->GetComponentLocation();
-	
-	FHitResult HitResult;
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-
-	// LT03. Line Trace  between Flashlight and Power Actor
-	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
-	DrawDebugLine(GetWorld(), Start, End, HitResult.bBlockingHit ? FColor::Red : FColor::Green, false, 1.0f, 0, 5.0f);
-
-	// LT04. Check to see if actor hit is Flashlight
-	AActor* HitActor = HitResult.GetActor();
-	if (HitActor == Flashlight)
-	{
-		// If Power Actor is not currently Flashlight powered
-		if (!bIsFlashlightPowered)
-		{
-			FlashlightPowerContribution = Flashlight->CurrentPower;
-			CurrentPower = CurrentPower + FlashlightPowerContribution;
-			bIsFlashlightPowered = true;
-		}
-		// Else (if) Power Actor is currently Flashlight powered
-		else
-		{
-			// Todo [1]: instead of checking for change every trace, use delegate to update flashlight contribution on segment drop/ pickup
-			// Todo: Let the delegate broadcast update the FlashlightPowerContribution and then recalculate current power and UPDATE POWER DETAILS
-			// Check to see if the Power of the Flashlight is different from what we're adding to Current Power
-			if (FlashlightPowerContribution != Flashlight->CurrentPower)
-			{
-				CurrentPower = CurrentPower - (FlashlightPowerContribution - Flashlight->CurrentPower);
-				FlashlightPowerContribution = Flashlight->CurrentPower;
-			}
-		}		
-	}
-	// Else (if) flashlight is no longer in direct line, remove Flashlight contribution from current power
-	else
-	{
-		CurrentPower = CurrentPower - FlashlightPowerContribution;
-		bIsFlashlightPowered = false;	
-	}*/
 }
 
 void ASI_Flashlight::ActivatePrimaryAction_Implementation()
@@ -290,23 +240,24 @@ void ASI_Flashlight::SpotlightHandler()
 	Spotlight->SetInnerConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);
 	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);
 
-	// Adjust collision cone size to match
+	// Adjust collision cone size to match flashlight spotlight cone
 	if (SegmentsPlaced == 0)
 	{
 		ConeRootScale = FVector(25.75f,25.75f,15.3f);
 	}
 	else if (SegmentsPlaced == 1)
 	{
-		ConeRootScale = FVector(25.75f,25.75f,15.3f);
+		ConeRootScale = FVector(20.3f,20.3f,17.5f);
 	}
 	else if (SegmentsPlaced == 2)
 	{
-		ConeRootScale = FVector(25.75f,25.75f,15.3f);
+		ConeRootScale = FVector(13.9f,13.9f,19.0f);
 	}
 	else
 	{
-		ConeRootScale = FVector(25.75f,25.75f,15.3f);
+		ConeRootScale = FVector(6.7f,6.7f,19.0f);
 	}
+	ConeRootSC->SetRelativeScale3D(ConeRootScale);
 	
 	// Print Debug Info
 	DebugSpotlightInfo();		

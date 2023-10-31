@@ -26,9 +26,9 @@ public:
 	// todo: declare flashlight variable
 	UPROPERTY(EditAnywhere, Category = PowerCollisionMesh)
 	UBoxComponent* PowerCollisionMesh;
-	UPROPERTY(EditAnywhere, Category = Power)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Power)
 	float CurrentPower;	
-	UPROPERTY(EditAnywhere, Category = Power)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Power)
 	float RequiredPower;
 	UPROPERTY(EditAnywhere, Category = Power)
 	bool bIsFullyPowered;
