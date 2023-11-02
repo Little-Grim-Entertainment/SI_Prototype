@@ -23,14 +23,16 @@ class SI_PROTOTYPE_API USI_AbilityManager : public USI_LocalPlayerSubsystem
 
 public:
 	
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload) override;
 	
 protected:
 
-	void TryActivateAbilityByTag(const FGameplayTag& InAddedTag);
-	void TryCancelAbilityByTag(const FGameplayTag& InAddedTag);
+	virtual void OnGameModeBeginPlay() override;
+	void TryActivateAbilityByTag(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload);
+	
+	//TODO: Pace... Do I need this?
+	void TryCancelAbilityByTag(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload);
 	void AddRemoveLooseAbilityTags(const FGameplayTag& InAddedTag);
-	void GetAbilitySystemComponents();
 
 	UPROPERTY()
 	USI_AbilitySystemComponent* GizboAbilitySystemComponent;

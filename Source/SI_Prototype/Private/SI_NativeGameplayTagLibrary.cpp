@@ -13,17 +13,21 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Cancel, "Ability.Cancel")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Confirm, "Ability.Confirm")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_HoldConfirm, "Ability.HoldConfirm")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Follow, "Ability.Follow")
+
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_AI, "Ability.AI")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_AI_Follow, "Ability.AI.Follow")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_AI_MoveTo, "Ability.AI.MoveTo")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_AI_Wait, "Ability.AI.Wait")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UsePrimary, "Ability.Gadget.UsePrimary")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Gadget_UseSecondary, "Ability.Gadget.UseSecondary")
+	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact, "Ability.Interact")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Drop, "Ability.Interact.Drop")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pickup, "Ability.Interact.Pickup")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Pull, "Ability.Interact.Pull")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Interact_Push, "Ability.Interact.Push")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_MoveTo, "Ability.MoveTo")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Wait, "Ability.Wait")
-	
+		
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick, "Ability.Nick")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_AdaptableAction, "Ability.Nick.AdaptableAction")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Ability_Nick_Observation, "Ability.Nick.Observation")

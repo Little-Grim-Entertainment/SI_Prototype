@@ -14,6 +14,7 @@
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
+#include "Characters/SI_Gizbo.h"
 
 void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -199,8 +200,9 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
 	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
 
-	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());	
-	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_MoveTo);
+	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

@@ -314,30 +314,37 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 
 void ASI_PlayerController::RequestUseGadgetPrimary()
 {
-	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
-	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary);
+	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogSI_Controller, Error, "SITagManager or Nick is null cannot add tag") return;}
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
+
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary, Payload);
 }
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
 {
-	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogSI_Controller, Error, "SITagManager or Nick is null cannot add tag") return;}
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary, Payload);
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
 {
-	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	if(!IsValid(SITagManager) || !IsValid(Nick) || !IsValid(Gizbo)) {LG_LOG(LogSI_Controller, Error, "SITagManager, Nick, or Gizbo is null cannot add tag") return;}
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);	
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Follow);
+	SITagManager->AddNewGameplayTag(SITag_Ability_AI_Follow, Payload);
 }
 
 void ASI_PlayerController::RequestToggleGizboAdaptableAction()
 {
-	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogSI_Controller, Error, "SITagManager or Nick is null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction);
+	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction, Payload);
 }
 
 void ASI_PlayerController::RequestCancelAbility()
@@ -363,16 +370,20 @@ void ASI_PlayerController::RequestHoldConfirmAbility()
 
 void ASI_PlayerController::RequestGizboUseGadgetPrimary()
 {
-	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	if(!IsValid(SITagManager) || !IsValid(Nick) || !IsValid(Gizbo)) {LG_LOG(LogSI_Controller, Error, "SITagManager, Nick, or Gizbo is null cannot add tag") return;}
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary);
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary, Payload);
 }
 
 void ASI_PlayerController::RequestGizboUseGadgetSecondary()
 {
-	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Controller, Error, "SITagManager Is Null cannot add tag") return;}
+	if(!IsValid(SITagManager) || !IsValid(Nick) || !IsValid(Gizbo)) {LG_LOG(LogSI_Controller, Error, "SITagManager, Nick, or Gizbo is null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary);
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	
+	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary, Payload);
 }
 
 void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetTag)
