@@ -35,11 +35,11 @@ void USI_WorldSubsystem::InitializeDelegateMaps()
 	
 }
 
-void USI_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 
 }
 
-void USI_WorldSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_WorldSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 }

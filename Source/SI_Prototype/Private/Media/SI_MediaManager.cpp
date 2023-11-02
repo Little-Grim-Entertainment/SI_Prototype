@@ -18,7 +18,7 @@
 #include "MediaAssets/Public/MediaSoundComponent.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 
-void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
 	
@@ -38,7 +38,7 @@ void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	}
 }
 
-void USI_MediaManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_MediaManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagRemoved(InRemovedTag);
 	

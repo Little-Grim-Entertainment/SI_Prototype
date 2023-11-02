@@ -36,7 +36,7 @@ void USI_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 	
 }
 
-void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
 
@@ -58,7 +58,7 @@ void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	}
 }
 
-void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagRemoved(InRemovedTag);
 

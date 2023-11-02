@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SI_Types.h"
+#include "SI_GameplayTagTypes.h"
 #include "Subsystems/SI_WorldSubsystem.h"
 #include "SI_MusicManager.generated.h"
 
@@ -54,8 +55,8 @@ public:
 protected:
 
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr) override;
 
 private:
 	

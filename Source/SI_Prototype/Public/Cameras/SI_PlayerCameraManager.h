@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "SI_GameplayTagTypes.h"
 #include "Camera/PlayerCameraManager.h"
 #include "SI_PlayerCameraManager.generated.h"
 
@@ -26,9 +27,7 @@ class SI_PROTOTYPE_API ASI_PlayerCameraManager : public APlayerCameraManager
 protected:
 	
 	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
-	UFUNCTION()
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag);
+	
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr);
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr);
 };

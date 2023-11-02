@@ -48,10 +48,9 @@ protected:
 	virtual void OnGameModeBeginPlay();
 	UFUNCTION()
 	virtual void OnPlayerStart();
-	UFUNCTION()
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
-	UFUNCTION()
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag);
+
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr);
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr);
 
 private:
 

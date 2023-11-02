@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/SI_GameInstanceSubsystem.h"
+#include "SI_GameplayTagTypes.h"
 #include "SI_GizboManager.generated.h"
 
 class USI_AbilitySystemComponent;
@@ -31,7 +32,7 @@ public:
 	void ShowGizbo(bool bShouldHide);
 	UFUNCTION(BlueprintCallable, Category = "Gizbo")
 	USI_AbilitySystemComponent* GetGizboASC() {return GizboAbilitySystemComponent;}
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr) override;
 	
 protected:
 

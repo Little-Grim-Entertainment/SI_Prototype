@@ -24,7 +24,7 @@ void ASI_PlayerCameraManager::BeginPlay()
 	SITagManager->OnTagRemoved().AddUObject(this, &ThisClass::OnGameplayTagRemoved);
 }
 
-void ASI_PlayerCameraManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void ASI_PlayerCameraManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Camera)){return;}
 
@@ -34,7 +34,7 @@ void ASI_PlayerCameraManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	Nick->GetATPCCamera()->SetCameraMode(InAddedTag, false, false);	
 }
 
-void ASI_PlayerCameraManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void ASI_PlayerCameraManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	
 }

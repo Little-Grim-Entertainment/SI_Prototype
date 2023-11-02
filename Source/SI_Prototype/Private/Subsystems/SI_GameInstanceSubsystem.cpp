@@ -53,13 +53,13 @@ void USI_GameInstanceSubsystem::OnPlayerStart()
 {
 }
 
-void USI_GameInstanceSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_GameInstanceSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	/*if(InAddedTag == PreviouslyAddedTag) {return;}
 	PreviouslyAddedTag = InAddedTag;*/
 }
 
-void USI_GameInstanceSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_GameInstanceSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	/*if(InRemovedTag == PreviouslyRemovedTag) {return;}
 	PreviouslyRemovedTag = InRemovedTag;*/

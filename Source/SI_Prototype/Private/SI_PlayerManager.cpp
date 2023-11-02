@@ -81,7 +81,7 @@ void USI_PlayerManager::Initialize(FSubsystemCollectionBase& Collection)
 }
 
 //Called from listener of GameplayTagManager OnTagAddedDelegate.Broadcast() in AddNewGameplayTag()
-void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	if(!IsValid(GetWorld())) {}
 	
@@ -147,7 +147,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 }
 
 //Called from listener of GameplayTagManager OnTagRemovedDelegate.Broadcast() in RemoveTag()
-void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	if(!IsValid(GetWorld()))
 		{UE_LOG(LogSI_PlayerManager, Error, TEXT("World is null unable to remove tag!")); return;}

@@ -5,13 +5,12 @@
 
 #include "LG_DebugMacros.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagTypes.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogSI_GameplayTagManager);
 
-void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
+void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
 {
 	FSI_GameplayTagContainer& ContainerToAddTo = GetContainerTypeByTag(InGameplayTag);
 	if (!InGameplayTag.IsValid()) return;
@@ -19,21 +18,21 @@ void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag
 	if(HasParentTag(InGameplayTag, SITag_Ability))
 	{
 		LG_LOG(LogSI_GameplayTagManager, Log, "Ability Tag Added: %s", *InGameplayTag.ToString());
-		OnTagAddedDelegate.Broadcast(InGameplayTag);
+		OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
 		return;
 	}
 
 	ContainerToAddTo.AddTag(InGameplayTag);
-	OnTagAddedDelegate.Broadcast(InGameplayTag);
+	OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
 }
 
-void USI_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag)
+void USI_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
 {
 	FSI_GameplayTagContainer& ContainerToRemoveFrom = GetContainerTypeByTag(InGameplayTag);
 	if (!ContainerToRemoveFrom.HasTagExact(InGameplayTag)) {return;}
 	
 	ContainerToRemoveFrom.RemoveTag(InGameplayTag);
-	OnTagRemovedDelegate.Broadcast(InGameplayTag);
+	OnTagRemovedDelegate.Broadcast(InGameplayTag, InTagPayload);
 }
 
 void USI_GameplayTagManager::ClearAllTagsFromContainer(FSI_GameplayTagContainer& InContainerToClear)

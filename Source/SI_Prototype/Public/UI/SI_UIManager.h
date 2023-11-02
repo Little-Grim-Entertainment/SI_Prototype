@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SI_QuickActionWidget.h"
+#include "SI_GameplayTagTypes.h"
 #include "TimerManager.h"
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_UIManager.generated.h"
@@ -114,8 +115,8 @@ protected:
 
 	virtual void OnGameInstanceInit() override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr) override;
 	virtual void OnPlayerStart() override;
 	
 	void DisplayDialogueBox();

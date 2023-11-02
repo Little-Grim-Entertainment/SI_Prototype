@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/SI_LocalPlayerSubsystem.h"
+#include "SI_GameplayTagTypes.h"
 #include "SI_PlayerManager.generated.h"
 
 class USI_GameplayAbility;
@@ -30,8 +31,8 @@ public:
 protected:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr) override;
 	virtual void OnPlayerStart() override;
 	virtual void OnGameModeBeginPlay() override;
 	
