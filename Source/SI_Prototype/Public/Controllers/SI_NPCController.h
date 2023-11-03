@@ -28,10 +28,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 	//TODO: Should also define what to do OnUnPossess
-	virtual void UpdateBehaviorTree();
+	
 	virtual void ConfigurePerception();
-	virtual void SetSeenTarget(AActor* Actor);
-	virtual void SetLostTarget();
 	//TODO: Will need to add support for AI Perception Teams, if we want NPCs to belong to specific factions, and have interactions between each other.
 	
 	UFUNCTION()
@@ -44,10 +42,4 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<ASI_NPC> PossessedNPC = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
-	FName BlackboardTargetKey = "Target";
-
-	UPROPERTY(EditDefaultsOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
-	FName BlackboardCanSeeTargetKey = "CanSeeTarget";
 };

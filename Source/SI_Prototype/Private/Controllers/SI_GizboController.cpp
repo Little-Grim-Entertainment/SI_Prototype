@@ -12,22 +12,19 @@
 
 ASI_GizboController::ASI_GizboController() : ASI_NPCController_Interactable()
 {
-	ConfigurePerception();
+	
 }
 
 void ASI_GizboController::BeginPlay()
 {
-	Super::BeginPlay();	
+	Super::BeginPlay();
+
+	ConfigurePerception();
 }
 
 void ASI_GizboController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-}
-
-void ASI_GizboController::UpdateBehaviorTree()
-{
-	Super::UpdateBehaviorTree();
 }
 
 void ASI_GizboController::ConfigurePerception()
@@ -60,11 +57,6 @@ void ASI_GizboController::ConfigurePerception()
 	}
 }
 
-void ASI_GizboController::SetSeenTarget(AActor* Actor)
-{
-	Super::SetSeenTarget(Actor);
-}
-
 void ASI_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (Actor && Stimulus.IsValid() && Stimulus.IsActive())
@@ -79,8 +71,7 @@ void ASI_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus S
 						//TODO: Amend accordingly
 						if (bCanFollow)
 						{
-							SetSeenTarget(Actor);
-							UpdateBehaviorTree();
+						
 						}
 						break;
 					}
@@ -105,8 +96,7 @@ void ASI_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus S
 						//TODO: Amend accordingly
 						if (bCanMoveTo)
 						{
-							SetSeenTarget(Actor);
-							UpdateBehaviorTree();
+							
 						}
 						break;
 					}
@@ -125,65 +115,4 @@ void ASI_GizboController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus S
 	}
 }
 
-void ASI_GizboController::ToggleFollow()
-{
-	bCanFollow = !bCanFollow;
-	bCanMoveTo = false;
-	
-	if (!bCanFollow && PossessedNPC->IsPerformingMainAction())
-	{
-		// Stop Gizbo from following Nick
-		PossessedNPC->SetCurrentBehavior(SITag_Behavior_None);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Follow Action Disabled")));
-		UE_LOG(LogSI_AI, Log, TEXT("%s : SI_GizboController::ToggleFollow Follow Action Disabled"), *GetNameSafe(GetPawn()));
-	}
-	else
-	{
-		// Allow Gizbo to follow Nick
-		PossessedNPC->SetCurrentBehavior(SITag_Behavior_Default);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Follow Action Enabled")));
-		UE_LOG(LogSI_AI, Log, TEXT("%s : SI_GizboController::ToggleFollow Follow Action Enabled"), *GetNameSafe(GetPawn()));
-	}
-	
-	UpdateBehaviorTree();
-}
 
-void ASI_GizboController::ToggleMoveTo()
-{
-	bCanMoveTo = !bCanMoveTo;
-	bCanFollow = false;
-
-	if (!bCanMoveTo && PossessedNPC->IsMovingToTarget())
-	{
-		// Stop Gizbo from moving to a target
-		PossessedNPC->SetCurrentBehavior(SITag_Behavior_None);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: MoveTo Action Disabled")));
-		UE_LOG(LogSI_AI, Log, TEXT("%s : SI_GizboController::ToggleMoveTo MoveTo Action Disabled"), *GetNameSafe(GetPawn()));
-	}
-	else
-	{
-		// Allow Gizbo to move to a target
-		PossessedNPC->SetCurrentBehavior(SITag_Behavior_MoveTo);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: MoveTo Action Enabled")));
-		UE_LOG(LogSI_AI, Log, TEXT("%s : SI_GizboController::ToggleMoveTo MoveTo Action Enabled"), *GetNameSafe(GetPawn()));
-	}
-	
-	UpdateBehaviorTree();
-}
-
-void ASI_GizboController::ToggleWait()
-{
-	bCanFollow = false;
-	bCanMoveTo = false;
-
-	if (!PossessedNPC->IsDoingNothing())
-	{
-		// Make Gizbo wait for further action
-		PossessedNPC->SetCurrentBehavior(SITag_Behavior_None);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Gizbo: Waiting Action Enabled")));
-		UE_LOG(LogSI_AI, Log, TEXT("%s : SI_GizboController::ToggleWait Waiting Action Enabled"), *GetNameSafe(GetPawn()));
-	}
-
-	SetLostTarget();
-	UpdateBehaviorTree();
-}

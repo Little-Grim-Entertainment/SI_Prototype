@@ -18,13 +18,6 @@ class SI_PROTOTYPE_API ASI_GizboController : public ASI_NPCController_Interactab
 	
 public:
 	ASI_GizboController();
-
-	UFUNCTION(BlueprintCallable, Category = "AI")
-	void ToggleFollow();
-	UFUNCTION(BlueprintCallable, Category = "AI") //TODO: Possibly remove these specifiers later if not needed
-	void ToggleMoveTo();
-	UFUNCTION(BlueprintCallable, Category = "AI")
-	void ToggleWait();
 	
 	UPROPERTY(BlueprintReadOnly)
 	ASI_Nick* Nick;
@@ -35,11 +28,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 	//TODO: Should also define what to do OnUnPossess
-	virtual void UpdateBehaviorTree() override;
 	virtual void ConfigurePerception() override;
-	virtual void SetSeenTarget(AActor* Actor) override;
 	//TODO: Will need to add support for AI Perception Teams, if we want NPCs to belong to specific factions, and have interactions between each other.
-	
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus) override;
 	
 	/*
