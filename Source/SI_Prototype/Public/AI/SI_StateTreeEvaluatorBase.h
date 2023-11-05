@@ -24,6 +24,6 @@ public:
 	ASI_Gizbo* Gizbo;
 	UPROPERTY(EditAnywhere, Category = "Output")
 	ASI_Nick* Nick;
-	UPROPERTY(EditAnywhere, Category = "Output")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Output")
 	FVector MoveToLocation;
 };

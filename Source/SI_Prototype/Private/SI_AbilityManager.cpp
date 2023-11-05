@@ -43,15 +43,13 @@ void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag,
 	
 	USI_AbilitySystemComponent* CharacterAbilitySystemComponent = InTagPayload->Target->GetComponentByClass<USI_AbilitySystemComponent>();
 	
-	if(!IsValid(CharacterAbilitySystemComponent))
-		{LG_LOG(LogSI_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to activate ability!") return;}
+	if(!IsValid(CharacterAbilitySystemComponent)) {LG_LOG(LogSI_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to activate ability!") return;}
 		
 	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
 
-	if(!IsValid(CurrentAbility))
-		{LG_LOG(LogSI_AbilityManager, Error, "%s is null unable to activate ability!", *CurrentAbility->GetName()); return;}
+	if(!IsValid(CurrentAbility)) {LG_LOG(LogSI_AbilityManager, Error, "%s is null unable to activate ability!", *CurrentAbility->GetName()); return;}
 
-	LG_PRINT(10.f, Green, "Attempting to activate %s", *CurrentAbility->GetName());
+		LG_PRINT(10.f, Green, "Attempting to activate %s", *CurrentAbility->GetName());
 	CharacterAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
 }
 

@@ -199,8 +199,9 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 	
 	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
 	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
-
+	
 	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());
+	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
 	
