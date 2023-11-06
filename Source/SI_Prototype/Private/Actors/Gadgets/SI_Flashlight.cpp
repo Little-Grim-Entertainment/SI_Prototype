@@ -159,13 +159,6 @@ void ASI_Flashlight::ActivateSecondaryAction_Implementation()
 	}	
 }
 
-void ASI_Flashlight::CancelSecondaryAction_Implementation()
-{
-	Super::CancelSecondaryAction();
-
-	//Not sure if you need a cancel for this one you can remove if you need to I just put it here in autopilot mode
-}
-
 void ASI_Flashlight::PlaceSegment()
 {
 	// PlayAnimation;	
