@@ -1,11 +1,11 @@
-"P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Module.LGDebug.cpp"
-/FI"P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
-/FI"P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Definitions.LGDebug.h"
-/Yu"P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
-/Fp"P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h.pch"
-/Fo"P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Module.LGDebug.cpp.obj"
-/sourceDependencies "P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Module.LGDebug.cpp.dep.json"
-@"P:\SpadeInvestigations\5.2\SI_Prototype 5.3\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\LGDebug.Shared.rsp"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Module.LGDebug.cpp"
+/FI"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
+/FI"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Definitions.LGDebug.h"
+/Yu"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
+/Fp"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h.pch"
+/Fo"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Module.LGDebug.cpp.obj"
+/sourceDependencies "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\Module.LGDebug.cpp.dep.json"
+@"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDebug\LGDebug.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi
