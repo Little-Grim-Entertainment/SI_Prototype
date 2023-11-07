@@ -89,7 +89,7 @@ void ASI_PowerActor::UpdatePowerDetails()
 	// If power requirements are met
 	if (CurrentPower >= RequiredPower)
 	{
-		bIsFullyPowered = true;
+		bIsFullyPowered = true;		
 		// Trigger 'fully-powered' animation
 		// Turn on powered features
 		// todo: delete material change when implementation complete//todo: ?????????????????????????????????????????????
@@ -109,16 +109,17 @@ void ASI_PowerActor::UpdatePowerDetails()
 		// todo: delete material change when implementation complete
 		Mesh->SetMaterial(0, MaterialPoweredOff);
 	}
-	
-	PrintDebug();
+	OnFullyPowered.Broadcast(bIsFullyPowered);
+
+	//PrintDebug();
 }
 
 void ASI_PowerActor::PrintDebug()
 {
-	if(GEngine)
+	/*if(GEngine)
 	{		
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("Power Actor: Current Power: %f"), CurrentPower));
-	}
+	}*/
 	
 }
 

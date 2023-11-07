@@ -11,6 +11,8 @@ class UBoxComponent;
 class ASI_FlashlightSegment;
 class ASI_Flashlight;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFullyPowered, bool, bIsFullyPowered);
+
 UCLASS()
 class SI_PROTOTYPE_API ASI_PowerActor : public ASI_InteractableActor, public ISI_PowerInterface
 {
@@ -22,6 +24,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Flashlight)
 	ASI_Flashlight* Flashlight;
+	FOnFullyPowered OnFullyPowered;
 	
 	// todo: declare flashlight variable
 	UPROPERTY(EditAnywhere, Category = PowerCollisionMesh)
