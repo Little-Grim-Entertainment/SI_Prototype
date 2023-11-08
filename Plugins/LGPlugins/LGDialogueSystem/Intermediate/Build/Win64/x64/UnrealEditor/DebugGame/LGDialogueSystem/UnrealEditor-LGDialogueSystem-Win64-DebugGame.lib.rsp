@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-LGDialogueSystem-Win64-DebugGame.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\DebugGame\Engine\SharedPCH.Engine.NonOptimized.Cpp17.InclOrderUnreal5_0.h.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDialogueSystem\Module.LGDialogueSystem.cpp.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDialogueSystem\Default.rc2.res"
+/OUT:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDialogueSystem\UnrealEditor-LGDialogueSystem-Win64-DebugGame.lib"
