@@ -1,0 +1,23 @@
+﻿{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "LGCsvDataProcessor",
+	"Description": "Handles Importing and Exporting of CSV data from Google Sheets",
+	"Category": "Other",
+	"CreatedBy": "Little Grim Entertainment",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "LGCsvDataProcessor",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
