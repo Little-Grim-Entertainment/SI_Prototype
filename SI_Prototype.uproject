@@ -103,6 +103,10 @@
 			"Name": "ProtoAnimatedText",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/0dd4efc6c34b46cab7d195a0002ecf01"
+		},
+		{
+			"Name": "LGDialogueSystem",
+			"Enabled": true
 		}
 	]
 }
