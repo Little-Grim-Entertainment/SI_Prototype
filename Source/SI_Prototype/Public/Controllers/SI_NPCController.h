@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Perception/AIPerceptionTypes.h"
+#include "SI_AITypes.h"
 #include "SI_NPCController.generated.h"
 
+class UStateTreeComponent;
 class ASI_NPC;
 class UBehaviorTreeComponent;
 class UAIPerceptionComponent;
@@ -24,6 +26,11 @@ class SI_PROTOTYPE_API ASI_NPCController : public AAIController
 public:
 	ASI_NPCController();
 
+	FSI_NPCMemory* GetNPCMemory() {return NPCMemory;}
+	const FSI_NPCMemory* GetNPCMemory() const {return NPCMemory;}
+	
+	FSI_NPCMemory* NPCMemory = nullptr;
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
@@ -42,4 +49,7 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<ASI_NPC> PossessedNPC = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
+	UStateTreeComponent* StateTreeComponent;
 };

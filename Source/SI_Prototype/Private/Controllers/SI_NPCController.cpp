@@ -5,26 +5,27 @@
 
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Characters/SI_NPC.h"
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "SI_Prototype/SI_Prototype.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "AI/SI_StateTreeComponentBase.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
 ASI_NPCController::ASI_NPCController()
 {
+	//StateTreeComponent = CreateDefaultSubobject<UStateTreeComponent>(TEXT("StateTreeComponent"));
 	PerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component"));
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("Hearing Config"));
+	NPCMemory = new FSI_NPCMemory();
 }
 
 void ASI_NPCController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	ConfigurePerception();
 	
 	if (PerceptionComp)

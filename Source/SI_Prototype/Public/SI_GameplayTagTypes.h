@@ -32,7 +32,8 @@ struct FSITagPayload
 	GENERATED_BODY()
 
 	FSITagPayload() {}
-	FSITagPayload(AActor* InCaller, AActor* InTarget); 
+	FSITagPayload(AActor* InCaller, AActor* InTarget);
+	
 	UPROPERTY()
 	AActor* Caller = nullptr;
 	UPROPERTY()

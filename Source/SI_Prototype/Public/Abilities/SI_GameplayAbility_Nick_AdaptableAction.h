@@ -74,7 +74,7 @@ protected:
 	*/
 	UFUNCTION()
 	void HoldConfirmTagReceived();
-	
+
 	UPROPERTY()
 	USI_AbilityTask_WaitCancelConfirmHoldTagAdded* WaitCancelConfirmHoldTagAddedTask;
 	

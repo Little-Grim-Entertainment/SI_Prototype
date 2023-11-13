@@ -11,6 +11,7 @@
 #include "SI_GameplayTagManager.h"
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Actors/SI_MovableActor.h"
+#include "AI/StateTree/Tasks/SI_StateTreeTaskCommonBase.h"
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
@@ -197,12 +198,15 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 {
 	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
 	
-	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
-	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
-	
-	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());
-	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+
+	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
+	if(!IsValid(AIController)) {LG_LOG(LogSI_Ability, Error, "AIController is not valid"); return; }	
+
+	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
+	AIController->GetNPCMemory()->SetMoveToLocation(NewMoveToLocation);
+	LG_PRINT(5.0f, Blue, "%s", *NewMoveToLocation.ToString());
+	
 	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
@@ -210,12 +214,19 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 
 void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 {
-	LG_PRINT(5.f, Green ,"HoldConfirmTagReceived");
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
-	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
-	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
+	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
+	if(!IsValid(AIController)) {LG_LOG(LogSI_Ability, Error, "AIController is not valid"); return; }	
+	FSI_NPCMemory* NPCMemory = AIController->GetNPCMemory();
+	if(*NPCMemory == FSI_NPCMemory()) {LG_LOG(LogSI_Ability, Error, "NPCMemory is Empty"); return; }
+
+	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
+	NPCMemory->SetMoveToLocation(NewMoveToLocation);
 	
-	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());
+	LG_PRINT(5.0f, Blue, "%s", *NPCMemory->MoveToLocation.ToString());
+	
+	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

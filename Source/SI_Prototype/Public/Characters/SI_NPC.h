@@ -6,12 +6,13 @@
 #include "Characters/SI_Character.h"
 #include "AIController.h"
 #include "SI_NativeGameplayTagLibrary.h"
+#include "Controllers/SI_NPCController_Interactable.h"
 #include "SI_NPC.generated.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
 struct FGameplayTagContainer;
-class USI_StateTreeComponent;
+class USI_StateTreeComponentBase;
 
 /**
  * Base NPC class for SI Prototype
@@ -32,9 +33,7 @@ public:
 	bool IsPerformingMainAction() const;
 	
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
-	USI_StateTreeComponent* StateTreeComponent;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
 	FGameplayTag CurrentBehaviorTag = SITag_Behavior;
 

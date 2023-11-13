@@ -2,14 +2,15 @@
 
 
 #include "Characters/SI_NPC.h"
+
+#include "LG_DebugMacros.h"
 #include "SI_NativeGameplayTagLibrary.h"
-#include "AI/SI_StateTreeComponent.h"
+
 
 using namespace SI_NativeGameplayTagLibrary;
 
 ASI_NPC::ASI_NPC()
 {
-	StateTreeComponent = CreateDefaultSubobject<USI_StateTreeComponent>(TEXT("StateTreeComponent"));
 }
 
 void ASI_NPC::SetCurrentBehavior(const FGameplayTag NewBehaviorTag)
@@ -18,6 +19,7 @@ void ASI_NPC::SetCurrentBehavior(const FGameplayTag NewBehaviorTag)
 	{
 		CurrentBehaviorTag = NewBehaviorTag;
 	}
+	LG_PRINT(5.0f, Black , "ASI_NPC::SetCurrentBehavior %s", *CurrentBehaviorTag.ToString());
 }
 
 FGameplayTag& ASI_NPC::GetCurrentBehaviorTag()
