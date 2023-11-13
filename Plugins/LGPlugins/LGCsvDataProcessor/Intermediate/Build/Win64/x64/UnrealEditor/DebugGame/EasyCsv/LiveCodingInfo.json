@@ -1,0 +1,12 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.EasyCsv.cpp.obj": [
+			"EasyCsv.gen.cpp.obj",
+			"EasyCsv.init.gen.cpp.obj",
+			"EasyCsvProjectSettings.gen.cpp.obj",
+			"EasyCsv.cpp.obj",
+			"EasyCsvModule.cpp.obj"
+		]
+	}
+}

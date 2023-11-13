@@ -38,6 +38,9 @@ public class LGCsvDataProcessor : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"LGDialogueSystem",
+				"RuntimeDataTable",
+				"EasyCsv"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -37,7 +37,8 @@ public class LGDialogueSystem : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore", 
+				"LGCsvDataProcessor",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

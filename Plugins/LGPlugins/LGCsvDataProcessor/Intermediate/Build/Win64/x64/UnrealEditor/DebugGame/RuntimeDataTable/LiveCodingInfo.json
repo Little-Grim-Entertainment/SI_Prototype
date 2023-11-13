@@ -1,0 +1,13 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.RuntimeDataTable.cpp.obj": [
+			"RuntimeDataTable.gen.cpp.obj",
+			"RuntimeDataTable.init.gen.cpp.obj",
+			"RuntimeDataTableProjectSettings.gen.cpp.obj",
+			"CsvToGoogleSheetsHandler.cpp.obj",
+			"RuntimeDataTable.cpp.obj",
+			"RuntimeDataTableModule.cpp.obj"
+		]
+	}
+}

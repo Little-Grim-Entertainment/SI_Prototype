@@ -2,7 +2,10 @@
 	"RemapUnityFiles": 
 	{
 		"Module.LGDialogueSystem.cpp.obj": [
-			"LGDialogueSystem.cpp.obj"
+			"LGDialogueSystem.init.gen.cpp.obj",
+			"LGDialogueTypes.gen.cpp.obj",
+			"LGDialogueSystem.cpp.obj",
+			"LGDialogueTypes.cpp.obj"
 		]
 	}
 }

@@ -1,0 +1,9 @@
+{
+	"BuildId": "27405482",
+	"Modules": 
+	{
+		"EasyCsv": "UnrealEditor-EasyCsv-Win64-DebugGame.dll",
+		"LGCsvDataProcessor": "UnrealEditor-LGCsvDataProcessor-Win64-DebugGame.dll",
+		"RuntimeDataTable": "UnrealEditor-RuntimeDataTable-Win64-DebugGame.dll"
+	}
+}
