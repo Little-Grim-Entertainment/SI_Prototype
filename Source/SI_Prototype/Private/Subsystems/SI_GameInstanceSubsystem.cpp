@@ -8,8 +8,6 @@
 #include "SI_GameplayTagManager.h"
 #include "Characters/SI_GizboManager.h"
 
-DEFINE_LOG_CATEGORY(LogSI_GameInstanceSubsystem);
-
 void USI_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

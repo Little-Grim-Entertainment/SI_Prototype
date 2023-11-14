@@ -8,8 +8,6 @@
 #include "SI_GameplayTagManager.h"
 #include "Characters/SI_Nick.h"
 
-DEFINE_LOG_CATEGORY(LogSI_PlayerCameraManager);
-
 void ASI_PlayerCameraManager::BeginPlay()
 {
 	Super::BeginPlay();

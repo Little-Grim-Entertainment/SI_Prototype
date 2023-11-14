@@ -29,7 +29,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAb
 	if(!IsValid(SICameraManger)) return;
 
 	USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
-	if(!IsValid(GizboManager)) {LG_LOG(LogSI_Ability, Error, "GizboManager is invalid") return;}
+	if(!IsValid(GizboManager)) {LG_LOG(LogLG_Ability, Error, "GizboManager is invalid") return;}
 	Gizbo = GizboManager->GetGizbo();
 
 	WaitCancelConfirmHoldTagAddedTask = USI_AbilityTask_WaitCancelConfirmHoldTagAdded::WaitCancelConfirmGameplayTagAdd(this, SITag_Ability_Cancel, SITag_Ability_Confirm, SITag_Ability_HoldConfirm, nullptr, true);
@@ -201,7 +201,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
 	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
-	if(!IsValid(AIController)) {LG_LOG(LogSI_Ability, Error, "AIController is not valid"); return; }	
+	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }	
 
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	AIController->GetNPCMemory()->SetMoveToLocation(NewMoveToLocation);
@@ -217,9 +217,9 @@ void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
 	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
-	if(!IsValid(AIController)) {LG_LOG(LogSI_Ability, Error, "AIController is not valid"); return; }	
+	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }	
 	FSI_NPCMemory* NPCMemory = AIController->GetNPCMemory();
-	if(*NPCMemory == FSI_NPCMemory()) {LG_LOG(LogSI_Ability, Error, "NPCMemory is Empty"); return; }
+	if(*NPCMemory == FSI_NPCMemory()) {LG_LOG(LogLG_Ability, Error, "NPCMemory is Empty"); return; }
 
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	NPCMemory->SetMoveToLocation(NewMoveToLocation);

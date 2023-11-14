@@ -7,11 +7,12 @@
 			"LGGameplayTagCategoryWidget.gen.cpp.obj",
 			"LGGameplayTagEntryWidget.gen.cpp.obj",
 			"LGGameplayTagViewer.gen.cpp.obj",
-			"LGDebug.cpp.obj",
 			"LGGameplayTagCategoryWidget.cpp.obj",
 			"LGGameplayTagEntryWidget.cpp.obj",
 			"LGGameplayTagViewer.cpp.obj",
-			"LGDebugWidget.cpp.obj"
+			"LGDebug.cpp.obj",
+			"LGDebugWidget.cpp.obj",
+			"LG_DebugCategories.cpp.obj"
 		]
 	}
 }

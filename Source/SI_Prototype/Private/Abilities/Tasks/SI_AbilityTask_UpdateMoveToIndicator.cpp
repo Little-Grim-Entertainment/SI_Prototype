@@ -30,11 +30,11 @@ void USI_AbilityTask_UpdateMoveToIndicator::Activate()
 	Super::Activate();
 	
 	PC = OwningAbility->GetOwningActorFromActorInfo()->GetInstigatorController<ASI_PlayerController>();
-	if(!IsValid(PC)) {LG_LOG_ERROR(LogSI_Ability,"PlayerController(PC) is not valid"); return; }
+	if(!IsValid(PC)) {LG_LOG_ERROR(LogLG_Ability,"PlayerController(PC) is not valid"); return; }
 	Nick = Cast<ASI_Nick>(PC->GetPawn());
-	if(!IsValid(Nick)) {LG_LOG(LogSI_Ability, Error, "Nick is not valid"); return; }
+	if(!IsValid(Nick)) {LG_LOG(LogLG_Ability, Error, "Nick is not valid"); return; }
 	SICameraManger = Cast<ASI_PlayerCameraManager>(PC->PlayerCameraManager);
-	if(!IsValid(SICameraManger)) {LG_LOG_ERROR(LogSI_Ability,"SICameraManager is not valid"); return; }
+	if(!IsValid(SICameraManger)) {LG_LOG_ERROR(LogLG_Ability,"SICameraManager is not valid"); return; }
 }
 
 void USI_AbilityTask_UpdateMoveToIndicator::TickTask(float DeltaTime)
@@ -76,7 +76,7 @@ void USI_AbilityTask_UpdateMoveToIndicator::DestroyMoveToIndicator()
 
 void USI_AbilityTask_UpdateMoveToIndicator::UpdateMoveToIndicatorPosition()
 {
-	if(!MoveToIndicator) {LG_LOG_LOG(LogSI_Ability,"MoveToIndicator is not valid"); return; }
+	if(!MoveToIndicator) {LG_LOG_LOG(LogLG_Ability,"MoveToIndicator is not valid"); return; }
 	
 	FHitResult HitResult;
 	FVector TraceStart = SICameraManger->GetCameraLocation();

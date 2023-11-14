@@ -10,8 +10,6 @@ class USI_AbilitySystemComponent;
 class USI_GizboManager;
 class USI_PlayerManager;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_AbilityManager, Log, All);
-
 /**
  * 
  */

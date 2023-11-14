@@ -26,8 +26,6 @@ class USI_CaseTitleCard;
 
 enum class EPlayerMode : uint8;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_UIManager, Log, All);
-
 UCLASS()
 class SI_PROTOTYPE_API USI_UIManager : public USI_GameInstanceSubsystem
 {

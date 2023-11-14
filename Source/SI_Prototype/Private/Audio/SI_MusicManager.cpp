@@ -12,8 +12,6 @@
 #include "Levels/SI_LevelManager.h"
 #include "Audio/SI_MusicGameplayTagLibrary.h"
 
-DEFINE_LOG_CATEGORY(LogSI_MusicManager);
-
 using namespace SI_MusicGameplayTagLibrary;
 
 USI_MusicManager::USI_MusicManager()

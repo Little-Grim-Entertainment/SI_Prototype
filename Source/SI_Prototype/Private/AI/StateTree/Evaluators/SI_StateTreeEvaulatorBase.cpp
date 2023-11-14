@@ -2,5 +2,3 @@
 
 
 #include "AI/StateTree/Evaluators/SI_StateTreeEvaulatorBase.h"
-
-DEFINE_LOG_CATEGORY(LogSI_StateTreeEvaluator)

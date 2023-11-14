@@ -11,7 +11,7 @@ void USI_GameplayAbility_Observation::ActivateAbility(const FGameplayAbilitySpec
                                                       const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	//LG_LOG_LOG(LogLG_Ability," Ability Activated");
 	
 	Task = USI_AbilityTask_Observation::ObservationTask(this);
 	Task->ReadyForActivation();

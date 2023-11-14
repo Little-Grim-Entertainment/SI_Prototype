@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
+#include "LG_DebugMacros.h"
 
 class FLGDebugModule : public IModuleInterface
 {

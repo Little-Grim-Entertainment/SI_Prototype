@@ -3,9 +3,6 @@
 
 #include "AI/StateTree/Tasks/SI_StateTreeTaskCommonBase.h"
 
-DEFINE_LOG_CATEGORY(LogSI_StateTreeTask)
-
-
 EStateTreeRunStatus FSI_StateTreeTaskCommonBase::EnterState(FStateTreeExecutionContext& Context,
 	const FStateTreeTransitionResult& Transition) const
 {

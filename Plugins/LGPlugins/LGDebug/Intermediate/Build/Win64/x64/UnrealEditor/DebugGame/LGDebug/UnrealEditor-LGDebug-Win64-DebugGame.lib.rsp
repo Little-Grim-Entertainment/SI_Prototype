@@ -6,7 +6,10 @@
 /NAME:"UnrealEditor-LGDebug-Win64-DebugGame.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\DebugGame\Engine\SharedPCH.Engine.NonOptimized.Cpp17.InclOrderUnreal5_0.h.obj"
-"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Module.LGDebug.cpp.obj"
-"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Default.rc2.res"
-/OUT:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\UnrealEditor-LGDebug-Win64-DebugGame.lib"
+"E:\Unreal Engine\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\DebugGame\Engine\SharedPCH.Engine.NonOptimized.Cpp17.InclOrderUnreal5_0.h.obj"
+"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Module.LGDebug.cpp.obj"
+"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LGDebug.cpp.obj"
+"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LGDebugWidget.cpp.obj"
+"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LG_DebugCategories.cpp.obj"
+"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Default.rc2.res"
+/OUT:"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\UnrealEditor-LGDebug-Win64-DebugGame.lib"

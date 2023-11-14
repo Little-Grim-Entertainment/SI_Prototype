@@ -3,12 +3,12 @@
 
 #include "SI_GameplayTagManager.h"
 
-#include "LG_DebugMacros.h"
+
 #include "SI_GameInstance.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
-
-DEFINE_LOG_CATEGORY(LogSI_GameplayTagManager);
+#include "LG_DebugMacros.h"
+#include "SI_Prototype/SI_Prototype.h"
 
 void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
 {
@@ -17,7 +17,7 @@ void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag
 
 	if(HasParentTag(InGameplayTag, SITag_Ability))
 	{
-		LG_LOG(LogSI_GameplayTagManager, Log, "Ability Tag Added: %s", *InGameplayTag.ToString());
+		LG_LOG(LogLG_GameplayTagManager, Log, "Ability Tag Added: %s", *InGameplayTag.ToString());
 		OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
 		return;
 	}

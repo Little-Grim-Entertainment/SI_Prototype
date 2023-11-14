@@ -6,8 +6,6 @@
 #include "StateTreeTaskBase.h"
 #include "SI_StateTreeTaskCommonBase.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_StateTreeTask, Log, All);
-
 USTRUCT()
 struct FStateTreeTaskCommonBase_InstanceData
 {

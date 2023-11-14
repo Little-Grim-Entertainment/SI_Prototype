@@ -6,8 +6,6 @@
 #include "StateTreeEvaluatorBase.h"
 #include "SI_StateTreeEvaulatorBase.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_StateTreeEvaluator, Log, All);
-
 USTRUCT()
 struct FSI_StateTreeEvaluatorBase_InstanceData
 {

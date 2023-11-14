@@ -2,10 +2,3 @@
 
 
 #include "AI/SI_StateTreeComponentBase.h"
-
-#include "LG_DebugMacros.h"
-
-DEFINE_LOG_CATEGORY(LogSI_StateTreeComponent);
-
-
-

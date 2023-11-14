@@ -25,8 +25,6 @@
 using namespace SI_MapGameplayTagLibrary;
 using namespace SI_NativeGameplayTagLibrary;
 
-DEFINE_LOG_CATEGORY(LogSI_LevelManager);
-
 USI_LevelManager::USI_LevelManager()
 {
 	bMapStatesInitialized = false;

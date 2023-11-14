@@ -19,8 +19,6 @@ class USI_GizboManager;
 using namespace SI_NativeGameplayTagLibrary;
 using namespace SI_MapGameplayTagLibrary;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_GameInstanceSubsystem, Log, All);
-
 UCLASS()
 class SI_PROTOTYPE_API USI_GameInstanceSubsystem : public UGameInstanceSubsystem
 {

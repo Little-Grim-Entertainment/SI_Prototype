@@ -4,5 +4,3 @@
 #include "Abilities/Effects/SI_GameplayEffect.h"
 
 #include "LG_DebugMacros.h"
-
-DEFINE_LOG_CATEGORY(LogSI_GameplayEffect);

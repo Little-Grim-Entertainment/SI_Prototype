@@ -6,8 +6,6 @@
 #include "Components/StateTreeComponent.h"
 #include "SI_StateTreeComponentBase.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_StateTreeComponent, Log, All);
-
 UCLASS()
 class SI_PROTOTYPE_API USI_StateTreeComponentBase : public UStateTreeComponent
 {

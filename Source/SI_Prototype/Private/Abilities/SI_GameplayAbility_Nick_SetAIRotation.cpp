@@ -30,7 +30,7 @@ void USI_GameplayAbility_Nick_SetAIRotation::ActivateAbility(const FGameplayAbil
 	Nick->Controller->SetIgnoreMoveInput(true);
 	
 	USI_GameplayTagManager* SITagManager =  GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
-	if(!IsValid(SITagManager)) {LG_LOG(LogSI_Ability, Error, "SITagManager is not valid"); return; }
+	if(!IsValid(SITagManager)) {LG_LOG(LogLG_Ability, Error, "SITagManager is not valid"); return; }
 	
 	SITagManager->AddNewGameplayTag(SITag_Ability_AI_MoveTo);	
 }
@@ -57,7 +57,7 @@ void USI_GameplayAbility_Nick_SetAIRotation::ConfirmTagReceived()
 	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
 	
 	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
-	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
+	if(!AIAbility) {LG_LOG(LogLG_Ability, Error, "AIAbility is not valid"); return; }
 
 	AIAbility->Execute_OnUpdateTargetRotation(this, MoveToIndicator->GetActorRotation());
 	

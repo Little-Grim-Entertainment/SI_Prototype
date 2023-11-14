@@ -10,12 +10,10 @@
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
-DEFINE_LOG_CATEGORY(LogSI_PlayerManager);
-
 void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 {
 	if(!InPlayerState.IsValid() || !SITagManager->HasParentTag(InPlayerState,SITag_Player_State))
-		{UE_LOG(LogSI_PlayerManager, VeryVerbose, TEXT("SITagManager does not have a parenttag of SITag_Player_State!")); return;}
+		{UE_LOG(LogLG_PlayerManager, VeryVerbose, TEXT("SITagManager does not have a parenttag of SITag_Player_State!")); return;}
 
 	SITagManager->ReplaceTagWithSameParent(InPlayerState, SITag_Player_State);
 
@@ -36,7 +34,7 @@ const FGameplayTag& USI_PlayerManager::GetPreviousPlayerState() const
 void USI_PlayerManager::ShowWorld(bool bShouldShow, bool bShouldFade)
 {
 	if (!IsValid(PlayerController))
-		{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to show world!")); return;}
+		{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to show world!")); return;}
 
 	if(bShouldShow)
 	{
@@ -95,7 +93,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 		}	
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Menu,SITag_Player_State);
 		if (!IsValid(PlayerController))
-			{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to set menu mode!")); return; }
+			{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to set menu mode!")); return; }
 
 		PlayerController->SetMenuMode(true);
 		return;
@@ -113,7 +111,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 	}
 	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_Player))
-		{UE_LOG(LogSI_PlayerManager, VeryVerbose, TEXT("%s does not have a parenttag of SITag_Player!"),*InAddedTag.ToString()); return;}
+		{UE_LOG(LogLG_PlayerManager, VeryVerbose, TEXT("%s does not have a parenttag of SITag_Player!"),*InAddedTag.ToString()); return;}
 	
 	if(SITagManager->HasParentTag(InAddedTag, SITag_Player_State))
 	{
@@ -123,7 +121,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 	if(InAddedTag == SITag_Player_State_Media)
 	{
 		if (!IsValid(PlayerController))
-			{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to add media input!")); return;}
+			{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to add media input!")); return;}
 
 		PlayerController->AddInputMappingByTag(InAddedTag, SecondaryMediaTag);
 		PlayerDelegateContainer.Find(InAddedTag)->Execute();
@@ -141,7 +139,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 	PlayerDelegateContainer.Find(InAddedTag)->Execute();
 
 	if(!IsValid(PlayerController))
-		{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to add input!")); return; }
+		{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to add input!")); return; }
 
 	PlayerController->AddInputMappingByTag(InAddedTag);
 }
@@ -150,7 +148,7 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	if(!IsValid(GetWorld()))
-		{UE_LOG(LogSI_PlayerManager, Error, TEXT("World is null unable to remove tag!")); return;}
+		{UE_LOG(LogLG_PlayerManager, Error, TEXT("World is null unable to remove tag!")); return;}
 	
 	Super::OnGameplayTagRemoved(InRemovedTag);
 	
@@ -166,7 +164,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 			SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
 		}
 		if (!IsValid(PlayerController))
-			{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to set menu mode!")); return;}
+			{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to set menu mode!")); return;}
 
 		PlayerController->SetMenuMode(false);
 		return;
@@ -185,7 +183,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 	}
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Player))
-		{UE_LOG(LogSI_PlayerManager, VeryVerbose, TEXT("%s does not have a parenttag of SITag_Player!"),*InRemovedTag.ToString()); return;}
+		{UE_LOG(LogLG_PlayerManager, VeryVerbose, TEXT("%s does not have a parenttag of SITag_Player!"),*InRemovedTag.ToString()); return;}
 	
 	if(SITagManager->HasParentTag(InRemovedTag, SITag_Player_State))
 	{
@@ -193,7 +191,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 	}
 
 	if(!IsValid(PlayerController))
-		{UE_LOG(LogSI_PlayerManager, Error, TEXT("PlayerController is null unable to remove input!")); return;}
+		{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to remove input!")); return;}
 
 	PlayerController->RemoveInputMappingByTag(InRemovedTag);
 }
@@ -257,7 +255,7 @@ void USI_PlayerManager::SetupExplorationState()
 {
 	USI_LevelManager* SILevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(SILevelManager) || !IsValid(SILevelManager->GetCurrentMap()))
-		{UE_LOG(LogSI_PlayerManager, Error, TEXT("SILevelManager or SILevelManager->GetCurrentMap() is null unable to set exploration mode!")); return;}
+		{UE_LOG(LogLG_PlayerManager, Error, TEXT("SILevelManager or SILevelManager->GetCurrentMap() is null unable to set exploration mode!")); return;}
 	
 	if (SILevelManager->GetCurrentMap()->MapType == SITag_Map_Type_Interior)
 	{

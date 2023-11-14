@@ -3,13 +3,13 @@
 
 #include "Controllers/SI_NPCController.h"
 
+#include "LG_DebugMacros.h"
+#include "SI_Prototype/SI_Prototype.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Characters/SI_NPC.h"
 #include "Perception/AIPerceptionComponent.h"
-#include "SI_Prototype/SI_Prototype.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
-#include "AI/SI_StateTreeComponentBase.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
@@ -39,31 +39,31 @@ void ASI_NPCController::OnPossess(APawn* InPawn)
 	PossessedNPC = Cast<ASI_NPC>(InPawn);
 	if (!IsValid(PossessedNPC))
 	{
-		UE_LOG(LogSI_AI, Error, TEXT("%s SI_NPCController::OnPossess PossessedNPC is not valid"), *GetNameSafe(InPawn));
+		LG_LOG(LogLG_AI, Error, "%s PossessedNPC is not valid", *GetNameSafe(InPawn));
 		return;
 	}
 	
 	if (!IsValid(PerceptionComp))
 	{
-		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess PerceptionComp is not valid"), *GetNameSafe(InPawn));
+		LG_LOG(LogLG_AI, Error, "%s PerceptionComp is not valid", *GetNameSafe(InPawn));
 		return;
 	}
 
 	if (!IsValid(SightConfig))
 	{
-		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess SightConfig is not valid"), *GetNameSafe(InPawn));
+		LG_LOG(LogLG_AI, Error, "%s SightConfig is not valid", *GetNameSafe(InPawn));
 		return;
 	}
 
 	if (!IsValid(HearingConfig))
 	{
-		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess HearingConfig is not valid"), *GetNameSafe(InPawn));
+		LG_LOG(LogLG_AI, Error, "%s HearingConfig is not valid", *GetNameSafe(InPawn));
 		return;
 	}
 	
 	if (!IsValid(GetWorld()))
 	{
-		UE_LOG(LogSI_AI, Error, TEXT("%s : SI_NPCController::OnPossess World is not valid"), *GetNameSafe(InPawn));
+		LG_LOG(LogLG_AI, Error, "%s  World is not valid", *GetNameSafe(InPawn));
 		return;
 	}
 	

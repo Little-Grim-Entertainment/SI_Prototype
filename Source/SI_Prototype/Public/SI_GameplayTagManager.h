@@ -10,7 +10,6 @@
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTagAdded, const FGameplayTag& AddedTag, FSITagPayload* InTagPayload);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTagRemoved, const FGameplayTag& RemovedTag, FSITagPayload* InTagPayload);
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_GameplayTagManager, Log, All);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_GameplayTagManager : public USI_GameInstanceSubsystem
