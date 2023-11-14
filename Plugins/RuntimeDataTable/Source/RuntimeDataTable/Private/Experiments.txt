@@ -1,0 +1,122 @@
+// Copyright Jared Therriault 2019, 2022
+
+void ARuntimeDataTableActor::ParseAndFillProperty(FProperty* Property, void* ValuePtr, FString ValueAsString)
+{
+	// Here's how to read integer and float properties
+	if (FNumericProperty * NumericProperty = (FNumericProperty*)(Property))
+	{
+		if (NumericProperty->IsEnum())
+		{
+			FByteProperty* EnumProperty = (FByteProperty*)(Property);
+
+			if (ValueAsString.IsNumeric())
+			{
+				EnumProperty->SetNumericPropertyValueFromString(ValuePtr, *ValueAsString);
+			}
+			else //if the enum property is serialized as a string
+			{
+				EnumProperty->SetPropertyValue(ValuePtr, EnumProperty->Enum->GetIndexByNameString(ValueAsString));
+			}
+		}
+		else
+		{
+			NumericProperty->SetNumericPropertyValueFromString(ValuePtr, *ValueAsString);
+		}
+	}
+
+	// How to read booleans
+	if (FBoolProperty * BoolProperty = (FBoolProperty*)(Property))
+	{
+		bool FromString = ValueAsString == "TRUE" ? true : false;
+		BoolProperty->SetPropertyValue(ValuePtr, FromString);
+	}
+
+	// Reading names
+	if (FNameProperty * NameProperty = (FNameProperty*)(Property))
+	{
+		NameProperty->SetPropertyValue(ValuePtr, FName(*ValueAsString));
+	}
+
+	// Reading strings
+	if (FStrProperty * StringProperty = (FStrProperty*)(Property))
+	{
+		StringProperty->SetPropertyValue(ValuePtr, ValueAsString);
+	}
+
+	// Reading texts
+	if (FTextProperty * TextProperty = (FTextProperty*)(Property))
+	{
+		if (ValueAsString.Contains("LOCTEXT("))
+		{
+			TArray<FString> Separated = ReadCSVRow(ValueAsString, ',');
+			if (Separated.Num() == 3)
+			{
+				FString LiteralText = Separated[2].TrimQuotes();
+				TextProperty->SetPropertyValue(ValuePtr, FText::AsCultureInvariant(LiteralText));
+			}
+			else
+			{
+				TextProperty->SetPropertyValue(ValuePtr, FText::AsCultureInvariant(ValueAsString));
+			}
+		}
+		else
+		{
+			TextProperty->SetPropertyValue(ValuePtr, FText::AsCultureInvariant(ValueAsString));
+		}
+	}
+
+	// Reading a nested struct/vector
+	if (FStructProperty * StructProperty = (FStructProperty*)(Property))
+	{
+		FTextArray ta;
+		ta.StringValues = ReadNestedStruct(ValueAsString);
+		//IterateThroughStructProperty(StructProperty, ValuePtr, ta);
+	}
+
+	// Reading an array
+	if (FArrayProperty * MapProperty = (FArrayProperty*)(Property))
+	{
+		TArray<FString> ArrayStrings = ReadCSVRow(ValueAsString);
+		// We need the helper to get to the items of the array            
+		FScriptArrayHelper ArrayHelper(MapProperty, ValuePtr);
+		ArrayHelper.EmptyAndAddValues(ArrayStrings.Num());
+		int32 HelperNum = ArrayHelper.Num();
+		for (int32 i = 0; i < HelperNum; i++)
+		{
+			ParseAndFillProperty(MapProperty->Inner, ArrayHelper.GetRawPtr(i), ArrayStrings[i]);
+		}
+	}
+
+	// Reading a Set
+	if (FSetProperty * MapProperty = (FSetProperty*)(Property))
+	{
+		TArray<FString> RawStrings = ReadCSVRow(ValueAsString);
+		TArray<FString> SetStrings;
+		for (FString str : RawStrings)
+		{
+			if (!SetStrings.Contains(str))
+			{
+				SetStrings.Add(str);
+			}
+		}
+		// We need the helper to get to the items of the set            
+		FScriptSetHelper SetHelper(MapProperty, ValuePtr);
+		SetHelper.EmptyElements(SetStrings.Num());
+		for (int32 i = 0; i < SetStrings.Num(); i++)
+		{
+			ParseAndFillProperty(MapProperty->ElementProp, SetHelper.GetElementPtr(SetHelper.AddUninitializedValue()), SetStrings[i]);
+		}
+	}
+
+
+}
+
+
+
+//void ARuntimeDataTableActor::AddFieldToStructProperty(const FStructProperty* StructProperty)
+//{
+//	UScriptStruct* Struct = StructProperty->Struct;
+//	FStrProperty* NewStringProperty = Cast<FStrProperty>(StaticConstructObject_Internal(FStrProperty::StaticClass(), Struct, FName("NewStringProperty")));
+//	Struct->AddCppProperty(NewStringProperty);
+//}
+
