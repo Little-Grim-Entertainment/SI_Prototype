@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "EasyCsv.h"
+#include "EasyCsvTypes.h"
 
 #include "HttpModule.h"
 #include "UObject/Object.h"
@@ -31,6 +31,15 @@ struct FRuntimeDataTableCallbackInfo
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
 	int32 ResponseCode = INDEX_NONE;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FString FilePath = "";
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FString CvsName = "";
+
+	UPROPERTY()
+	UObject* Caller = nullptr;
 };
 
 // Used to return a JWT internally. Don't use this.
@@ -51,6 +60,18 @@ struct FRuntimeDataTableOperationParams
 	/** How long to wait for the operation to complete before a timeout is considered */
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	float RequestTimeout = 30.f;
+
+	/** A name for the file path of the CSV */
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FString FilePath = "";
+
+	/** A name for the CSV file */
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FString CvsName = "";
+
+	/** The caller that begins the CSV Import */
+	UPROPERTY()
+	UObject* Caller = nullptr;
 };
 
 // Used to build an authentication token

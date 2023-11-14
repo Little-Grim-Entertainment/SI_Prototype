@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "EasyCsv.h"
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -58,15 +58,7 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 
 	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(CsvStringsArrayProperty, &CSVInfo.CsvStrings, this, CSVInfo.CSVInfoResults, true))
 	{
-		if(InCallbackInfo.OnImportCompleteDelegate.IsBound())
-		{
-			InCallbackInfo.OnImportCompleteDelegate.Broadcast(CSVInfo);
-			if(IsValid(InCallbackInfo.Caller))
-			{
-				InCallbackInfo.OnImportCompleteDelegate.RemoveAll(InCallbackInfo.Caller);
-			}
-		}
-		
+				
 	}
 }
 

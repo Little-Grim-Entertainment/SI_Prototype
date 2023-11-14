@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "EasyCsvTypes.h"
-#include "RuntimeDataTableTypes.h"
 #include "LGCsvDataTypes.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCsvDataProcessor, Log, All);
@@ -50,6 +49,4 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 
 	UPROPERTY()
 	UObject* Caller;
-
-	FOnImportComplete OnImportCompleteDelegate;
 };

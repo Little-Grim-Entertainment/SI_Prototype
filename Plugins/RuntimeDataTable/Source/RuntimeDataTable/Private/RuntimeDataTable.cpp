@@ -2,6 +2,8 @@
 
 #include "RuntimeDataTable.h"
 
+#include "EasyCsv.h"
+
 #include "CsvToGoogleSheetsHandler.h"
 #include "RuntimeDataTableModule.h"
 #include "RuntimeDataTableProjectSettings.h"
@@ -156,6 +158,9 @@ void URuntimeDataTableObject::OnResponseReceived_GET_SheetAsCSV(
 {
 	FRuntimeDataTableCallbackInfo CallbackInfo;
 	CallbackInfo.OperationName = OperationParams.OperationName;
+	CallbackInfo.FilePath = OperationParams.FilePath;
+	CallbackInfo.CvsName = OperationParams.CvsName;
+	CallbackInfo.Caller = OperationParams.Caller;
 	CallbackInfo.bWasSuccessful = bWasSuccessful;
 	GenericValidateHttpResponse(Request, Response, CallbackInfo);
 	CallOnComplete.ExecuteIfBound(CallbackInfo);
