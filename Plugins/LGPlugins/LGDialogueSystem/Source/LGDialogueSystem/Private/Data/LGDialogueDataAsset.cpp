@@ -17,14 +17,11 @@ void ULGDialogueDataAsset::UpdateDialogue()
 		FString FilePath = UKismetSystemLibrary::GetProjectSavedDirectory();
 		FilePath.Append(FolderPath + "/" + CsvName + ".csv");
 
-		FOnImportComplete OnImportCompleteDelegate;
-
 		FLGCsvInfoImportPayload ImportPayload;
-		ImportPayload.Caller(this);
+		ImportPayload.Caller = this;
 		ImportPayload.FileName = CsvName;
 		ImportPayload.FilePath = FilePath;
 		ImportPayload.URL = CurrentURL.URL;
-		ImportPayload.OnImportCompleteDelegate = OnImportCompleteDelegate;
 		
 		ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(ImportPayload);
 	}

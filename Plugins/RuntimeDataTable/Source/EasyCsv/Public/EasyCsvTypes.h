@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "EasyCsv.generated.h"
+#include "EasyCsvTypes.generated.h"
 
 USTRUCT(BlueprintType)
 struct FEasyCsvStringValueArray

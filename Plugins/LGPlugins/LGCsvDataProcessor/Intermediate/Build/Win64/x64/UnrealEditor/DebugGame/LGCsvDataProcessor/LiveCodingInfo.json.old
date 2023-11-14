@@ -3,8 +3,10 @@
 	{
 		"Module.LGCsvDataProcessor.cpp.obj": [
 			"LGCsvDataProcessor.init.gen.cpp.obj",
+			"LGCsvDataProcessorFunctionLibrary.gen.cpp.obj",
 			"LGCsvDataTypes.gen.cpp.obj",
 			"LGCsvDataProcessor.cpp.obj",
+			"LGCsvDataProcessorFunctionLibrary.cpp.obj",
 			"LGCsvDataTypes.cpp.obj"
 		]
 	}
