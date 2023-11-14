@@ -6,6 +6,7 @@
 
 #include "UObject/GeneratedCppIncludes.h"
 #include "EasyCsv.h"
+#include "EasyCsvTypes.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeEasyCsv() {}
 // Cross Module References
@@ -14,185 +15,9 @@ void EmptyLinkFunctionForGeneratedCodeEasyCsv() {}
 	EASYCSV_API UClass* Z_Construct_UClass_UEasyCsv();
 	EASYCSV_API UClass* Z_Construct_UClass_UEasyCsv_NoRegister();
 	EASYCSV_API UScriptStruct* Z_Construct_UScriptStruct_FEasyCsvInfo();
-	EASYCSV_API UScriptStruct* Z_Construct_UScriptStruct_FEasyCsvStringValueArray();
 	ENGINE_API UClass* Z_Construct_UClass_UBlueprintFunctionLibrary();
 	UPackage* Z_Construct_UPackage__Script_EasyCsv();
 // End Cross Module References
-	static FStructRegistrationInfo Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray;
-class UScriptStruct* FEasyCsvStringValueArray::StaticStruct()
-{
-	if (!Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray.OuterSingleton)
-	{
-		Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray.OuterSingleton = GetStaticStruct(Z_Construct_UScriptStruct_FEasyCsvStringValueArray, (UObject*)Z_Construct_UPackage__Script_EasyCsv(), TEXT("EasyCsvStringValueArray"));
-	}
-	return Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray.OuterSingleton;
-}
-template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvStringValueArray>()
-{
-	return FEasyCsvStringValueArray::StaticStruct();
-}
-	struct Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics
-	{
-#if WITH_METADATA
-		static const UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[];
-#endif
-		static void* NewStructOps();
-		static const UECodeGen_Private::FStrPropertyParams NewProp_StringValues_Inner;
-#if WITH_METADATA
-		static const UECodeGen_Private::FMetaDataPairParam NewProp_StringValues_MetaData[];
-#endif
-		static const UECodeGen_Private::FArrayPropertyParams NewProp_StringValues;
-		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
-		static const UECodeGen_Private::FStructParams ReturnStructParams;
-	};
-#if WITH_METADATA
-	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::Struct_MetaDataParams[] = {
-		{ "BlueprintType", "true" },
-		{ "ModuleRelativePath", "Public/EasyCsv.h" },
-	};
-#endif
-	void* Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewStructOps()
-	{
-		return (UScriptStruct::ICppStructOps*)new UScriptStruct::TCppStructOps<FEasyCsvStringValueArray>();
-	}
-	const UECodeGen_Private::FStrPropertyParams Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewProp_StringValues_Inner = { "StringValues", nullptr, (EPropertyFlags)0x0000000000020000, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
-#if WITH_METADATA
-	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewProp_StringValues_MetaData[] = {
-		{ "Category", "easyCSV" },
-		{ "ModuleRelativePath", "Public/EasyCsv.h" },
-	};
-#endif
-	const UECodeGen_Private::FArrayPropertyParams Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewProp_StringValues = { "StringValues", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FEasyCsvStringValueArray, StringValues), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewProp_StringValues_MetaData), Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewProp_StringValues_MetaData) };
-	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::PropPointers[] = {
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewProp_StringValues_Inner,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewProp_StringValues,
-	};
-	const UECodeGen_Private::FStructParams Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::ReturnStructParams = {
-		(UObject* (*)())Z_Construct_UPackage__Script_EasyCsv,
-		nullptr,
-		&NewStructOps,
-		"EasyCsvStringValueArray",
-		Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::PropPointers,
-		UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::PropPointers),
-		sizeof(FEasyCsvStringValueArray),
-		alignof(FEasyCsvStringValueArray),
-		RF_Public|RF_Transient|RF_MarkAsNative,
-		EStructFlags(0x00000001),
-		METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::Struct_MetaDataParams), Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::Struct_MetaDataParams)
-	};
-	static_assert(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::PropPointers) < 2048);
-	UScriptStruct* Z_Construct_UScriptStruct_FEasyCsvStringValueArray()
-	{
-		if (!Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray.InnerSingleton)
-		{
-			UECodeGen_Private::ConstructUScriptStruct(Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray.InnerSingleton, Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::ReturnStructParams);
-		}
-		return Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray.InnerSingleton;
-	}
-	static FStructRegistrationInfo Z_Registration_Info_UScriptStruct_EasyCsvInfo;
-class UScriptStruct* FEasyCsvInfo::StaticStruct()
-{
-	if (!Z_Registration_Info_UScriptStruct_EasyCsvInfo.OuterSingleton)
-	{
-		Z_Registration_Info_UScriptStruct_EasyCsvInfo.OuterSingleton = GetStaticStruct(Z_Construct_UScriptStruct_FEasyCsvInfo, (UObject*)Z_Construct_UPackage__Script_EasyCsv(), TEXT("EasyCsvInfo"));
-	}
-	return Z_Registration_Info_UScriptStruct_EasyCsvInfo.OuterSingleton;
-}
-template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
-{
-	return FEasyCsvInfo::StaticStruct();
-}
-	struct Z_Construct_UScriptStruct_FEasyCsvInfo_Statics
-	{
-#if WITH_METADATA
-		static const UECodeGen_Private::FMetaDataPairParam Struct_MetaDataParams[];
-#endif
-		static void* NewStructOps();
-		static const UECodeGen_Private::FStructPropertyParams NewProp_CSV_Map_ValueProp;
-		static const UECodeGen_Private::FNamePropertyParams NewProp_CSV_Map_Key_KeyProp;
-#if WITH_METADATA
-		static const UECodeGen_Private::FMetaDataPairParam NewProp_CSV_Map_MetaData[];
-#endif
-		static const UECodeGen_Private::FMapPropertyParams NewProp_CSV_Map;
-		static const UECodeGen_Private::FNamePropertyParams NewProp_CSV_Keys_Inner;
-#if WITH_METADATA
-		static const UECodeGen_Private::FMetaDataPairParam NewProp_CSV_Keys_MetaData[];
-#endif
-		static const UECodeGen_Private::FArrayPropertyParams NewProp_CSV_Keys;
-		static const UECodeGen_Private::FStrPropertyParams NewProp_CSV_Headers_Inner;
-#if WITH_METADATA
-		static const UECodeGen_Private::FMetaDataPairParam NewProp_CSV_Headers_MetaData[];
-#endif
-		static const UECodeGen_Private::FArrayPropertyParams NewProp_CSV_Headers;
-		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
-		static const UECodeGen_Private::FStructParams ReturnStructParams;
-	};
-#if WITH_METADATA
-	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::Struct_MetaDataParams[] = {
-		{ "BlueprintType", "true" },
-		{ "ModuleRelativePath", "Public/EasyCsv.h" },
-	};
-#endif
-	void* Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewStructOps()
-	{
-		return (UScriptStruct::ICppStructOps*)new UScriptStruct::TCppStructOps<FEasyCsvInfo>();
-	}
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map_ValueProp = { "CSV_Map", nullptr, (EPropertyFlags)0x0000000000020001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 1, Z_Construct_UScriptStruct_FEasyCsvStringValueArray, METADATA_PARAMS(0, nullptr) }; // 3498439254
-	const UECodeGen_Private::FNamePropertyParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map_Key_KeyProp = { "CSV_Map_Key", nullptr, (EPropertyFlags)0x0000000000020001, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
-#if WITH_METADATA
-	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map_MetaData[] = {
-		{ "Category", "easyCSV" },
-		{ "ModuleRelativePath", "Public/EasyCsv.h" },
-	};
-#endif
-	const UECodeGen_Private::FMapPropertyParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map = { "CSV_Map", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Map, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FEasyCsvInfo, CSV_Map), EMapPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map_MetaData), Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map_MetaData) }; // 3498439254
-	const UECodeGen_Private::FNamePropertyParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Keys_Inner = { "CSV_Keys", nullptr, (EPropertyFlags)0x0000000000020000, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
-#if WITH_METADATA
-	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Keys_MetaData[] = {
-		{ "Category", "easyCSV" },
-		{ "ModuleRelativePath", "Public/EasyCsv.h" },
-	};
-#endif
-	const UECodeGen_Private::FArrayPropertyParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Keys = { "CSV_Keys", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FEasyCsvInfo, CSV_Keys), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Keys_MetaData), Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Keys_MetaData) };
-	const UECodeGen_Private::FStrPropertyParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Headers_Inner = { "CSV_Headers", nullptr, (EPropertyFlags)0x0000000000020000, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
-#if WITH_METADATA
-	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Headers_MetaData[] = {
-		{ "Category", "easyCSV" },
-		{ "ModuleRelativePath", "Public/EasyCsv.h" },
-	};
-#endif
-	const UECodeGen_Private::FArrayPropertyParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Headers = { "CSV_Headers", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FEasyCsvInfo, CSV_Headers), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Headers_MetaData), Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Headers_MetaData) };
-	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::PropPointers[] = {
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map_ValueProp,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map_Key_KeyProp,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Map,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Keys_Inner,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Keys,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Headers_Inner,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewProp_CSV_Headers,
-	};
-	const UECodeGen_Private::FStructParams Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::ReturnStructParams = {
-		(UObject* (*)())Z_Construct_UPackage__Script_EasyCsv,
-		nullptr,
-		&NewStructOps,
-		"EasyCsvInfo",
-		Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::PropPointers,
-		UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::PropPointers),
-		sizeof(FEasyCsvInfo),
-		alignof(FEasyCsvInfo),
-		RF_Public|RF_Transient|RF_MarkAsNative,
-		EStructFlags(0x00000001),
-		METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::Struct_MetaDataParams), Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::Struct_MetaDataParams)
-	};
-	static_assert(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::PropPointers) < 2048);
-	UScriptStruct* Z_Construct_UScriptStruct_FEasyCsvInfo()
-	{
-		if (!Z_Registration_Info_UScriptStruct_EasyCsvInfo.InnerSingleton)
-		{
-			UECodeGen_Private::ConstructUScriptStruct(Z_Registration_Info_UScriptStruct_EasyCsvInfo.InnerSingleton, Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::ReturnStructParams);
-		}
-		return Z_Registration_Info_UScriptStruct_EasyCsvInfo.InnerSingleton;
-	}
 	DEFINE_FUNCTION(UEasyCsv::execConvertQuatStringToRotatorArray)
 	{
 		P_GET_PROPERTY(FStrProperty,Z_Param_InString);
@@ -883,7 +708,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetColumnAsStringArray_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetColumnAsStringArray_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray_Statics::NewProp_ColumnName_MetaData[] = {
 		{ "NativeConst", "" },
@@ -951,7 +776,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetColumnCount_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetColumnCount_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 	const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetColumnCount_Parms, ReturnValue), METADATA_PARAMS(0, nullptr) };
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::PropPointers[] = {
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UEasyCsv_GetColumnCount_Statics::NewProp_CSV_Info,
@@ -1058,7 +883,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapHeaders_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapHeaders_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
 	const UECodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapHeaders_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(0, nullptr) };
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UEasyCsv_GetMapHeaders_Statics::PropPointers[] = {
@@ -1118,7 +943,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapKeyIndex_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapKeyIndex_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex_Statics::NewProp_Key_MetaData[] = {
 		{ "NativeConst", "" },
@@ -1179,7 +1004,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapKeys_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapKeys_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 	const UECodeGen_Private::FNamePropertyParams Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, METADATA_PARAMS(0, nullptr) };
 	const UECodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetMapKeys_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(0, nullptr) };
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UEasyCsv_GetMapKeys_Statics::PropPointers[] = {
@@ -1243,7 +1068,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetRowAsStringArray_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetRowAsStringArray_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray_Statics::NewProp_RowKey_MetaData[] = {
 		{ "NativeConst", "" },
@@ -1311,7 +1136,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetRowCount_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetRowCount_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 	const UECodeGen_Private::FIntPropertyParams Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetRowCount_Parms, ReturnValue), METADATA_PARAMS(0, nullptr) };
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::PropPointers[] = {
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UEasyCsv_GetRowCount_Statics::NewProp_CSV_Info,
@@ -1377,7 +1202,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetRowValueAsString_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetRowValueAsString_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetRowValueAsString_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetRowValueAsString_Statics::NewProp_CSV_Info_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_GetRowValueAsString_Statics::NewProp_CSV_Info = { "CSV_Info", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventGetRowValueAsString_Parms, CSV_Info), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_GetRowValueAsString_Statics::NewProp_CSV_Info_MetaData), Z_Construct_UFunction_UEasyCsv_GetRowValueAsString_Statics::NewProp_CSV_Info_MetaData) }; // 2071183195
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_UEasyCsv_GetRowValueAsString_Statics::NewProp_ColumnName_MetaData[] = {
 		{ "NativeConst", "" },
@@ -1522,7 +1347,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 	};
 #endif
 	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile_Statics::NewProp_InPath = { "InPath", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventMakeCsvInfoStructFromFile_Parms, InPath), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile_Statics::NewProp_InPath_MetaData), Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile_Statics::NewProp_InPath_MetaData) };
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile_Statics::NewProp_OutCsvInfo = { "OutCsvInfo", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventMakeCsvInfoStructFromFile_Parms, OutCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile_Statics::NewProp_OutCsvInfo = { "OutCsvInfo", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventMakeCsvInfoStructFromFile_Parms, OutCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 2071183195
 	void Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile_Statics::NewProp_ParseHeaders_SetBit(void* Obj)
 	{
 		((EasyCsv_eventMakeCsvInfoStructFromFile_Parms*)Obj)->ParseHeaders = 1;
@@ -1598,7 +1423,7 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		static const UECodeGen_Private::FFunctionParams FuncParams;
 	};
 	const UECodeGen_Private::FStrPropertyParams Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromString_Statics::NewProp_InString = { "InString", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventMakeCsvInfoStructFromString_Parms, InString), METADATA_PARAMS(0, nullptr) };
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromString_Statics::NewProp_OutCsvInfo = { "OutCsvInfo", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventMakeCsvInfoStructFromString_Parms, OutCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromString_Statics::NewProp_OutCsvInfo = { "OutCsvInfo", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(EasyCsv_eventMakeCsvInfoStructFromString_Parms, OutCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 2071183195
 	void Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromString_Statics::NewProp_ParseHeaders_SetBit(void* Obj)
 	{
 		((EasyCsv_eventMakeCsvInfoStructFromString_Parms*)Obj)->ParseHeaders = 1;
@@ -1897,18 +1722,18 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 		{ &Z_Construct_UFunction_UEasyCsv_ConvertStringToRotatorArray, "ConvertStringToRotatorArray" }, // 3986881911
 		{ &Z_Construct_UFunction_UEasyCsv_DoesStringRepresentContainer, "DoesStringRepresentContainer" }, // 3595607891
 		{ &Z_Construct_UFunction_UEasyCsv_EscapeCharacters, "EscapeCharacters" }, // 2761680963
-		{ &Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray, "GetColumnAsStringArray" }, // 2331362377
-		{ &Z_Construct_UFunction_UEasyCsv_GetColumnCount, "GetColumnCount" }, // 1296604502
+		{ &Z_Construct_UFunction_UEasyCsv_GetColumnAsStringArray, "GetColumnAsStringArray" }, // 1355709202
+		{ &Z_Construct_UFunction_UEasyCsv_GetColumnCount, "GetColumnCount" }, // 4259470466
 		{ &Z_Construct_UFunction_UEasyCsv_GetFTextComponentsFromRepresentativeFString, "GetFTextComponentsFromRepresentativeFString" }, // 2985354178
-		{ &Z_Construct_UFunction_UEasyCsv_GetMapHeaders, "GetMapHeaders" }, // 2229324676
-		{ &Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex, "GetMapKeyIndex" }, // 2497271754
-		{ &Z_Construct_UFunction_UEasyCsv_GetMapKeys, "GetMapKeys" }, // 3324418802
-		{ &Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray, "GetRowAsStringArray" }, // 3445885662
-		{ &Z_Construct_UFunction_UEasyCsv_GetRowCount, "GetRowCount" }, // 2256388058
-		{ &Z_Construct_UFunction_UEasyCsv_GetRowValueAsString, "GetRowValueAsString" }, // 634903311
+		{ &Z_Construct_UFunction_UEasyCsv_GetMapHeaders, "GetMapHeaders" }, // 1197878838
+		{ &Z_Construct_UFunction_UEasyCsv_GetMapKeyIndex, "GetMapKeyIndex" }, // 610183732
+		{ &Z_Construct_UFunction_UEasyCsv_GetMapKeys, "GetMapKeys" }, // 3021989647
+		{ &Z_Construct_UFunction_UEasyCsv_GetRowAsStringArray, "GetRowAsStringArray" }, // 1076905250
+		{ &Z_Construct_UFunction_UEasyCsv_GetRowCount, "GetRowCount" }, // 347693842
+		{ &Z_Construct_UFunction_UEasyCsv_GetRowValueAsString, "GetRowValueAsString" }, // 913239157
 		{ &Z_Construct_UFunction_UEasyCsv_LoadStringFromLocalFile, "LoadStringFromLocalFile" }, // 652821818
-		{ &Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile, "MakeCsvInfoStructFromFile" }, // 1245690195
-		{ &Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromString, "MakeCsvInfoStructFromString" }, // 1456041266
+		{ &Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromFile, "MakeCsvInfoStructFromFile" }, // 4033109405
+		{ &Z_Construct_UFunction_UEasyCsv_MakeCsvInfoStructFromString, "MakeCsvInfoStructFromString" }, // 497594624
 		{ &Z_Construct_UFunction_UEasyCsv_ReplaceEscapedCharacters, "ReplaceEscapedCharacters" }, // 1900467677
 		{ &Z_Construct_UFunction_UEasyCsv_SaveStringToFile, "SaveStringToFile" }, // 1414517685
 		{ &Z_Construct_UFunction_UEasyCsv_SaveStringToFileWithFullPath, "SaveStringToFileWithFullPath" }, // 1332153972
@@ -1953,20 +1778,15 @@ template<> EASYCSV_API UScriptStruct* StaticStruct<FEasyCsvInfo>()
 	UEasyCsv::UEasyCsv(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {}
 	DEFINE_VTABLE_PTR_HELPER_CTOR(UEasyCsv);
 	UEasyCsv::~UEasyCsv() {}
-	struct Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics
+	struct Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics
 	{
-		static const FStructRegisterCompiledInInfo ScriptStructInfo[];
 		static const FClassRegisterCompiledInInfo ClassInfo[];
 	};
-	const FStructRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ScriptStructInfo[] = {
-		{ FEasyCsvStringValueArray::StaticStruct, Z_Construct_UScriptStruct_FEasyCsvStringValueArray_Statics::NewStructOps, TEXT("EasyCsvStringValueArray"), &Z_Registration_Info_UScriptStruct_EasyCsvStringValueArray, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FEasyCsvStringValueArray), 3498439254U) },
-		{ FEasyCsvInfo::StaticStruct, Z_Construct_UScriptStruct_FEasyCsvInfo_Statics::NewStructOps, TEXT("EasyCsvInfo"), &Z_Registration_Info_UScriptStruct_EasyCsvInfo, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FEasyCsvInfo), 795079476U) },
+	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ClassInfo[] = {
+		{ Z_Construct_UClass_UEasyCsv, UEasyCsv::StaticClass, TEXT("UEasyCsv"), &Z_Registration_Info_UClass_UEasyCsv, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UEasyCsv), 1760836775U) },
 	};
-	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ClassInfo[] = {
-		{ Z_Construct_UClass_UEasyCsv, UEasyCsv::StaticClass, TEXT("UEasyCsv"), &Z_Registration_Info_UClass_UEasyCsv, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UEasyCsv), 1743610757U) },
-	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_2340137583(TEXT("/Script/EasyCsv"),
-		Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ClassInfo),
-		Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ScriptStructInfo),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_3400207626(TEXT("/Script/EasyCsv"),
+		Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_EasyCsv_Public_EasyCsv_h_Statics::ClassInfo),
+		nullptr, 0,
 		nullptr, 0);
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

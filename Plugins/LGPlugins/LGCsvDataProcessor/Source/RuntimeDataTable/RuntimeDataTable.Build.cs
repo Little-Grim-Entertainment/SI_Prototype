@@ -22,7 +22,7 @@ public class RuntimeDataTable : ModuleRules
             }
         );
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Json", "JsonUtilities", "OpenSSL", "Slate", "SlateCore", "UMG", "EasyCsv" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Json", "JsonUtilities", "OpenSSL", "Slate", "SlateCore", "UMG", "EasyCsv", "LGCsvDataProcessor", "LGCsvDataProcessor" });
 
         PrivateDependencyModuleNames.AddRange(new string[] { "Engine", "Core", "CoreUObject", "HTTP", "InputCore" });
 

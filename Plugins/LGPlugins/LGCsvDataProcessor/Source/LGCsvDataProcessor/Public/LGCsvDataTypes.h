@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EasyCsv/Public/EasyCsv.h"
-
+#include "EasyCsvTypes.h"
+#include "RuntimeDataTableTypes.h"
 #include "LGCsvDataTypes.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCsvDataProcessor, Log, All);
@@ -32,4 +32,24 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfo
 
 	UPROPERTY()
 	TArray<FString> ExportKeys;
+};
+
+USTRUCT()
+struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString URL;
+
+	UPROPERTY()
+	FString FilePath;
+
+	UPROPERTY()
+	FString FileName;
+
+	UPROPERTY()
+	UObject* Caller;
+
+	FOnImportComplete OnImportCompleteDelegate;
 };

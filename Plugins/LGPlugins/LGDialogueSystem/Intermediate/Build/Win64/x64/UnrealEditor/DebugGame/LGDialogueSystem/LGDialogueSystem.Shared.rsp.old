@@ -275,6 +275,7 @@
 /I "..\Intermediate\Build\Win64\UnrealEditor\Inc\WidgetRegistration\UHT"
 /I "Developer\WidgetRegistration\Public"
 /I "Runtime\Windows"
+/I "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\UnrealEditor\Inc\LGDialogueSystem\UHT"
 /I "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Source"
 /I "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Source\LGDialogueSystem\Public"
 /external:W0

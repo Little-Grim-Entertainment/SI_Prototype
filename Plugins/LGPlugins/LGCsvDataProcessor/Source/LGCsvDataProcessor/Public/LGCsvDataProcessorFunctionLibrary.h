@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "RuntimeDataTable.h"
 #include "LGCsvDataTypes.h"
 #include "LGCsvDataProcessorFunctionLibrary.generated.h"
 
@@ -17,12 +18,12 @@ class LGCSVDATAPROCESSOR_API ULGCsvDataProcessorFunctionLibrary : public UBluepr
 public:
 	
 	UFUNCTION()
-	static void ImportCsvFromURL(const FString& InURL, const FString& InFilePath, const FString& InFileName);
-
+	static void ImportCsvFromURL(const FLGCsvInfoImportPayload& InImportPayload);
+	
 	UFUNCTION()
 	static void FNameArrayToFStringArray(const TArray<FName>& InNameArray, TArray<FString>& OutStringArray);
 
 private:
-
+	
 	void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
 };

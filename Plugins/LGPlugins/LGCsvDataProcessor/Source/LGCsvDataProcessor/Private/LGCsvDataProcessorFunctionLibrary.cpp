@@ -3,25 +3,24 @@
 
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "RuntimeDataTable.h"
 
-void ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(const FString& InURL, const FString& InFilePath, const FString& InFileName)
+
+void ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(const FLGCsvInfoImportPayload& InImportPayload)
 {
-	if(InURL.IsEmpty()){return;}
+	if(InImportPayload.URL.IsEmpty()){return;}
 	
 	FRuntimeDataTableTokenInfo TokenInfo;
 	FRuntimeDataTableOperationParams RuntimeDataTableOperationParams;
 	RuntimeDataTableOperationParams.OperationName = FName(TEXT("CsvUpdate"));
-	RuntimeDataTableOperationParams.FilePath = InFilePath;
-	RuntimeDataTableOperationParams.CvsName = InFileName;
+	RuntimeDataTableOperationParams.FilePath = InImportPayload.FilePath;
+	RuntimeDataTableOperationParams.CvsName = InImportPayload.FileName;
+	RuntimeDataTableOperationParams.Caller = InImportPayload.Caller;
 	
 	FRDTGetStringDelegate CallbackDelegate;
 	CallbackDelegate.BindUFunction(StaticClass(), GET_FUNCTION_NAME_CHECKED(ULGCsvDataProcessorFunctionLibrary, OnSheetStructsDownloaded));
 	
-	URuntimeDataTableObject::BuildGoogleSheetDownloadLinkAndGetAsCsv(TokenInfo, RuntimeDataTableOperationParams, CallbackDelegate, InURL, true);
+	URuntimeDataTableObject::BuildGoogleSheetDownloadLinkAndGetAsCsv(TokenInfo, RuntimeDataTableOperationParams, CallbackDelegate, InImportPayload.URL, true);
 }
-
-
 
 void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo)
 {
@@ -55,7 +54,20 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 	FEasyCsvInfo CsvInfoResults;
 	if(!UEasyCsv::MakeCsvInfoStructFromFile(InCallbackInfo.FilePath, CsvInfoResults)){UE_LOG(LogDemo, Warning, TEXT("MakeCsvInfoStructFromFile failed.")); return;}
 
-	URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(CsvStringsArrayProperty, &CSVInfo.CsvStrings, this, CsvInfoResults, true);
+	CSVInfo.CSVInfoResults = CsvInfoResults;
+
+	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(CsvStringsArrayProperty, &CSVInfo.CsvStrings, this, CSVInfo.CSVInfoResults, true))
+	{
+		if(InCallbackInfo.OnImportCompleteDelegate.IsBound())
+		{
+			InCallbackInfo.OnImportCompleteDelegate.Broadcast(CSVInfo);
+			if(IsValid(InCallbackInfo.Caller))
+			{
+				InCallbackInfo.OnImportCompleteDelegate.RemoveAll(InCallbackInfo.Caller);
+			}
+		}
+		
+	}
 }
 
 void ULGCsvDataProcessorFunctionLibrary::FNameArrayToFStringArray(const TArray<FName>& InNameArray, TArray<FString>& OutStringArray)

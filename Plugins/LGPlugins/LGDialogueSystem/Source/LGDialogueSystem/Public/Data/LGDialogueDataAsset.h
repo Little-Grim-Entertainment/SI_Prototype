@@ -16,10 +16,12 @@ class LGDIALOGUESYSTEM_API ULGDialogueDataAsset : public UDataAsset
 
 public:
 	
-	UFUNCTION(CallInEditor)
-	void UpdateDialogue();
+	void UpdateDialogue_Internal();	
 
 private:
+
+	UFUNCTION(CallInEditor)
+	void UpdateDialogue();
 
 	UPROPERTY(EditAnywhere)
 	FString FolderPath;

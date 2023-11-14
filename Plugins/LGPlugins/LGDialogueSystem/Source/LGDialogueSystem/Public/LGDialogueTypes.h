@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "LGDialogueTypes.generated.h"
 
-USTRUCT()
+class ULGDialogueDataAsset;
+
+USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogueURL
 {
 	GENERATED_BODY()
@@ -16,4 +17,16 @@ struct LGDIALOGUESYSTEM_API FLGDialogueURL
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString URL;
+};
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGCharacterDialogue
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText CharacterName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<ULGDialogueDataAsset*> DialogueData; 
 };

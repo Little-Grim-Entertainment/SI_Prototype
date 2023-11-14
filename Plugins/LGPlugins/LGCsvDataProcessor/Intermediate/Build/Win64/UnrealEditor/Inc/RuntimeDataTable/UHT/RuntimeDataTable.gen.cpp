@@ -6,7 +6,7 @@
 
 #include "UObject/GeneratedCppIncludes.h"
 #include "RuntimeDataTable.h"
-#include "EasyCsv.h"
+#include "EasyCsvTypes.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeRuntimeDataTable() {}
 // Cross Module References
@@ -53,6 +53,14 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableCal
 		static void NewProp_bWasSuccessful_SetBit(void* Obj);
 		static const UECodeGen_Private::FBoolPropertyParams NewProp_bWasSuccessful;
 #if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam NewProp_FilePath_MetaData[];
+#endif
+		static const UECodeGen_Private::FStrPropertyParams NewProp_FilePath;
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam NewProp_CvsName_MetaData[];
+#endif
+		static const UECodeGen_Private::FStrPropertyParams NewProp_CvsName;
+#if WITH_METADATA
 		static const UECodeGen_Private::FMetaDataPairParam NewProp_ResponseAsString_MetaData[];
 #endif
 		static const UECodeGen_Private::FStrPropertyParams NewProp_ResponseAsString;
@@ -60,6 +68,10 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableCal
 		static const UECodeGen_Private::FMetaDataPairParam NewProp_ResponseCode_MetaData[];
 #endif
 		static const UECodeGen_Private::FIntPropertyParams NewProp_ResponseCode;
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam NewProp_Caller_MetaData[];
+#endif
+		static const UECodeGen_Private::FObjectPropertyParams NewProp_Caller;
 		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 		static const UECodeGen_Private::FStructParams ReturnStructParams;
 	};
@@ -98,6 +110,20 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableCal
 	}
 	const UECodeGen_Private::FBoolPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_bWasSuccessful = { "bWasSuccessful", nullptr, (EPropertyFlags)0x0010000000020005, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(FRuntimeDataTableCallbackInfo), &Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_bWasSuccessful_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_bWasSuccessful_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_bWasSuccessful_MetaData) };
 #if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_FilePath_MetaData[] = {
+		{ "Category", "Runtime DataTable" },
+		{ "ModuleRelativePath", "Public/RuntimeDataTable.h" },
+	};
+#endif
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_FilePath = { "FilePath", nullptr, (EPropertyFlags)0x0010000000020005, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableCallbackInfo, FilePath), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_FilePath_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_FilePath_MetaData) };
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_CvsName_MetaData[] = {
+		{ "Category", "Runtime DataTable" },
+		{ "ModuleRelativePath", "Public/RuntimeDataTable.h" },
+	};
+#endif
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_CvsName = { "CvsName", nullptr, (EPropertyFlags)0x0010000000020005, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableCallbackInfo, CvsName), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_CvsName_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_CvsName_MetaData) };
+#if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_ResponseAsString_MetaData[] = {
 		{ "Category", "Runtime DataTable" },
 		{ "ModuleRelativePath", "Public/RuntimeDataTable.h" },
@@ -111,11 +137,20 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableCal
 	};
 #endif
 	const UECodeGen_Private::FIntPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_ResponseCode = { "ResponseCode", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableCallbackInfo, ResponseCode), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_ResponseCode_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_ResponseCode_MetaData) };
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_Caller_MetaData[] = {
+		{ "ModuleRelativePath", "Public/RuntimeDataTable.h" },
+	};
+#endif
+	const UECodeGen_Private::FObjectPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_Caller = { "Caller", nullptr, (EPropertyFlags)0x0010000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableCallbackInfo, Caller), Z_Construct_UClass_UObject_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_Caller_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_Caller_MetaData) };
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::PropPointers[] = {
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_OperationName,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_bWasSuccessful,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_FilePath,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_CvsName,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_ResponseAsString,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_ResponseCode,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewProp_Caller,
 	};
 	const UECodeGen_Private::FStructParams Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::ReturnStructParams = {
 		(UObject* (*)())Z_Construct_UPackage__Script_RuntimeDataTable,
@@ -152,7 +187,7 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableCal
 #endif
 		static const UECodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature_Statics::NewProp_CallbackInfo = { "CallbackInfo", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(_Script_RuntimeDataTable_eventRDTGetStringDelegate_Parms, CallbackInfo), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo, METADATA_PARAMS(0, nullptr) }; // 3918684402
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature_Statics::NewProp_CallbackInfo = { "CallbackInfo", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(_Script_RuntimeDataTable_eventRDTGetStringDelegate_Parms, CallbackInfo), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo, METADATA_PARAMS(0, nullptr) }; // 3798639844
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature_Statics::PropPointers[] = {
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature_Statics::NewProp_CallbackInfo,
 	};
@@ -207,9 +242,21 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableOpe
 #endif
 		static const UECodeGen_Private::FNamePropertyParams NewProp_OperationName;
 #if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam NewProp_FilePath_MetaData[];
+#endif
+		static const UECodeGen_Private::FStrPropertyParams NewProp_FilePath;
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam NewProp_CvsName_MetaData[];
+#endif
+		static const UECodeGen_Private::FStrPropertyParams NewProp_CvsName;
+#if WITH_METADATA
 		static const UECodeGen_Private::FMetaDataPairParam NewProp_RequestTimeout_MetaData[];
 #endif
 		static const UECodeGen_Private::FFloatPropertyParams NewProp_RequestTimeout;
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam NewProp_Caller_MetaData[];
+#endif
+		static const UECodeGen_Private::FObjectPropertyParams NewProp_Caller;
 		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 		static const UECodeGen_Private::FStructParams ReturnStructParams;
 	};
@@ -243,6 +290,32 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableOpe
 #endif
 	const UECodeGen_Private::FNamePropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_OperationName = { "OperationName", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableOperationParams, OperationName), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_OperationName_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_OperationName_MetaData) };
 #if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_FilePath_MetaData[] = {
+		{ "Category", "Runtime DataTable" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "/** The file path to store your csv */" },
+#endif
+		{ "ModuleRelativePath", "Public/RuntimeDataTable.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The file path to store your csv" },
+#endif
+	};
+#endif
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_FilePath = { "FilePath", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableOperationParams, FilePath), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_FilePath_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_FilePath_MetaData) };
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_CvsName_MetaData[] = {
+		{ "Category", "Runtime DataTable" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "/** A name for your stored file */" },
+#endif
+		{ "ModuleRelativePath", "Public/RuntimeDataTable.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "A name for your stored file" },
+#endif
+	};
+#endif
+	const UECodeGen_Private::FStrPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_CvsName = { "CvsName", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableOperationParams, CvsName), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_CvsName_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_CvsName_MetaData) };
+#if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_RequestTimeout_MetaData[] = {
 		{ "Category", "Runtime DataTable" },
 #if !UE_BUILD_SHIPPING
@@ -255,9 +328,18 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableOpe
 	};
 #endif
 	const UECodeGen_Private::FFloatPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_RequestTimeout = { "RequestTimeout", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableOperationParams, RequestTimeout), METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_RequestTimeout_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_RequestTimeout_MetaData) };
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_Caller_MetaData[] = {
+		{ "ModuleRelativePath", "Public/RuntimeDataTable.h" },
+	};
+#endif
+	const UECodeGen_Private::FObjectPropertyParams Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_Caller = { "Caller", nullptr, (EPropertyFlags)0x0010000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(FRuntimeDataTableOperationParams, Caller), Z_Construct_UClass_UObject_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_Caller_MetaData), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_Caller_MetaData) };
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::PropPointers[] = {
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_OperationName,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_FilePath,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_CvsName,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_RequestTimeout,
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewProp_Caller,
 	};
 	const UECodeGen_Private::FStructParams Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::ReturnStructParams = {
 		(UObject* (*)())Z_Construct_UPackage__Script_RuntimeDataTable,
@@ -1057,13 +1139,13 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_OperationParams = { "OperationParams", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventBuildGoogleSheetDownloadLinkAndGetAsCsv_Parms, OperationParams), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_OperationParams_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_OperationParams_MetaData) }; // 1745228001
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_OperationParams = { "OperationParams", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventBuildGoogleSheetDownloadLinkAndGetAsCsv_Parms, OperationParams), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_OperationParams_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_OperationParams_MetaData) }; // 462823263
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_CallOnComplete_MetaData[] = {
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FDelegatePropertyParams Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_CallOnComplete = { "CallOnComplete", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Delegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventBuildGoogleSheetDownloadLinkAndGetAsCsv_Parms, CallOnComplete), Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_CallOnComplete_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_CallOnComplete_MetaData) }; // 3660932638
+	const UECodeGen_Private::FDelegatePropertyParams Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_CallOnComplete = { "CallOnComplete", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Delegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventBuildGoogleSheetDownloadLinkAndGetAsCsv_Parms, CallOnComplete), Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_CallOnComplete_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_CallOnComplete_MetaData) }; // 3796044237
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv_Statics::NewProp_InSheetURL_MetaData[] = {
 		{ "NativeConst", "" },
@@ -1881,7 +1963,7 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 		((RuntimeDataTableObject_eventUpdateArrayFromCsvInfo_Parms*)Obj)->Successful = 1;
 	}
 	const UECodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_UpdateArrayFromCsvInfo_Statics::NewProp_Successful = { "Successful", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(RuntimeDataTableObject_eventUpdateArrayFromCsvInfo_Parms), &Z_Construct_UFunction_URuntimeDataTableObject_UpdateArrayFromCsvInfo_Statics::NewProp_Successful_SetBit, METADATA_PARAMS(0, nullptr) };
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_UpdateArrayFromCsvInfo_Statics::NewProp_CSVInfo = { "CSVInfo", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventUpdateArrayFromCsvInfo_Parms, CSVInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_UpdateArrayFromCsvInfo_Statics::NewProp_CSVInfo = { "CSVInfo", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventUpdateArrayFromCsvInfo_Parms, CSVInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 2071183195
 	void Z_Construct_UFunction_URuntimeDataTableObject_UpdateArrayFromCsvInfo_Statics::NewProp_MatchStructMemberNames_SetBit(void* Obj)
 	{
 		((RuntimeDataTableObject_eventUpdateArrayFromCsvInfo_Parms*)Obj)->MatchStructMemberNames = 1;
@@ -1969,8 +2051,8 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_InCallbackInfo = { "InCallbackInfo", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Parms, InCallbackInfo), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_InCallbackInfo_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_InCallbackInfo_MetaData) }; // 3918684402
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_OutCsvInfo = { "OutCsvInfo", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Parms, OutCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_InCallbackInfo = { "InCallbackInfo", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Parms, InCallbackInfo), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_InCallbackInfo_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_InCallbackInfo_MetaData) }; // 3798639844
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_OutCsvInfo = { "OutCsvInfo", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Parms, OutCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(0, nullptr) }; // 2071183195
 	const UECodeGen_Private::FBytePropertyParams Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_OutResultCode_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
 	const UECodeGen_Private::FEnumPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Statics::NewProp_OutResultCode = { "OutResultCode", nullptr, (EPropertyFlags)0x0010000000000180, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventValidateGoogleSheetsDownloadAndLoadBackupIfNeeded_Parms, OutResultCode), Z_Construct_UEnum_RuntimeDataTable_ERuntimeDataTableBackupResultCode, METADATA_PARAMS(0, nullptr) }; // 4033296090
 #if WITH_METADATA
@@ -2069,13 +2151,13 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_OperationParams = { "OperationParams", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventWriteCsvToSheet_Parms, OperationParams), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_OperationParams_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_OperationParams_MetaData) }; // 1745228001
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_OperationParams = { "OperationParams", nullptr, (EPropertyFlags)0x0010000000000082, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventWriteCsvToSheet_Parms, OperationParams), Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_OperationParams_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_OperationParams_MetaData) }; // 462823263
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_CallOnComplete_MetaData[] = {
 		{ "NativeConst", "" },
 	};
 #endif
-	const UECodeGen_Private::FDelegatePropertyParams Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_CallOnComplete = { "CallOnComplete", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Delegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventWriteCsvToSheet_Parms, CallOnComplete), Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_CallOnComplete_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_CallOnComplete_MetaData) }; // 3660932638
+	const UECodeGen_Private::FDelegatePropertyParams Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_CallOnComplete = { "CallOnComplete", nullptr, (EPropertyFlags)0x0010000008000182, UECodeGen_Private::EPropertyGenFlags::Delegate, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(RuntimeDataTableObject_eventWriteCsvToSheet_Parms, CallOnComplete), Z_Construct_UDelegateFunction_RuntimeDataTable_RDTGetStringDelegate__DelegateSignature, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_CallOnComplete_MetaData), Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_CallOnComplete_MetaData) }; // 3796044237
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet_Statics::NewProp_InSpreadsheetId_MetaData[] = {
 		{ "NativeConst", "" },
@@ -2153,7 +2235,7 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 	static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_URuntimeDataTableObject_Statics::DependentSingletons) < 16);
 	const FClassFunctionLinkInfo Z_Construct_UClass_URuntimeDataTableObject_Statics::FuncInfo[] = {
 		{ &Z_Construct_UFunction_URuntimeDataTableObject_AutoGenerateKeys, "AutoGenerateKeys" }, // 2180243509
-		{ &Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv, "BuildGoogleSheetDownloadLinkAndGetAsCsv" }, // 2066636084
+		{ &Z_Construct_UFunction_URuntimeDataTableObject_BuildGoogleSheetDownloadLinkAndGetAsCsv, "BuildGoogleSheetDownloadLinkAndGetAsCsv" }, // 2757913732
 		{ &Z_Construct_UFunction_URuntimeDataTableObject_GenerateCsvFromArray, "GenerateCsvFromArray" }, // 410602615
 		{ &Z_Construct_UFunction_URuntimeDataTableObject_GenerateTokenInfoFromFile, "GenerateTokenInfoFromFile" }, // 751887985
 		{ &Z_Construct_UFunction_URuntimeDataTableObject_GenerateTokenInfoFromString, "GenerateTokenInfoFromString" }, // 2135849457
@@ -2166,9 +2248,9 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 		{ &Z_Construct_UFunction_URuntimeDataTableObject_GetSheetIdFromUrl, "GetSheetIdFromUrl" }, // 2046245812
 		{ &Z_Construct_UFunction_URuntimeDataTableObject_GetSheetIdFromUrl_Int, "GetSheetIdFromUrl_Int" }, // 3570283284
 		{ &Z_Construct_UFunction_URuntimeDataTableObject_GetSpreadsheetIdFromUrl, "GetSpreadsheetIdFromUrl" }, // 3911734271
-		{ &Z_Construct_UFunction_URuntimeDataTableObject_UpdateArrayFromCsvInfo, "UpdateArrayFromCsvInfo" }, // 1583606299
-		{ &Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded, "ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded" }, // 2961447908
-		{ &Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet, "WriteCsvToSheet" }, // 2983501037
+		{ &Z_Construct_UFunction_URuntimeDataTableObject_UpdateArrayFromCsvInfo, "UpdateArrayFromCsvInfo" }, // 3763759997
+		{ &Z_Construct_UFunction_URuntimeDataTableObject_ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded, "ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded" }, // 1602351817
+		{ &Z_Construct_UFunction_URuntimeDataTableObject_WriteCsvToSheet, "WriteCsvToSheet" }, // 986638606
 	};
 	static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_URuntimeDataTableObject_Statics::FuncInfo) < 2048);
 #if WITH_METADATA
@@ -2189,7 +2271,7 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 #endif
 	};
 #endif
-	const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_URuntimeDataTableObject_Statics::NewProp_CachedCsvInfo = { "CachedCsvInfo", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(URuntimeDataTableObject, CachedCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UClass_URuntimeDataTableObject_Statics::NewProp_CachedCsvInfo_MetaData), Z_Construct_UClass_URuntimeDataTableObject_Statics::NewProp_CachedCsvInfo_MetaData) }; // 795079476
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_URuntimeDataTableObject_Statics::NewProp_CachedCsvInfo = { "CachedCsvInfo", nullptr, (EPropertyFlags)0x0010000000000004, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(URuntimeDataTableObject, CachedCsvInfo), Z_Construct_UScriptStruct_FEasyCsvInfo, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UClass_URuntimeDataTableObject_Statics::NewProp_CachedCsvInfo_MetaData), Z_Construct_UClass_URuntimeDataTableObject_Statics::NewProp_CachedCsvInfo_MetaData) }; // 2071183195
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_URuntimeDataTableObject_Statics::PropPointers[] = {
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_URuntimeDataTableObject_Statics::NewProp_CachedCsvInfo,
 	};
@@ -2226,26 +2308,26 @@ template<> RUNTIMEDATATABLE_API UScriptStruct* StaticStruct<FRuntimeDataTableTok
 	}
 	DEFINE_VTABLE_PTR_HELPER_CTOR(URuntimeDataTableObject);
 	URuntimeDataTableObject::~URuntimeDataTableObject() {}
-	struct Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics
+	struct Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics
 	{
 		static const FEnumRegisterCompiledInInfo EnumInfo[];
 		static const FStructRegisterCompiledInInfo ScriptStructInfo[];
 		static const FClassRegisterCompiledInInfo ClassInfo[];
 	};
-	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::EnumInfo[] = {
+	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::EnumInfo[] = {
 		{ ERuntimeDataTableBackupResultCode_StaticEnum, TEXT("ERuntimeDataTableBackupResultCode"), &Z_Registration_Info_UEnum_ERuntimeDataTableBackupResultCode, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 4033296090U) },
 	};
-	const FStructRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ScriptStructInfo[] = {
-		{ FRuntimeDataTableCallbackInfo::StaticStruct, Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewStructOps, TEXT("RuntimeDataTableCallbackInfo"), &Z_Registration_Info_UScriptStruct_RuntimeDataTableCallbackInfo, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FRuntimeDataTableCallbackInfo), 3918684402U) },
-		{ FRuntimeDataTableOperationParams::StaticStruct, Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewStructOps, TEXT("RuntimeDataTableOperationParams"), &Z_Registration_Info_UScriptStruct_RuntimeDataTableOperationParams, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FRuntimeDataTableOperationParams), 1745228001U) },
+	const FStructRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ScriptStructInfo[] = {
+		{ FRuntimeDataTableCallbackInfo::StaticStruct, Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo_Statics::NewStructOps, TEXT("RuntimeDataTableCallbackInfo"), &Z_Registration_Info_UScriptStruct_RuntimeDataTableCallbackInfo, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FRuntimeDataTableCallbackInfo), 3798639844U) },
+		{ FRuntimeDataTableOperationParams::StaticStruct, Z_Construct_UScriptStruct_FRuntimeDataTableOperationParams_Statics::NewStructOps, TEXT("RuntimeDataTableOperationParams"), &Z_Registration_Info_UScriptStruct_RuntimeDataTableOperationParams, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FRuntimeDataTableOperationParams), 462823263U) },
 		{ FRuntimeDataTableTokenInfo::StaticStruct, Z_Construct_UScriptStruct_FRuntimeDataTableTokenInfo_Statics::NewStructOps, TEXT("RuntimeDataTableTokenInfo"), &Z_Registration_Info_UScriptStruct_RuntimeDataTableTokenInfo, CONSTRUCT_RELOAD_VERSION_INFO(FStructReloadVersionInfo, sizeof(FRuntimeDataTableTokenInfo), 546094522U) },
 	};
-	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ClassInfo[] = {
+	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ClassInfo[] = {
 		{ Z_Construct_UClass_URuntimeDataTableWebToken, URuntimeDataTableWebToken::StaticClass, TEXT("URuntimeDataTableWebToken"), &Z_Registration_Info_UClass_URuntimeDataTableWebToken, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(URuntimeDataTableWebToken), 87880283U) },
-		{ Z_Construct_UClass_URuntimeDataTableObject, URuntimeDataTableObject::StaticClass, TEXT("URuntimeDataTableObject"), &Z_Registration_Info_UClass_URuntimeDataTableObject, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(URuntimeDataTableObject), 240823975U) },
+		{ Z_Construct_UClass_URuntimeDataTableObject, URuntimeDataTableObject::StaticClass, TEXT("URuntimeDataTableObject"), &Z_Registration_Info_UClass_URuntimeDataTableObject, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(URuntimeDataTableObject), 286301778U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_1418921306(TEXT("/Script/RuntimeDataTable"),
-		Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ClassInfo),
-		Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ScriptStructInfo),
-		Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::EnumInfo));
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_3143675981(TEXT("/Script/RuntimeDataTable"),
+		Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ClassInfo),
+		Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ScriptStructInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::ScriptStructInfo),
+		Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SpadeInvestigations_SpadeInvestigations_Plugins_LGPlugins_LGCsvDataProcessor_Source_RuntimeDataTable_Public_RuntimeDataTable_h_Statics::EnumInfo));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

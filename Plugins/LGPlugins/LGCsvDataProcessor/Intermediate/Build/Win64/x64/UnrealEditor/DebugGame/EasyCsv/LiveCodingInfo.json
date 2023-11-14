@@ -5,8 +5,10 @@
 			"EasyCsv.gen.cpp.obj",
 			"EasyCsv.init.gen.cpp.obj",
 			"EasyCsvProjectSettings.gen.cpp.obj",
+			"EasyCsvTypes.gen.cpp.obj",
+			"EasyCsvModule.cpp.obj",
 			"EasyCsv.cpp.obj",
-			"EasyCsvModule.cpp.obj"
+			"EasyCsvTypes.cpp.obj"
 		]
 	}
 }

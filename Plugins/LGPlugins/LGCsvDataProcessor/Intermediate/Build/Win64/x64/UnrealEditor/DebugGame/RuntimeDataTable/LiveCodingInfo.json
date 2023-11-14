@@ -6,8 +6,9 @@
 			"RuntimeDataTable.init.gen.cpp.obj",
 			"RuntimeDataTableProjectSettings.gen.cpp.obj",
 			"CsvToGoogleSheetsHandler.cpp.obj",
+			"RuntimeDataTableModule.cpp.obj",
 			"RuntimeDataTable.cpp.obj",
-			"RuntimeDataTableModule.cpp.obj"
+			"RuntimeDataTableTypes.cpp.obj"
 		]
 	}
 }

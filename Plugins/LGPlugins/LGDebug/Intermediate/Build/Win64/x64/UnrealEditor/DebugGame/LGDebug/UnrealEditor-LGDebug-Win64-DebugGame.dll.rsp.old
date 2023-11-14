@@ -35,8 +35,8 @@
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN:6
 "P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\DebugGame\Engine\SharedPCH.Engine.NonOptimized.Cpp17.InclOrderUnreal5_0.h.obj"
-"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Module.LGDebug.cpp.obj"
-"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Default.rc2.res"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Module.LGDebug.cpp.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Default.rc2.res"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\GameplayTags\UnrealEditor-GameplayTags.lib"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\Core\UnrealEditor-Core.lib"
 "..\Intermediate\Build\Win64\x64\UnrealEditor\Development\CoreUObject\UnrealEditor-CoreUObject.lib"
@@ -69,7 +69,7 @@
 "synchronization.lib"
 "dwmapi.lib"
 "imm32.lib"
-/OUT:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Binaries\Win64\UnrealEditor-LGDebug-Win64-DebugGame.dll"
-/IMPLIB:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\UnrealEditor-LGDebug-Win64-DebugGame.sup.lib"
-/PDB:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGDebug\Binaries\Win64\UnrealEditor-LGDebug-Win64-DebugGame.pdb"
+/OUT:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Binaries\Win64\UnrealEditor-LGDebug-Win64-DebugGame.dll"
+/IMPLIB:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\UnrealEditor-LGDebug-Win64-DebugGame.sup.lib"
+/PDB:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Binaries\Win64\UnrealEditor-LGDebug-Win64-DebugGame.pdb"
 /ignore:4078

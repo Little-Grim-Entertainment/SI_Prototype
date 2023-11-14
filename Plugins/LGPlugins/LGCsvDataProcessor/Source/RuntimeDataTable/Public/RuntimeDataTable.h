@@ -2,11 +2,10 @@
 
 #pragma once
 
-#include "EasyCsv.h"
-
 #include "HttpModule.h"
 #include "UObject/Object.h"
-
+#include "RuntimeDataTableTypes.h"
+#include "EasyCsvTypes.h"
 #include "RuntimeDataTable.generated.h"
 
 class URuntimeDataTableObject;
@@ -37,6 +36,11 @@ struct FRuntimeDataTableCallbackInfo
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
 	int32 ResponseCode = INDEX_NONE;
+
+	UPROPERTY()
+	UObject* Caller = nullptr;
+
+	FOnImportComplete OnImportCompleteDelegate;
 };
 
 // Used to return a JWT internally. Don't use this.
@@ -49,7 +53,7 @@ USTRUCT(BlueprintType)
 struct FRuntimeDataTableOperationParams
 {
 	GENERATED_BODY()
-
+		
 	/** A name for your operation for tracking purposes */
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	FName OperationName = NAME_None;
@@ -65,6 +69,11 @@ struct FRuntimeDataTableOperationParams
 	/** How long to wait for the operation to complete before a timeout is considered */
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	float RequestTimeout = 30.f;
+
+	UPROPERTY()
+	UObject* Caller = nullptr;
+
+	FOnImportComplete OnImportCompleteDelegate;
 };
 
 // Used to build an authentication token

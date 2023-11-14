@@ -25,7 +25,8 @@ public class LGCsvDataProcessor : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", 
+				"RuntimeDataTable",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -39,7 +40,6 @@ public class LGCsvDataProcessor : ModuleRules
 				"Slate",
 				"SlateCore",
 				"LGDialogueSystem",
-				"RuntimeDataTable",
 				"EasyCsv"
 				// ... add private dependencies that you statically link with here ...	
 			}
