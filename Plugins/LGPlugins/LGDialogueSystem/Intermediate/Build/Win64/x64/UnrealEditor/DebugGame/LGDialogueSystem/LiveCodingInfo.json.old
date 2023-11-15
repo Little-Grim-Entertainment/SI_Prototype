@@ -7,10 +7,8 @@
 			"LGProjectDialogueData.cpp.obj",
 			"LGDialogueSystem.cpp.obj",
 			"LGDialogueDataAsset.gen.cpp.obj",
-			"LGDialogueProcessorInterface.gen.cpp.obj",
 			"LGDialogueSystem.init.gen.cpp.obj",
 			"LGDialogueDataAsset.cpp.obj",
-			"LGDialogueProcessorInterface.cpp.obj",
 			"LGDialogueTypes.cpp.obj"
 		]
 	}
