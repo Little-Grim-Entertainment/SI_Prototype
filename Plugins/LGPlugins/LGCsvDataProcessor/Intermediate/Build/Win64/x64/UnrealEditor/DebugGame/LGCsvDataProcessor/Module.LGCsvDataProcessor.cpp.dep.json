@@ -7,12 +7,7 @@
         "Includes": [
             "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\intermediate\\build\\win64\\x64\\unrealeditor\\debuggame\\lgcsvdataprocessor\\definitions.lgcsvdataprocessor.h",
             "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\source\\lgcsvdataprocessor\\private\\lgcsvdataprocessor.cpp",
-            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\source\\lgcsvdataprocessor\\public\\lgcsvdataprocessor.h",
-            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\source\\lgcsvdataprocessor\\private\\lgcsvdatatypes.cpp",
-            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\source\\lgcsvdataprocessor\\public\\lgcsvdatatypes.h",
-            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\runtimedatatable\\source\\easycsv\\public\\easycsvtypes.h",
-            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\runtimedatatable\\intermediate\\build\\win64\\unrealeditor\\inc\\easycsv\\uht\\easycsvtypes.generated.h",
-            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\intermediate\\build\\win64\\unrealeditor\\inc\\lgcsvdataprocessor\\uht\\lgcsvdatatypes.generated.h"
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\source\\lgcsvdataprocessor\\public\\lgcsvdataprocessor.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

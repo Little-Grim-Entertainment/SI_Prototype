@@ -76,5 +76,5 @@
 /DPROJECT_COPYRIGHT_STRING="Fill out your copyright notice in the Description page of Project Settings."
 /DPROJECT_PRODUCT_NAME="Ace of Spades"
 /DPROJECT_PRODUCT_IDENTIFIER=SI_Prototype
-/fo "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGCsvDataProcessor\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGCsvDataProcessor\Default.rc2.res"
+/fo "P:\SpadeInvestigations\SpadeInvestigations\Plugins\LGPlugins\LGCsvDataProcessor\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGCsvDataProcessor\Default.rc2.res"
 "..\Build\Windows\Resources\Default.rc2"
