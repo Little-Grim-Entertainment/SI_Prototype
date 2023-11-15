@@ -1,0 +1,13 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.LGCsvDataProcessor.cpp.obj": [
+			"LGCsvDataTypes.gen.cpp.obj",
+			"LGCsvDataProcessor.cpp.obj",
+			"LGCsvDataTypes.cpp.obj",
+			"LGCsvDataProcessor.init.gen.cpp.obj",
+			"LGCsvDataProcessorFunctionLibrary.gen.cpp.obj",
+			"LGCsvDataProcessorFunctionLibrary.cpp.obj"
+		]
+	}
+}

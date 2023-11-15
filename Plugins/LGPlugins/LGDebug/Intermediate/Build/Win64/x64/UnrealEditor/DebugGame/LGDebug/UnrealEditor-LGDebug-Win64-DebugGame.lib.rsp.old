@@ -8,5 +8,10 @@
 /NODEFAULTLIB
 "P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\DebugGame\Engine\SharedPCH.Engine.NonOptimized.Cpp17.InclOrderUnreal5_0.h.obj"
 "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Module.LGDebug.cpp.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LGDebug.init.gen.cpp.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LGDebugWidget.gen.cpp.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LGGameplayTagCategoryWidget.gen.cpp.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LGGameplayTagEntryWidget.gen.cpp.obj"
+"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\LGGameplayTagViewer.gen.cpp.obj"
 "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\Default.rc2.res"
 /OUT:"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDebug\Intermediate\Build\Win64\x64\UnrealEditor\DebugGame\LGDebug\UnrealEditor-LGDebug-Win64-DebugGame.lib"

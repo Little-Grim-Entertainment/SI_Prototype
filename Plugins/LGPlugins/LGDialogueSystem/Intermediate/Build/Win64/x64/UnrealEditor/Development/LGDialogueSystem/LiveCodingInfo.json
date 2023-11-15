@@ -1,8 +1,0 @@
-{
-	"RemapUnityFiles": 
-	{
-		"Module.LGDialogueSystem.cpp.obj": [
-			"LGDialogueSystem.cpp.obj"
-		]
-	}
-}

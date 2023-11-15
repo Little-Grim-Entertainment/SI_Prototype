@@ -11,6 +11,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeLGDialogueDataAsset() {}
 // Cross Module References
 	ENGINE_API UClass* Z_Construct_UClass_UDataAsset();
+	LGCSVDATAPROCESSOR_API UClass* Z_Construct_UClass_ULGCsvProcessorInterface_NoRegister();
 	LGDIALOGUESYSTEM_API UClass* Z_Construct_UClass_ULGDialogueDataAsset();
 	LGDIALOGUESYSTEM_API UClass* Z_Construct_UClass_ULGDialogueDataAsset_NoRegister();
 	LGDIALOGUESYSTEM_API UScriptStruct* Z_Construct_UScriptStruct_FLGDialogueURL();
@@ -80,6 +81,7 @@ void EmptyLinkFunctionForGeneratedCodeLGDialogueDataAsset() {}
 #endif
 		static const UECodeGen_Private::FArrayPropertyParams NewProp_DialogueURLs;
 		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+		static const UECodeGen_Private::FImplementedInterfaceParams InterfaceParams[];
 		static const FCppClassTypeInfoStatic StaticCppClassTypeInfo;
 		static const UECodeGen_Private::FClassParams ClassParams;
 	};
@@ -126,6 +128,10 @@ void EmptyLinkFunctionForGeneratedCodeLGDialogueDataAsset() {}
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ULGDialogueDataAsset_Statics::NewProp_DialogueURLs_Inner,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ULGDialogueDataAsset_Statics::NewProp_DialogueURLs,
 	};
+		const UECodeGen_Private::FImplementedInterfaceParams Z_Construct_UClass_ULGDialogueDataAsset_Statics::InterfaceParams[] = {
+			{ Z_Construct_UClass_ULGCsvProcessorInterface_NoRegister, (int32)VTABLE_OFFSET(ULGDialogueDataAsset, ILGCsvProcessorInterface), false },  // 3104988546
+		};
+	static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_ULGDialogueDataAsset_Statics::InterfaceParams) < 64);
 	const FCppClassTypeInfoStatic Z_Construct_UClass_ULGDialogueDataAsset_Statics::StaticCppClassTypeInfo = {
 		TCppClassTypeTraits<ULGDialogueDataAsset>::IsAbstract,
 	};
@@ -136,11 +142,11 @@ void EmptyLinkFunctionForGeneratedCodeLGDialogueDataAsset() {}
 		DependentSingletons,
 		FuncInfo,
 		Z_Construct_UClass_ULGDialogueDataAsset_Statics::PropPointers,
-		nullptr,
+		InterfaceParams,
 		UE_ARRAY_COUNT(DependentSingletons),
 		UE_ARRAY_COUNT(FuncInfo),
 		UE_ARRAY_COUNT(Z_Construct_UClass_ULGDialogueDataAsset_Statics::PropPointers),
-		0,
+		UE_ARRAY_COUNT(InterfaceParams),
 		0x001000A0u,
 		METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UClass_ULGDialogueDataAsset_Statics::Class_MetaDataParams), Z_Construct_UClass_ULGDialogueDataAsset_Statics::Class_MetaDataParams)
 	};
@@ -165,9 +171,9 @@ void EmptyLinkFunctionForGeneratedCodeLGDialogueDataAsset() {}
 		static const FClassRegisterCompiledInInfo ClassInfo[];
 	};
 	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_Data_LGDialogueDataAsset_h_Statics::ClassInfo[] = {
-		{ Z_Construct_UClass_ULGDialogueDataAsset, ULGDialogueDataAsset::StaticClass, TEXT("ULGDialogueDataAsset"), &Z_Registration_Info_UClass_ULGDialogueDataAsset, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ULGDialogueDataAsset), 3995119375U) },
+		{ Z_Construct_UClass_ULGDialogueDataAsset, ULGDialogueDataAsset::StaticClass, TEXT("ULGDialogueDataAsset"), &Z_Registration_Info_UClass_ULGDialogueDataAsset, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ULGDialogueDataAsset), 3319155793U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_Data_LGDialogueDataAsset_h_692713099(TEXT("/Script/LGDialogueSystem"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_Data_LGDialogueDataAsset_h_1209385342(TEXT("/Script/LGDialogueSystem"),
 		Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_Data_LGDialogueDataAsset_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_Data_LGDialogueDataAsset_h_Statics::ClassInfo),
 		nullptr, 0,
 		nullptr, 0);

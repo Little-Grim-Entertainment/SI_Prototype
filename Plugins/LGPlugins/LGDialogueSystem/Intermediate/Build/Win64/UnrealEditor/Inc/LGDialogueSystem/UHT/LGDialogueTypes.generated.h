@@ -14,14 +14,14 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define LGDIALOGUESYSTEM_LGDialogueTypes_generated_h
 
-#define FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_LGDialogueTypes_h_13_GENERATED_BODY \
+#define FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_LGDialogueTypes_h_15_GENERATED_BODY \
 	friend struct Z_Construct_UScriptStruct_FLGDialogueURL_Statics; \
 	static class UScriptStruct* StaticStruct();
 
 
 template<> LGDIALOGUESYSTEM_API UScriptStruct* StaticStruct<struct FLGDialogueURL>();
 
-#define FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_LGDialogueTypes_h_25_GENERATED_BODY \
+#define FID_SI_Prototype_Plugins_LGPlugins_LGDialogueSystem_Source_LGDialogueSystem_Public_LGDialogueTypes_h_27_GENERATED_BODY \
 	friend struct Z_Construct_UScriptStruct_FLGCharacterDialogue_Statics; \
 	static class UScriptStruct* StaticStruct();
 

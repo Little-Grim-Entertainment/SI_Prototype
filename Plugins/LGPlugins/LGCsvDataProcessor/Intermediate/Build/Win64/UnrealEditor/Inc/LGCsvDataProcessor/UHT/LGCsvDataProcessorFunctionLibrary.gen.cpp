@@ -7,6 +7,7 @@
 #include "UObject/GeneratedCppIncludes.h"
 #include "LGCsvDataProcessor/Public/LGCsvDataProcessorFunctionLibrary.h"
 #include "LGCsvDataProcessor/Public/LGCsvDataTypes.h"
+#include "RuntimeDataTable.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeLGCsvDataProcessorFunctionLibrary() {}
 // Cross Module References
@@ -14,8 +15,17 @@ void EmptyLinkFunctionForGeneratedCodeLGCsvDataProcessorFunctionLibrary() {}
 	LGCSVDATAPROCESSOR_API UClass* Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary();
 	LGCSVDATAPROCESSOR_API UClass* Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary_NoRegister();
 	LGCSVDATAPROCESSOR_API UScriptStruct* Z_Construct_UScriptStruct_FLGCsvInfoImportPayload();
+	RUNTIMEDATATABLE_API UScriptStruct* Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo();
 	UPackage* Z_Construct_UPackage__Script_LGCsvDataProcessor();
 // End Cross Module References
+	DEFINE_FUNCTION(ULGCsvDataProcessorFunctionLibrary::execOnSheetStructsDownloaded)
+	{
+		P_GET_STRUCT(FRuntimeDataTableCallbackInfo,Z_Param_InCallbackInfo);
+		P_FINISH;
+		P_NATIVE_BEGIN;
+		P_THIS->OnSheetStructsDownloaded(Z_Param_InCallbackInfo);
+		P_NATIVE_END;
+	}
 	DEFINE_FUNCTION(ULGCsvDataProcessorFunctionLibrary::execFNameArrayToFStringArray)
 	{
 		P_GET_TARRAY_REF(FName,Z_Param_Out_InNameArray);
@@ -39,6 +49,7 @@ void EmptyLinkFunctionForGeneratedCodeLGCsvDataProcessorFunctionLibrary() {}
 		static const FNameNativePtrPair Funcs[] = {
 			{ "FNameArrayToFStringArray", &ULGCsvDataProcessorFunctionLibrary::execFNameArrayToFStringArray },
 			{ "ImportCsvFromURL", &ULGCsvDataProcessorFunctionLibrary::execImportCsvFromURL },
+			{ "OnSheetStructsDownloaded", &ULGCsvDataProcessorFunctionLibrary::execOnSheetStructsDownloaded },
 		};
 		FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
 	}
@@ -136,6 +147,40 @@ void EmptyLinkFunctionForGeneratedCodeLGCsvDataProcessorFunctionLibrary() {}
 		}
 		return ReturnFunction;
 	}
+	struct Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics
+	{
+		struct LGCsvDataProcessorFunctionLibrary_eventOnSheetStructsDownloaded_Parms
+		{
+			FRuntimeDataTableCallbackInfo InCallbackInfo;
+		};
+		static const UECodeGen_Private::FStructPropertyParams NewProp_InCallbackInfo;
+		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
+#endif
+		static const UECodeGen_Private::FFunctionParams FuncParams;
+	};
+	const UECodeGen_Private::FStructPropertyParams Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::NewProp_InCallbackInfo = { "InCallbackInfo", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(LGCsvDataProcessorFunctionLibrary_eventOnSheetStructsDownloaded_Parms, InCallbackInfo), Z_Construct_UScriptStruct_FRuntimeDataTableCallbackInfo, METADATA_PARAMS(0, nullptr) }; // 1597180715
+	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::PropPointers[] = {
+		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::NewProp_InCallbackInfo,
+	};
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "Public/LGCsvDataProcessorFunctionLibrary.h" },
+	};
+#endif
+	const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary, nullptr, "OnSheetStructsDownloaded", nullptr, nullptr, Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::PropPointers), sizeof(Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::LGCsvDataProcessorFunctionLibrary_eventOnSheetStructsDownloaded_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00040401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::Function_MetaDataParams), Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::Function_MetaDataParams) };
+	static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::PropPointers) < 2048);
+	static_assert(sizeof(Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::LGCsvDataProcessorFunctionLibrary_eventOnSheetStructsDownloaded_Parms) < MAX_uint16);
+	UFunction* Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded()
+	{
+		static UFunction* ReturnFunction = nullptr;
+		if (!ReturnFunction)
+		{
+			UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded_Statics::FuncParams);
+		}
+		return ReturnFunction;
+	}
 	IMPLEMENT_CLASS_NO_AUTO_REGISTRATION(ULGCsvDataProcessorFunctionLibrary);
 	UClass* Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary_NoRegister()
 	{
@@ -159,6 +204,7 @@ void EmptyLinkFunctionForGeneratedCodeLGCsvDataProcessorFunctionLibrary() {}
 	const FClassFunctionLinkInfo Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary_Statics::FuncInfo[] = {
 		{ &Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_FNameArrayToFStringArray, "FNameArrayToFStringArray" }, // 2102462141
 		{ &Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_ImportCsvFromURL, "ImportCsvFromURL" }, // 3043076547
+		{ &Z_Construct_UFunction_ULGCsvDataProcessorFunctionLibrary_OnSheetStructsDownloaded, "OnSheetStructsDownloaded" }, // 2452590260
 	};
 	static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary_Statics::FuncInfo) < 2048);
 #if WITH_METADATA
@@ -205,9 +251,9 @@ void EmptyLinkFunctionForGeneratedCodeLGCsvDataProcessorFunctionLibrary() {}
 		static const FClassRegisterCompiledInInfo ClassInfo[];
 	};
 	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_LGCsvDataProcessor_Public_LGCsvDataProcessorFunctionLibrary_h_Statics::ClassInfo[] = {
-		{ Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary, ULGCsvDataProcessorFunctionLibrary::StaticClass, TEXT("ULGCsvDataProcessorFunctionLibrary"), &Z_Registration_Info_UClass_ULGCsvDataProcessorFunctionLibrary, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ULGCsvDataProcessorFunctionLibrary), 3989886614U) },
+		{ Z_Construct_UClass_ULGCsvDataProcessorFunctionLibrary, ULGCsvDataProcessorFunctionLibrary::StaticClass, TEXT("ULGCsvDataProcessorFunctionLibrary"), &Z_Registration_Info_UClass_ULGCsvDataProcessorFunctionLibrary, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(ULGCsvDataProcessorFunctionLibrary), 857595452U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_LGCsvDataProcessor_Public_LGCsvDataProcessorFunctionLibrary_h_1034890583(TEXT("/Script/LGCsvDataProcessor"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_LGCsvDataProcessor_Public_LGCsvDataProcessorFunctionLibrary_h_2441595901(TEXT("/Script/LGCsvDataProcessor"),
 		Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_LGCsvDataProcessor_Public_LGCsvDataProcessorFunctionLibrary_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_LGCsvDataProcessor_Public_LGCsvDataProcessorFunctionLibrary_h_Statics::ClassInfo),
 		nullptr, 0,
 		nullptr, 0);

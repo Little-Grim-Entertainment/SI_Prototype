@@ -10,6 +10,7 @@
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 struct FLGCsvInfoImportPayload;
+struct FRuntimeDataTableCallbackInfo;
 #ifdef LGCSVDATAPROCESSOR_LGCsvDataProcessorFunctionLibrary_generated_h
 #error "LGCsvDataProcessorFunctionLibrary.generated.h already included, missing '#pragma once' in LGCsvDataProcessorFunctionLibrary.h"
 #endif
@@ -20,6 +21,7 @@ struct FLGCsvInfoImportPayload;
 #define FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_LGCsvDataProcessor_Public_LGCsvDataProcessorFunctionLibrary_h_16_EDITOR_ONLY_SPARSE_DATA_PROPERTY_ACCESSORS
 #define FID_SI_Prototype_Plugins_LGPlugins_LGCsvDataProcessor_Source_LGCsvDataProcessor_Public_LGCsvDataProcessorFunctionLibrary_h_16_RPC_WRAPPERS_NO_PURE_DECLS \
  \
+	DECLARE_FUNCTION(execOnSheetStructsDownloaded); \
 	DECLARE_FUNCTION(execFNameArrayToFStringArray); \
 	DECLARE_FUNCTION(execImportCsvFromURL);
 
