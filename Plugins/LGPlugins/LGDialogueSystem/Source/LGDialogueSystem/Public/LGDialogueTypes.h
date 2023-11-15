@@ -7,6 +7,8 @@
 
 class ULGDialogueDataAsset;
 
+DECLARE_LOG_CATEGORY_EXTERN(LogLGDialogue, Log, All);
+
 USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogueURL
 {

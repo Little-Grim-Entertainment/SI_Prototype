@@ -3,6 +3,7 @@
 #include "LGCsvDataProcessorFunctionLibrary.h"
 
 #include "EasyCsv.h"
+#include "Interfaces/LGCsvProcessorInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -59,7 +60,12 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 
 	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(CsvStringsArrayProperty, &CSVInfo.CsvStrings, this, CSVInfo.CSVInfoResults, true))
 	{
-				
+		if (!IsValid(InCallbackInfo.Caller) || !InCallbackInfo.Caller->Implements<ULGCsvProcessorInterface>()) {return;}
+		
+		if (const ILGCsvProcessorInterface* DialogueProcessorObject = Cast<ILGCsvProcessorInterface>(InCallbackInfo.Caller))
+		{
+			DialogueProcessorObject->Execute_OnInteractComplete(InCallbackInfo.Caller, InCallbackInfo.Caller, CSVInfo);
+		}
 	}
 }
 

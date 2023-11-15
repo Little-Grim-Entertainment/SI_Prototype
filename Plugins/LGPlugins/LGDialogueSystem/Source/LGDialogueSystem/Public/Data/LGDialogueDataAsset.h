@@ -5,18 +5,21 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "LGDialogueTypes.h"
+#include "Interfaces/LGCsvProcessorInterface.h"
 #include "LGDialogueDataAsset.generated.h"
 
 
 
 UCLASS()
-class LGDIALOGUESYSTEM_API ULGDialogueDataAsset : public UDataAsset
+class LGDIALOGUESYSTEM_API ULGDialogueDataAsset : public UDataAsset, public ILGCsvProcessorInterface
 {
 	GENERATED_BODY()
 
 public:
 	
-	void UpdateDialogue_Internal();	
+	void UpdateDialogue_Internal();
+
+	virtual void OnInteractComplete_Implementation(UObject* Caller, const FLGCsvInfo& InCvsInfo) override;
 
 private:
 

@@ -24,6 +24,7 @@ public:
 	static void FNameArrayToFStringArray(const TArray<FName>& InNameArray, TArray<FString>& OutStringArray);
 
 private:
-	
+
+	UFUNCTION()
 	void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
 };

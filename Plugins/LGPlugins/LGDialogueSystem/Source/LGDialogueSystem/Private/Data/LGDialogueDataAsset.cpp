@@ -5,6 +5,8 @@
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+
+
 void ULGDialogueDataAsset::UpdateDialogue_Internal()
 {
 	UpdateDialogue();
@@ -25,4 +27,9 @@ void ULGDialogueDataAsset::UpdateDialogue()
 		
 		ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(ImportPayload);
 	}
+}
+
+void ULGDialogueDataAsset::OnInteractComplete_Implementation(UObject* Caller, const FLGCsvInfo& InCvsInfo)
+{
+	UE_LOG(LogLGDialogue, Warning, TEXT("Dilogue Asset Interaction Complete!"));
 }

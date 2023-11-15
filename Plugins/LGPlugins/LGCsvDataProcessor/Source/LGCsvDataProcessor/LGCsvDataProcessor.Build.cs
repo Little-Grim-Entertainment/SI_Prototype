@@ -27,6 +27,7 @@ public class LGCsvDataProcessor : ModuleRules
 			{
 				"Core", 
 				"RuntimeDataTable",
+				"LGDialogueSystem",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -39,7 +40,6 @@ public class LGCsvDataProcessor : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"LGDialogueSystem",
 				"EasyCsv"
 				// ... add private dependencies that you statically link with here ...	
 			}
