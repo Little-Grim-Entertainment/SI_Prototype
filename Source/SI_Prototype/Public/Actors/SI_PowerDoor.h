@@ -31,9 +31,14 @@ protected:
 	void CheckPowerRequirements(bool bIsFullyPowered);	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OpenDoorBPEvent();
+	
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bAllActorsPowered;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsDoorOpen;
 };

@@ -35,18 +35,27 @@ void APowerDoor::CheckPowerRequirements(bool bIsFullyPowered)
 	{
 		int ArraySize = AttachedPowerActors.Num();
 		int FullyPoweredActors = 0;
-		
+
+		// Iterate through attached power actors and increment number of fully powered attached actors
 		for (ASI_PowerActor* PowerActor : AttachedPowerActors)
 		{			
 			if (PowerActor->bIsFullyPowered)
 			{
 				FullyPoweredActors++;
-			}			
+			}	
 		}
+		// If the number of fully power actors matches the total array size then Open Door
 		if (FullyPoweredActors == ArraySize)
 		{
+			bAllActorsPowered = true;
 			OpenDoorBPEvent();
 			UE_LOG(LogTemp, Warning, TEXT("Door Opened"))
+		}
+		// Else trigger door close
+		else
+		{
+			bAllActorsPowered = false;
+			OpenDoorBPEvent();
 		}
 	}
 }
