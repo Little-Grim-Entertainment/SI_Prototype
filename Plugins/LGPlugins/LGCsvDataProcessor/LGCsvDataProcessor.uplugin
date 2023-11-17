@@ -3,7 +3,7 @@
 	"Version": 1,
 	"VersionName": "1.0",
 	"FriendlyName": "LGCsvDataProcessor",
-	"Description": "Handles Importing and Exporting of CSV data from Google Sheets",
+	"Description": "",
 	"Category": "Other",
 	"CreatedBy": "Little Grim Entertainment",
 	"CreatedByURL": "",
@@ -17,7 +17,7 @@
 		{
 			"Name": "LGCsvDataProcessor",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "PreLoadingScreen"
 		}
 	]
 }
