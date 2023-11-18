@@ -10,8 +10,17 @@
             "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgdialoguesystem\\source\\lgdialoguesystem\\public\\lgdialoguetypes.h",
             "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgdialoguesystem\\intermediate\\build\\win64\\unrealeditor\\inc\\lgdialoguesystem\\uht\\lgdialoguetypes.generated.h",
             "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\source\\lgcsvdataprocessor\\public\\interfaces\\lgcsvprocessorinterface.h",
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\source\\lgcsvdataprocessor\\public\\lgcsvdatatypes.h",
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\runtimedatatable\\source\\easycsv\\public\\easycsvtypes.h",
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\runtimedatatable\\intermediate\\build\\win64\\unrealeditor\\inc\\easycsv\\uht\\easycsvtypes.generated.h",
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\intermediate\\build\\win64\\unrealeditor\\inc\\lgcsvdataprocessor\\uht\\lgcsvdatatypes.generated.h",
             "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgcsvdataprocessor\\intermediate\\build\\win64\\unrealeditor\\inc\\lgcsvdataprocessor\\uht\\lgcsvprocessorinterface.generated.h",
-            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgdialoguesystem\\intermediate\\build\\win64\\unrealeditor\\inc\\lgdialoguesystem\\uht\\lgdialoguedataasset.generated.h"
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\lgplugins\\lgdialoguesystem\\intermediate\\build\\win64\\unrealeditor\\inc\\lgdialoguesystem\\uht\\lgdialoguedataasset.generated.h",
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\runtimedatatable\\source\\runtimedatatable\\public\\runtimedatatable.h",
+            "c:\\program files\\epic games\\ue_5.3\\engine\\source\\runtime\\online\\http\\public\\httpmodule.h",
+            "c:\\program files\\epic games\\ue_5.3\\engine\\source\\runtime\\online\\http\\public\\interfaces\\ihttprequest.h",
+            "c:\\program files\\epic games\\ue_5.3\\engine\\source\\runtime\\online\\http\\public\\interfaces\\ihttpbase.h",
+            "p:\\spadeinvestigations\\5.3\\si_prototype\\plugins\\runtimedatatable\\intermediate\\build\\win64\\unrealeditor\\inc\\runtimedatatable\\uht\\runtimedatatable.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

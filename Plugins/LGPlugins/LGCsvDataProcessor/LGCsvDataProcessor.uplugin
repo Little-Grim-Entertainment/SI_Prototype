@@ -5,19 +5,19 @@
 	"FriendlyName": "LGCsvDataProcessor",
 	"Description": "",
 	"Category": "Other",
-	"CreatedBy": "Little Grim Entertainment",
+	"CreatedBy": "",
 	"CreatedByURL": "",
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"CanContainContent": true,
-	"IsBetaVersion": true,
+	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
 			"Name": "LGCsvDataProcessor",
 			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
+			"LoadingPhase": "Default"
 		}
 	]
 }

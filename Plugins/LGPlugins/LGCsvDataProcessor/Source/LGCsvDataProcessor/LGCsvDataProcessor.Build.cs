@@ -1,4 +1,4 @@
-﻿// Some copyright should be here...
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -25,7 +25,10 @@ public class LGCsvDataProcessor : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", 
+				"EasyCsv",
+				"LGDialogueSystem",
+				"RuntimeDataTable",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

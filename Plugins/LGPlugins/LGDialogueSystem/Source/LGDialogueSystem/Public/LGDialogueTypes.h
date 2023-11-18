@@ -15,7 +15,7 @@ struct LGDIALOGUESYSTEM_API FLGDialogueURL
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FString URL_Name;
+	FString FileName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString URL;

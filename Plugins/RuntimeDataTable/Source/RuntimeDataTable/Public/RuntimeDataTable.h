@@ -6,7 +6,6 @@
 
 #include "HttpModule.h"
 #include "UObject/Object.h"
-
 #include "RuntimeDataTable.generated.h"
 
 class URuntimeDataTableObject;
@@ -36,7 +35,10 @@ struct FRuntimeDataTableCallbackInfo
 	FString FilePath = "";
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
-	FString CvsName = "";
+	FString FileName = "";
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FString FolderName = "";
 
 	UPROPERTY()
 	UObject* Caller = nullptr;
@@ -67,7 +69,11 @@ struct FRuntimeDataTableOperationParams
 
 	/** A name for the CSV file */
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
-	FString CvsName = "";
+	FString FolderName = "";
+
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FString FileName = "";
+
 
 	/** The caller that begins the CSV Import */
 	UPROPERTY()

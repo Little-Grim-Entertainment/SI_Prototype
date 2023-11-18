@@ -159,7 +159,8 @@ void URuntimeDataTableObject::OnResponseReceived_GET_SheetAsCSV(
 	FRuntimeDataTableCallbackInfo CallbackInfo;
 	CallbackInfo.OperationName = OperationParams.OperationName;
 	CallbackInfo.FilePath = OperationParams.FilePath;
-	CallbackInfo.CvsName = OperationParams.CvsName;
+	CallbackInfo.FolderName = OperationParams.FolderName;
+	CallbackInfo.FileName = OperationParams.FileName;
 	CallbackInfo.Caller = OperationParams.Caller;
 	CallbackInfo.bWasSuccessful = bWasSuccessful;
 	GenericValidateHttpResponse(Request, Response, CallbackInfo);

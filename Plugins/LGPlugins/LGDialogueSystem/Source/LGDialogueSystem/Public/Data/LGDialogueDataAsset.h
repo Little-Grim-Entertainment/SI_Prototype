@@ -9,6 +9,7 @@
 #include "LGDialogueDataAsset.generated.h"
 
 
+struct FRuntimeDataTableCallbackInfo;
 
 UCLASS()
 class LGDIALOGUESYSTEM_API ULGDialogueDataAsset : public UDataAsset, public ILGCsvProcessorInterface
@@ -21,6 +22,9 @@ public:
 
 	virtual void OnInteractComplete_Implementation(UObject* Caller, const FLGCsvInfo& InCvsInfo) override;
 
+	UFUNCTION()
+	void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
+
 private:
 
 	UFUNCTION(CallInEditor)
@@ -30,7 +34,7 @@ private:
 	FString FolderPath;
 	
 	UPROPERTY(EditAnywhere)
-	FString CsvName;
+	FString FolderName;
 
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DialogueURLs;
