@@ -1,11 +1,11 @@
-"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Module.LGDialogueSystem.cpp"
-/FI"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
-/FI"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Definitions.LGDialogueSystem.h"
-/Yu"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
-/Fp"P:\SpadeInvestigations\5.3\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h.pch"
-/Fo"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Module.LGDialogueSystem.cpp.obj"
-/sourceDependencies "P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Module.LGDialogueSystem.cpp.dep.json"
-@"P:\SpadeInvestigations\5.3\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\LGDialogueSystem.Shared.rsp"
+"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Module.LGDialogueSystem.cpp"
+/FI"E:\Unreal Engine\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
+/FI"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Definitions.LGDialogueSystem.h"
+/Yu"E:\Unreal Engine\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
+/Fp"E:\Unreal Engine\SI_Prototype\Intermediate\Build\Win64\x64\SI_PrototypeEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h.pch"
+/Fo"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Module.LGDialogueSystem.cpp.obj"
+/sourceDependencies "E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\Module.LGDialogueSystem.cpp.dep.json"
+@"E:\Unreal Engine\SI_Prototype\Plugins\LGPlugins\LGDialogueSystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\LGDialogueSystem\LGDialogueSystem.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi
