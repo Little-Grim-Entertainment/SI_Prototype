@@ -107,6 +107,10 @@
 		{
 			"Name": "LGDialogueSystem",
 			"Enabled": true
+		},
+		{
+			"Name": "SmartObjects",
+			"Enabled": true
 		}
 	]
 }
