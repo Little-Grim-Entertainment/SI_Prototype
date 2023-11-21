@@ -6,6 +6,7 @@
 #include "SI_AITypes.generated.h"
 
 class ASI_NPCController;
+class ASI_Nick;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveToLocationUpdated, FVector&);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMoveToRotationUpdated, FRotator&)
@@ -16,21 +17,20 @@ struct FSI_NPCMemory
 	GENERATED_BODY()
 
 	FSI_NPCMemory() {};
-	FSI_NPCMemory(AActor* InTargetActor);
 	FSI_NPCMemory(FVector& InLocation, FRotator& InRotation);
 
 	FVector& GetMoveToLocation() { return MoveToLocation; }
 	void SetMoveToLocation(FVector& InLocation);
 	FRotator& GetMoveToRotation() { return MoveToRotation; }
 	void SetMoveToRotation(FRotator& InRotation);
+	TObjectPtr<ASI_Nick> GetNick() { return Nick; }
+	void SetNick(TObjectPtr<ASI_Nick> InNick);
 
-	UPROPERTY(EditAnywhere, Category = "Input", meta=(Optional))
-	TObjectPtr<AActor> TargetActor = nullptr;
-	UPROPERTY(EditAnywhere, Category = "Input", meta=(Optional))
-	float AcceptanceRadius = 50.0f;
-	UPROPERTY(EditAnywhere, Category = "Input", meta=(Optional))
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<ASI_Nick> Nick = nullptr;
+	UPROPERTY(EditAnywhere, Category = "AI")
 	FVector MoveToLocation = FVector();
-	UPROPERTY(EditAnywhere, Category = "Input", meta=(Optional))
+	UPROPERTY(EditAnywhere, Category = "AI")
 	FRotator MoveToRotation = FRotator();
 
 	FOnMoveToLocationUpdated OnMoveToLocationUpdated;

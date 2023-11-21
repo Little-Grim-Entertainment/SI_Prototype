@@ -11,11 +11,11 @@
 #include "SI_GameplayTagManager.h"
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Actors/SI_MovableActor.h"
-#include "AI/StateTree/Tasks/SI_StateTreeTaskCommonBase.h"
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
 #include "Characters/SI_Gizbo.h"
+#include "Controllers/SI_NPCController.h"
 
 void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {

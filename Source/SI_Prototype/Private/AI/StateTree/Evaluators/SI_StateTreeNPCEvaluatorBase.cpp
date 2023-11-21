@@ -7,22 +7,27 @@
 #include "LG_DebugMacros.h"
 #include "StateTreeExecutionContext.h"
 #include "Controllers/SI_NPCController.h"
-#include "StateTreeLinker.h"
-#include "Characters/SI_Gizbo.h"
-#include "Controllers/SI_GizboController.h"
-
+#include "Characters/SI_NPC.h"
+#include "SI_Prototype/SI_Prototype.h"
 
 //-----------------------------------------------------
 // USI_StateTreeNPCEvaluatorBase_InstanceData
 //-----------------------------------------------------
-void USI_StateTreeNPCEvaluatorBase_InstanceData::OnTreeStart(FStateTreeExecutionContext& Context, FSI_NPCMemory& InNPCMemory) 
+void USI_StateTreeNPCEvaluatorBase_InstanceData::OnTreeStart(FStateTreeExecutionContext& Context) 
 {
-	InNPCMemory.OnMoveToLocationUpdated.AddUObject(this, &USI_StateTreeNPCEvaluatorBase_InstanceData::SetMoveToLocation);
+	LG_LOG(LogLG_StateTree, Log, "USI_StateTreeNPCEvaluatorBase_InstanceData::OnTreeStart")
+	NPCController = NPC->GetController<ASI_NPCController>();
+	if(!IsValid(NPCController)) {LG_LOG(LogLG_StateTree, Error, "NPCController is invalid cannot Start Tree") return;}
+	FSI_NPCMemory* NPCMemory = NPCController->GetNPCMemory();
+
+	Nick = NPCMemory->GetNick();
+	
+	NPCMemory->OnMoveToLocationUpdated.AddUObject(this, &USI_StateTreeNPCEvaluatorBase_InstanceData::SetMoveToLocation);
 }
 
-void USI_StateTreeNPCEvaluatorBase_InstanceData::SetMoveToLocation(FVector& InMoveLotLocation) 
+void USI_StateTreeNPCEvaluatorBase_InstanceData::SetMoveToLocation(FVector& InMoveToLocation) 
 {
-	MoveToLocation = InMoveLotLocation;
+	MoveToLocation = InMoveToLocation;
 }
 
 //-----------------------------------------------------
@@ -30,30 +35,18 @@ void USI_StateTreeNPCEvaluatorBase_InstanceData::SetMoveToLocation(FVector& InMo
 //-----------------------------------------------------
 void FSI_StateTreeNPCEvaluatorBase::TreeStart(FStateTreeExecutionContext& Context) const
 {
+	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeNPCEvaluatorBase::TreeStart")
 	Super::TreeStart(Context);
 	
 	UInstanceDataType* InstanceData = Context.GetInstanceDataPtr<UInstanceDataType>(*this);
-
-	ASI_Gizbo* Gizbo = Cast<ASI_Gizbo>(Context.GetOwner());
-	ASI_GizboController* GizboController = Cast<ASI_GizboController>(Gizbo->GetController());
-	InstanceData->Nick = GizboController->Nick;
-	
-	ASI_NPCController& Controller = Context.GetExternalData(ControllerHandle);
-	InstanceData->OnTreeStart(Context, *Controller.NPCMemory);
+	InstanceData->OnTreeStart(Context);
 }
 
 void FSI_StateTreeNPCEvaluatorBase::Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const
 {
-
 }
 
 void FSI_StateTreeNPCEvaluatorBase::TreeStop(FStateTreeExecutionContext& Context) const
 {
-
-}
-
-bool FSI_StateTreeNPCEvaluatorBase::Link(FStateTreeLinker& Linker)
-{
-	Linker.LinkExternalData(ControllerHandle);
-	return true;
+	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeNPCEvaluatorBase::TreeStop")
 }

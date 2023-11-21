@@ -38,6 +38,8 @@ protected:
 	
 	virtual void ConfigurePerception();
 	//TODO: Will need to add support for AI Perception Teams, if we want NPCs to belong to specific factions, and have interactions between each other.
+
+	void BuildMemory();
 	
 	UFUNCTION()
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
@@ -49,7 +51,4 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<ASI_NPC> PossessedNPC = nullptr;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
-	UStateTreeComponent* StateTreeComponent;
 };

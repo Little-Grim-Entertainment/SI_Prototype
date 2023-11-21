@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "StateTreeTaskBase.h"
+#include "SmartObjectSubsystem.h"
 #include "SI_StateTreeTaskCommonBase.generated.h"
+
+class USmartObjectSubsystem;
 
 USTRUCT()
 struct FStateTreeTaskCommonBase_InstanceData
@@ -22,6 +25,8 @@ struct SI_PROTOTYPE_API FSI_StateTreeTaskCommonBase : public FStateTreeTaskCommo
 	using FInstanceDataType = FStateTreeTaskCommonBase_InstanceData;
 	virtual const UStruct* GetInstanceDataType() const override { return FInstanceDataType::StaticStruct(); }
 
-	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const override;
-
+	virtual bool Link(FStateTreeLinker& Linker) override;
+	
+	/** Handle to retrieve USmartObjectSubsystem. */
+	TStateTreeExternalDataHandle<USmartObjectSubsystem> SmartObjectSubsystemHandle;
 };

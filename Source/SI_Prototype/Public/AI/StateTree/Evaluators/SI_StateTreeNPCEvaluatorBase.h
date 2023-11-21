@@ -21,17 +21,20 @@ class USI_StateTreeNPCEvaluatorBase_InstanceData : public UObject
 	GENERATED_BODY()
 
 public:
+	USI_StateTreeNPCEvaluatorBase_InstanceData() = default;
 	
-	void OnTreeStart(FStateTreeExecutionContext& Context, FSI_NPCMemory& InNPCMemory);
+	void OnTreeStart(FStateTreeExecutionContext& Context);
 	UFUNCTION()
 	void SetMoveToLocation(FVector& InMoveToLocation);
 	
+	UPROPERTY(EditAnywhere, Category = "Context")
+	TObjectPtr<ASI_NPC> NPC;
+	UPROPERTY(EditAnywhere, Category = "Output")
+	TObjectPtr<ASI_NPCController> NPCController;
+	UPROPERTY(EditAnywhere, Category = "Output")
+	TObjectPtr<ASI_Nick> Nick;
 	UPROPERTY(EditAnywhere, Category = "Output")
 	FVector MoveToLocation;
-	UPROPERTY(EditAnywhere, Category = "Context")
-	ASI_NPC* NPC;
-	UPROPERTY(EditAnywhere, Category = "Output")
-	ASI_Nick* Nick;
 };
 
 //-----------------------------------------------------
@@ -50,7 +53,4 @@ struct SI_PROTOTYPE_API FSI_StateTreeNPCEvaluatorBase : public FSI_StateTreeEvau
 	virtual void TreeStart(FStateTreeExecutionContext& Context) const override;
 	virtual void Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const override;
 	virtual void TreeStop(FStateTreeExecutionContext& Context) const override;
-
-	virtual bool Link(FStateTreeLinker& Linker) override;
-	TStateTreeExternalDataHandle<ASI_NPCController> ControllerHandle;
 };

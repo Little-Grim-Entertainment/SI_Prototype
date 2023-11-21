@@ -4,15 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Characters/SI_Character.h"
-#include "AIController.h"
 #include "SI_NativeGameplayTagLibrary.h"
-#include "Controllers/SI_NPCController_Interactable.h"
 #include "SI_NPC.generated.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
 struct FGameplayTagContainer;
-class USI_StateTreeComponentBase;
+class UStateTreeComponent;
 
 /**
  * Base NPC class for SI Prototype
@@ -33,9 +31,12 @@ public:
 	bool IsPerformingMainAction() const;
 	
 protected:
+
+	virtual void BeginPlay() override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
 	FGameplayTag CurrentBehaviorTag = SITag_Behavior;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
+	TObjectPtr<UStateTreeComponent> StateTreeComponent;
+	
 };

@@ -7,6 +7,7 @@
 #include "SI_Prototype/SI_Prototype.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Characters/SI_NPC.h"
+#include "Characters/SI_Nick.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -15,11 +16,9 @@ using namespace SI_NativeGameplayTagLibrary;
 
 ASI_NPCController::ASI_NPCController()
 {
-	//StateTreeComponent = CreateDefaultSubobject<UStateTreeComponent>(TEXT("StateTreeComponent"));
 	PerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component"));
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("Hearing Config"));
-	NPCMemory = new FSI_NPCMemory();
 }
 
 void ASI_NPCController::BeginPlay()
@@ -27,6 +26,7 @@ void ASI_NPCController::BeginPlay()
 	Super::BeginPlay();
 	
 	ConfigurePerception();
+	BuildMemory();
 	
 	if (PerceptionComp)
 	{
@@ -72,13 +72,12 @@ void ASI_NPCController::OnPossess(APawn* InPawn)
 
 	PossessedNPC->SetCurrentBehavior(SITag_Behavior_Default);
 	PerceptionComp->Activate(true);
-	//TODO: Ask NPC to set blackboard values etc.
+	
 	SetActorTickEnabled(true);
 }
 
 void ASI_NPCController::ConfigurePerception()
 {
-	//TODO: Play around with / discuss values with Jeff, Manuel etc.
 	if (SightConfig)
 	{
 		SightConfig->SightRadius = 1000.0f;
@@ -103,6 +102,15 @@ void ASI_NPCController::ConfigurePerception()
 		PerceptionComp->ConfigureSense(*HearingConfig);
 		PerceptionComp->SetDominantSense(SightConfig->GetSenseImplementation());
 	}
+}
+
+void ASI_NPCController::BuildMemory()
+{
+	ASI_Nick* Nick = Cast<ASI_Nick>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if(!IsValid(Nick)) {LG_LOG(LogLG_Ability, Error, "Nick is invalid unable to build NPCMemory") return;}
+
+	NPCMemory = new FSI_NPCMemory();
+	NPCMemory->SetNick(Nick);
 }
 
 void ASI_NPCController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)

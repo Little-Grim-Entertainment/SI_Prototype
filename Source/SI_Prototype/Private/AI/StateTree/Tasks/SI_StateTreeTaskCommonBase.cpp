@@ -2,9 +2,11 @@
 
 
 #include "AI/StateTree/Tasks/SI_StateTreeTaskCommonBase.h"
+#include "StateTreeExecutionContext.h"
+#include "StateTreeLinker.h"
 
-EStateTreeRunStatus FSI_StateTreeTaskCommonBase::EnterState(FStateTreeExecutionContext& Context,
-	const FStateTreeTransitionResult& Transition) const
+bool FSI_StateTreeTaskCommonBase::Link(FStateTreeLinker& Linker)
 {
-	return EStateTreeRunStatus::Running;
+	Linker.LinkExternalData(SmartObjectSubsystemHandle);
+	return true;
 }
