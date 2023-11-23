@@ -9,7 +9,6 @@ void USI_GameplayAbility_Follow::ActivateAbility(const FGameplayAbilitySpecHandl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	LG_LOG_LOG(LogLG_Ability,"Ability Activated");
-	LG_PRINT(5.f, Red, "Follow Ability Activated");
 
 	ASI_NPC* Actor = Cast<ASI_NPC>(ActorInfo->OwnerActor);
 	if(!IsValid(Actor)) {LG_LOG(LogLG_Ability, Error, "Actor is not valid"); return;}
@@ -28,5 +27,4 @@ void USI_GameplayAbility_Follow::EndAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	LG_PRINT(5.f, Red, "Follow Ability Ended");
 }

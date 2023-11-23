@@ -12,7 +12,6 @@ void USI_GameplayAbility_Wait::ActivateAbility(const FGameplayAbilitySpecHandle 
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	LG_LOG_LOG(LogLG_Ability," Ability Activated");
 
-	LG_PRINT(5.f, Red, "Wait Ability Activated");
 
 	ASI_NPC* Actor = Cast<ASI_NPC>(ActorInfo->OwnerActor);
 	if(!IsValid(Actor)) {LG_LOG(LogLG_Ability, Error, "Actor is not valid"); return;}
@@ -26,5 +25,4 @@ void USI_GameplayAbility_Wait::EndAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	LG_PRINT(5.f, Red, "Wait Ability Ended");
 }

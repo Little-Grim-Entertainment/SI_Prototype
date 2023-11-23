@@ -7,7 +7,6 @@
 
 void ASI_BaseGadget::ActivatePrimaryAction_Implementation()
 {
-	LG_PRINT(5.f, Red, "SI_BaseGadget: Activate Primary");
 		
 }
 

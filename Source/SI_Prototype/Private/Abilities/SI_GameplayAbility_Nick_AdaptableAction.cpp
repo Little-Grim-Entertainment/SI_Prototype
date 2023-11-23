@@ -57,7 +57,6 @@ void USI_GameplayAbility_Nick_AdaptableAction::EndAbility(const FGameplayAbility
 	{
 		WaitCancelConfirmHoldTagAddedTask->EndTask();
 	}
-	LG_PRINT(5.f, Green ,"EndAbility");
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::StartAdaptableAction(const AActor* InActor)
@@ -189,14 +188,12 @@ void USI_GameplayAbility_Nick_AdaptableAction::CancelInteractableHighlight()
 
 void USI_GameplayAbility_Nick_AdaptableAction::CancelTagReceived()
 {
-	LG_PRINT(5.f, Green ,"CancelTagReceived");
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 {
-	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
 	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
@@ -205,7 +202,6 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	AIController->GetNPCMemory()->SetMoveToLocation(NewMoveToLocation);
-	LG_PRINT(5.0f, Blue, "%s", *NewMoveToLocation.ToString());
 	
 	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
 	
@@ -223,8 +219,6 @@ void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	NPCMemory->SetMoveToLocation(NewMoveToLocation);
-	
-	LG_PRINT(5.0f, Blue, "%s", *NPCMemory->MoveToLocation.ToString());
 	
 	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
 	

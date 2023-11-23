@@ -14,8 +14,6 @@
 void USI_GameplayAbility_Nick_SetAIRotation::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	LG_PRINT(5.f, Green ,"ActivateAbility");
 	
 	Nick = Cast<ASI_Nick>(ActorInfo->OwnerActor);
 	if(!IsValid(Nick)) return;
@@ -47,14 +45,12 @@ void USI_GameplayAbility_Nick_SetAIRotation::EndAbility(const FGameplayAbilitySp
 
 void USI_GameplayAbility_Nick_SetAIRotation::CancelTagReceived()
 {
-	LG_PRINT(5.f, Green ,"CancelTagReceived");
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
 void USI_GameplayAbility_Nick_SetAIRotation::ConfirmTagReceived()
 {
-	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
 	
 	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
 	if(!AIAbility) {LG_LOG(LogLG_Ability, Error, "AIAbility is not valid"); return; }

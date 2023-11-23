@@ -46,7 +46,6 @@ void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag,
 
 	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "%s is null unable to activate ability!", *CurrentAbility->GetName()); return;}
 
-		LG_PRINT(10.f, Green, "Attempting to activate %s", *CurrentAbility->GetName());
 	CharacterAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
 }
 
@@ -62,7 +61,6 @@ void USI_AbilityManager::TryCancelAbilityByTag(const FGameplayTag& InAddedTag, F
 	if(!IsValid(CurrentAbility))
 	{LG_LOG(LogLG_AbilityManager, Error, "%s is null unable to cancel ability!", *CurrentAbility->GetName()); return;}
 
-	LG_PRINT(10.f, Green, "Cancelling Ability %s", *CurrentAbility->GetName());
 	CharacterAbilitySystemComponent->CancelAbility(CurrentAbility);
 }
 

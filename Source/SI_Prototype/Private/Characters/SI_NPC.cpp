@@ -6,6 +6,7 @@
 #include "LG_DebugMacros.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Components/StateTreeComponent.h"
+#include "SI_Prototype/SI_Prototype.h"
 
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -20,8 +21,9 @@ void ASI_NPC::SetCurrentBehavior(const FGameplayTag NewBehaviorTag)
 	if (CurrentBehaviorTag != NewBehaviorTag)
 	{
 		CurrentBehaviorTag = NewBehaviorTag;
+		OnBehaviorTagUpdated.Broadcast(CurrentBehaviorTag);
 	}
-	LG_PRINT(5.0f, Black , "ASI_NPC::SetCurrentBehavior %s", *CurrentBehaviorTag.ToString());
+	LG_LOG(LogLG_AI, Log, "ASI_NPC::SetCurrentBehavior %s", *CurrentBehaviorTag.ToString());
 }
 
 FGameplayTag& ASI_NPC::GetCurrentBehaviorTag()
