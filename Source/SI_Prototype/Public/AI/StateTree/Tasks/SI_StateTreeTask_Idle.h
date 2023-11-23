@@ -6,26 +6,31 @@
 #include "SI_StateTreeTaskCommonBase.h"
 #include "SI_StateTreeTask_Idle.generated.h"
 
-
-
-USTRUCT()
-struct FStateTreeIdleTask_InstanceData
+UCLASS()
+class UStateTreeIdleTask_InstanceData : public UObject
 {
 	GENERATED_BODY()
 
-	FStateTreeIdleTask_InstanceData() = default;
+	UStateTreeIdleTask_InstanceData() = default;
+
+public:
+	void OnTreeStart(FStateTreeExecutionContext& Context);
+	UFUNCTION()
+	void UpdateBehaviorBool(FGameplayTag& InBehaviorTag);
 	
+	UPROPERTY()
+	bool bBehaviorTagUpdated = false;
 };
 
-USTRUCT(meta = (DisplayName = "SIIdleTask"))
+USTRUCT(meta = (DisplayName = "SI Idle Task"))
 struct SI_PROTOTYPE_API FSI_StateTreeTask_Idle : public FSI_StateTreeTaskCommonBase
 {
 	GENERATED_BODY()
 
 	FSI_StateTreeTask_Idle() = default;
 	
-	using FInstanceDataType = FStateTreeIdleTask_InstanceData;
-	virtual const UStruct* GetInstanceDataType() const override { return FInstanceDataType::StaticStruct(); }
+	using UInstanceDataType = UStateTreeIdleTask_InstanceData;
+	virtual const UStruct* GetInstanceDataType() const override { return UInstanceDataType::StaticClass(); }
 
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const override;
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const override;

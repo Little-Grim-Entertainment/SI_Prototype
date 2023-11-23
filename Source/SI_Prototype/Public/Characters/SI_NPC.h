@@ -9,6 +9,8 @@
 
 using namespace SI_NativeGameplayTagLibrary;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FBehaviorTagUpdated, FGameplayTag& InBehaviorTag)
+
 struct FGameplayTagContainer;
 class UStateTreeComponent;
 
@@ -29,6 +31,8 @@ public:
 	void SetCurrentBehavior(const FGameplayTag NewBehaviorTag);
 	UFUNCTION(BlueprintGetter, Category = "AI")
 	bool IsPerformingMainAction() const;
+
+	FBehaviorTagUpdated OnBehaviorTagUpdated;
 	
 protected:
 
@@ -38,5 +42,4 @@ protected:
 	FGameplayTag CurrentBehaviorTag = SITag_Behavior;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
 	TObjectPtr<UStateTreeComponent> StateTreeComponent;
-	
 };

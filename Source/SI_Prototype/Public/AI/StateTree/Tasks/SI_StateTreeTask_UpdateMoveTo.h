@@ -14,7 +14,7 @@ struct FStateTreeUpdateMoveToTask_InstanceData
 {
 	GENERATED_BODY()
 
-	FStateTreeUpdateMoveToTask_InstanceData() = default;
+	FStateTreeUpdateMoveToTask_InstanceData();
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	FVector MoveToLocation = FVector::ZeroVector;
@@ -22,10 +22,9 @@ struct FStateTreeUpdateMoveToTask_InstanceData
 	TObjectPtr<ASI_Nick> Nick;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<ASI_NPCController> NPCController;
-	
 };
 
-USTRUCT(meta = (DisplayName = "SIMoveToTask"))
+USTRUCT(meta = (DisplayName = "SI Move To  Task"))
 struct SI_PROTOTYPE_API FSI_StateTreeTask_UpdateMoveTo : public FSI_StateTreeTaskCommonBase
 {
 	GENERATED_BODY()

@@ -7,17 +7,37 @@
 #include "LG_DebugMacros.h"
 #include "StateTreeLinker.h"
 #include "StateTreeExecutionContext.h"
+#include "Characters/SI_NPC.h"
 #include "Controllers/SI_NPCController.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "SI_Prototype/SI_Prototype.h"
+
+FStateTreeUpdateMoveToTask_InstanceData::FStateTreeUpdateMoveToTask_InstanceData()
+	: MoveToLocation(FVector::ZeroVector)
+	, Nick(nullptr)
+	, NPCController(nullptr)
+{
+	LG_LOG(LogLG_StateTree, Log, "FStateTreeUpdateMoveToTask_InstanceData::Constructed")
+}
 
 EStateTreeRunStatus FSI_StateTreeTask_UpdateMoveTo::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const
 {
 	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeTask_UpdateMoveTo::EnterState")
 	const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 	
-	if(InstanceData.MoveToLocation != FVector::ZeroVector)
+	if(InstanceData.MoveToLocation == FVector::ZeroVector)
 	{
+		TObjectPtr<ASI_NPC> NPC = Cast<ASI_NPC>(Context.GetOwner());
+		if(!IsValid(NPC))
+		{
+			LG_LOG(LogLG_StateTree, Error, "NPC is invalid cannot change behavior")
+			return EStateTreeRunStatus::Failed;
+		}
+		
+		LG_LOG(LogLG_StateTree, Warning, "MoveToLocation isnt set task failed")
+		
+		NPC->SetCurrentBehavior(SITag_Behavior_Waiting);
+		
 		return EStateTreeRunStatus::Failed;
 	}
 
@@ -29,8 +49,6 @@ EStateTreeRunStatus FSI_StateTreeTask_UpdateMoveTo::Tick(FStateTreeExecutionCont
 {
 	const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 	
-	LG_LOG(LogLG_StateTree, Log, "MoveToLocation: %s", *InstanceData.MoveToLocation.ToString())
-	
 	bool Moving = InstanceData.NPCController->GetMoveStatus() == EPathFollowingStatus::Moving;
 	return Moving ? EStateTreeRunStatus::Running : EStateTreeRunStatus::Succeeded;
 }
@@ -38,9 +56,12 @@ EStateTreeRunStatus FSI_StateTreeTask_UpdateMoveTo::Tick(FStateTreeExecutionCont
 void FSI_StateTreeTask_UpdateMoveTo::ExitState(FStateTreeExecutionContext& Context,
 	const FStateTreeTransitionResult& Transition) const
 {
+	const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
+	ASI_NPC* NPC = Cast<ASI_NPC>(InstanceData.NPCController->GetPawn());
+	if(!IsValid(NPC)) {LG_LOG(LogLG_StateTree, Error, "NPC is invalid cannot change behavior") return;}
 
+	NPC->SetCurrentBehavior(SITag_Behavior_Waiting);
 	
 	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeTask_UpdateMoveTo::ExitState") 
-	FSI_StateTreeTaskCommonBase::ExitState(Context, Transition);
 }
 
