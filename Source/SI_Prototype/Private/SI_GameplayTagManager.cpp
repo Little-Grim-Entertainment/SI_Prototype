@@ -3,7 +3,6 @@
 
 #include "SI_GameplayTagManager.h"
 
-
 #include "SI_GameInstance.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
@@ -21,7 +20,14 @@ void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag
 		OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
 		return;
 	}
-
+	
+	if(HasParentTag(InGameplayTag, SITag_Behavior))
+	{
+		LG_LOG(LogLG_GameplayTagManager, Log, "Behavior Tag Added: %s", *InGameplayTag.ToString());
+		OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
+		return;
+	}
+	
 	ContainerToAddTo.AddTag(InGameplayTag);
 	OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
 }

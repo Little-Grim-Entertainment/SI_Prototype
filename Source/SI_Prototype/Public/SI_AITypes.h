@@ -16,7 +16,7 @@ struct FSI_NPCMemory
 {
 	GENERATED_BODY()
 
-	FSI_NPCMemory() {};
+	FSI_NPCMemory() = default;
 	FSI_NPCMemory(FVector& InLocation, FRotator& InRotation);
 
 	FVector& GetMoveToLocation() { return MoveToLocation; }
@@ -26,11 +26,11 @@ struct FSI_NPCMemory
 	TObjectPtr<ASI_Nick> GetNick() { return Nick; }
 	void SetNick(TObjectPtr<ASI_Nick> InNick);
 
-	UPROPERTY(EditAnywhere, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "AI | Memory")
 	TObjectPtr<ASI_Nick> Nick = nullptr;
-	UPROPERTY(EditAnywhere, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "AI | Memory")
 	FVector MoveToLocation = FVector();
-	UPROPERTY(EditAnywhere, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "AI | Memory")
 	FRotator MoveToRotation = FRotator();
 
 	FOnMoveToLocationUpdated OnMoveToLocationUpdated;
@@ -38,4 +38,29 @@ struct FSI_NPCMemory
 	
 	bool operator == (const FSI_NPCMemory& Other) const;
 	bool operator != (const FSI_NPCMemory& Other) const;
+};
+
+USTRUCT(BlueprintType)
+struct FSI_NPCMovementHelper
+{
+	GENERATED_BODY()
+
+	FSI_NPCMovementHelper() = default;
+
+	float CalculateMovementSpeed(float InCurrentDistance, float InCurrentTargetSpeed);
+	
+	UPROPERTY(EditAnywhere, Category = "AI|Movement")
+	float MinDistance = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "AI|Movement")
+	float MaxDistance = 250.0f;
+	
+	UPROPERTY(EditAnywhere, Category = "AI|Movement")
+	float MinSpeed = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "AI|Movement")
+	float MaxSpeed = 300.0f;
+	
+	UPROPERTY(EditAnywhere, Category = "AI|Movement")
+	float MinTargetSpeed = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "AI|Movement")
+	float MaxTargetSpeed = 300.0f;
 };

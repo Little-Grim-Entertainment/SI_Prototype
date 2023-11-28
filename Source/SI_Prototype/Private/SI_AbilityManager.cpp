@@ -28,20 +28,19 @@ void USI_AbilityManager::OnGameModeBeginPlay()
 {
 	Super::OnGameModeBeginPlay();
 	
-	if(!IsValid(PlayerManager)) return; //{LG_LOG(LogLG_AbilityManager, Error, "PlayerManager is null unable to activate ability!") return;}
+	if(!IsValid(PlayerManager)) {LG_LOG(LogLG_AbilityManager, Error, "PlayerManager is null unable to GetNickAbilitySystemComponent!") return;}
 
 	NickAbilitySystemComponent = PlayerManager->GetNickAbilitySystemComponent();
 }
 
 void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
-	if(InTagPayload == nullptr)
-		{LG_LOG(LogLG_AbilityManager, Error, "InTagPayload is null unable to activate ability!") return;}
+	if(InTagPayload == nullptr)	{LG_LOG(LogLG_AbilityManager, Error, "InTagPayload is null unable to activate ability!") return;}
 	
 	USI_AbilitySystemComponent* CharacterAbilitySystemComponent = InTagPayload->Target->GetComponentByClass<USI_AbilitySystemComponent>();
 	
 	if(!IsValid(CharacterAbilitySystemComponent)) {LG_LOG(LogLG_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to activate ability!") return;}
-		
+	
 	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
 
 	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "%s is null unable to activate ability!", *CurrentAbility->GetName()); return;}
@@ -53,13 +52,11 @@ void USI_AbilityManager::TryCancelAbilityByTag(const FGameplayTag& InAddedTag, F
 {	
 	USI_AbilitySystemComponent* CharacterAbilitySystemComponent = InTagPayload->Target->GetComponentByClass<USI_AbilitySystemComponent>();
 	
-	if(!IsValid(CharacterAbilitySystemComponent))
-	{LG_LOG(LogLG_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to cancel ability!") return;}
+	if(!IsValid(CharacterAbilitySystemComponent)) {LG_LOG(LogLG_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to cancel ability!") return;}
 		
 	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
 
-	if(!IsValid(CurrentAbility))
-	{LG_LOG(LogLG_AbilityManager, Error, "%s is null unable to cancel ability!", *CurrentAbility->GetName()); return;}
+	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "%s is null unable to cancel ability!", *CurrentAbility->GetName()); return;}
 
 	CharacterAbilitySystemComponent->CancelAbility(CurrentAbility);
 }

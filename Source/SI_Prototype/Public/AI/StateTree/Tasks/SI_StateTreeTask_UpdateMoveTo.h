@@ -8,6 +8,7 @@
 
 class ASI_NPCController;
 class ASI_Nick;
+class USI_GameplayTagManager;
 
 USTRUCT()
 struct FStateTreeUpdateMoveToTask_InstanceData
@@ -21,7 +22,7 @@ struct FStateTreeUpdateMoveToTask_InstanceData
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<ASI_Nick> Nick;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	TObjectPtr<ASI_NPCController> NPCController;
+	TObjectPtr<ASI_NPCController> NPCController; 
 };
 
 USTRUCT(meta = (DisplayName = "SI Move To  Task"))

@@ -8,6 +8,8 @@
 #include "SI_NativeGameplayTagLibrary.h"
 #include "Characters/SI_NPC.h"
 #include "Characters/SI_Nick.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -21,12 +23,15 @@ ASI_NPCController::ASI_NPCController()
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("Hearing Config"));
 }
 
+
+
 void ASI_NPCController::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	ConfigurePerception();
 	BuildMemory();
+	NPCMovementHelper = new FSI_NPCMovementHelper();
 	
 	if (PerceptionComp)
 	{
@@ -111,6 +116,18 @@ void ASI_NPCController::BuildMemory()
 
 	NPCMemory = new FSI_NPCMemory();
 	NPCMemory->SetNick(Nick);
+}
+
+void ASI_NPCController::UpdateMovementSpeed(const FVector& InMoveToLocation, float InTargetSpeed)
+{
+	if (PossessedNPC)
+	{
+		const float CurrentDistanceToTarget = FVector::Dist(InMoveToLocation, GetPawn()->GetActorLocation());
+		NPCMovementHelper->CalculateMovementSpeed(CurrentDistanceToTarget, InTargetSpeed);
+		
+		UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(PossessedNPC->GetMovementComponent());
+		MovementComponent->MaxWalkSpeed = NPCMovementHelper->CalculateMovementSpeed(CurrentDistanceToTarget, InTargetSpeed);
+	}
 }
 
 void ASI_NPCController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)

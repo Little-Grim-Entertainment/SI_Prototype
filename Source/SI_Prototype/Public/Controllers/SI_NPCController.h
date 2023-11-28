@@ -31,6 +31,10 @@ public:
 	
 	FSI_NPCMemory* NPCMemory = nullptr;
 	
+	FSI_NPCMovementHelper* NPCMovementHelper = nullptr;
+
+	void UpdateMovementSpeed(const FVector& InMoveToLocation, float InTargetSpeed = 0.0f);
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;

@@ -21,8 +21,6 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly)
 	ASI_Nick* Nick;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
 
 protected:
 	virtual void BeginPlay() override;

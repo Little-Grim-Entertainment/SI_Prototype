@@ -48,6 +48,8 @@ EStateTreeRunStatus FSI_StateTreeTask_UpdateMoveTo::EnterState(FStateTreeExecuti
 EStateTreeRunStatus FSI_StateTreeTask_UpdateMoveTo::Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const
 {
 	const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
+
+	InstanceData.NPCController->UpdateMovementSpeed(InstanceData.MoveToLocation);
 	
 	bool Moving = InstanceData.NPCController->GetMoveStatus() == EPathFollowingStatus::Moving;
 	return Moving ? EStateTreeRunStatus::Running : EStateTreeRunStatus::Succeeded;

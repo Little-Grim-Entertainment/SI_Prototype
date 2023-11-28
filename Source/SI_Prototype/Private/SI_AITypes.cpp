@@ -37,3 +37,22 @@ bool FSI_NPCMemory::operator!=(const FSI_NPCMemory& Other) const
 {
 	return MoveToLocation != Other.MoveToLocation || MoveToRotation != Other.MoveToRotation;
 }
+
+float FSI_NPCMovementHelper::CalculateMovementSpeed(float InCurrentDistance, float InCurrentTargetSpeed)
+{
+	const float DistanceDelta = MaxDistance - MinDistance;
+	const float SpeedDelta = MaxSpeed - MinSpeed;
+	const float TargetSpeedDelta = MaxTargetSpeed - MinTargetSpeed;
+	
+	const float DistanceToUse = InCurrentDistance - MinDistance;
+	const float DistanceRatio = FMath::Clamp(DistanceToUse / DistanceDelta, 0.0f, 1.0f);
+
+	const float TargetSpeedToUse = InCurrentTargetSpeed - MinTargetSpeed;
+	const float TargetSpeedRatio = FMath::Clamp(TargetSpeedToUse / TargetSpeedDelta, 0.0f, 1.0f);
+
+	const float TotalRatio = FMath::Min(DistanceRatio + TargetSpeedRatio, 1.0f);
+
+	const float DesiredSpeed = MinSpeed + (TotalRatio * SpeedDelta);
+
+	return DesiredSpeed;
+}

@@ -8,6 +8,7 @@
 #include "SI_StateTreeTaskCommonBase.generated.h"
 
 class USmartObjectSubsystem;
+class USI_TagManager;
 
 USTRUCT()
 struct FStateTreeTaskCommonBase_InstanceData
