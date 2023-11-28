@@ -4,35 +4,33 @@
 
 #include "CoreMinimal.h"
 #include "SI_StateTreeTaskCommonBase.h"
-#include "SI_StateTreeTask_UpdateMoveTo.generated.h"
+#include "SI_StateTreeTask_FollowNick.generated.h"
 
 class ASI_NPCController;
 class ASI_Nick;
 class USI_GameplayTagManager;
 
 USTRUCT()
-struct FStateTreeUpdateMoveToTask_InstanceData
+struct FStateTreeFollowNickTask_InstanceData
 {
 	GENERATED_BODY()
 
-	FStateTreeUpdateMoveToTask_InstanceData();
+	FStateTreeFollowNickTask_InstanceData();
 	
-	UPROPERTY(EditAnywhere, Category = "Input")
-	FVector MoveToLocation = FVector::ZeroVector;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<ASI_Nick> Nick;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<ASI_NPCController> NPCController; 
 };
 
-USTRUCT(meta = (DisplayName = "SI Move To Task"))
-struct SI_PROTOTYPE_API FSI_StateTreeTask_UpdateMoveTo : public FSI_StateTreeTaskCommonBase
+USTRUCT(meta = (DisplayName = "SI Follow Nick Task"))
+struct SI_PROTOTYPE_API FStateTreeFollowNickTask : public FSI_StateTreeTaskCommonBase
 {
 	GENERATED_BODY()
 
-	FSI_StateTreeTask_UpdateMoveTo() = default;
+	FStateTreeFollowNickTask() = default;
 	
-	using FInstanceDataType = FStateTreeUpdateMoveToTask_InstanceData;
+	using FInstanceDataType = FStateTreeFollowNickTask_InstanceData;
 	virtual const UStruct* GetInstanceDataType() const override { return FInstanceDataType::StaticStruct(); }
 
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const override;
