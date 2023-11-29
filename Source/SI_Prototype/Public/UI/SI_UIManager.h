@@ -49,12 +49,9 @@ public:
 	void CreateCaseTitleCard(USI_CaseData* InCase, bool bShouldFadeIn = false);
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveCaseTitleCard();
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	USI_UserWidget* CreateSIWidget(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag);
+
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void RemoveSIWidget(USI_UserWidget* InWidgetPtr);
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	USI_UserWidget* GetWidgetByTag(const FGameplayTag InWidgetTag);
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateMapMenu();
@@ -102,13 +99,26 @@ public:
 	TArray<USI_InteractionWidget*>& GetActiveInteractionWidgets();
 
 	UFUNCTION(BlueprintPure, Category = "Media")
-	USI_MoviePlayerWidget* GetMoviePlayerWidget() const;
+	USI_MoviePlayerWidget* GetMoviePlayerWidget();
 	UFUNCTION(BlueprintPure, Category = "PlayerHUD")
 	USI_HUD* GetPlayerHUD();
+	
+	UFUNCTION()
+	void SetUIEnabled(bool bInShouldEnable);
+	
+	template <class T>
+	TArray<T*>& GetActiveUIWidgets();
+	
+	template <class T>
+	T* GetActiveUIWidget();
+	
+	template <class T>
+	T* GetActiveUIWidgetByTag(const FGameplayTag& InWidgetTag);
 
-	UFUNCTION(BlueprintPure, Category = "PlayerHUD")
-	USI_UserWidget* GetSIWidget(const FGameplayTag& InWidgetTag) const;
+	template <class WidgetC>
+	WidgetC* CreateSIWidget(UObject* OwningObject, FGameplayTag InUITag, TSubclassOf<UUserWidget> UserWidgetClass = WidgetC::StaticClass(), FName WidgetName = NAME_None );
 
+		
 protected:
 
 	virtual void OnGameInstanceInit() override;
@@ -137,30 +147,15 @@ private:
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
 
-	UPROPERTY()
-	TMap<FGameplayTag, USI_UserWidget*> UIWidgetContainer;
-
 	FGameplayTag CurrentUITag;
+
+	TMap<FGameplayTag, TSoftObjectPtr<USI_UserWidget>> ActiveUIWidgetsArray;
 	
-	UPROPERTY()
-	USI_UserWidget* LoadingScreen;
-	UPROPERTY()
-	USI_HUD* PlayerHUD;
-	UPROPERTY()
-	USI_UserWidget* SystemMenu;
-	UPROPERTY()
-	USI_UserWidget* MapMenu;
-	UPROPERTY()
-	USI_SkipWidget* SkipWidget;
-	UPROPERTY()
-	USI_MoviePlayerWidget* MoviePlayerWidget;
-	UPROPERTY()
-	USI_CaseTitleCard* CaseTitleCardWidget;
-	UPROPERTY()
-	USI_QuickActionWidget* QuickActionWidget;
 	UPROPERTY()
 	TArray<USI_InteractionWidget*> ActiveInteractionWidgets;
 
+	bool bUIEnabled;
+	
 	FTimerHandle LoadingScreenFadeDelayHandle;
 	FTimerDelegate LoadingScreenFadeDelayDelegate;
 	
@@ -178,3 +173,58 @@ private:
 	FSimpleDelegate AddVendorMenuDelegate;
 	FSimpleDelegate AddVideoScreenDelegate;
 };
+
+template <class T>
+TArray<T*>& USI_UIManager::GetActiveUIWidgets()
+{
+	TArray<T*> TempArray;
+	
+	for(TPair<FGameplayTag, TSoftObjectPtr<USI_UserWidget>>& CurrentWidget : ActiveUIWidgetsArray)
+	{
+		T* TWidget = Cast<T>(CurrentWidget.Value.Get());
+		if(TWidget)
+		{
+			TempArray.Add(TWidget);
+		}
+	}
+	return TempArray;
+}
+
+template <class T>
+T* USI_UIManager::GetActiveUIWidget()
+{
+	for( TPair<FGameplayTag, TSoftObjectPtr<USI_UserWidget>>& CurrentWidget : ActiveUIWidgetsArray)
+	{
+		T* TWidget = Cast<T>(CurrentWidget.Value.Get());
+		return TWidget;
+	}
+	return nullptr;
+}
+
+template <class T>
+T* USI_UIManager::GetActiveUIWidgetByTag(const FGameplayTag& InWidgetTag)
+{
+	for(TPair<FGameplayTag, TSoftObjectPtr<USI_UserWidget>>& CurrentWidget : ActiveUIWidgetsArray)
+	{
+		if(CurrentWidget.Key == InWidgetTag)
+		{
+			T* TWidget = Cast<T>(CurrentWidget.Value.Get());
+			return TWidget;
+		}
+	}
+	return nullptr;
+}
+
+template <class WidgetC>
+WidgetC* USI_UIManager::CreateSIWidget(UObject* OwningObject, FGameplayTag InUITag, TSubclassOf<UUserWidget> UserWidgetClass, FName WidgetName)
+{
+	WidgetC* NewWidget = CreateWidget<WidgetC>(OwningObject, UserWidgetClass);
+	if(IsValid(NewWidget))
+	{
+		if(Cast<USI_UserWidget>(NewWidget))
+		{
+			ActiveUIWidgetsArray.Add(InUITag, NewWidget);
+		}
+	}
+	return NewWidget;
+}

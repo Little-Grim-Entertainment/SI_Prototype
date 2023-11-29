@@ -179,7 +179,6 @@ void USI_CheatManager::CheatPauseWorldTimer(bool bShouldPause)
 void USI_CheatManager::DebugToggleGameplayTagViewer()
 {
 	if(!IsValid(GameInstance)) {return;}
-
 	
 	if(GameInstance->bGameplayTagViewerActive)
 	{
@@ -203,4 +202,9 @@ void USI_CheatManager::DebugToggleGameplayTagViewer()
 			GameInstance->bGameplayTagViewerActive = true;
 		}
 	}
+}
+
+void USI_CheatManager::CheatDisableUI()
+{
+	
 }

@@ -9,8 +9,7 @@ struct FStateTreeInteractTask_InstanceData
 {
 	GENERATED_BODY()
 
-	FStateTreeInteractTask_InstanceData();
-	
+	FStateTreeInteractTask_InstanceData() = default;	
 };
 
 USTRUCT(meta = (DisplayName = "SI Interact Task"))

@@ -54,6 +54,10 @@ public:
 	UFUNCTION(exec)
 	void DebugToggleGameplayTagViewer();
 
+	//UI Manager Cheats
+	UFUNCTION(exec)
+	void CheatDisableUI();
+	
 protected:
 
 	virtual void InitCheatManager() override;
