@@ -57,6 +57,9 @@ public:
 	//UI Manager Cheats
 	UFUNCTION(exec)
 	void CheatDisableUI();
+
+	UFUNCTION(exec)
+	void CheatDisableHUD(const bool bShouldDisable);
 	
 protected:
 

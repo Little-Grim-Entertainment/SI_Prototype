@@ -234,11 +234,17 @@ void USI_UIManager::InitializeDelegateMaps()
 	AddUIDelegateContainer.Add(SITag_UI_Screen_Video, AddVideoScreenDelegate);
 }
 
+USI_UserWidget* USI_UIManager::CreateSIWidget_Internal(TSubclassOf<UUserWidget> UserWidgetClass, FName WidgetName)
+{
+	USI_UserWidget* NewUserWidget = CreateWidget<USI_UserWidget>(GetWorld()->GetFirstPlayerController(), UserWidgetClass, WidgetName);
+	return NewUserWidget;
+}
+
 void USI_UIManager::CreatePlayerHUD()
 {
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 
-	USI_HUD* PlayerHUD = CreateSIWidget<USI_HUD>(GameInstance->GetGameMode()->PlayerHUD_Class, SITag_UI_HUD);
+	USI_HUD* PlayerHUD = CreateSIWidget<USI_HUD>(SITag_UI_HUD, GameInstance->GetGameMode()->PlayerHUD_Class);
 	if(!IsValid(PlayerHUD))
 	{
 		FSimpleDelegate LoadingScreenDelayDelegate;
@@ -255,7 +261,7 @@ void USI_UIManager::CreateMoviePlayerWidget()
 	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if (!IsValid(GameInstance) || !IsValid(GameInstance->GetGameMode())){return;}
 
-	USI_MoviePlayerWidget* MoviePlayerWidget = CreateSIWidget<USI_MoviePlayerWidget>(GetWorld()->GetFirstPlayerController(), SITag_UI_Screen_Video, GameInstance->GetGameMode()->MoviePlayerWidget);
+	USI_MoviePlayerWidget* MoviePlayerWidget = CreateSIWidget<USI_MoviePlayerWidget>(SITag_UI_Screen_Video, GameInstance->GetGameMode()->MoviePlayerWidget);
 	
 	if (!IsValid(MoviePlayerWidget))
 	{
@@ -301,7 +307,7 @@ void USI_UIManager::CreateCaseTitleCard(USI_CaseData* InCase, bool bShouldFadeIn
 {
 	if (!IsValid(InCase)) {return;}
 
-	USI_CaseTitleCard* CaseTitleCardWidget = CreateSIWidget<USI_CaseTitleCard>(GetWorld()->GetFirstPlayerController(), SITag_UI_Screen_TitleCard, InCase->TitleCardWidget);
+	USI_CaseTitleCard* CaseTitleCardWidget = CreateSIWidget<USI_CaseTitleCard>(SITag_UI_Screen_TitleCard, InCase->TitleCardWidget);
 	if (!IsValid(CaseTitleCardWidget))
 	{
 		FSimpleDelegate CaseTitleCardDelayDelegate;
@@ -387,7 +393,7 @@ void USI_UIManager::CreateMapMenu()
 	const USI_MenuMapData* MenuMapData = Cast<USI_MenuMapData>(LevelManager->GetCurrentMap());
 	if (!IsValid(MenuMapData) || !IsValid(MenuMapData->MapMenuWidgetClass)){return;}
 
-	USI_UserWidget* MapMenu = CreateSIWidget<USI_UserWidget>(GetWorld()->GetFirstPlayerController(), SITag_UI_Menu_Map, MenuMapData->MapMenuWidgetClass);
+	USI_UserWidget* MapMenu = CreateSIWidget<USI_UserWidget>(SITag_UI_Menu_Map, MenuMapData->MapMenuWidgetClass);
 	if(!IsValid(MapMenu))
 	{
 		FSimpleDelegate MapMenuDelayDelegate;
@@ -403,7 +409,7 @@ void USI_UIManager::CreateSystemMenu()
 {
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 
-	USI_UserWidget* SystemMenu = CreateSIWidget<USI_UserWidget>(GetWorld()->GetFirstPlayerController(), SITag_UI_Menu_System, GameInstance->GetGameMode()->SystemMenuClass);
+	USI_UserWidget* SystemMenu = CreateSIWidget<USI_UserWidget>(SITag_UI_Menu_System, GameInstance->GetGameMode()->SystemMenuClass);
 	if(!IsValid(SystemMenu))
 	{
 		FSimpleDelegate SystemMenuDelayDelegate;
@@ -432,7 +438,7 @@ void USI_UIManager::CreateSkipWidget()
 {
 	if (!IsValid(GameInstance->GetGameMode())){return;}
 	
-	USI_SkipWidget* SkipWidget = CreateSIWidget<USI_SkipWidget>(GetWorld()->GetFirstPlayerController(),SITag_UI_Prompt_Skip, GameInstance->GetGameMode()->SkipWidget);
+	USI_SkipWidget* SkipWidget = CreateSIWidget<USI_SkipWidget>(SITag_UI_Prompt_Skip, GameInstance->GetGameMode()->SkipWidget);
 	if (!IsValid(SkipWidget))
 	{
 		FSimpleDelegate SkipWidgetDelayDelegate;
@@ -442,6 +448,11 @@ void USI_UIManager::CreateSkipWidget()
 	}
 	
 	SkipWidget->AddToViewport();
+}
+
+USI_UserWidget* USI_UIManager::GetSIWidgetByTag(const FGameplayTag& InWidgetTag)
+{
+	return GetActiveUIWidgetByTag<USI_UserWidget>(InWidgetTag);
 }
 
 void USI_UIManager::AddActiveInteractionWidget(USI_InteractionWidget* InInteractionWidget)
@@ -490,7 +501,7 @@ void USI_UIManager::DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade)
 			const int32 RandNumb = FMath::RandRange(0, GameMode->LoadingScreens.Num() - 1);
 			if (const TSubclassOf<USI_UserWidget> SelectedLoadingScreen = GameMode->LoadingScreens[RandNumb])
 			{
-				LoadingScreen = CreateSIWidget<USI_UserWidget>(GetWorld()->GetFirstPlayerController(), SITag_UI_Screen_Loading, SelectedLoadingScreen);
+				LoadingScreen = CreateSIWidget<USI_UserWidget>(SITag_UI_Screen_Loading, SelectedLoadingScreen);
 				if(!IsValid(LoadingScreen))
 				{
 					FSimpleDelegate LoadingScreenDelayDelegate;

@@ -64,9 +64,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateSkipWidget();
+
+	UFUNCTION(BlueprintPure, Category = "UI")
+	USI_UserWidget* GetSIWidgetByTag(const FGameplayTag& InWidgetTag);
 	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void DisplayLoadingScreen(bool bShouldDisplay, bool bShouldFade);
+
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void ShowPlayerHUD(bool bShouldShow);
+
 	
 	// Case Manager Delegates
 	UFUNCTION()
@@ -111,12 +118,12 @@ public:
 	
 	template <class T>
 	T* GetActiveUIWidget();
-	
+
 	template <class T>
 	T* GetActiveUIWidgetByTag(const FGameplayTag& InWidgetTag);
 
 	template <class WidgetC>
-	WidgetC* CreateSIWidget(UObject* OwningObject, FGameplayTag InUITag, TSubclassOf<UUserWidget> UserWidgetClass = WidgetC::StaticClass(), FName WidgetName = NAME_None );
+	WidgetC* CreateSIWidget(FGameplayTag InUITag, TSubclassOf<UUserWidget> UserWidgetClass = WidgetC::StaticClass(), FName WidgetName = NAME_None );
 
 		
 protected:
@@ -138,11 +145,12 @@ private:
 	void BindCaseManagerDelegates();
 	void DelayWidgetCreation(const FSimpleDelegate& InDelegate);
 
-	void ShowPlayerHUD(bool bShouldShow);
 	void ShowMapMenu(bool bShouldShow);
 	
 	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
+
+	USI_UserWidget* CreateSIWidget_Internal(TSubclassOf<UUserWidget> UserWidgetClass, FName WidgetName);
 	
 	UPROPERTY()
 	ASI_PlayerController* PlayerController;
@@ -216,15 +224,18 @@ T* USI_UIManager::GetActiveUIWidgetByTag(const FGameplayTag& InWidgetTag)
 }
 
 template <class WidgetC>
-WidgetC* USI_UIManager::CreateSIWidget(UObject* OwningObject, FGameplayTag InUITag, TSubclassOf<UUserWidget> UserWidgetClass, FName WidgetName)
+WidgetC* USI_UIManager::CreateSIWidget(FGameplayTag InUITag, TSubclassOf<UUserWidget> UserWidgetClass, FName WidgetName)
 {
-	WidgetC* NewWidget = CreateWidget<WidgetC>(OwningObject, UserWidgetClass);
-	if(IsValid(NewWidget))
+	USI_UserWidget* NewUserWidget = CreateSIWidget_Internal(UserWidgetClass, WidgetName);
+	if(IsValid(NewUserWidget))
 	{
-		if(Cast<USI_UserWidget>(NewWidget))
+		ActiveUIWidgetsArray.Add(InUITag, NewUserWidget);
+
+		WidgetC* NewWidgetType = Cast<WidgetC>(NewUserWidget);
+		if(NewWidgetType != nullptr)
 		{
-			ActiveUIWidgetsArray.Add(InUITag, NewWidget);
+			return NewWidgetType;
 		}
 	}
-	return NewWidget;
+	return nullptr;
 }

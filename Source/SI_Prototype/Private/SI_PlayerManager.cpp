@@ -64,6 +64,9 @@ void USI_PlayerManager::ShowWorld(bool bShouldShow, bool bShouldFade)
 
 USI_AbilitySystemComponent* USI_PlayerManager::GetNickAbilitySystemComponent()
 {
+	// TODO: @Pace Player Controller is null, fix this
+	if(!IsValid(PlayerController)) {return nullptr;}
+	
 	if(!IsValid(NickAbilitySystemComponent))
 	{
 		NickAbilitySystemComponent = PlayerController->GetNick()->GetSIAbilitySystemComponent();

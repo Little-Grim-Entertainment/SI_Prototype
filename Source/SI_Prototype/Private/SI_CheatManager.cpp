@@ -208,3 +208,13 @@ void USI_CheatManager::CheatDisableUI()
 {
 	
 }
+
+void USI_CheatManager::CheatDisableHUD(const bool bShouldDisable)
+{
+	if(!IsValid(GameInstance)) {return;}
+	
+	USI_UIManager* UIManager = GameInstance->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)){return;}
+
+	UIManager->ShowPlayerHUD(!bShouldDisable);
+}
