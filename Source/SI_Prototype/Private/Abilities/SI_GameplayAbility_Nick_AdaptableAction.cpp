@@ -188,17 +188,15 @@ void USI_GameplayAbility_Nick_AdaptableAction::CancelInteractableHighlight()
 
 void USI_GameplayAbility_Nick_AdaptableAction::CancelTagReceived()
 {
-	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
-{
-	
+{	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
 	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
-	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }	
+	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }
 
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	AIController->GetNPCMemory()->SetMoveToLocation(NewMoveToLocation);

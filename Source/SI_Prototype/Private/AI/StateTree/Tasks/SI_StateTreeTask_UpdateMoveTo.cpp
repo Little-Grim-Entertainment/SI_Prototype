@@ -17,12 +17,12 @@ FStateTreeUpdateMoveToTask_InstanceData::FStateTreeUpdateMoveToTask_InstanceData
 	, Nick(nullptr)
 	, NPCController(nullptr)
 {
-	LG_LOG(LogLG_StateTree, Log, "FStateTreeUpdateMoveToTask_InstanceData::Constructed")
+	LG_LOG(LogLG_StateTree, VeryVerbose, "FStateTreeUpdateMoveToTask_InstanceData::Constructed")
 }
 
 EStateTreeRunStatus FSI_StateTreeTask_UpdateMoveTo::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const
 {
-	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeTask_UpdateMoveTo::EnterState")
+	LG_LOG(LogLG_StateTree, VeryVerbose, "FSI_StateTreeTask_UpdateMoveTo::EnterState")
 	const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 	
 	if(InstanceData.MoveToLocation == FVector::ZeroVector)
@@ -64,6 +64,6 @@ void FSI_StateTreeTask_UpdateMoveTo::ExitState(FStateTreeExecutionContext& Conte
 
 	NPC->SetCurrentBehavior(SITag_Behavior_Waiting);
 	
-	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeTask_UpdateMoveTo::ExitState") 
+	LG_LOG(LogLG_StateTree, VeryVerbose, "FSI_StateTreeTask_UpdateMoveTo::ExitState") 
 }
 

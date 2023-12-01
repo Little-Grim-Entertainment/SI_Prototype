@@ -15,7 +15,7 @@
 //-----------------------------------------------------
 void USI_StateTreeNPCEvaluatorBase_InstanceData::OnTreeStart(FStateTreeExecutionContext& Context) 
 {
-	LG_LOG(LogLG_StateTree, Log, "USI_StateTreeNPCEvaluatorBase_InstanceData::OnTreeStart")
+	LG_LOG(LogLG_StateTree, VeryVerbose, "USI_StateTreeNPCEvaluatorBase_InstanceData::OnTreeStart")
 	NPCController = NPC->GetController<ASI_NPCController>();
 	if(!IsValid(NPCController)) {LG_LOG(LogLG_StateTree, Error, "NPCController is invalid cannot Start Tree") return;}
 	FSI_NPCMemory* NPCMemory = NPCController->GetNPCMemory();
@@ -35,7 +35,7 @@ void USI_StateTreeNPCEvaluatorBase_InstanceData::SetMoveToLocation(FVector& InMo
 //-----------------------------------------------------
 void FSI_StateTreeNPCEvaluatorBase::TreeStart(FStateTreeExecutionContext& Context) const
 {
-	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeNPCEvaluatorBase::TreeStart")
+	LG_LOG(LogLG_StateTree, VeryVerbose, "FSI_StateTreeNPCEvaluatorBase::TreeStart")
 	Super::TreeStart(Context);
 	
 	UInstanceDataType* InstanceData = Context.GetInstanceDataPtr<UInstanceDataType>(*this);
@@ -48,5 +48,5 @@ void FSI_StateTreeNPCEvaluatorBase::Tick(FStateTreeExecutionContext& Context, co
 
 void FSI_StateTreeNPCEvaluatorBase::TreeStop(FStateTreeExecutionContext& Context) const
 {
-	LG_LOG(LogLG_StateTree, Log, "FSI_StateTreeNPCEvaluatorBase::TreeStop")
+	LG_LOG(LogLG_StateTree, VeryVerbose, "FSI_StateTreeNPCEvaluatorBase::TreeStop")
 }

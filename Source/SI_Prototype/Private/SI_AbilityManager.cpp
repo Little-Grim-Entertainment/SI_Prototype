@@ -43,7 +43,7 @@ void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag,
 	
 	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
 
-	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "%s is null unable to activate ability!", *CurrentAbility->GetName()); return;}
+	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "CurrentAbility is null unable to activate ability!"); return;}
 
 	CharacterAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
 }
@@ -56,7 +56,7 @@ void USI_AbilityManager::TryCancelAbilityByTag(const FGameplayTag& InAddedTag, F
 		
 	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
 
-	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "%s is null unable to cancel ability!", *CurrentAbility->GetName()); return;}
+	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "CurrentAbility is null unable to activate ability!"); return;}
 
 	CharacterAbilitySystemComponent->CancelAbility(CurrentAbility);
 }

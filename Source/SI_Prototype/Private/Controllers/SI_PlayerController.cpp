@@ -400,8 +400,9 @@ void ASI_PlayerController::RequestMultiOptionUp()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
-	
-	SITagManager->AddNewGameplayTag(AbilityTag);
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestMutliOptionDown()
@@ -411,7 +412,8 @@ void ASI_PlayerController::RequestMutliOptionDown()
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
 	
-	SITagManager->AddNewGameplayTag(AbilityTag);
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestMultiOptionLeft()
@@ -421,7 +423,8 @@ void ASI_PlayerController::RequestMultiOptionLeft()
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
 	
-	SITagManager->AddNewGameplayTag(AbilityTag);
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestMultiOptionRight()
@@ -431,7 +434,8 @@ void ASI_PlayerController::RequestMultiOptionRight()
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
 	
-	SITagManager->AddNewGameplayTag(AbilityTag);
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)

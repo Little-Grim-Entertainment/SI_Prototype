@@ -113,8 +113,12 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_TurnRate, "Input.Axis.1D.TurnRate")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Axis_1D_LookUpRate, "Input.Axis.1D.LookUpRate")
 
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pickupable, "Interact.Pickupable")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Interact_Pushable, "SITag.Interact.Pushable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interaction_Activate,"Interaction.Activate")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interaction_Deactivate,"Interaction.Deactivate")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interaction_Pickup,"Interaction.Pickup")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interaction_Drop,"Interaction.Drop")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interaction_Push,"Interaction.Push")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Interaction_Pull,"Interaction.Pull")
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media, "Media")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Media_Cinematic, "Media.Cinematic")
