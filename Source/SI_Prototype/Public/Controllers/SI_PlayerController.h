@@ -143,11 +143,11 @@ protected:
 	void RequestUseGadgetSecondary();
 	void RequestCancelAbility();
 	void RequestConfirmAbility();
-	void RequestHoldConfirmAbility(); 
+	void RequestHoldConfirmAbility();
+	void RequestToggleAdaptableAction();
 	
 	// Gizbo
 	void RequestToggleGizboFollow(); 
-	void RequestToggleGizboAdaptableAction();
 	void RequestGizboUseGadgetPrimary();
 	void RequestGizboUseGadgetSecondary();
 
@@ -157,6 +157,10 @@ protected:
 	void RequestMutliOptionDown();
 	void RequestMultiOptionLeft();
 	void RequestMultiOptionRight();
+	void RequestGizboMultiOptionUp();
+	void RequestGizboMutliOptionDown();
+	void RequestGizboMultiOptionLeft();
+	void RequestGizboMultiOptionRight();
 
 private:
 

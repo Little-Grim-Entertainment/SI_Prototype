@@ -35,9 +35,9 @@ struct FSITagPayload
 	FSITagPayload(AActor* InCaller, AActor* InTarget);
 	
 	UPROPERTY()
-	AActor* Caller = nullptr;
+	TObjectPtr<AActor> Instigator = nullptr;
 	UPROPERTY()
-	AActor* Target = nullptr;
+	TObjectPtr<AActor> Target = nullptr;
 
 	bool operator == (const FSITagPayload& Other) const;
 	bool operator != (const FSITagPayload& Other) const;

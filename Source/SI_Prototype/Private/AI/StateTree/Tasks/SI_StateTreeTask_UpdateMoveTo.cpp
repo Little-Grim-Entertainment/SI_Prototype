@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AI/StateTree/Tasks/SI_StateTreeTask_UpdateMoveTo.h"
 
 #include "AIController.h"
@@ -55,8 +54,7 @@ EStateTreeRunStatus FSI_StateTreeTask_UpdateMoveTo::Tick(FStateTreeExecutionCont
 	return Moving ? EStateTreeRunStatus::Running : EStateTreeRunStatus::Succeeded;
 }
 
-void FSI_StateTreeTask_UpdateMoveTo::ExitState(FStateTreeExecutionContext& Context,
-	const FStateTreeTransitionResult& Transition) const
+void FSI_StateTreeTask_UpdateMoveTo::ExitState(FStateTreeExecutionContext& Context,	const FStateTreeTransitionResult& Transition) const
 {
 	const FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 	ASI_NPC* NPC = Cast<ASI_NPC>(InstanceData.NPCController->GetPawn());

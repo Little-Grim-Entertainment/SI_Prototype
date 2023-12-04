@@ -38,24 +38,30 @@ void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag,
 	if(InTagPayload == nullptr)	{LG_LOG(LogLG_AbilityManager, Error, "InTagPayload is null unable to activate ability!") return;}
 	
 	USI_AbilitySystemComponent* CharacterAbilitySystemComponent = InTagPayload->Target->GetComponentByClass<USI_AbilitySystemComponent>();
-	
 	if(!IsValid(CharacterAbilitySystemComponent)) {LG_LOG(LogLG_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to activate ability!") return;}
 	
 	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
-
 	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "CurrentAbility is null unable to activate ability!"); return;}
 
-	CharacterAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
+	FGameplayEventData Payload;
+	Payload.Target = *InTagPayload->Target;
+	Payload.Instigator = *InTagPayload->Instigator;
+	Payload.EventTag = InAddedTag;
+
+	//HandleGameplayEvent returns 0 if the ability isn't set to be triggered via event
+	//We want to use HandleGameplayEvent if we need to pass in a Payload
+	if (CharacterAbilitySystemComponent->HandleGameplayEvent(InAddedTag, &Payload) == 0)
+	{
+		CharacterAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
+	}
 }
 
 void USI_AbilityManager::TryCancelAbilityByTag(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {	
 	USI_AbilitySystemComponent* CharacterAbilitySystemComponent = InTagPayload->Target->GetComponentByClass<USI_AbilitySystemComponent>();
-	
 	if(!IsValid(CharacterAbilitySystemComponent)) {LG_LOG(LogLG_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to cancel ability!") return;}
 		
 	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
-
 	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "CurrentAbility is null unable to activate ability!"); return;}
 
 	CharacterAbilitySystemComponent->CancelAbility(CurrentAbility);
@@ -72,6 +78,6 @@ void USI_AbilityManager::AddRemoveLooseAbilityTags(const FGameplayTag& InAddedTa
 	
 	NickAbilitySystemComponent->AddLooseGameplayTag(InAddedTag);
 	NickAbilitySystemComponent->RemoveLooseGameplayTag(InAddedTag);
-	LG_LOG(LogLG_AbilityManager, Log, "%s was loose added and removed", *InAddedTag.ToString())
+	LG_LOG(LogLG_AbilityManager, VeryVerbose, "%s was loose added and removed", *InAddedTag.ToString())
 }
 

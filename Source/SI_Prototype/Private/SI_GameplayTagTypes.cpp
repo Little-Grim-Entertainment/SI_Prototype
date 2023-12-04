@@ -14,17 +14,17 @@ const FGameplayTag& FSI_GameplayTagContainer::GetParentTag() const
 }
 
 FSITagPayload::FSITagPayload(AActor* InCaller, AActor* InTarget):
-	Caller(InCaller),
+	Instigator(InCaller),
 	Target(InTarget)
 {
 }
 
 bool FSITagPayload::operator==(const FSITagPayload& Other) const
 {
-	return Caller == Other.Caller && Target == Other.Target;
+	return Instigator == Other.Instigator && Target == Other.Target;
 }
 
 bool FSITagPayload::operator!=(const FSITagPayload& Other) const
 {
-	return Caller != Other.Caller || Target != Other.Target;
+	return Instigator != Other.Instigator || Target != Other.Target;
 }

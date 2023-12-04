@@ -62,7 +62,7 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_TurnRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestTurnRight);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Axis_1D_LookUpRate,  ETriggerEvent::Triggered, this, &ThisClass::RequestLookUp);
 	
-	// Nick Action Bindings
+	// Nick Ability Action Bindings
 	/*	These bindings are for the ability system.
 	 *	Cancel is set to started so it activates as soon as you press the input.
 	 *	Confirm is set to triggered on release of the input
@@ -72,7 +72,7 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ConfirmAbility, ETriggerEvent::Triggered, this, &ThisClass::RequestConfirmAbility);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_HoldConfirmAbility, ETriggerEvent::Triggered, this, &ThisClass::RequestHoldConfirmAbility);
 	
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableAction, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboAdaptableAction);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableAction, ETriggerEvent::Started, this, &ThisClass::RequestToggleAdaptableAction);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
@@ -81,19 +81,24 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetPrimary);
-	EnhancedInputComponent->BindInputByTag(InputConfig, SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetPrimary);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
+	// MultiAction Bindings
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Down, ETriggerEvent::Started, this, &ThisClass::RequestMutliOptionDown);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Right, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Up, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionUp);
 	
 	// Gizbo Commands Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_Follow, ETriggerEvent::Started, this, &ThisClass::RequestToggleGizboFollow); //TODO: Amend later
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetPrimary);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestGizboUseGadgetSecondary);
 
-	// MultiAction Bindings
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Down, ETriggerEvent::Started, this, &ThisClass::RequestMutliOptionDown);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Right, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionRight);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Up, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionUp);
+	// Gizbo MultiAction Bindings
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MultiOption_Down, ETriggerEvent::Started, this, &ThisClass::RequestGizboMutliOptionDown);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestGizboMultiOptionLeft);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MultiOption_Right, ETriggerEvent::Started, this, &ThisClass::RequestGizboMultiOptionRight);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Gizbo_MultiOption_Up, ETriggerEvent::Started, this, &ThisClass::RequestGizboMultiOptionUp);
 }
 
 void ASI_PlayerController::BeginPlay()
@@ -339,7 +344,7 @@ void ASI_PlayerController::RequestToggleGizboFollow()
 	SITagManager->AddNewGameplayTag(SITag_Ability_AI_Follow, Payload);
 }
 
-void ASI_PlayerController::RequestToggleGizboAdaptableAction()
+void ASI_PlayerController::RequestToggleAdaptableAction()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager or Nick is null cannot add tag") return;}
 	
@@ -401,7 +406,7 @@ void ASI_PlayerController::RequestMultiOptionUp()
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
 
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }
 
@@ -411,8 +416,8 @@ void ASI_PlayerController::RequestMutliOptionDown()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
-	
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }
 
@@ -422,8 +427,8 @@ void ASI_PlayerController::RequestMultiOptionLeft()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
-	
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }
 
@@ -433,7 +438,51 @@ void ASI_PlayerController::RequestMultiOptionRight()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+}
+
+void ASI_PlayerController::RequestGizboMultiOptionUp()
+{
+	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
+	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+}
+
+void ASI_PlayerController::RequestGizboMutliOptionDown()
+{
+	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
+	
+	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+}
+
+void ASI_PlayerController::RequestGizboMultiOptionLeft()
+{
+	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
+	
+	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
+
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
+	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+}
+
+void ASI_PlayerController::RequestGizboMultiOptionRight()
+{
+	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
+	
+	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
+
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
 }

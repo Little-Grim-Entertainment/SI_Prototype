@@ -97,14 +97,18 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_MultiOption_Right, "Input.Action.MultiOption.Right")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_MultiOption_Up, "Input.Action.MultiOption.Up")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ObserveObject, "Input.Action.ObserveObject")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ToggleGizboControls, "Input.Action.ToggleGizboControls")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ToggleObservationMode, "Input.Action.ToggleObservationMode")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ToggleSystemMenu, "Input.Action.ToggleSystemMenu")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_UseGadget, "Input.Action.UseGadget")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_UseGadgetSecondary, "Input.Action.UseGadgetSecondary")
 	
 	// Gizbo Commands
-	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_ControlsToggle, "Input.Action.Gizbo.ControlsToggle")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_Follow, "Input.Action.Gizbo.Follow")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MultiOption_Down, "Input.Action.Gizbo.MultiOption.Down")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MultiOption_Left, "Input.Action.Gizbo.MultiOption.Left")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MultiOption_Right, "Input.Action.Gizbo.MultiOption.Right")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_MultiOption_Up, "Input.Action.Gizbo.MultiOption.Up")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_UseGadget, "Input.Action.Gizbo.UseGadget");
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Gizbo_UseGadgetSecondary, "Input.Action.Gizbo.UseGadgetSecondary");
 
