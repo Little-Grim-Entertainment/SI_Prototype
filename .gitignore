@@ -47,7 +47,6 @@ SourceArt/**/*.tga
 
 # Binary Files
 **/Binaries/**
-Plugins/LGPlugins/**/Binaries/**
 
 
 # Builds
@@ -69,8 +68,6 @@ Saved/*
 
 # Compiled source files for the engine to use
 **/Intermediate/**
-Plugins/LGPlugins/**/Intermediate/**
-Plugins/LGPlugins/**/Intermediate/**/Timestamp
 
 
 

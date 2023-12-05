@@ -457,7 +457,8 @@ bool UATPCCameraLocationObject::IsOverrideCameraRotation() const
 
 const FRotator& UATPCCameraLocationObject::GetOverrideCameraRotation() const
 {
-	return OverrideCameraRotation.Get(FRotator());
+	static const FRotator defaultValue = FRotator();
+	return OverrideCameraRotation.Get(defaultValue);
 }
 
 void UATPCCameraLocationObject::AttachCameraToComponent(USceneComponent* InParentComponent, FVector InRelativeLocation, FName InSocketName, bool bWithInterp, float InterpSpeed)
