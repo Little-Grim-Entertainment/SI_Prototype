@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/SI_WorldSubsystem.h"
+#include "SI_GameplayTagTypes.h"
 #include "Media/SI_MediaTypes.h"
 
 #include "SI_MediaManager.generated.h"
@@ -107,8 +108,8 @@ public:
 
 protected:
 
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr) override;
 	
 private:
 	

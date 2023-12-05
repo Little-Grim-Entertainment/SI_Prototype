@@ -17,8 +17,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBeginLevelLoad, USI_MapData*, Lo
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelLoaded, USI_MapData*, LoadedLevel, bool, bShouldFade);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUnloaded, USI_MapData*, UnloadedLevel);
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_LevelManager, Log, All);
-
 UCLASS()
 class SI_PROTOTYPE_API USI_LevelManager : public USI_GameInstanceSubsystem
 {

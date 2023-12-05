@@ -179,7 +179,6 @@ void USI_CheatManager::CheatPauseWorldTimer(bool bShouldPause)
 void USI_CheatManager::DebugToggleGameplayTagViewer()
 {
 	if(!IsValid(GameInstance)) {return;}
-
 	
 	if(GameInstance->bGameplayTagViewerActive)
 	{
@@ -203,4 +202,19 @@ void USI_CheatManager::DebugToggleGameplayTagViewer()
 			GameInstance->bGameplayTagViewerActive = true;
 		}
 	}
+}
+
+void USI_CheatManager::CheatDisableUI()
+{
+	
+}
+
+void USI_CheatManager::CheatDisableHUD(const bool bShouldDisable)
+{
+	if(!IsValid(GameInstance)) {return;}
+	
+	USI_UIManager* UIManager = GameInstance->GetSubsystem<USI_UIManager>();
+	if(!IsValid(UIManager)){return;}
+
+	UIManager->ShowPlayerHUD(!bShouldDisable);
 }

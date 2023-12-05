@@ -29,7 +29,7 @@ class SI_PROTOTYPE_API ISI_AIInterface
 	public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AI")
-	void OnUpdateTargetLocation(FVector TargetLocation);
+	void OnUpdateBehaviorTag(FVector TargetLocation);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AI")
 	void OnUpdateTargetRotation(FRotator TargeRotation);
 };

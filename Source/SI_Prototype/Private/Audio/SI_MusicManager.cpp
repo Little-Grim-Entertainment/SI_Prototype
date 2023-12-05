@@ -12,8 +12,6 @@
 #include "Levels/SI_LevelManager.h"
 #include "Audio/SI_MusicGameplayTagLibrary.h"
 
-DEFINE_LOG_CATEGORY(LogSI_MusicManager);
-
 using namespace SI_MusicGameplayTagLibrary;
 
 USI_MusicManager::USI_MusicManager()
@@ -36,7 +34,7 @@ void USI_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 	
 }
 
-void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
 
@@ -58,7 +56,7 @@ void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	}
 }
 
-void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagRemoved(InRemovedTag);
 

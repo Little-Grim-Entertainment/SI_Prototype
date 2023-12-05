@@ -14,7 +14,7 @@
 #include "AdvancedThirdPersonCamera.h"
 #include "Algo/AnyOf.h"
 #include "Camera/PlayerCameraManager.h"
-#include "CinematicCamera/Public/CineCameraComponent.h"
+#include "CineCameraComponent.h"
 #include "Engine/DataTable.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"

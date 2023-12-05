@@ -9,8 +9,6 @@
 class USI_PartData;
 class USI_CharacterData;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_CharacterManager, Log, All);
-
 UCLASS()
 class SI_PROTOTYPE_API USI_CharacterManager : public USI_GameInstanceSubsystem
 {

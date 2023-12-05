@@ -6,8 +6,6 @@
 #include "GameplayEffect.h"
 #include "SI_GameplayEffect.generated.h"
 
-
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_GameplayEffect, Log, All);
 /**
  * 
  */

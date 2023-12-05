@@ -4,12 +4,10 @@
 #include "Actors/Gadgets/SI_BaseGadget.h"
 
 #include "LG_DebugMacros.h"
-#include "Characters/SI_Nick.h"
-
-DEFINE_LOG_CATEGORY(LogSI_Gadget);
 
 void ASI_BaseGadget::ActivatePrimaryAction_Implementation()
 {
+		
 }
 
 void ASI_BaseGadget::ActivateSecondaryAction_Implementation()

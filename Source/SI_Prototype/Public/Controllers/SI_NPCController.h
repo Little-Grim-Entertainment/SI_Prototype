@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Perception/AIPerceptionTypes.h"
+#include "SI_AITypes.h"
 #include "SI_NPCController.generated.h"
 
+class UStateTreeComponent;
 class ASI_NPC;
 class UBehaviorTreeComponent;
 class UAIPerceptionComponent;
@@ -24,15 +26,24 @@ class SI_PROTOTYPE_API ASI_NPCController : public AAIController
 public:
 	ASI_NPCController();
 
+	FSI_NPCMemory* GetNPCMemory() {return NPCMemory;}
+	const FSI_NPCMemory* GetNPCMemory() const {return NPCMemory;}
+	
+	FSI_NPCMemory* NPCMemory = nullptr;
+	
+	FSI_NPCMovementHelper* NPCMovementHelper = nullptr;
+
+	void UpdateMovementSpeed(const FVector& InMoveToLocation, float InTargetSpeed = 0.0f);
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 	//TODO: Should also define what to do OnUnPossess
-	virtual void UpdateBehaviorTree();
+	
 	virtual void ConfigurePerception();
-	virtual void SetSeenTarget(AActor* Actor);
-	virtual void SetLostTarget();
 	//TODO: Will need to add support for AI Perception Teams, if we want NPCs to belong to specific factions, and have interactions between each other.
+
+	void BuildMemory();
 	
 	UFUNCTION()
 	virtual void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
@@ -44,10 +55,4 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<ASI_NPC> PossessedNPC = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
-	FName BlackboardTargetKey = "Target";
-
-	UPROPERTY(EditDefaultsOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
-	FName BlackboardCanSeeTargetKey = "CanSeeTarget";
 };

@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "LG_DebugMacros.h"
 #include "SI_BaseGadget.generated.h"
 
 /**
  * 
  */
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_Gadget, Log, All);
+
 
 UCLASS()
 class SI_PROTOTYPE_API ASI_BaseGadget : public AActor

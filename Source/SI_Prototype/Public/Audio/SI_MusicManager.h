@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SI_Types.h"
+#include "SI_GameplayTagTypes.h"
 #include "Subsystems/SI_WorldSubsystem.h"
 #include "SI_MusicManager.generated.h"
 
@@ -13,8 +14,6 @@ class USI_MapData;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicPaused);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackgroundMusicStopped);
-
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_MusicManager, Log, All);
 
 // This system is responsible for playing, stopping, and pausing the game music
 
@@ -54,8 +53,8 @@ public:
 protected:
 
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr) override;
 
 private:
 	

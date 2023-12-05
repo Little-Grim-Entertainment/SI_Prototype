@@ -25,3 +25,21 @@ private:
 
 	FGameplayTag ParentTag;
 };
+
+USTRUCT()
+struct FSITagPayload 
+{
+	GENERATED_BODY()
+
+	FSITagPayload() {}
+	FSITagPayload(AActor* InCaller, AActor* InTarget);
+	
+	UPROPERTY()
+	TObjectPtr<AActor> Instigator = nullptr;
+	UPROPERTY()
+	TObjectPtr<AActor> Target = nullptr;
+
+	bool operator == (const FSITagPayload& Other) const;
+	bool operator != (const FSITagPayload& Other) const;
+};
+

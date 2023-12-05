@@ -26,8 +26,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCaseTitleCardComplete);
 
 // This system is responsible for handling the receiving, completing, and updating of cases
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_CaseManager, Log, All);
-
 UCLASS()
 class SI_PROTOTYPE_API USI_CaseManager : public USI_GameInstanceSubsystem
 {

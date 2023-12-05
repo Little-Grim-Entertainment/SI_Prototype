@@ -6,8 +6,6 @@
 #include "SI_GameInstance.h"
 #include "Data/Cases/SI_CaseManager.h"
 
-DEFINE_LOG_CATEGORY(LogSI_CharacterManager);
-
 void USI_CharacterManager::OnGameInstanceInit()
 {
 	if(!IsValid(GameInstance)){return;}

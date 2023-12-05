@@ -1,5 +1,7 @@
 #pragma once
 
+#include "LG_DebugCategories.h"
+
 #define __CLASS_FUNCTION__ __FUNCTION__
 
 /* ClassName::FunctionName where this is called. */
@@ -48,3 +50,4 @@
  */
 
 #define LG_PRINT(Time, Color, FormatString , ...) if(GEngine)(GEngine->AddOnScreenDebugMessage(-1, Time, FColor::Color, *(CURRENT_CLASS_FUNCTION_LINE + ": " + (FString::Printf(TEXT(FormatString), ##__VA_ARGS__ )))) )
+

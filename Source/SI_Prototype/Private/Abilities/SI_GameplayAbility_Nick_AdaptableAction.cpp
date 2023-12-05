@@ -14,6 +14,8 @@
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
+#include "Characters/SI_Gizbo.h"
+#include "Controllers/SI_NPCController.h"
 
 void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -27,7 +29,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAb
 	if(!IsValid(SICameraManger)) return;
 
 	USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
-	if(!IsValid(GizboManager)) {LG_LOG(LogSI_Ability, Error, "GizboManager is invalid") return;}
+	if(!IsValid(GizboManager)) {LG_LOG(LogLG_Ability, Error, "GizboManager is invalid") return;}
 	Gizbo = GizboManager->GetGizbo();
 
 	WaitCancelConfirmHoldTagAddedTask = USI_AbilityTask_WaitCancelConfirmHoldTagAdded::WaitCancelConfirmGameplayTagAdd(this, SITag_Ability_Cancel, SITag_Ability_Confirm, SITag_Ability_HoldConfirm, nullptr, true);
@@ -55,7 +57,6 @@ void USI_GameplayAbility_Nick_AdaptableAction::EndAbility(const FGameplayAbility
 	{
 		WaitCancelConfirmHoldTagAddedTask->EndTask();
 	}
-	LG_PRINT(5.f, Green ,"EndAbility");
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::StartAdaptableAction(const AActor* InActor)
@@ -187,33 +188,37 @@ void USI_GameplayAbility_Nick_AdaptableAction::CancelInteractableHighlight()
 
 void USI_GameplayAbility_Nick_AdaptableAction::CancelTagReceived()
 {
-	LG_PRINT(5.f, Green ,"CancelTagReceived");
-	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
-{
-	LG_PRINT(5.f, Green ,"ConfirmTagReceived");
-	
-	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
-	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
+{	
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
-	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());	
-	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Gizbo_MoveTo);
+	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
+	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }
+
+	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
+	AIController->GetNPCMemory()->SetMoveToLocation(NewMoveToLocation);
+	
+	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
 void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 {
-	LG_PRINT(5.f, Green ,"HoldConfirmTagReceived");
+	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
-	const ISI_AIInterface* AIAbility = Cast<ISI_AIInterface>(this);
-	if(!AIAbility) {LG_LOG(LogSI_Ability, Error, "AIAbility is not valid"); return; }
+	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
+	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }	
+	FSI_NPCMemory* NPCMemory = AIController->GetNPCMemory();
+	if(*NPCMemory == FSI_NPCMemory()) {LG_LOG(LogLG_Ability, Error, "NPCMemory is Empty"); return; }
+
+	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
+	NPCMemory->SetMoveToLocation(NewMoveToLocation);
 	
-	AIAbility->Execute_OnUpdateTargetLocation(this, MoveToIndicator->GetActorLocation());
-	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_Nick_SetAIRotation);
-
+	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
+	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

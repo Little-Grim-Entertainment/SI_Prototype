@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "LGDebugWidget.generated.h"
 
+
 /**
  * 
  */
@@ -13,4 +14,6 @@ UCLASS()
 class LGDEBUG_API ULGDebugWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+
 };

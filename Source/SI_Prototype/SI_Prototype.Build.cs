@@ -32,6 +32,8 @@ public class SI_Prototype : ModuleRules
 			"SlateCore",
 			"UMG", 
 			"LGDebug", 
+			"StateTreeModule",
+			"SmartObjectsModule"
 		});
 	}
 }

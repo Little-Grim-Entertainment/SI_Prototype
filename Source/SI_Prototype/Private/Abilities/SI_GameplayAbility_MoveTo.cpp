@@ -10,12 +10,10 @@ void USI_GameplayAbility_MoveTo::ActivateAbility(const FGameplayAbilitySpecHandl
                                                  const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability,"Ability Activated");
-	
-	LG_PRINT(5.f, Red, "MoveTo Ability Activated");
+	LG_LOG_LOG(LogLG_Ability,"Ability Activated");
 
 	ASI_NPC* Actor = Cast<ASI_NPC>(ActorInfo->OwnerActor);
-	if(!IsValid(Actor)) {LG_LOG(LogSI_Ability, Error, "Actor is not valid"); return;}
+	if(!IsValid(Actor)) {LG_LOG(LogLG_Ability, Error, "Actor is not valid"); return;}
 	
 	Actor->SetCurrentBehavior(SITag_Behavior_MoveTo);
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
@@ -26,6 +24,4 @@ void USI_GameplayAbility_MoveTo::EndAbility(const FGameplayAbilitySpecHandle Han
 	bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	
-	LG_PRINT(5.f, Red, "MoveTo Ability Ended");
 }

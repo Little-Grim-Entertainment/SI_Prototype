@@ -2,7 +2,6 @@
 
 
 #include "SI_AbilityManager.h"
-
 #include "LG_DebugMacros.h"
 #include "SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
@@ -10,9 +9,7 @@
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
-DEFINE_LOG_CATEGORY(LogSI_AbilityManager)
-
-void USI_AbilityManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_AbilityManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	if(!SITagManager->HasParentTag(InAddedTag,SITag_Ability)) return;
 	
@@ -24,83 +21,63 @@ void USI_AbilityManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 		return;
 	}
 
-	TryActivateAbilityByTag(InAddedTag);
+	TryActivateAbilityByTag(InAddedTag, InTagPayload);
 }
 
-void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag)
+void USI_AbilityManager::OnGameModeBeginPlay()
 {
-	if(!IsValid(NickAbilitySystemComponent) || !IsValid(GizboAbilitySystemComponent))
-	{
-		GetAbilitySystemComponents();
-	}
+	Super::OnGameModeBeginPlay();
 	
-	if(!IsValid(NickAbilitySystemComponent))
-		{LG_LOG(LogSI_AbilityManager, Error, "NickAbilitySystemComponent is null unable to activate ability!") return;}
-	if(!IsValid(GizboAbilitySystemComponent))
-		{LG_LOG(LogSI_AbilityManager, Error, "GizboAbilitySystemComponent is null unable to activate ability!") return;}
-	
-	if(SITagManager->HasParentTag(InAddedTag,SITag_Ability_Nick))
-	{
-		USI_GameplayAbility* CurrentAbility = NickAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
-	
-		if(!IsValid(CurrentAbility))
-		{LG_LOG(LogSI_AbilityManager, Error, "%s is null unable to activate ability!", *CurrentAbility->GetName()); return;}
+	if(!IsValid(PlayerManager)) {LG_LOG(LogLG_AbilityManager, Error, "PlayerManager is null unable to GetNickAbilitySystemComponent!") return;}
 
-		LG_PRINT(10.f, Green, "Attempting to activate %s", *CurrentAbility->GetName());
-		NickAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
-	}
-	else if(SITagManager->HasParentTag(InAddedTag,SITag_Ability_Gizbo))
-	{
-		USI_GameplayAbility* CurrentAbility = GizboAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
+	NickAbilitySystemComponent = PlayerManager->GetNickAbilitySystemComponent();
+}
 
-		if(!IsValid(CurrentAbility))
-		{LG_LOG(LogSI_AbilityManager, Error, "%s is null unable to activate ability!", *CurrentAbility->GetName()); return;}
+void USI_AbilityManager::TryActivateAbilityByTag(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
+{
+	if(InTagPayload == nullptr)	{LG_LOG(LogLG_AbilityManager, Error, "InTagPayload is null unable to activate ability!") return;}
 	
-		GizboAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
+	USI_AbilitySystemComponent* CharacterAbilitySystemComponent = InTagPayload->Target->GetComponentByClass<USI_AbilitySystemComponent>();
+	if(!IsValid(CharacterAbilitySystemComponent)) {LG_LOG(LogLG_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to activate ability!") return;}
+	
+	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
+	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "CurrentAbility is null unable to activate ability!"); return;}
+
+	FGameplayEventData Payload;
+	Payload.Target = *InTagPayload->Target;
+	Payload.Instigator = *InTagPayload->Instigator;
+	Payload.EventTag = InAddedTag;
+
+	//HandleGameplayEvent returns 0 if the ability isn't set to be triggered via event
+	//We want to use HandleGameplayEvent if we need to pass in a Payload
+	if (CharacterAbilitySystemComponent->HandleGameplayEvent(InAddedTag, &Payload) == 0)
+	{
+		CharacterAbilitySystemComponent->TryActivateAbilitiesByTag(InAddedTag.GetSingleTagContainer(), false);
 	}
 }
 
-void USI_AbilityManager::TryCancelAbilityByTag(const FGameplayTag& InAddedTag)
+void USI_AbilityManager::TryCancelAbilityByTag(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {	
-	USI_GameplayAbility* CurrentAbility = NickAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
+	USI_AbilitySystemComponent* CharacterAbilitySystemComponent = InTagPayload->Target->GetComponentByClass<USI_AbilitySystemComponent>();
+	if(!IsValid(CharacterAbilitySystemComponent)) {LG_LOG(LogLG_AbilityManager, Error, "CharacterAbilitySystemComponent is null unable to cancel ability!") return;}
+		
+	USI_GameplayAbility* CurrentAbility = CharacterAbilitySystemComponent->GetGameplayAbilityByTag(InAddedTag);
+	if(!IsValid(CurrentAbility)) {LG_LOG(LogLG_AbilityManager, Error, "CurrentAbility is null unable to activate ability!"); return;}
 
-	if(!IsValid(CurrentAbility))
-		{LG_LOG( LogSI_AbilityManager, Error, "CurrentAbility is null unable to cancel ability!") return;}
-
-	if(InAddedTag.RequestDirectParent() == SITag_Ability_Nick)
-	{
-		NickAbilitySystemComponent->CancelAbility(CurrentAbility);
-	}
-	else if(InAddedTag.RequestDirectParent() == SITag_Ability_Gizbo)
-	{
-		GizboAbilitySystemComponent->CancelAbility(CurrentAbility);
-	}
+	CharacterAbilitySystemComponent->CancelAbility(CurrentAbility);
 }
 
 void USI_AbilityManager::AddRemoveLooseAbilityTags(const FGameplayTag& InAddedTag)
 {
 	if(!IsValid(NickAbilitySystemComponent))
 	{
-		GetAbilitySystemComponents();
-	}
+		NickAbilitySystemComponent = PlayerManager->GetNickAbilitySystemComponent();
 		
+		if(!IsValid(NickAbilitySystemComponent)) {LG_LOG(LogLG_AbilityManager, Error, "NickAbilitySystemComponent is null unable to activate ability!") return;}
+	}
+	
 	NickAbilitySystemComponent->AddLooseGameplayTag(InAddedTag);
 	NickAbilitySystemComponent->RemoveLooseGameplayTag(InAddedTag);
-	LG_LOG(LogSI_AbilityManager, Log, "%s was loose added and removed", *InAddedTag.ToString())
-}
-
-void USI_AbilityManager::GetAbilitySystemComponents()
-{
-	if(!IsValid(NickAbilitySystemComponent))
-	{
-		NickAbilitySystemComponent = PlayerManager->GetNickAbilitySystemComponent();
-	}
-
-	if(!IsValid(GizboAbilitySystemComponent))
-	{
-		USI_GizboManager* GizboManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_GizboManager>();
-		if(!IsValid(GizboManager)) {LG_LOG(LogSI_AbilityManager, Error, "GizboManager is invalid") return;}
-		GizboAbilitySystemComponent = GizboManager->GetGizboASC();
-	}
+	LG_LOG(LogLG_AbilityManager, VeryVerbose, "%s was loose added and removed", *InAddedTag.ToString())
 }
 

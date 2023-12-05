@@ -9,7 +9,6 @@
 #include "SI_DebugManager.generated.h"
 
 class USI_GameplayTagViewer;
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_DebugManager, Log, All);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_DebugManager : public USI_GameInstanceSubsystem

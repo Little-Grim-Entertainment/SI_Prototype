@@ -1,10 +1,30 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "SI_Prototype.h"
+
 #include "Modules/ModuleManager.h"
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, SI_Prototype, "SI_Prototype" );
 
-DEFINE_LOG_CATEGORY(LogSI_AI);
-DEFINE_LOG_CATEGORY(LogSI_Controller);
-DEFINE_LOG_CATEGORY(LogSI_Interactable);
+DEFINE_LOG_CATEGORY(LogLG_Ability)
+DEFINE_LOG_CATEGORY(LogLG_AI)
+DEFINE_LOG_CATEGORY(LogLG_AbilityManager)
+DEFINE_LOG_CATEGORY(LogLG_CaseManager)
+DEFINE_LOG_CATEGORY(LogLG_CharacterManager)
+DEFINE_LOG_CATEGORY(LogLG_DebugManager)
+DEFINE_LOG_CATEGORY(LogLG_Gadget)
+DEFINE_LOG_CATEGORY(LogLG_GameInstanceSubsystem)
+DEFINE_LOG_CATEGORY(LogLG_GameMode)
+DEFINE_LOG_CATEGORY(LogLG_GameplayEffect)
+DEFINE_LOG_CATEGORY(LogLG_GameplayTagManager)
+DEFINE_LOG_CATEGORY(LogLG_GameState)
+DEFINE_LOG_CATEGORY(LogLG_GizboManager)
+DEFINE_LOG_CATEGORY(LogLG_LevelManager)
+DEFINE_LOG_CATEGORY(LogLG_MusicManager)
+DEFINE_LOG_CATEGORY(LogLG_PlayerCameraManager)
+DEFINE_LOG_CATEGORY(LogLG_PlayerCharacter)
+DEFINE_LOG_CATEGORY(LogLG_PlayerController)
+DEFINE_LOG_CATEGORY(LogLG_PlayerManager)
+DEFINE_LOG_CATEGORY(LogLG_PlayerState)
+DEFINE_LOG_CATEGORY(LogLG_StateTree)
+DEFINE_LOG_CATEGORY(LogLG_UIManager)

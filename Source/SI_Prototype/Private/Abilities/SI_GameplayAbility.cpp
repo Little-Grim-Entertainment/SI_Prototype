@@ -3,14 +3,12 @@
 
 #include "Abilities/SI_GameplayAbility.h"
 
-DEFINE_LOG_CATEGORY(LogSI_Ability)
-
 void USI_GameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                           const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability,"Ability Activated");
+	LG_LOG(LogLG_Ability, Log, "Ability Activated");
 	
 	ActiveSpecHandle = GetCurrentAbilitySpec()->Handle;
 	ActiveSpecHandleDelegate.Broadcast(ActiveSpecHandle);

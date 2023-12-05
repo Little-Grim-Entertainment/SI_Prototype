@@ -11,7 +11,7 @@ void USI_GameplayAbility_Gadget_UsePrimary::ActivateAbility(const FGameplayAbili
                                                             const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	LG_LOG_LOG(LogLG_Ability," Ability Activated");
 	
 	ASI_Character* Character = Cast<ASI_Character>(ActorInfo->OwnerActor.Get());
 	TArray<AActor*> AttachedActors;
@@ -20,7 +20,11 @@ void USI_GameplayAbility_Gadget_UsePrimary::ActivateAbility(const FGameplayAbili
 	for (auto AttachedActor : AttachedActors)
 	{
 		EquippedGadget = Cast<ASI_BaseGadget>(AttachedActor);
-		EquippedGadget->ActivatePrimaryAction();			
+		
+		if(IsValid(EquippedGadget))
+		{
+			EquippedGadget->ActivatePrimaryAction();
+		}
 	}
 	
 }

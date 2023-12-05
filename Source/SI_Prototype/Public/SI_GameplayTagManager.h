@@ -7,10 +7,9 @@
 #include "SI_GameplayTagTypes.h"
 #include "SI_GameplayTagManager.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnTagAdded, const FGameplayTag& AddedTag);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnTagRemoved, const FGameplayTag& RemovedTag);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTagAdded, const FGameplayTag& AddedTag, FSITagPayload* InTagPayload);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTagRemoved, const FGameplayTag& RemovedTag, FSITagPayload* InTagPayload);
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_GameplayTagManager, Log, All);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_GameplayTagManager : public USI_GameInstanceSubsystem
@@ -18,13 +17,12 @@ class SI_PROTOTYPE_API USI_GameplayTagManager : public USI_GameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
+
+
 	// Used to register the tag manager with the gameplay tag manager which then broadcasts
 	// the OnTagAdded and OnTagRemoved delegates when tags are added or removed.
-	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
-	void AddNewGameplayTag(const FGameplayTag& InGameplayTag);
-	UFUNCTION(BlueprintCallable, Category = "GameplayTags")
-	void RemoveTag(const FGameplayTag& InGameplayTag);
-	
+	void AddNewGameplayTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload = nullptr);
+	void RemoveTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload = nullptr);
 	void ClearAllTagsFromContainer(FSI_GameplayTagContainer& InContainerToClear);
 
 	// Receives InNewTag and replaces it with InParentTag

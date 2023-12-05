@@ -9,7 +9,7 @@
 void USI_GameplayAbility_Gizbo_ConstructGadget::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	LG_LOG_LOG(LogLG_Ability," Ability Activated");
 	
 	TArray<ASI_BaseGadget> ActiveGadgets;
 	if(ActiveGadgets.Num() > 2)

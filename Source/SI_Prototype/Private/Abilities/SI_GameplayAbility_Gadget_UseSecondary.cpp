@@ -9,7 +9,7 @@
 void USI_GameplayAbility_Gadget_UseSecondary::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	LG_LOG_LOG(LogLG_Ability," Ability Activated");
 	
 	ASI_Character* Character = Cast<ASI_Character>(ActorInfo->OwnerActor.Get());
 	TArray<AActor*> AttachedActors;
@@ -17,6 +17,7 @@ void USI_GameplayAbility_Gadget_UseSecondary::ActivateAbility(const FGameplayAbi
 
 	for (auto AttachedActor : AttachedActors)
 	{
+		// Todo: (Anu) Does this need an IsValid check?
 		EquippedGadget = Cast<ASI_BaseGadget>(AttachedActor);
 		EquippedGadget->ActivateSecondaryAction();			
 	}

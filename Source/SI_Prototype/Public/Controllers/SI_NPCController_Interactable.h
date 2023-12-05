@@ -10,21 +10,5 @@ UCLASS()
 class SI_PROTOTYPE_API ASI_NPCController_Interactable : public ASI_NPCController
 {
 	GENERATED_BODY()
-
-	UPROPERTY()
-	class UBehaviorTree* DialogueTree;
-
-public:
-
-	UFUNCTION()
-	void StartDialogue();
-	UFUNCTION()
-	void EndDialogue();
-	
-	UFUNCTION()
-	void SetDialogueTree(UBehaviorTree* DialogueTreeToSet) {DialogueTree = DialogueTreeToSet;}
-	
-	UFUNCTION(BlueprintPure)
-	UBehaviorTree* GetDialogueTree() {return DialogueTree;}
 	
 };

@@ -5,18 +5,3 @@
 #include "BehaviorTree/BehaviorTree.h"
 
 
-void ASI_NPCController_Interactable::StartDialogue()
-{
-	if (DialogueTree)
-	{
-		RunBehaviorTree(DialogueTree);
-	}
-}
-
-void ASI_NPCController_Interactable::EndDialogue()
-{
-	if (DialogueTree)
-	{
-		BrainComponent->StopLogic("Conversation Ended");
-	}
-}

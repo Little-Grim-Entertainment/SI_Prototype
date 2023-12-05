@@ -17,8 +17,6 @@
 #include "SI_PlayerManager.h"
 #include "Data/Maps/SI_MapData.h"
 
-DEFINE_LOG_CATEGORY(LogSI_CaseManager);
-
 USI_CaseManager::USI_CaseManager()
 {
 	bCasesInitialized = false;

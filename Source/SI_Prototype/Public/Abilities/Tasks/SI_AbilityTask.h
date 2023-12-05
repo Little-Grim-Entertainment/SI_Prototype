@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SI_NativeGameplayTagLibrary.h"
 #include "LG_DebugMacros.h"
+#include "SI_Prototype/SI_Prototype.h"
 #include "Abilities/Tasks/AbilityTask.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "SI_AbilityTask.generated.h"
@@ -14,8 +15,6 @@
  */
 
 using namespace SI_NativeGameplayTagLibrary;
-
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_AbilityTask, Log, All);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_AbilityTask : public UAbilityTask
