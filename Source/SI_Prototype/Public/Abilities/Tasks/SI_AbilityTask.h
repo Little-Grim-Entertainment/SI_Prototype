@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "LG_DebugMacros.h"
 #include "SI_Prototype/SI_Prototype.h"
 #include "Abilities/Tasks/AbilityTask.h"

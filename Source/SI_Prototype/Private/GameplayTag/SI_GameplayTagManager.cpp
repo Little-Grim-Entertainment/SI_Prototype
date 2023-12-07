@@ -1,10 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 
 #include "SI_GameInstance.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "Abilities/SI_AbilityGameplayTagLibrary.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 #include "LG_DebugMacros.h"
 #include "SI_Prototype/SI_Prototype.h"

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems\SI_GameInstanceSubsystem.h"
-#include "SI_GameplayTagTypes.h"
+#include "Subsystems/SI_GameInstanceSubsystem.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "SI_GameplayTagManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTagAdded, const FGameplayTag& AddedTag, FSITagPayload* InTagPayload);

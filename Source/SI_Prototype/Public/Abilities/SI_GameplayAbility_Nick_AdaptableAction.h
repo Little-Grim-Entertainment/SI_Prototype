@@ -79,19 +79,21 @@ protected:
 	USI_AbilityTask_WaitCancelConfirmHoldTagAdded* WaitCancelConfirmHoldTagAddedTask;
 	
 	UPROPERTY()
-	ASI_Nick* Nick;
+	TObjectPtr<ASI_Nick> Nick;
 	UPROPERTY()
-	ASI_Gizbo* Gizbo;
+	TObjectPtr<ASI_Gizbo> Gizbo;
 	UPROPERTY()
-	ASI_PlayerController* PC;
-	UPROPERTY()
-	ASI_MoveToIndicator* MoveToIndicator;
-	UPROPERTY(EditAnywhere)
+	TObjectPtr<ASI_PlayerController> PC;
+	UPROPERTY(EditAnywhere, Category = "Ability")
+	TObjectPtr<ASI_MoveToIndicator> MoveToIndicator;
+	UPROPERTY(EditAnywhere, Category = "Ability")
 	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "Ability")
 	float AdaptableActionMaximumRadius = 2000.0f;
 	UPROPERTY()
-	ASI_PlayerCameraManager* SICameraManger;
+	TObjectPtr<ASI_PlayerCameraManager> SICameraManger;
+
+private:
 	float UpdateIndicatorDelay = 0.001f;
 	FTimerHandle IndicatorPositionTimerHandle;
 	bool bIsActive;

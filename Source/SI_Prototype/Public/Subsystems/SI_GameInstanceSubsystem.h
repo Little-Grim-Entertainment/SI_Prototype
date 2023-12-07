@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "SI_GameplayTagTypes.h"
-#include "..\SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "..\Levels\SI_MapGameplayTagLibrary.h"
 #include "SI_GameInstanceSubsystem.generated.h"
 

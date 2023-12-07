@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Data\Media\SI_MediaDataAsset.h"
 #include "Media\SI_MediaTypes.h"
-#include "SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "Engine/DataTable.h"
 #include "GameplayAbilitySpec.h"
 #include "SI_Types.generated.h"

@@ -5,7 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
 #include "Interfaces/SI_InteractInterface.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
@@ -22,7 +22,7 @@
 #include "UI/SI_HUD.h"
 #include "UI/SI_UIManager.h"
 #include "Data/Input/SI_InputConfig.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "SI_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"

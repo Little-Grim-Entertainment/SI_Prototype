@@ -13,7 +13,7 @@
 #include "Data/Media/SI_CinematicDataAsset.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "Media/SI_MediaManager.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
 #include "Data/Maps/SI_MapData.h"
 

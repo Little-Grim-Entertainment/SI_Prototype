@@ -2,8 +2,8 @@
 
 
 #include "SI_PlayerManager.h"
-#include "SI_GameplayTagManager.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "Controllers/SI_PlayerController.h"
 #include "Data/Maps/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
@@ -256,7 +256,11 @@ void USI_PlayerManager::SetupDialogueState()
 
 void USI_PlayerManager::SetupExplorationState()
 {
-	USI_LevelManager* SILevelManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_LevelManager>();
+	TObjectPtr<UWorld> TempWorld = GetWorld();
+	if(!IsValid(TempWorld)) {UE_LOG(LogLG_PlayerManager, Error, TEXT("World is null unable to set exploration mode!")); return;}
+	TObjectPtr<UGameInstance> TempGameInstance = TempWorld->GetGameInstance();
+	if(!IsValid(TempGameInstance)) {UE_LOG(LogLG_PlayerManager, Error, TEXT("GameInstance is null unable to set exploration mode!")); return;}
+	TObjectPtr<USI_LevelManager> SILevelManager = TempGameInstance->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(SILevelManager) || !IsValid(SILevelManager->GetCurrentMap()))
 		{UE_LOG(LogLG_PlayerManager, Error, TEXT("SILevelManager or SILevelManager->GetCurrentMap() is null unable to set exploration mode!")); return;}
 	

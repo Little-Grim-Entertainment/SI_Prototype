@@ -3,7 +3,7 @@
 
 #include "SI_AbilityManager.h"
 #include "LG_DebugMacros.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
 #include "Abilities/SI_GameplayAbility.h"
 #include "Characters/SI_GizboManager.h"

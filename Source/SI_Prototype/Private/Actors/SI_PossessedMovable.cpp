@@ -8,17 +8,15 @@
 
 ASI_PossessedMovable::ASI_PossessedMovable()
 {
-	Root = CreateDefaultSubobject<USceneComponent>("Root");
-	RootComponent = Root;
-
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+	SetRootComponent(MeshComponent);
+	
 	ATPCCamera = CreateDefaultSubobject<UATPCCameraComponent>(TEXT("ATPCCamera"));
-	ATPCCamera->SetupAttachment(RootComponent);
+	ATPCCamera->SetupAttachment(MeshComponent);
 
 	// Create a follow camera
 	PossessedFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PossessedFollowCamera"));
 	PossessedFollowCamera->SetupAttachment(ATPCCamera);
-	
-	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 }
 
 void ASI_PossessedMovable::UpdateActiveMesh(UStaticMesh* InMesh)

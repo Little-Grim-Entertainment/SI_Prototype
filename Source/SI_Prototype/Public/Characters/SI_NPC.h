@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/SI_Character.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "SI_NPC.generated.h"
 
 using namespace SI_NativeGameplayTagLibrary;

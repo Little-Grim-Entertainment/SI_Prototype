@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/SI_LocalPlayerSubsystem.h"
-#include "SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "SI_PlayerManager.generated.h"
 
 class USI_GameplayAbility;

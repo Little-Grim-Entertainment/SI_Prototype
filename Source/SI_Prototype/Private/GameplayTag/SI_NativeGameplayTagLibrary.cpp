@@ -3,7 +3,7 @@
 
 
 
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 
 namespace SI_NativeGameplayTagLibrary
 {

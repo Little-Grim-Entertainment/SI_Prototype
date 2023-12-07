@@ -5,7 +5,7 @@
 
 #include "LG_DebugMacros.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "Characters/SI_GizboManager.h"
 
 void USI_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)

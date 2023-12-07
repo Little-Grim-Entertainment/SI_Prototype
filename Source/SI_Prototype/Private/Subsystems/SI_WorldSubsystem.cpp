@@ -3,7 +3,7 @@
 
 #include "Subsystems/SI_WorldSubsystem.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 
 
 void USI_WorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)

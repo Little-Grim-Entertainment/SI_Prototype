@@ -9,7 +9,7 @@
 #include "Data/Characters/SI_CharacterData.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameModes/SI_GameMode.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 
 void USI_GizboManager::SpawnGizbo()
 {

@@ -5,8 +5,8 @@
 #include "SI_GameInstance.h"
 
 // Subsystems
-#include "SI_GameplayTagManager.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "Data/Cases/SI_CaseManager.h"
 #include "Media/SI_MediaManager.h"
 #include "Levels/SI_LevelManager.h"
@@ -29,7 +29,7 @@
 #include "Data/Maps/SI_MenuMapData.h"
 #include "Data/Media/SI_VideoDataAsset.h"
 #include "GameModes/SI_GameMode.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "SI_Prototype/SI_Prototype.h"
 
 #if !UE_BUILD_SHIPPING

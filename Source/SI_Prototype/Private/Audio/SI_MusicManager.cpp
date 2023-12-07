@@ -3,7 +3,7 @@
 
 #include "Audio/SI_MusicManager.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "AudioDevice.h"
 #include "Components/AudioComponent.h"
 #include "Data/Maps/SI_MapData.h"

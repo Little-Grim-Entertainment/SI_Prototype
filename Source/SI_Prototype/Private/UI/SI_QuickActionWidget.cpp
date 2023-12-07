@@ -4,7 +4,7 @@
 #include "UI/SI_QuickActionWidget.h"
 
 #include "EnhancedInputSubsystems.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "SI_Types.h"
 #include "Components/TextBlock.h"
 #include "UI/SI_OptionWidget.h"

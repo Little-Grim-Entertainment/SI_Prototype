@@ -4,7 +4,7 @@
 #include "Media/SI_MediaManager.h"
 
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
 #include "GameplayTagContainer.h"
 #include "LevelSequence.h"

@@ -7,7 +7,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "UI/SI_InteractionPrompt.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
