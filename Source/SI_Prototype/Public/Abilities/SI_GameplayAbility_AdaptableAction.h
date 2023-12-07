@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "SI_GameplayAbility.h"
 #include "Interfaces/SI_AIInterface.h"
-#include "SI_GameplayAbility_Nick_AdaptableAction.generated.h"
+#include "SI_GameplayAbility_AdaptableAction.generated.h"
 
 class ASI_Gizbo;
 class USI_AbilityTask_WaitCancelConfirmHoldTagAdded;
@@ -17,7 +17,7 @@ class ASI_MoveToIndicator;
  * 
  */
 UCLASS()
-class SI_PROTOTYPE_API USI_GameplayAbility_Nick_AdaptableAction : public USI_GameplayAbility, public ISI_AIInterface
+class SI_PROTOTYPE_API USI_GameplayAbility_AdaptableAction : public USI_GameplayAbility, public ISI_AIInterface
 {
 	GENERATED_BODY()
 

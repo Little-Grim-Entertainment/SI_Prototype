@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Abilities/SI_GameplayAbility_Nick_AdaptableAction.h"
+#include "Abilities/SI_GameplayAbility_AdaptableAction.h"
 
 #include "Actors/SI_MoveToIndicator.h"
 #include "Cameras/SI_PlayerCameraManager.h"
@@ -16,7 +16,7 @@
 #include "Characters/SI_Gizbo.h"
 #include "Controllers/SI_NPCController.h"
 
-void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void USI_GameplayAbility_AdaptableAction::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
@@ -41,7 +41,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::ActivateAbility(const FGameplayAb
 	StartAdaptableAction(Nick);
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void USI_GameplayAbility_AdaptableAction::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
@@ -58,7 +58,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::EndAbility(const FGameplayAbility
 	}
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::StartAdaptableAction(const AActor* InActor)
+void USI_GameplayAbility_AdaptableAction::StartAdaptableAction(const AActor* InActor)
 {	
 	FVector TraceStart = SICameraManger->GetCameraLocation();
 	FVector TraceEnd =  TraceStart + SICameraManger->GetActorForwardVector() * AdaptableActionMaximumRadius;
@@ -82,17 +82,17 @@ void USI_GameplayAbility_Nick_AdaptableAction::StartAdaptableAction(const AActor
 	}	
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::StartUpdateIndicatorPositionTimer()
+void USI_GameplayAbility_AdaptableAction::StartUpdateIndicatorPositionTimer()
 {
 	GetWorld()->GetTimerManager().SetTimer(IndicatorPositionTimerHandle, this, &ThisClass::UpdateMoveToIndicatorPosition, UpdateIndicatorDelay, true);
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::CancelUpdateIndicatorPositionTimer()
+void USI_GameplayAbility_AdaptableAction::CancelUpdateIndicatorPositionTimer()
 {
 	GetWorld()->GetTimerManager().ClearTimer(IndicatorPositionTimerHandle);
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::UpdateMoveToIndicatorPosition()
+void USI_GameplayAbility_AdaptableAction::UpdateMoveToIndicatorPosition()
 {
 	if(!MoveToIndicator) return;
 	
@@ -128,7 +128,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::UpdateMoveToIndicatorPosition()
 	}
 }
 
-ASI_MoveToIndicator* USI_GameplayAbility_Nick_AdaptableAction::SpawnMoveToIndicator(const FVector InHitLocation)
+ASI_MoveToIndicator* USI_GameplayAbility_AdaptableAction::SpawnMoveToIndicator(const FVector InHitLocation)
 {
 	MoveToIndicatorClass = GetMoveToIndicatorClass();
 	if(MoveToIndicatorClass == nullptr)
@@ -150,7 +150,7 @@ ASI_MoveToIndicator* USI_GameplayAbility_Nick_AdaptableAction::SpawnMoveToIndica
 	return MoveToIndicator;
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::DestroyMoveToIndicator()
+void USI_GameplayAbility_AdaptableAction::DestroyMoveToIndicator()
 {
 	if(MoveToIndicator)
 	{
@@ -158,7 +158,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::DestroyMoveToIndicator()
 	}
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::HighlightInteractables(const AActor* InActor)
+void USI_GameplayAbility_AdaptableAction::HighlightInteractables(const AActor* InActor)
 {
 	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
@@ -174,7 +174,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::HighlightInteractables(const AAct
 	}
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::CancelInteractableHighlight()
+void USI_GameplayAbility_AdaptableAction::CancelInteractableHighlight()
 {
 	for(TActorIterator<ASI_InteractableActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
@@ -185,12 +185,12 @@ void USI_GameplayAbility_Nick_AdaptableAction::CancelInteractableHighlight()
 	}
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::CancelTagReceived()
+void USI_GameplayAbility_AdaptableAction::CancelTagReceived()
 {
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
+void USI_GameplayAbility_AdaptableAction::ConfirmTagReceived()
 {	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
@@ -205,7 +205,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
-void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
+void USI_GameplayAbility_AdaptableAction::HoldConfirmTagReceived()
 {
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 
