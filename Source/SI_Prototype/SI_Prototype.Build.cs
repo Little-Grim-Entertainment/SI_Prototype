@@ -23,6 +23,7 @@ public class SI_Prototype : ModuleRules
 			"Engine",
 			"GameplayAbilities",
 			"InputCore",
+			"LGDialogueSystem",
 			"LevelSequence",
 			"MediaAssets",
 			"MoviePlayer",
@@ -33,7 +34,7 @@ public class SI_Prototype : ModuleRules
 			"UMG", 
 			"LGDebug", 
 			"StateTreeModule",
-			"SmartObjectsModule"
+			"SmartObjectsModule" 
 		});
 	}
 }

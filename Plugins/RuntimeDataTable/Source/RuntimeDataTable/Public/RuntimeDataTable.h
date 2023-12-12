@@ -3,6 +3,7 @@
 #pragma once
 
 #include "EasyCsvTypes.h"
+#include "GameplayTagContainer.h"
 
 #include "HttpModule.h"
 #include "UObject/Object.h"
@@ -42,6 +43,9 @@ struct FRuntimeDataTableCallbackInfo
 
 	UPROPERTY()
 	UObject* Caller = nullptr;
+
+	UPROPERTY()
+	FGameplayTag CsvArrayTypeTag;
 };
 
 // Used to return a JWT internally. Don't use this.
@@ -74,10 +78,12 @@ struct FRuntimeDataTableOperationParams
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	FString FileName = "";
 
-
 	/** The caller that begins the CSV Import */
 	UPROPERTY()
 	UObject* Caller = nullptr;
+
+	UPROPERTY()
+	FGameplayTag CsvArrayTypeTag;
 };
 
 // Used to build an authentication token
@@ -89,7 +95,7 @@ struct FRuntimeDataTableTokenInfo
 	// Maps to: private_key in the json
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 		FString PrivateKey;
-
+ 
 	// Maps to: client_email in the json
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 		FString ServiceAccountEmail;

@@ -22,9 +22,9 @@ public class RuntimeDataTable : ModuleRules
             }
         );
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Json", "JsonUtilities", "OpenSSL", "Slate", "SlateCore", "UMG", "EasyCsv" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Json", "JsonUtilities", "OpenSSL", "Slate", "SlateCore", "UMG", "EasyCsv", "StructUtils" });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { "Engine", "Core", "CoreUObject", "HTTP", "InputCore" });
+        PrivateDependencyModuleNames.AddRange(new string[] { "Engine", "Core", "CoreUObject", "HTTP", "InputCore", "GameplayTags" });
 
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
     }

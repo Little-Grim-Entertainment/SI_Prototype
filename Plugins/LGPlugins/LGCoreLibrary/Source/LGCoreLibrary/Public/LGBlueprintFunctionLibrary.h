@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class LGCORELIBRARY_API ULGBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
@@ -18,4 +18,5 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Array Conversion")
 	static void FNameArrayToFStringArray(const TArray<FName>& InNameArray, TArray<FString>& OutStringArray);
+	
 };

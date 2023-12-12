@@ -21,9 +21,12 @@ public:
 	void UpdateDialogue_Internal();
 
 	virtual void OnInteractComplete_Implementation(UObject* Caller, const FLGCsvInfo& InCvsInfo) override;
+	virtual UStruct* GetUStructContainer();
+	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag);
+	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag);
 
 	UFUNCTION()
-	void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
+	virtual void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
 
 private:
 

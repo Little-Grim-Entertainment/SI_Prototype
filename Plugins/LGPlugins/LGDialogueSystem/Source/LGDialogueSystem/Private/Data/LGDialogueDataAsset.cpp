@@ -2,10 +2,8 @@
 
 
 #include "Data/LGDialogueDataAsset.h"
-
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-
 
 
 void ULGDialogueDataAsset::UpdateDialogue_Internal()
@@ -21,7 +19,8 @@ void ULGDialogueDataAsset::UpdateDialogue_Internal()
 		ImportPayload.FilePath = FilePath;
 		ImportPayload.FileName = CurrentURL.FileName;
 		ImportPayload.URL = CurrentURL.URL;
-
+		ImportPayload.CsvArrayTypeTag = CurrentURL.DialogueStructType;
+		
 		FRDTGetStringDelegate CallbackDelegate;
 		CallbackDelegate.BindUFunction(this, GET_FUNCTION_NAME_CHECKED(ULGDialogueDataAsset, OnSheetStructsDownloaded));
 		
@@ -39,7 +38,26 @@ void ULGDialogueDataAsset::OnInteractComplete_Implementation(UObject* Caller, co
 	UE_LOG(LogLGDialogue, Warning, TEXT("Dilogue Asset Interaction Complete!"));
 }
 
+UStruct* ULGDialogueDataAsset::GetUStructContainer()
+{
+	return nullptr;
+}
+
+void* ULGDialogueDataAsset::GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag)
+{
+	return nullptr;
+}
+
+FName ULGDialogueDataAsset::GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag)
+{
+	return FName("NONE");
+}
+
 void ULGDialogueDataAsset::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo)
 {
-	ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(InCallbackInfo);
+	const FGameplayTag& CsvArrayType = InCallbackInfo.CsvArrayTypeTag;
+	const FName& PropertyName = GetStructPropertyNameByTag(CsvArrayType);
+	void* DialogueStructArray = GetDialogueStructArrayByTag(CsvArrayType);
+	
+	ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(InCallbackInfo, DialogueStructArray, GetUStructContainer(), PropertyName);
 }

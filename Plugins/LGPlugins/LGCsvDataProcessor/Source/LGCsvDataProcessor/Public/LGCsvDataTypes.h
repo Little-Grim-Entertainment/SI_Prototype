@@ -4,24 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "EasyCsvTypes.h"
+#include "LGDialogueTypes.h"
+#include "GameplayTagContainer.h"
 #include "LGCsvDataTypes.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCsvDataProcessor, Log, All);
-
-USTRUCT()
-struct LGCSVDATAPROCESSOR_API FLGCsvStrings
-{
-	GENERATED_BODY()
-	
-};
 
 USTRUCT(BlueprintType)
 struct LGCSVDATAPROCESSOR_API FLGCsvInfo
 {
 	GENERATED_BODY()
-
-	UPROPERTY()
-	TArray<FLGCsvStrings> CsvStrings;
 
 	UPROPERTY()
 	FString CSVToWrite;
@@ -31,6 +23,9 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfo
 
 	UPROPERTY()
 	TArray<FString> ExportKeys;
+
+	UPROPERTY()
+	TArray<FString> DialogueStringArray;
 };
 
 USTRUCT()
@@ -52,4 +47,7 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 
 	UPROPERTY()
 	UObject* Caller;
+
+	UPROPERTY()
+	FGameplayTag CsvArrayTypeTag;
 };

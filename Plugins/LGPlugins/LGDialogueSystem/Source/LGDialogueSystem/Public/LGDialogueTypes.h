@@ -3,11 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "RuntimeDataTable.h"
 #include "LGDialogueTypes.generated.h"
 
 class ULGDialogueDataAsset;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogLGDialogue, Log, All);
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGDialogueCsv
+{
+	GENERATED_BODY()
+	
+};
 
 USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogueURL
@@ -19,6 +28,9 @@ struct LGDIALOGUESYSTEM_API FLGDialogueURL
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString URL;
+	
+	UPROPERTY(EditAnywhere)
+	FGameplayTag DialogueStructType;
 };
 
 USTRUCT(BlueprintType)

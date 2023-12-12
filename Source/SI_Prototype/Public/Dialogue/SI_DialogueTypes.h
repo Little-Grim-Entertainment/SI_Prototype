@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
 #include "SI_DialogueTypes.generated.h"
 
 USTRUCT(BlueprintType)
@@ -31,6 +30,30 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue
 };
 
 USTRUCT(BlueprintType)
+struct SI_PROTOTYPE_API FSI_PrimaryDialogueStrings
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	FString Line;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString SpeakerName;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString Dialogue;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString PressURL;
+	
+	UPROPERTY(BlueprintReadOnly)
+	FString ResponseURL;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString IsTrueStatement;
+};
+
+USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_CorrectedDialogue
 {
 	GENERATED_BODY()
@@ -49,6 +72,24 @@ struct SI_PROTOTYPE_API FSI_CorrectedDialogue
 };
 
 USTRUCT(BlueprintType)
+struct SI_PROTOTYPE_API FSI_CorrectedDialogueStrings
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	FString CorrectedLine;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString SpeakerLine;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString SpeakerName;
+	
+	UPROPERTY(BlueprintReadOnly)
+	FString Dialogue;
+};
+
+USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_DefaultResponse
 {
 	GENERATED_BODY()
@@ -64,4 +105,22 @@ struct SI_PROTOTYPE_API FSI_DefaultResponse
 	
 	UPROPERTY(BlueprintReadOnly)
 	FText Dialogue;	
+};
+
+USTRUCT(BlueprintType)
+struct SI_PROTOTYPE_API FSI_DefaultResponseStrings
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	FString CorrectedLine;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString SpeakerLine;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString SpeakerName;
+	
+	UPROPERTY(BlueprintReadOnly)
+	FString Dialogue;	
 };

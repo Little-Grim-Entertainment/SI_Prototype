@@ -18,11 +18,7 @@ public:
 	
 	UFUNCTION()
 	static void ImportCsvFromURL(const FLGCsvInfoImportPayload& InImportPayload, FRDTGetStringDelegate InCallbackDelegate);
-	
-	UFUNCTION()
-	static void FNameArrayToFStringArray(const TArray<FName>& InNameArray, TArray<FString>& OutStringArray);
 
-	UFUNCTION()
-	static void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
+	static void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, UStruct* InStructPtr, const FName& InPropertyName);
 
 };
