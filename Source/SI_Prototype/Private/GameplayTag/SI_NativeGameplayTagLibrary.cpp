@@ -74,6 +74,8 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Dialogue_Struct_PrimaryDialogue, "SITag.Dialogue.Struct.PrimaryDialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Dialogue_Struct_CorrectedDialogue, "SITag.Dialogue.Struct.CorrectedDialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Dialogue_Struct_DefaultResponse, "SITag.Dialogue.Struct.DefaultResponse")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Dialogue_Struct_PressDialogue, "SITag.Dialogue.Struct.PressDialogue")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Dialogue_Struct_ResponseDialogue, "SITag.Dialogue.Struct.ResponseDialogue")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget, "Gadget")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Gadget_Flashlight, "Gadget.Flashlight")

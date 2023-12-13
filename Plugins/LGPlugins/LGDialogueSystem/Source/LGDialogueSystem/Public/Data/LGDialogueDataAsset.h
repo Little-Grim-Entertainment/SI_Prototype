@@ -18,27 +18,31 @@ class LGDIALOGUESYSTEM_API ULGDialogueDataAsset : public UDataAsset, public ILGC
 
 public:
 	
-	void UpdateDialogue_Internal();
-
-	virtual void OnInteractComplete_Implementation(UObject* Caller, const FLGCsvInfo& InCvsInfo) override;
-	virtual UStruct* GetUStructContainer();
-	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag);
-	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag);
+	virtual void UpdateDialogue_Internal();
 
 	UFUNCTION()
 	virtual void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
 
+protected:
+
+	UPROPERTY(EditAnywhere, Category = "FileInfo")
+	FString FolderPath;
+	
+	UPROPERTY(EditAnywhere, Category = "FileInfo")
+	FString FolderName;
+
+	void OnPayLoadReadyForImport(const FLGCsvInfoImportPayload& InImportPayload);
+	
+	virtual void OnCsvProcessComplete_Implementation(const FLGCsvInfo& InCvsInfo) override;
+
+	virtual UStruct* GetUStructContainerByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueStructID);
+	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueID);
+	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag);
+	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag);
+
+	
 private:
 
 	UFUNCTION(CallInEditor)
 	void UpdateDialogue();
-
-	UPROPERTY(EditAnywhere)
-	FString FolderPath;
-	
-	UPROPERTY(EditAnywhere)
-	FString FolderName;
-
-	UPROPERTY(EditAnywhere, Category = "URLs")
-	TArray<FLGDialogueURL> DialogueURLs;
 };

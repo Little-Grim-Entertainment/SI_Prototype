@@ -25,5 +25,8 @@ class LGCSVDATAPROCESSOR_API ILGCsvProcessorInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
-	void OnInteractComplete(UObject* Caller, const FLGCsvInfo& InCvsInfo);
+	void OnCsvProcessComplete(const FLGCsvInfo& InCvsInfo);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
+	void OnRequestCheckForEmbeddedCsv(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, const FGuid& InDialogueID);
 };

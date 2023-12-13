@@ -163,6 +163,8 @@ void URuntimeDataTableObject::OnResponseReceived_GET_SheetAsCSV(
 	CallbackInfo.FileName = OperationParams.FileName;
 	CallbackInfo.Caller = OperationParams.Caller;
 	CallbackInfo.CsvArrayTypeTag = OperationParams.CsvArrayTypeTag;
+	CallbackInfo.DialogueStructID = OperationParams.DialogueStructID;
+	CallbackInfo.DialogueLabel = OperationParams.DialogueLabel;
 	CallbackInfo.bWasSuccessful = bWasSuccessful;
 	GenericValidateHttpResponse(Request, Response, CallbackInfo);
 	CallOnComplete.ExecuteIfBound(CallbackInfo);
@@ -1290,7 +1292,10 @@ void URuntimeDataTableObject::GenericValidateHttpResponse(
 {
 	RemoveFromRoot();
 	Request->OnProcessRequestComplete().Unbind();
-
+	if(!Response)
+	{
+		return;
+	}
 	CallbackInfo.ResponseAsString = CallbackInfo.bWasSuccessful ? Response->GetContentAsString() : "";
 	CallbackInfo.ResponseCode = Response->GetResponseCode();
 

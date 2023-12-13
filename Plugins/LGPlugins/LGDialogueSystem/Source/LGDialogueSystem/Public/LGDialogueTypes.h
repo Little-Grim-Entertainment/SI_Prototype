@@ -12,10 +12,17 @@ class ULGDialogueDataAsset;
 DECLARE_LOG_CATEGORY_EXTERN(LogLGDialogue, Log, All);
 
 USTRUCT(BlueprintType)
-struct LGDIALOGUESYSTEM_API FLGDialogueCsv
+struct LGDIALOGUESYSTEM_API FLGDialogue
 {
 	GENERATED_BODY()
-	
+
+	FLGDialogue();
+
+	UPROPERTY(VisibleAnywhere)
+	FGuid DialogueID;
+
+	bool operator==(const FLGDialogue& OtherDialogue) const;
+	bool operator!=(const FLGDialogue& OtherDialogue) const;
 };
 
 USTRUCT(BlueprintType)
@@ -23,7 +30,7 @@ struct LGDIALOGUESYSTEM_API FLGDialogueURL
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString FileName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

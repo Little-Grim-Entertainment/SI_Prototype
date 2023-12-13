@@ -10,7 +10,12 @@
 #include "LG_DebugMacros.h"
 #include "SI_Prototype/SI_Prototype.h"
 
-void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
+void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag)
+{
+	AddNewGameplayTag_Internal(InGameplayTag);
+}
+
+void USI_GameplayTagManager::AddNewGameplayTag_Internal(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
 {
 	FSI_GameplayTagContainer& ContainerToAddTo = GetContainerTypeByTag(InGameplayTag);
 	if (!InGameplayTag.IsValid()) return;
@@ -33,7 +38,12 @@ void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag
 	OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
 }
 
-void USI_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
+void USI_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag)
+{
+	RemoveTag_Internal(InGameplayTag);
+}
+
+void USI_GameplayTagManager::RemoveTag_Internal(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
 {
 	FSI_GameplayTagContainer& ContainerToRemoveFrom = GetContainerTypeByTag(InGameplayTag);
 	if (!ContainerToRemoveFrom.HasTagExact(InGameplayTag)) {return;}
@@ -48,7 +58,7 @@ void USI_GameplayTagManager::ClearAllTagsFromContainer(FSI_GameplayTagContainer&
 	InContainerToClear.GetGameplayTagArray(AllContainerTags);
 	for (FGameplayTag& CurrentGameplayTag : AllContainerTags)
 	{
-		RemoveTag(CurrentGameplayTag);
+		RemoveTag_Internal(CurrentGameplayTag);
 	}
 }
 
@@ -66,12 +76,12 @@ void USI_GameplayTagManager::ReplaceTagWithSameParent(const FGameplayTag& InNewT
 		{
 			if (HasParentTag(CurrentGameplayTag, InParentTag))
 			{
-				RemoveTag(CurrentGameplayTag);
+				RemoveTag_Internal(CurrentGameplayTag);
 			}
 		}
 	}
 	
-	AddNewGameplayTag(InNewTag);
+	AddNewGameplayTag_Internal(InNewTag);
 }
 
 bool USI_GameplayTagManager::SwapTags(const FGameplayTag& InOldTag, const FGameplayTag& InNewTag)
@@ -83,8 +93,8 @@ bool USI_GameplayTagManager::SwapTags(const FGameplayTag& InOldTag, const FGamep
 
 	if (TagTypeContainer.HasTag(InOldTag))
 	{
-		RemoveTag(InOldTag);
-		AddNewGameplayTag(InNewTag);
+		RemoveTag_Internal(InOldTag);
+		AddNewGameplayTag_Internal(InNewTag);
 		return true;
 	}
 	

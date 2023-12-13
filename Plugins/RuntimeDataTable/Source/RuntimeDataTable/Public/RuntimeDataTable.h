@@ -41,6 +41,12 @@ struct FRuntimeDataTableCallbackInfo
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
 	FString FolderName = "";
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FGuid DialogueStructID = FGuid();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FString DialogueLabel = "";
+
 	UPROPERTY()
 	UObject* Caller = nullptr;
 
@@ -77,6 +83,12 @@ struct FRuntimeDataTableOperationParams
 
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	FString FileName = "";
+
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FGuid DialogueStructID = FGuid();
+
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FString DialogueLabel = "";
 
 	/** The caller that begins the CSV Import */
 	UPROPERTY()

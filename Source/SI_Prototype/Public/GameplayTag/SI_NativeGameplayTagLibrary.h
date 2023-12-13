@@ -74,7 +74,8 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_PrimaryDialogue)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_CorrectedDialogue)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_DefaultResponse)
-
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_PressDialogue)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_ResponseDialogue)
 
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Gadget)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Gadget_Flashlight)

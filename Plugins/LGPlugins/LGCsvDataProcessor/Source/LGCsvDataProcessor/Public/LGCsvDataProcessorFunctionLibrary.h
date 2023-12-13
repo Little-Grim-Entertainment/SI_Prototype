@@ -10,6 +10,8 @@
 
 struct FRuntimeDataTableCallbackInfo;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnRequestCheckForEmbeddedCsv, const void* InArrayPtr);
+
 UCLASS()
 class LGCSVDATAPROCESSOR_API ULGCsvDataProcessorFunctionLibrary : public UBlueprintFunctionLibrary
 {
@@ -20,5 +22,4 @@ public:
 	static void ImportCsvFromURL(const FLGCsvInfoImportPayload& InImportPayload, FRDTGetStringDelegate InCallbackDelegate);
 
 	static void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, UStruct* InStructPtr, const FName& InPropertyName);
-
 };

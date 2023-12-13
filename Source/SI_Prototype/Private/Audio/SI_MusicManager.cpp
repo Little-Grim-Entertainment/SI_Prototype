@@ -112,8 +112,8 @@ UAudioComponent* USI_MusicManager::PlayBackgroundMusic(FSI_MusicSettings InMusic
 			BackgroundMusic->Play();
 		}
 
-		SITagManager->AddNewGameplayTag(InMusicSettings.MusicTag);
-		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Playing);
+		SITagManager->AddNewGameplayTag_Internal(InMusicSettings.MusicTag);
+		SITagManager->AddNewGameplayTag_Internal(SITag_Audio_Music_Playing);
 		OnBackgroundMusicStarted.Broadcast();
 		bMusicIsPlaying = true;
 		bMusicIsPaused = false;
@@ -178,10 +178,10 @@ void USI_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLev
 		if (!bMusicIsPaused)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(MusicTimecode);
-			SITagManager->RemoveTag(CurrentMusicSettings.MusicTag);
+			SITagManager->RemoveTag_Internal(CurrentMusicSettings.MusicTag);
 			OnBackgroundMusicStopped.Broadcast();
 		}
-		SITagManager->RemoveTag(SITag_Audio_Music_Playing);
+		SITagManager->RemoveTag_Internal(SITag_Audio_Music_Playing);
 		BackgroundMusic->DestroyComponent();
 		bMusicIsPlaying = false;
 	}

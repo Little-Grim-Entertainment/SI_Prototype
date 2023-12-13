@@ -87,7 +87,7 @@ void USI_LevelManager::ExecuteLoadLevelByTag(const FGameplayTag& InLevelToLoadTa
 		{
 			if (LoadedMapState->GetMapData()->MapType == SITag_Map_Type_Menu)
 			{
-				SITagManager->RemoveTag(SITag_UI_Menu_Map);
+				SITagManager->RemoveTag_Internal(SITag_UI_Menu_Map);
 			}
 
 			if(!bShouldSkipMedia && LoadedMapState->HasOutroMedia())
@@ -308,7 +308,7 @@ void USI_LevelManager::LevelLoaded(UWorld* LoadedWorld)
 	}
 	else if(SITagManager->HasGameplayTag(SITag_UI_Menu_Map))
 	{
-		SITagManager->RemoveTag(SITag_UI_Menu_Map);
+		SITagManager->RemoveTag_Internal(SITag_UI_Menu_Map);
 	}
 	
 	bLevelHasLoaded = true;

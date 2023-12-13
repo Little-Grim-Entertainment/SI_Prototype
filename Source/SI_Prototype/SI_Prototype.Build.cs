@@ -24,6 +24,7 @@ public class SI_Prototype : ModuleRules
 			"GameplayAbilities",
 			"InputCore",
 			"LGDialogueSystem",
+			"LGCsvDataProcessor",
 			"LevelSequence",
 			"MediaAssets",
 			"MoviePlayer",

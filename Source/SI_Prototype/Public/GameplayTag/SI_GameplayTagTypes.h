@@ -26,7 +26,7 @@ private:
 	FGameplayTag ParentTag;
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FSITagPayload 
 {
 	GENERATED_BODY()

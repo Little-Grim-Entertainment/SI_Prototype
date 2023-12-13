@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "EasyCsvTypes.h"
-#include "LGDialogueTypes.h"
 #include "GameplayTagContainer.h"
 #include "LGCsvDataTypes.generated.h"
 
@@ -35,6 +34,12 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 
 	UPROPERTY()
 	FString URL;
+
+	UPROPERTY()
+	FGuid DialogueStructID;
+
+	UPROPERTY()
+	FString DialogueLabel;
 	
 	UPROPERTY()
 	FString FileName;

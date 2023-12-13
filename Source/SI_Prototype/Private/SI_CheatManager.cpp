@@ -103,11 +103,11 @@ void USI_CheatManager::CheatHideHud(const bool bShouldHide)
 	
 	if(bShouldHide)
 	{
-		SITagManager->RemoveTag(SITag_UI_HUD);
+		SITagManager->RemoveTag_Internal(SITag_UI_HUD);
 	}
 	else
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_HUD);
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_HUD);
 	}		
 }
 
@@ -117,11 +117,11 @@ void USI_CheatManager::CheatHideMapMenu(const bool bShouldHide)
 	
 	if(bShouldHide)
 	{
-		SITagManager->RemoveTag(SITag_UI_Menu_Map);
+		SITagManager->RemoveTag_Internal(SITag_UI_Menu_Map);
 	}
 	else
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_Menu_Map);
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_Menu_Map);
 	}	
 }
 

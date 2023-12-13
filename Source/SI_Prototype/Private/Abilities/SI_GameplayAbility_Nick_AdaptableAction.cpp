@@ -50,7 +50,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::EndAbility(const FGameplayAbility
 	CancelUpdateIndicatorPositionTimer();
 	if(IsValid(PC))
 	{
-		PC->GetSITagManager()->RemoveTag(SITag_UI_HUD_QuickAction_Movable);
+		PC->GetSITagManager()->RemoveTag_Internal(SITag_UI_HUD_QuickAction_Movable);
 	}
 	if(IsValid(WaitCancelConfirmHoldTagAddedTask))
 	{
@@ -110,7 +110,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::UpdateMoveToIndicatorPosition()
 			// Update HUD
 			if(!bHitActorIsMovable)
 			{
-				PC->GetSITagManager()->AddNewGameplayTag(SITag_UI_HUD_QuickAction_Movable);
+				PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_UI_HUD_QuickAction_Movable);
 				bHitActorIsMovable = true;
 			}
 		}
@@ -118,7 +118,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::UpdateMoveToIndicatorPosition()
 		{
 			if(bHitActorIsMovable)
 			{
-				PC->GetSITagManager()->RemoveTag(SITag_UI_HUD_QuickAction_Movable);
+				PC->GetSITagManager()->RemoveTag_Internal(SITag_UI_HUD_QuickAction_Movable);
 			}
 			bHitActorIsMovable = false;
 		}
@@ -200,7 +200,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::ConfirmTagReceived()
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	AIController->GetNPCMemory()->SetMoveToLocation(NewMoveToLocation);
 	
-	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
+	PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_Ability_AI_MoveTo, Payload);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
@@ -217,7 +217,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::HoldConfirmTagReceived()
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	NPCMemory->SetMoveToLocation(NewMoveToLocation);
 	
-	PC->GetSITagManager()->AddNewGameplayTag(SITag_Ability_AI_MoveTo, Payload);
+	PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_Ability_AI_MoveTo, Payload);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

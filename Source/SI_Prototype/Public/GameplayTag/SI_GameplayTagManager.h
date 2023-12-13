@@ -21,8 +21,14 @@ public:
 
 	// Used to register the tag manager with the gameplay tag manager which then broadcasts
 	// the OnTagAdded and OnTagRemoved delegates when tags are added or removed.
-	void AddNewGameplayTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload = nullptr);
-	void RemoveTag(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload = nullptr);
+	// Use AddNewGameplayTag_Internal() for C++ code.
+	UFUNCTION(BlueprintCallable)
+	void AddNewGameplayTag(const FGameplayTag& InGameplayTag);
+	void AddNewGameplayTag_Internal(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload = nullptr);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveTag(const FGameplayTag& InGameplayTag);
+	void RemoveTag_Internal(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload = nullptr);
 	void ClearAllTagsFromContainer(FSI_GameplayTagContainer& InContainerToClear);
 
 	// Receives InNewTag and replaces it with InParentTag

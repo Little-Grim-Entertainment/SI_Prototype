@@ -160,7 +160,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 		SecondaryMenuTag = FGameplayTag();
 		if(InRemovedTag == SITag_UI_Menu_Map)
 		{
-			SITagManager->RemoveTag(SITag_Player_State_Menu);
+			SITagManager->RemoveTag_Internal(SITag_Player_State_Menu);
 		}
 		else
 		{
@@ -181,7 +181,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 	
 	if(SITagManager->HasParentTag(InRemovedTag, SITag_UI_Screen))
 	{
-		SITagManager->RemoveTag(SITag_Player_State_Inactive);
+		SITagManager->RemoveTag_Internal(SITag_Player_State_Inactive);
 		return;
 	}
 	

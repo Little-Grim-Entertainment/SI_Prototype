@@ -30,7 +30,7 @@ void USI_GameplayAbility_Nick_SetAIRotation::ActivateAbility(const FGameplayAbil
 	USI_GameplayTagManager* SITagManager =  GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_Ability, Error, "SITagManager is not valid"); return; }
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_AI_MoveTo);	
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_AI_MoveTo);	
 }
 
 void USI_GameplayAbility_Nick_SetAIRotation::EndAbility(const FGameplayAbilitySpecHandle Handle,
