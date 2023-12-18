@@ -19,12 +19,12 @@ void ULGDialogueDataAsset::OnCsvProcessComplete_Implementation(const FLGCsvInfo&
 	UE_LOG(LogLGDialogue, Warning, TEXT("Dilogue Asset Interaction Complete!"));
 }
 
-UStruct* ULGDialogueDataAsset::GetUStructContainerByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueStructID)
+FArrayProperty* ULGDialogueDataAsset::GetArrayPropertyByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID)
 {
 	return nullptr;
 }
 
-void* ULGDialogueDataAsset::GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueID)
+void* ULGDialogueDataAsset::GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID, bool bReturnUScriptContainer)
 {
 	return nullptr;
 }
@@ -45,7 +45,7 @@ void ULGDialogueDataAsset::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInf
 	const FName& PropertyName = GetStructPropertyNameByTag(CsvArrayType);
 	void* DialogueStructArray = GetDialogueStructArrayByTag(CsvArrayType, InCallbackInfo.DialogueStructID);
 	
-	ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(InCallbackInfo, DialogueStructArray, GetUStructContainerByTag(CsvArrayType, InCallbackInfo.DialogueStructID), PropertyName);
+	ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(InCallbackInfo, DialogueStructArray, GetArrayPropertyByTag(CsvArrayType, InCallbackInfo.DialogueStructID), PropertyName);
 }
 
 void ULGDialogueDataAsset::OnPayLoadReadyForImport(const FLGCsvInfoImportPayload& InImportPayload)

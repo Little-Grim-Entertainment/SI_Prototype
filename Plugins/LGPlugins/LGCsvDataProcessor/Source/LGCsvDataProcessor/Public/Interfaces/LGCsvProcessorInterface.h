@@ -29,4 +29,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
 	void OnRequestCheckForEmbeddedCsv(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, const FGuid& InDialogueID);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
+	bool StructTypeHasEmbeddedCsv(const FGameplayTag& InStructType);
 };

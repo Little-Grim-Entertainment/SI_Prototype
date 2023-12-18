@@ -35,8 +35,8 @@ protected:
 	
 	virtual void OnCsvProcessComplete_Implementation(const FLGCsvInfo& InCvsInfo) override;
 
-	virtual UStruct* GetUStructContainerByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueStructID);
-	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueID);
+	virtual FArrayProperty* GetArrayPropertyByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID);
+	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID, bool bReturnUScriptContainer = false);
 	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag);
 	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag);
 

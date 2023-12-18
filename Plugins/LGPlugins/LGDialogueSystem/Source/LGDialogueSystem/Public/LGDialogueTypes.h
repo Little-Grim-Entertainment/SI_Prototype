@@ -4,12 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "RuntimeDataTable.h"
 #include "LGDialogueTypes.generated.h"
 
 class ULGDialogueDataAsset;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogLGDialogue, Log, All);
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGDialogueArray
+{
+	GENERATED_BODY()
+
+	FLGDialogueArray() {}
+	virtual ~FLGDialogueArray(){}
+	
+	UPROPERTY(VisibleAnywhere)
+	FGameplayTag DialogueStructTypeTag;
+
+	UPROPERTY(VisibleAnywhere)
+	FName PropertyName;
+
+	virtual FArrayProperty* GetArrayProperty();
+
+	bool operator==(const FLGDialogueArray& OtherDialogue) const;
+	bool operator!=(const FLGDialogueArray& OtherDialogue) const;
+};
 
 USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogue

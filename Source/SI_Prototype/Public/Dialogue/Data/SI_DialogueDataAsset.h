@@ -20,21 +20,27 @@ protected:
 
 	virtual void UpdateDialogue_Internal() override;
 
-	virtual void OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, const FGuid& InDialogueID) override;
+	virtual void OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, const FGuid& InDialogueDataID) override;
+	virtual bool StructTypeHasEmbeddedCsv_Implementation(const FGameplayTag& InStructType) override; 
 	
-	virtual UScriptStruct* GetUStructContainerByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueStructID) override;
-	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueID) override;
+	virtual FArrayProperty* GetArrayPropertyByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID) override;
+	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID, bool bReturnUScriptContainer = false) override;
 	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag) override;
 	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag) override;
+	
+	FSI_DialogueArrayData* GetDialogueDataByID(const FGuid& InDialogueDataID);
 
-	FLGDialogue* GetDialogueStructByID(const FGuid& InDialogueStructID);
-	FSI_DialogueArrays* GetDialogueDataByID(const FGuid& InDialogueDataID);
+	FLGDialogueArray* GetDialogueStructArrayByTagAndID(const FGameplayTag& InStructTypeTag, const FGuid& InDialogueDataID);
 
-	bool IsMainStructType(const FGameplayTag& InGameplayTag) const;
+	template <class StructPtr, class ArrayPtr>
+	TArray<ArrayPtr>* GetDialogueArrayFromStruct(FLGDialogueArray* InArrayPtr);
 
 private:
 
-	UPROPERTY(EditAnywhere, Category = "CaseInfo")
+	UPROPERTY(EditAnywhere, Category = "Dialogue")
+	FSI_DefaultDialogue DefaultDialogue;
+	
+	UPROPERTY(EditAnywhere, Category = "Dialogue")
 	TArray<FSI_CaseDialogue> CaseDialogue;
 
 	void InitializeDialogueLabels();
@@ -44,3 +50,15 @@ private:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 };
+
+template <class StructPtr, class ArrayPtr>
+TArray<ArrayPtr>* USI_DialogueDataAsset::GetDialogueArrayFromStruct(FLGDialogueArray* InArrayPtr)
+{
+	StructPtr* DialogueArrayPtr = static_cast<StructPtr*>(InArrayPtr);
+	if(DialogueArrayPtr)
+	{
+		TArray<ArrayPtr>* DialogueArray = DialogueArrayPtr->GetDialogueArray();
+		return DialogueArray;
+	}
+	return nullptr;
+}

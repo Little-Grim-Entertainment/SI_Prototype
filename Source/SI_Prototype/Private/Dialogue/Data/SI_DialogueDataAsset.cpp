@@ -3,38 +3,9 @@
 
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
 #include "LGCsvDataProcessorFunctionLibrary.h"
+#include "Data/Characters/SI_CharacterData.h"
 #include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-
-FSI_DialogueArrays::FSI_DialogueArrays() : DialogueDataID(FGuid::NewGuid())
-{
-}
-
-FLGDialogue* FSI_DialogueArrays::GetDialogueByID(const FGuid& InDialogueID)
-{
-	for(FSI_PrimaryDialogue& CurrentPrimaryDialogue : PrimaryDialogueArray)
-	{
-		if(CurrentPrimaryDialogue.DialogueID == InDialogueID)
-		{
-			return &CurrentPrimaryDialogue;
-		}
-	}
-	for(FSI_CorrectedDialogue& CurrentCorrectedDialogue : CorrectedDialogueArray)
-	{
-		if(CurrentCorrectedDialogue.DialogueID == InDialogueID)
-		{
-			return &CurrentCorrectedDialogue;
-		}
-	}
-	for(FSI_DefaultResponse& CurrentDefaultResponse : DefaultResponseArray)
-	{
-		if(CurrentDefaultResponse.DialogueID == InDialogueID)
-		{
-			return &CurrentDefaultResponse;
-		}
-	}
-	return nullptr;
-}
 
 void USI_DialogueDataAsset::InitializeDialogueLabels()
 {
@@ -81,9 +52,14 @@ void USI_DialogueDataAsset::UpdateDialogue_Internal()
 	{
 		for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
 		{
+			if(!CurrentPart.DialogueData.DialogueArrays.IsEmpty())
+			{
+				CurrentPart.DialogueData.DialogueArrays.Empty();
+			}
+			
 			for (FLGDialogueURL& CurrentURL : CurrentPart.DialogueURLs)
 			{
-				FString FilePath = UKismetSystemLibrary::GetProjectSavedDirectory();
+				FString FilePath = UKismetSystemLibrary::GetProjectDirectory();
 				FilePath.Append(FolderPath + "/");
 				
 				FString DialogueLabel = CurrentPart.DialogueData.DialogueLabel;
@@ -97,21 +73,24 @@ void USI_DialogueDataAsset::UpdateDialogue_Internal()
 				ImportPayload.FileName = CurrentURL.FileName;
 				ImportPayload.URL = CurrentURL.URL;
 				ImportPayload.CsvArrayTypeTag = CurrentURL.DialogueStructType;
-		
+			
+				CurrentPart.DialogueData.AddNewArrayByTag(CurrentURL.DialogueStructType);
 				OnPayLoadReadyForImport(ImportPayload);
 			}
 		}
 	}
 }
 
-void USI_DialogueDataAsset::OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath,  const FString& InDialogueLabel, const FGuid& InDialogueID)
+void USI_DialogueDataAsset::OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath,  const FString& InDialogueLabel, const FGuid& InDialogueDataID)
 {
-	if(InStructType != SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue) {return;}
-	
-	FSI_DialogueArrays* DialogueDataPtr = GetDialogueDataByID(InDialogueID);
+	FSI_DialogueArrayData* DialogueDataPtr = GetDialogueDataByID(InDialogueDataID);
 	if(!DialogueDataPtr) {return;}
+
+	FLGDialogueArray* DialogueArrayPtr = DialogueDataPtr->GetDialogueArrayByTag(SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue);
+	FSI_PrimaryDialogueArray* PrimaryDialogueArrayPtr = static_cast<FSI_PrimaryDialogueArray*>(DialogueArrayPtr);
+	if(!PrimaryDialogueArrayPtr) {return;}
 	
-	for(FSI_PrimaryDialogue& CurrentPrimaryDialogue : DialogueDataPtr->PrimaryDialogueArray)
+	for(FSI_PrimaryDialogue& CurrentPrimaryDialogue : PrimaryDialogueArrayPtr->PrimaryDialogueArray)
 	{
 		if(!CurrentPrimaryDialogue.PressURL.IsEmpty())
 		{
@@ -119,7 +98,7 @@ void USI_DialogueDataAsset::OnRequestCheckForEmbeddedCsv_Implementation(const FG
 			FString DialogueLabel = InDialogueLabel + LineString;
 				
 			FLGCsvInfoImportPayload ImportPayload;
-			ImportPayload.DialogueStructID = CurrentPrimaryDialogue.DialogueID;
+			ImportPayload.DialogueStructID = InDialogueDataID;
 			ImportPayload.DialogueLabel = DialogueLabel;
 			ImportPayload.Caller = this;
 			ImportPayload.FolderName = "PressDialogue";
@@ -127,7 +106,8 @@ void USI_DialogueDataAsset::OnRequestCheckForEmbeddedCsv_Implementation(const FG
 			ImportPayload.FileName = FolderName + "_" + DialogueLabel + "_PressDialogue";
 			ImportPayload.URL = CurrentPrimaryDialogue.PressURL;
 			ImportPayload.CsvArrayTypeTag = SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue;
-		
+
+			DialogueDataPtr->AddNewArrayByTag(ImportPayload.CsvArrayTypeTag);
 			OnPayLoadReadyForImport(ImportPayload);
 		}
 		if(!CurrentPrimaryDialogue.ResponseURL.IsEmpty())
@@ -136,82 +116,99 @@ void USI_DialogueDataAsset::OnRequestCheckForEmbeddedCsv_Implementation(const FG
 			FString DialogueLabel = InDialogueLabel + LineString;
 				
 			FLGCsvInfoImportPayload ImportPayload;
-			ImportPayload.DialogueStructID = CurrentPrimaryDialogue.DialogueID;
+			ImportPayload.DialogueStructID = InDialogueDataID;
+			ImportPayload.DialogueLabel = DialogueLabel;
 			ImportPayload.Caller = this;
 			ImportPayload.FolderName = "ResponseDialogue";
 			ImportPayload.FilePath = InSavePath + "/";
 			ImportPayload.FileName = FolderName + "_" + DialogueLabel + "_ResponseDialogue";
 			ImportPayload.URL = CurrentPrimaryDialogue.PressURL;
-			ImportPayload.CsvArrayTypeTag = SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue;
-		
+			ImportPayload.CsvArrayTypeTag = SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue;
+
+			DialogueDataPtr->AddNewArrayByTag(ImportPayload.CsvArrayTypeTag);
 			OnPayLoadReadyForImport(ImportPayload);
 		}
 	}
 }
 
-UScriptStruct* USI_DialogueDataAsset::GetUStructContainerByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueStructID)
+bool USI_DialogueDataAsset::StructTypeHasEmbeddedCsv_Implementation(const FGameplayTag& InStructType)
 {
-	UScriptStruct* DialogueScriptStruct = nullptr;
-	if(IsMainStructType(InGameplayTag))
-	{
-		const FSI_DialogueArrays* DialogueDataPtr = GetDialogueDataByID(InDialogueStructID);
-		if(!DialogueDataPtr){return nullptr;}
-
-		DialogueScriptStruct = DialogueDataPtr->StaticStruct();
-	}
-	else
-	{
-		if(const FSI_PrimaryDialogue* PrimaryDialogue = static_cast<FSI_PrimaryDialogue*>(GetDialogueStructByID(InDialogueStructID)))
-		{
-			DialogueScriptStruct = PrimaryDialogue->StaticStruct();
-		}
-	}
-		
-	return DialogueScriptStruct;
+	return InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue;
 }
 
-void* USI_DialogueDataAsset::GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueID)
+FArrayProperty* USI_DialogueDataAsset::GetArrayPropertyByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID)
 {
-	if(IsMainStructType(InGameplayTag))
-	{
-		FSI_DialogueArrays* DialogueData = GetDialogueDataByID(InDialogueID);
-		if(!DialogueData) {return Super::GetDialogueStructArrayByTag(InGameplayTag, InDialogueID);}
+	FSI_DialogueArrayData* DialogueData = GetDialogueDataByID(InDialogueDataID);
+	if(!DialogueData) {return nullptr;}
 
-		if(InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue)
-		{
-			return &DialogueData->PrimaryDialogueArray;	
-		}
-		if(InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue)
-		{
-			return &DialogueData->CorrectedDialogueArray;		
-		}
-		if(InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse)
-		{
-			return &DialogueData->DefaultResponseArray;
-		}
-	}	
+	FLGDialogueArray* DialogueArrayPtr = DialogueData->GetDialogueArrayByTag(InGameplayTag);
+	if(!DialogueArrayPtr) {return nullptr;}
 	
-	FSI_PrimaryDialogue* PrimaryDialogue = static_cast<FSI_PrimaryDialogue*>(GetDialogueStructByID(InDialogueID));
-	if(PrimaryDialogue)
-	{
-		if(InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
-		{
-			return &PrimaryDialogue->PressDialogueArray;
-		}
-		if(InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue)
-		{
-			return &PrimaryDialogue->ResponseDialogue;
-		}
-	}
-
-	return Super::GetDialogueStructArrayByTag(InGameplayTag, InDialogueID);
+	return DialogueArrayPtr->GetArrayProperty();
 }
 
-bool USI_DialogueDataAsset::IsMainStructType(const FGameplayTag& InGameplayTag) const
+void* USI_DialogueDataAsset::GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID, bool bReturnUScriptContainer)
 {
-	return	InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue ||
-			InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue ||
-			InGameplayTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse;
+	FSI_DialogueArrayData* DialogueData = GetDialogueDataByID(InDialogueDataID);
+	if(!DialogueData) {return Super::GetDialogueStructArrayByTag(InGameplayTag, InDialogueDataID);}
+
+	FLGDialogueArray* DialogueArrayPtr = DialogueData->GetDialogueArrayByTag(InGameplayTag);
+	if(!DialogueArrayPtr) {return Super::GetDialogueStructArrayByTag(InGameplayTag, InDialogueDataID);}
+	
+	TArray<FSI_PrimaryDialogue>* PrimaryDialogueArray = GetDialogueArrayFromStruct<FSI_PrimaryDialogueArray, FSI_PrimaryDialogue>(DialogueArrayPtr);
+	if(PrimaryDialogueArray)
+	{
+		return PrimaryDialogueArray;
+	}
+	TArray<FSI_CorrectedDialogue>* CorrectedDialogueArray = GetDialogueArrayFromStruct<FSI_CorrectedDialogueArray, FSI_CorrectedDialogue>(DialogueArrayPtr);
+	if(CorrectedDialogueArray)
+	{
+		return CorrectedDialogueArray;
+	}
+	TArray<FSI_DefaultResponse>* DefaultResponseArray = GetDialogueArrayFromStruct<FSI_DefaultResponseArray, FSI_DefaultResponse>(DialogueArrayPtr);
+	if(DefaultResponseArray)
+	{
+		return DefaultResponseArray;
+	}
+	TArray<FSI_PressDialogue>* PressDialogueArray = GetDialogueArrayFromStruct<FSI_PressDialogueArray, FSI_PressDialogue>(DialogueArrayPtr);
+	if(PressDialogueArray)
+	{
+		return PressDialogueArray;
+	}
+	TArray<FSI_ResponseDialogue>* ResponseDialogueArray = GetDialogueArrayFromStruct<FSI_ResponseDialogueArray, FSI_ResponseDialogue>(DialogueArrayPtr);
+	if(ResponseDialogueArray)
+	{
+		return ResponseDialogueArray;
+	}
+
+	return Super::GetDialogueStructArrayByTag(InGameplayTag, InDialogueDataID);
+}
+
+FSI_DialogueArrayData* USI_DialogueDataAsset::GetDialogueDataByID(const FGuid& InDialogueDataID)
+{
+	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
+	{
+		for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+		{
+			FSI_DialogueArrayData& DialogueArrayData = CurrentPart.DialogueData;
+
+			if(InDialogueDataID == DialogueArrayData.DialogueDataID)
+			{
+				return &DialogueArrayData;
+			}
+		}
+	}
+	return nullptr;
+}
+
+FLGDialogueArray* USI_DialogueDataAsset::GetDialogueStructArrayByTagAndID(const FGameplayTag& InStructTypeTag, const FGuid& InDialogueDataID)
+{
+	FSI_DialogueArrayData* DialogueArrayData = GetDialogueDataByID(InDialogueDataID);
+	if(DialogueArrayData && DialogueArrayData->DialogueDataID == InDialogueDataID)
+	{
+		return DialogueArrayData->GetDialogueArrayByTag(InStructTypeTag);
+	}
+	return nullptr;
 }
 
 FName USI_DialogueDataAsset::GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag)
@@ -265,45 +262,6 @@ FName USI_DialogueDataAsset::GetStructTypeNameByTag(const FGameplayTag& InGamepl
 
 	return Super::GetStructPropertyNameByTag(InGameplayTag);
 }
-
-FLGDialogue* USI_DialogueDataAsset::GetDialogueStructByID(const FGuid& InDialogueStructID)
-{
-	FLGDialogue* FoundDialogue = nullptr;
-	
-	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
-	{
-		for(FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
-		{
-			FoundDialogue = CurrentPart.DialogueData.GetDialogueByID(InDialogueStructID);
-			if(FoundDialogue)
-			{
-				return FoundDialogue;
-			}
-		}
-	}
-	
-	return FoundDialogue;
-}
-
-FSI_DialogueArrays* USI_DialogueDataAsset::GetDialogueDataByID(const FGuid& InDialogueDataID)
-{
-	FSI_DialogueArrays* FoundDialogue = nullptr;
-	
-	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
-	{
-		for(FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
-		{
-			if(CurrentPart.DialogueData.DialogueDataID == InDialogueDataID)
-			{
-				FoundDialogue = &CurrentPart.DialogueData;
-				return FoundDialogue;
-			}
-		}
-	}
-
-	return FoundDialogue;
-}
-
 
 #if WITH_EDITOR
 

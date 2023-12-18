@@ -21,5 +21,5 @@ public:
 	UFUNCTION()
 	static void ImportCsvFromURL(const FLGCsvInfoImportPayload& InImportPayload, FRDTGetStringDelegate InCallbackDelegate);
 
-	static void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, UStruct* InStructPtr, const FName& InPropertyName);
+	static void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, FArrayProperty* InArrayProperty, const FName& InPropertyName);
 };

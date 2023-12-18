@@ -26,7 +26,7 @@ void ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(const FLGCsvInfoImport
 	URuntimeDataTableObject::BuildGoogleSheetDownloadLinkAndGetAsCsv(TokenInfo, RuntimeDataTableOperationParams, InCallbackDelegate, InImportPayload.URL, true);
 }
 
-void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, UStruct* InStructPtr, const FName& InPropertyName)
+void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, FArrayProperty* InArrayProperty, const FName& InPropertyName)
 {
 	if(!InCallbackInfo.bWasSuccessful) {return;}
 	
@@ -47,14 +47,11 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 	CSVInfo.CSVInfoResults = EasyCsvInfo;
 	ULGBlueprintFunctionLibrary::FNameArrayToFStringArray(EasyCsvInfo.CSV_Keys, CSVInfo.ExportKeys);
 
-	if(!IsValid(InStructPtr)){UE_LOG(LogCsvDataProcessor, Error, TEXT("Failed to convert CSVInfo into StaticStruct.")); return;}
-	
-	FArrayProperty* CsvStringsArrayProperty = FindFProperty<FArrayProperty>(InStructPtr, InPropertyName);
-	if(!CsvStringsArrayProperty){UE_LOG(LogCsvDataProcessor, Error, TEXT("Failed to find CsvStringsArrayProperty.")); return;}
+	if(!InArrayProperty){UE_LOG(LogCsvDataProcessor, Error, TEXT("Invalid Array Property.")); return;}
 
-	if(!URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(CsvStringsArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true)){UE_LOG(LogDemo, Warning, TEXT("UpdateArrayFromCsvInfo_Internal failed.")); return;}
+	if(!URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(InArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true)){UE_LOG(LogDemo, Warning, TEXT("UpdateArrayFromCsvInfo_Internal failed.")); return;}
 
-	FString CSVString = URuntimeDataTableObject::GenerateCsvFromArray_Internal(CsvStringsArrayProperty, InArrayPtr, CSVInfo.ExportKeys, InCallbackInfo.Caller);
+	FString CSVString = URuntimeDataTableObject::GenerateCsvFromArray_Internal(InArrayProperty, InArrayPtr, CSVInfo.ExportKeys, InCallbackInfo.Caller);
 
 	FString StringToFilePath = ProjectSavePath + InCallbackInfo.FolderName;
 	
@@ -65,7 +62,7 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 
 	CSVInfo.CSVInfoResults = CsvInfoResults;
 		
-	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(CsvStringsArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true))
+	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(InArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true))
 	{
 		if (!IsValid(InCallbackInfo.Caller) || !InCallbackInfo.Caller->Implements<ULGCsvProcessorInterface>()) {return;}
 		
@@ -73,8 +70,11 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 		{
 			DialogueProcessorObject->Execute_OnCsvProcessComplete(InCallbackInfo.Caller, CSVInfo);
 
-			FString EmbeddedSavePath = ProjectSavePath + "/" + InCallbackInfo.FolderName;
-			DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.DialogueLabel, InCallbackInfo.DialogueStructID);
+			if(DialogueProcessorObject->Execute_StructTypeHasEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag))
+			{
+				FString EmbeddedSavePath = ProjectSavePath + "/" + InCallbackInfo.FolderName;
+				DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.DialogueLabel, InCallbackInfo.DialogueStructID);
+			}
 		}
 	}
 }

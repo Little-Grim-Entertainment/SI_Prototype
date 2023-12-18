@@ -5,6 +5,21 @@
 
 DEFINE_LOG_CATEGORY(LogLGDialogue);
 
+FArrayProperty* FLGDialogueArray::GetArrayProperty()
+{
+	return nullptr;
+}
+
+bool FLGDialogueArray::operator==(const FLGDialogueArray& OtherDialogue) const
+{
+	return OtherDialogue.DialogueStructTypeTag == DialogueStructTypeTag;
+}
+
+bool FLGDialogueArray::operator!=(const FLGDialogueArray& OtherDialogue) const
+{
+	return OtherDialogue.DialogueStructTypeTag != DialogueStructTypeTag;
+}
+
 FLGDialogue::FLGDialogue() : DialogueID(FGuid::NewGuid())
 {
 }
