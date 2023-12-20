@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "EasyCsvTypes.h"
 #include "GameplayTagContainer.h"
+//#include "LGDialogueTypes.h"
 #include "LGCsvDataTypes.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCsvDataProcessor, Log, All);
@@ -37,6 +38,9 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 
 	UPROPERTY()
 	FGuid DialogueStructID;
+
+	UPROPERTY()
+	FGuid DialogueArrayID;
 
 	UPROPERTY()
 	FString DialogueLabel;

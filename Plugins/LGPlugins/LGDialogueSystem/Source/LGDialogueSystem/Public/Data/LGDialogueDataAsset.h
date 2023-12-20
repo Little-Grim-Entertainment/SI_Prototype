@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LGCsvDataTypes.h"
 #include "Engine/DataAsset.h"
 #include "LGDialogueTypes.h"
 #include "Interfaces/LGCsvProcessorInterface.h"
@@ -23,6 +24,8 @@ public:
 	UFUNCTION()
 	virtual void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
 
+	virtual void OnCsvProcessComplete_Implementation(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr) override;
+
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "FileInfo")
@@ -32,14 +35,18 @@ protected:
 	FString FolderName;
 
 	void OnPayLoadReadyForImport(const FLGCsvInfoImportPayload& InImportPayload);
-	
-	virtual void OnCsvProcessComplete_Implementation(const FLGCsvInfo& InCvsInfo) override;
 
-	virtual FArrayProperty* GetArrayPropertyByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID);
-	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID, bool bReturnUScriptContainer = false);
+	virtual void UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr);
+	virtual void InitializeDialogueDataTableByIDs(UDataTable* InDataTable, const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
+
+	virtual void* GetDialogueStructArrayByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
+
 	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag);
 	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag);
-
+	
+	virtual UScriptStruct* GetStructContainerByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
+	virtual UScriptStruct* GetStructTypeByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
+	virtual UDataTable* GenerateNewDataTable(UScriptStruct* InStructPtr,  FRuntimeDataTableCallbackInfo& InCallbackInfo);
 	
 private:
 

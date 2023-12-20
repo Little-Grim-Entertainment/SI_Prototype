@@ -2,89 +2,62 @@
 
 
 #include "Dialogue/SI_DialogueTypes.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+
+DEFINE_LOG_CATEGORY(LogSI_Dialogue);
 
 FSI_DialogueArrayData::FSI_DialogueArrayData() : DialogueDataID(FGuid::NewGuid())
 {
 }
 
-void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag)
+void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag, FLGCsvInfoImportPayload& OutPayload)
 {
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue)
 	{
-		DialogueArrays.Add(new FSI_PrimaryDialogueArray());
+		FSI_PrimaryDialogueArray* NewPrimaryDialogueArray = new FSI_PrimaryDialogueArray();
+		DialogueArrayPtrs.Add(NewPrimaryDialogueArray);
+		DialogueArrays.Add(*NewPrimaryDialogueArray);
+		OutPayload.DialogueArrayID = NewPrimaryDialogueArray->DialogueArrayID;
 	}
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue)
 	{
-		DialogueArrays.Add(new FSI_CorrectedDialogueArray());
+		FSI_CorrectedDialogueArray* NewCorrectedDialogueArray = new FSI_CorrectedDialogueArray();
+		DialogueArrayPtrs.Add(NewCorrectedDialogueArray);
+		DialogueArrays.Add(*NewCorrectedDialogueArray);
+		OutPayload.DialogueArrayID = NewCorrectedDialogueArray->DialogueArrayID;
 	}
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse)
 	{
-		DialogueArrays.Add(new FSI_DefaultResponseArray());
+		FSI_DefaultResponseArray* NewDefaultResponseArray = new FSI_DefaultResponseArray();
+		DialogueArrayPtrs.Add(NewDefaultResponseArray);
+		DialogueArrays.Add(*NewDefaultResponseArray);
+		OutPayload.DialogueArrayID = NewDefaultResponseArray->DialogueArrayID;
 	}
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
 	{
-		DialogueArrays.Add(new FSI_PressDialogueArray());
+		FSI_PressDialogueArray* NewPressDialogueArray = new FSI_PressDialogueArray();
+		DialogueArrayPtrs.Add(NewPressDialogueArray);
+		DialogueArrays.Add(*NewPressDialogueArray);
+		OutPayload.DialogueArrayID = NewPressDialogueArray->DialogueArrayID;
 	}
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue)
 	{
-		DialogueArrays.Add(new FSI_ResponseDialogueArray());
+		FSI_ResponseDialogueArray* NewResponseDialogueArray = new FSI_ResponseDialogueArray();
+		DialogueArrayPtrs.Add(NewResponseDialogueArray);
+		DialogueArrays.Add(*NewResponseDialogueArray);
+		OutPayload.DialogueArrayID = NewResponseDialogueArray->DialogueArrayID;
 	}	
 }
 
-void FSI_DialogueArrayData::RemoveArrayByTag(const FGameplayTag& InStructTypeTag)
+FLGDialogueArray* FSI_DialogueArrayData::GetDialogueArrayByID(const FGuid& InDialogueArrayID)
 {
-	for(int32 CurrentIndex = 0; CurrentIndex < DialogueArrays.Num(); CurrentIndex++)
+	for(FLGDialogueArray* CurrentDialogueArray : DialogueArrayPtrs)
 	{
-		if(DialogueArrays[CurrentIndex] && DialogueArrays[CurrentIndex]->DialogueStructTypeTag == InStructTypeTag)
-		{
-			DialogueArrays.RemoveAt(CurrentIndex);
-			return;
-		}
-	}
-}
-
-bool FSI_DialogueArrayData::ContainsArrayByTypeTag(const FGameplayTag& InStructTypeTag) const
-{
-	for(const FLGDialogueArray* CurrentDialogueArray : DialogueArrays)
-	{
-		if(CurrentDialogueArray && CurrentDialogueArray->DialogueStructTypeTag == InStructTypeTag)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-FLGDialogueArray* FSI_DialogueArrayData::GetDialogueArrayByTag(const FGameplayTag& InStructTypeTag)
-{
-	for(FLGDialogueArray* CurrentDialogueArray : DialogueArrays)
-	{
-		if(CurrentDialogueArray && CurrentDialogueArray->DialogueStructTypeTag == InStructTypeTag)
+		if(CurrentDialogueArray && CurrentDialogueArray->DialogueArrayID == InDialogueArrayID)
 		{
 			return CurrentDialogueArray;
 		}
 	}
-
-	FLGDialogueArray* DialogueArray = GetDialogueArrayByTag(SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue);
-	FSI_PrimaryDialogueArray* PrimaryDialogueArrayPtr = static_cast<FSI_PrimaryDialogueArray*>(DialogueArray);
-	if(PrimaryDialogueArrayPtr)
-	{
-		for(FSI_PrimaryDialogue& CurrentPrimaryDialogue : PrimaryDialogueArrayPtr->PrimaryDialogueArray)
-		{
-			FSI_PressDialogueArray& PressDialogue = CurrentPrimaryDialogue.PressDialogue;
-			if(PressDialogue.DialogueStructTypeTag == InStructTypeTag)
-			{
-				return &PressDialogue;
-			}
-			
-			FSI_ResponseDialogueArray& ResponseDialogue = CurrentPrimaryDialogue.ResponseDialogue;
-			if(ResponseDialogue.DialogueStructTypeTag == InStructTypeTag)
-			{
-				return &ResponseDialogue;
-			}
-		}
-	}
-
 	return nullptr;
 }
 
@@ -99,11 +72,19 @@ TArray<FSI_PrimaryDialogue>* FSI_PrimaryDialogueArray::GetDialogueArray()
 	return &PrimaryDialogueArray;
 }
 
-FArrayProperty* FSI_PrimaryDialogueArray::GetArrayProperty()
+UScriptStruct* FSI_PrimaryDialogueArray::GetStructContainer()
 {
-	const UScriptStruct* ScriptStruct = StaticStruct();
-	FArrayProperty* FoundProperty = FindFProperty<FArrayProperty>(ScriptStruct, PropertyName);
-	return FoundProperty;
+	return StaticStruct();
+}
+
+void FSI_PrimaryDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
+{
+	if(!IsValid(InDataTable)){return;}
+
+	for (int32 CurrentIndex = 0; CurrentIndex < PrimaryDialogueArray.Num(); CurrentIndex++)
+	{
+		InDataTable->AddRow(FName(FString::FromInt(CurrentIndex + 1)), PrimaryDialogueArray[CurrentIndex]);
+	}
 }
 
 FSI_CorrectedDialogueArray::FSI_CorrectedDialogueArray()
@@ -117,11 +98,19 @@ TArray<FSI_CorrectedDialogue>* FSI_CorrectedDialogueArray::GetDialogueArray()
 	return &CorrectedDialogueArray;
 }
 
-FArrayProperty* FSI_CorrectedDialogueArray::GetArrayProperty()
+UScriptStruct* FSI_CorrectedDialogueArray::GetStructContainer()
 {
-	const UScriptStruct* ScriptStruct = StaticStruct();
-	FArrayProperty* FoundProperty = FindFProperty<FArrayProperty>(ScriptStruct, PropertyName);
-	return FoundProperty;
+	return StaticStruct();
+}
+
+void FSI_CorrectedDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
+{
+	if(!IsValid(InDataTable)){return;}
+
+	for (int32 CurrentIndex = 0; CurrentIndex < CorrectedDialogueArray.Num(); CurrentIndex++)
+	{
+		InDataTable->AddRow(FName(FString::FromInt(CurrentIndex + 1)), CorrectedDialogueArray[CurrentIndex]);
+	}
 }
 
 FSI_DefaultResponseArray::FSI_DefaultResponseArray()
@@ -135,11 +124,19 @@ TArray<FSI_DefaultResponse>* FSI_DefaultResponseArray::GetDialogueArray()
 	return &DefaultResponseArray;
 }
 
-FArrayProperty* FSI_DefaultResponseArray::GetArrayProperty()
+UScriptStruct* FSI_DefaultResponseArray::GetStructContainer()
 {
-	const UScriptStruct* ScriptStruct = StaticStruct();
-	FArrayProperty* FoundProperty = FindFProperty<FArrayProperty>(ScriptStruct, PropertyName);
-	return FoundProperty;
+	return StaticStruct();
+}
+
+void FSI_DefaultResponseArray::InitializeDialogueDataTable(UDataTable* InDataTable)
+{
+	if(!IsValid(InDataTable)){return;}
+
+	for (int32 CurrentIndex = 0; CurrentIndex < DefaultResponseArray.Num(); CurrentIndex++)
+	{
+		InDataTable->AddRow(FName(FString::FromInt(CurrentIndex + 1)), DefaultResponseArray[CurrentIndex]);
+	}
 }
 
 FSI_PressDialogueArray::FSI_PressDialogueArray()
@@ -153,11 +150,19 @@ TArray<FSI_PressDialogue>* FSI_PressDialogueArray::GetDialogueArray()
 	return &PressDialogueArray;
 }
 
-FArrayProperty* FSI_PressDialogueArray::GetArrayProperty()
+UScriptStruct* FSI_PressDialogueArray::GetStructContainer()
 {
-	const UScriptStruct* ScriptStruct = StaticStruct();
-	FArrayProperty* FoundProperty = FindFProperty<FArrayProperty>(ScriptStruct, PropertyName);
-	return FoundProperty;
+	return StaticStruct();
+}
+
+void FSI_PressDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
+{
+	if(!IsValid(InDataTable)){return;}
+
+	for (int32 CurrentIndex = 0; CurrentIndex < PressDialogueArray.Num(); CurrentIndex++)
+	{
+		InDataTable->AddRow(FName(FString::FromInt(CurrentIndex + 1)), PressDialogueArray[CurrentIndex]);
+	}
 }
 
 FSI_ResponseDialogueArray::FSI_ResponseDialogueArray()
@@ -172,10 +177,18 @@ TArray<FSI_ResponseDialogue>* FSI_ResponseDialogueArray::GetDialogueArray()
 	return &ResponseDialogueArray;
 }
 
-FArrayProperty* FSI_ResponseDialogueArray::GetArrayProperty()
+UScriptStruct* FSI_ResponseDialogueArray::GetStructContainer()
 {
-	const UScriptStruct* ScriptStruct = StaticStruct();
-	FArrayProperty* FoundProperty = FindFProperty<FArrayProperty>(ScriptStruct, PropertyName);
-	return FoundProperty;
+	return StaticStruct();
+}
+
+void FSI_ResponseDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
+{
+	if(!IsValid(InDataTable)){return;}
+
+	for (int32 CurrentIndex = 0; CurrentIndex < ResponseDialogueArray.Num(); CurrentIndex++)
+	{
+		InDataTable->AddRow(FName(FString::FromInt(CurrentIndex + 1)), ResponseDialogueArray[CurrentIndex]);
+	}
 }
 

@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LGCsvDataTypes.h"
+#include "RuntimeDataTable.h"
+#include "LGDialogueTypes.h"
 #include "UObject/Interface.h"
 #include "LGCsvProcessorInterface.generated.h"
 
@@ -25,10 +26,10 @@ class LGCSVDATAPROCESSOR_API ILGCsvProcessorInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
-	void OnCsvProcessComplete(const FLGCsvInfo& InCvsInfo);
+	void OnCsvProcessComplete(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
-	void OnRequestCheckForEmbeddedCsv(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, const FGuid& InDialogueID);
+	void OnRequestCheckForEmbeddedCsv(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, FGuid& InDialogueDataID, FGuid& InDialogueArrayID);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
 	bool StructTypeHasEmbeddedCsv(const FGameplayTag& InStructType);

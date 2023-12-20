@@ -23,8 +23,6 @@ public class SI_Prototype : ModuleRules
 			"Engine",
 			"GameplayAbilities",
 			"InputCore",
-			"LGDialogueSystem",
-			"LGCsvDataProcessor",
 			"LevelSequence",
 			"MediaAssets",
 			"MoviePlayer",
@@ -33,9 +31,14 @@ public class SI_Prototype : ModuleRules
 			"Slate", 
 			"SlateCore",
 			"UMG", 
-			"LGDebug", 
 			"StateTreeModule",
-			"SmartObjectsModule" 
+			"SmartObjectsModule",
+			
+			// LG Plugins
+			"LGCoreLibrary",
+			"LGCsvDataProcessor",
+			"LGDebug", 
+			"LGDialogueSystem",
 		});
 	}
 }

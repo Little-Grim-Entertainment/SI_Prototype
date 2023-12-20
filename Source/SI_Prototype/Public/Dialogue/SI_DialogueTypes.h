@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LGCsvDataTypes.h"
 #include "LGDialogueTypes.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "SI_DialogueTypes.generated.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(LogSI_Dialogue, Log, All);
 
 USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGDialogue
@@ -20,6 +22,12 @@ struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FText Dialogue;
+
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedWordsString;
+	
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedColorsString;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool CanPresentEvidence;
@@ -36,7 +44,8 @@ struct FSI_PressDialogueArray : public FLGDialogueArray
 	TArray<FSI_PressDialogue> PressDialogueArray;
 
 	TArray<FSI_PressDialogue>* GetDialogueArray();
-	virtual FArrayProperty* GetArrayProperty() override;
+	virtual UScriptStruct* GetStructContainer() override;
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 };
 
 USTRUCT(BlueprintType)
@@ -53,6 +62,12 @@ struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGDialogue
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FText Dialogue;
 
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedWordsString;
+	
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedColorsString;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool CanPresentEvidence;
 };
@@ -68,7 +83,8 @@ struct FSI_ResponseDialogueArray : public FLGDialogueArray
 	TArray<FSI_ResponseDialogue> ResponseDialogueArray;
 
 	TArray<FSI_ResponseDialogue>* GetDialogueArray();
-	virtual FArrayProperty* GetArrayProperty() override;
+	virtual UScriptStruct* GetStructContainer() override;
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 };
 
 USTRUCT(BlueprintType)
@@ -85,13 +101,19 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGDialogue
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FText Dialogue;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedWordsString;
+	
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedColorsString;
+
+	UPROPERTY(VisibleAnywhere)
 	FString PressURL;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FSI_PressDialogueArray PressDialogue;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	FString ResponseURL;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -112,7 +134,8 @@ struct FSI_PrimaryDialogueArray : public FLGDialogueArray
 	TArray<FSI_PrimaryDialogue> PrimaryDialogueArray;
 	
 	TArray<FSI_PrimaryDialogue>* GetDialogueArray();
-	virtual FArrayProperty* GetArrayProperty() override;
+	virtual UScriptStruct* GetStructContainer() override;
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 };
 
 USTRUCT(BlueprintType)
@@ -128,9 +151,6 @@ struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FText SpeakerName;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FText Dialogue;
 };
 
 USTRUCT(BlueprintType)
@@ -144,7 +164,8 @@ struct FSI_CorrectedDialogueArray : public FLGDialogueArray
 	TArray<FSI_CorrectedDialogue> CorrectedDialogueArray;
 
 	TArray<FSI_CorrectedDialogue>* GetDialogueArray();
-	virtual FArrayProperty* GetArrayProperty() override;
+	virtual UScriptStruct* GetStructContainer() override;
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 };
 
 USTRUCT(BlueprintType)
@@ -160,9 +181,6 @@ struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FText SpeakerName;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FText Dialogue;	
 };
 
 USTRUCT(BlueprintType)
@@ -176,7 +194,8 @@ struct FSI_DefaultResponseArray : public FLGDialogueArray
 	TArray<FSI_DefaultResponse> DefaultResponseArray;
 
 	TArray<FSI_DefaultResponse>* GetDialogueArray();
-	virtual FArrayProperty* GetArrayProperty() override;
+	virtual UScriptStruct* GetStructContainer() override;
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 };
 
 USTRUCT(BlueprintType)
@@ -192,12 +211,13 @@ struct FSI_DialogueArrayData
 	UPROPERTY(VisibleAnywhere)
 	FString DialogueLabel;
 
-	TArray<FLGDialogueArray*> DialogueArrays;
+	UPROPERTY(EditAnywhere)
+	TArray<FLGDialogueArray> DialogueArrays;
 
-	void AddNewArrayByTag(const FGameplayTag& InStructTypeTag);
-	void RemoveArrayByTag(const FGameplayTag& InStructTypeTag);
-	bool ContainsArrayByTypeTag(const FGameplayTag& InStructTypeTag) const;
-	FLGDialogueArray* GetDialogueArrayByTag(const FGameplayTag& InStructTypeTag);
+	TArray<FLGDialogueArray*> DialogueArrayPtrs;
+
+	void AddNewArrayByTag(const FGameplayTag& InStructTypeTag, FLGCsvInfoImportPayload& OutPayload);
+	FLGDialogueArray* GetDialogueArrayByID(const FGuid& InDialogueArrayID);
 };
 
 USTRUCT(BlueprintType)
@@ -211,7 +231,7 @@ struct SI_PROTOTYPE_API FSI_PartDialogue
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DialogueURLs;
 
-	UPROPERTY(VisibleAnywhere, Category = "DialogueData")
+	UPROPERTY(EditAnywhere, Category = "DialogueData")
 	FSI_DialogueArrayData DialogueData;
 };
 

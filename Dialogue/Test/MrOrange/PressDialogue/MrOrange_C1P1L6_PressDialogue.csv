@@ -1,3 +1,3 @@
-"Key","PressLine","SpeakerName","Dialogue","CanPresentEvidence","DialogueID"
-"1","1","Player","One of those things seem a bit far fetched...","False","61578BD04FEE7974AAC265B938930767"
-"2","2","Mr Orange","Which one?","True","DCE81CBB4AFC5E71F52B33890813DB65"
+Key,PressLine,SpeakerName,Dialogue,EmphasizedWords,EmphasizedColors,CanPresentEvidence
+1,1,Player,One of those things seem a bit far fetched...,,,FALSE
+2,2,Mr Orange,Which one?,,,TRUE

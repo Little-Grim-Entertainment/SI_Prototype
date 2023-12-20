@@ -19,6 +19,7 @@ void ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(const FLGCsvInfoImport
 	RuntimeDataTableOperationParams.Caller = InImportPayload.Caller;
 	RuntimeDataTableOperationParams.CsvArrayTypeTag = InImportPayload.CsvArrayTypeTag;
 	RuntimeDataTableOperationParams.DialogueStructID = InImportPayload.DialogueStructID;
+	RuntimeDataTableOperationParams.DialogueArrayID = InImportPayload.DialogueArrayID;
 	RuntimeDataTableOperationParams.DialogueLabel = InImportPayload.DialogueLabel;
 	
 	if(!InCallbackDelegate.IsBound()) {UE_LOG(LogCsvDataProcessor, Warning, TEXT("Delegate is not bound."));}
@@ -26,7 +27,7 @@ void ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(const FLGCsvInfoImport
 	URuntimeDataTableObject::BuildGoogleSheetDownloadLinkAndGetAsCsv(TokenInfo, RuntimeDataTableOperationParams, InCallbackDelegate, InImportPayload.URL, true);
 }
 
-void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, FArrayProperty* InArrayProperty, const FName& InPropertyName)
+void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, UScriptStruct* InStructPtr, const FName& InPropertyName)
 {
 	if(!InCallbackInfo.bWasSuccessful) {return;}
 	
@@ -47,11 +48,12 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 	CSVInfo.CSVInfoResults = EasyCsvInfo;
 	ULGBlueprintFunctionLibrary::FNameArrayToFStringArray(EasyCsvInfo.CSV_Keys, CSVInfo.ExportKeys);
 
-	if(!InArrayProperty){UE_LOG(LogCsvDataProcessor, Error, TEXT("Invalid Array Property.")); return;}
+	FArrayProperty* ArrayProperty = FindFProperty<FArrayProperty>(InStructPtr, InPropertyName);
+	if(!ArrayProperty){UE_LOG(LogCsvDataProcessor, Error, TEXT("Failed to find ArrayProperty.")); return;}
 
-	if(!URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(InArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true)){UE_LOG(LogDemo, Warning, TEXT("UpdateArrayFromCsvInfo_Internal failed.")); return;}
+	if(!URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(ArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true)){UE_LOG(LogDemo, Warning, TEXT("UpdateArrayFromCsvInfo_Internal failed.")); return;}
 
-	FString CSVString = URuntimeDataTableObject::GenerateCsvFromArray_Internal(InArrayProperty, InArrayPtr, CSVInfo.ExportKeys, InCallbackInfo.Caller);
+	FString CSVString = URuntimeDataTableObject::GenerateCsvFromArray_Internal(ArrayProperty, InArrayPtr, CSVInfo.ExportKeys, InCallbackInfo.Caller);
 
 	FString StringToFilePath = ProjectSavePath + InCallbackInfo.FolderName;
 	
@@ -62,18 +64,18 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 
 	CSVInfo.CSVInfoResults = CsvInfoResults;
 		
-	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(InArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true))
+	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(ArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true))
 	{
 		if (!IsValid(InCallbackInfo.Caller) || !InCallbackInfo.Caller->Implements<ULGCsvProcessorInterface>()) {return;}
 		
 		if (ILGCsvProcessorInterface* DialogueProcessorObject = Cast<ILGCsvProcessorInterface>(InCallbackInfo.Caller))
 		{
-			DialogueProcessorObject->Execute_OnCsvProcessComplete(InCallbackInfo.Caller, CSVInfo);
+			DialogueProcessorObject->Execute_OnCsvProcessComplete(InCallbackInfo.Caller, InCallbackInfo, InStructPtr);
 
 			if(DialogueProcessorObject->Execute_StructTypeHasEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag))
 			{
 				FString EmbeddedSavePath = ProjectSavePath + "/" + InCallbackInfo.FolderName;
-				DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.DialogueLabel, InCallbackInfo.DialogueStructID);
+				DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.DialogueLabel, InCallbackInfo.DialogueStructID, InCallbackInfo.DialogueArrayID);
 			}
 		}
 	}

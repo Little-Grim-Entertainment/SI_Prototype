@@ -28,6 +28,7 @@ public class LGCsvDataProcessor : ModuleRules
 				"Core", 
 				"EasyCsv",
 				"GameplayTags",
+				"LGCoreLibrary",
 				"LGDialogueSystem",
 				"RuntimeDataTable",
 				// ... add other public dependencies that you statically link with here ...
@@ -40,7 +41,6 @@ public class LGCsvDataProcessor : ModuleRules
 			{
 				"CoreUObject",
 				"Engine",
-				"LGCoreLibrary",
 				"Slate",
 				"SlateCore",
 				// ... add private dependencies that you statically link with here ...	

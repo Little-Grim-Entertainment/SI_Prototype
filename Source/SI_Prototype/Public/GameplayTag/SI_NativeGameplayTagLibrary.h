@@ -69,8 +69,10 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Debug)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Debug_DisableAllMedia)
 
+	// Dialogue
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_BubbleDialogue)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_PrimaryDialogue)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_CorrectedDialogue)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Dialogue_Struct_DefaultResponse)

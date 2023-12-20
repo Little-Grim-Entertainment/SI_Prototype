@@ -164,6 +164,7 @@ void URuntimeDataTableObject::OnResponseReceived_GET_SheetAsCSV(
 	CallbackInfo.Caller = OperationParams.Caller;
 	CallbackInfo.CsvArrayTypeTag = OperationParams.CsvArrayTypeTag;
 	CallbackInfo.DialogueStructID = OperationParams.DialogueStructID;
+	CallbackInfo.DialogueArrayID = OperationParams.DialogueArrayID;
 	CallbackInfo.DialogueLabel = OperationParams.DialogueLabel;
 	CallbackInfo.bWasSuccessful = bWasSuccessful;
 	GenericValidateHttpResponse(Request, Response, CallbackInfo);

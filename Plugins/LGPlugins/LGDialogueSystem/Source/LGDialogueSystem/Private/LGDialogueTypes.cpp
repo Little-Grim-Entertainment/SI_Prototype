@@ -5,9 +5,18 @@
 
 DEFINE_LOG_CATEGORY(LogLGDialogue);
 
-FArrayProperty* FLGDialogueArray::GetArrayProperty()
+
+FLGDialogueArray::FLGDialogueArray() : DialogueArrayID(FGuid())
+{
+}
+
+UScriptStruct* FLGDialogueArray::GetStructContainer()
 {
 	return nullptr;
+}
+
+void FLGDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
+{
 }
 
 bool FLGDialogueArray::operator==(const FLGDialogueArray& OtherDialogue) const
@@ -20,7 +29,7 @@ bool FLGDialogueArray::operator!=(const FLGDialogueArray& OtherDialogue) const
 	return OtherDialogue.DialogueStructTypeTag != DialogueStructTypeTag;
 }
 
-FLGDialogue::FLGDialogue() : DialogueID(FGuid::NewGuid())
+FLGDialogue::FLGDialogue() : DialogueID(FGuid())
 {
 }
 

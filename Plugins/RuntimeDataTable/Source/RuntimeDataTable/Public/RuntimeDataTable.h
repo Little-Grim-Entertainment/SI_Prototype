@@ -45,6 +45,9 @@ struct FRuntimeDataTableCallbackInfo
 	FGuid DialogueStructID = FGuid();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FGuid DialogueArrayID = FGuid();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
 	FString DialogueLabel = "";
 
 	UPROPERTY()
@@ -86,6 +89,9 @@ struct FRuntimeDataTableOperationParams
 
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	FGuid DialogueStructID = FGuid();
+
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FGuid DialogueArrayID = FGuid();
 
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	FString DialogueLabel = "";

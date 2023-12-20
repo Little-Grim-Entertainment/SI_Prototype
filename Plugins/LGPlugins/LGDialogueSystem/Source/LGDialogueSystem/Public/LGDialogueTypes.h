@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+//#include "LGCoreTypes.h"
 #include "LGDialogueTypes.generated.h"
 
 class ULGDialogueDataAsset;
@@ -11,11 +12,40 @@ class ULGDialogueDataAsset;
 DECLARE_LOG_CATEGORY_EXTERN(LogLGDialogue, Log, All);
 
 USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGEmphasizedWord
+{
+	GENERATED_BODY()
+
+	
+};
+
+/*USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGDialogueGuid : public FLGGuid
+{
+	GENERATED_BODY()
+
+};
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGDialogueArrayGuid : public FLGDialogueGuid
+{
+	GENERATED_BODY()
+	
+};
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGDialogueDataGuid : public FLGDialogueGuid
+{
+	GENERATED_BODY()
+	
+};*/
+
+USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogueArray
 {
 	GENERATED_BODY()
 
-	FLGDialogueArray() {}
+	FLGDialogueArray();
 	virtual ~FLGDialogueArray(){}
 	
 	UPROPERTY(VisibleAnywhere)
@@ -24,14 +54,21 @@ struct LGDIALOGUESYSTEM_API FLGDialogueArray
 	UPROPERTY(VisibleAnywhere)
 	FName PropertyName;
 
-	virtual FArrayProperty* GetArrayProperty();
+	UPROPERTY(VisibleAnywhere)
+	FGuid DialogueArrayID;
+
+	UPROPERTY(EditAnywhere, meta = (RequiredAssetDataTags = "RowStructure=/Script/SI_Prototype.SI_PrimaryDialogue, /Script/SI_Prototype.SI_CorrectedDialogue, /Script/SI_Prototype.SI_DefaultResponse, /Script/SI_Prototype.SI_PressDialogue, /Script/SI_Prototype.SI_ResponseDialogue, /Script/SI_Prototype.SI_BubbleDialogue"))
+	TSoftObjectPtr<UDataTable> ConnectedDataTable;
+
+	virtual UScriptStruct* GetStructContainer();
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable);
 
 	bool operator==(const FLGDialogueArray& OtherDialogue) const;
 	bool operator!=(const FLGDialogueArray& OtherDialogue) const;
 };
 
 USTRUCT(BlueprintType)
-struct LGDIALOGUESYSTEM_API FLGDialogue
+struct LGDIALOGUESYSTEM_API FLGDialogue : public FTableRowBase
 {
 	GENERATED_BODY()
 

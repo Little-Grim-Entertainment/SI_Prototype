@@ -7,8 +7,6 @@
 #include "Dialogue/SI_DialogueTypes.h"
 #include "SI_DialogueDataAsset.generated.h"
 
-
-
 UCLASS()
 class SI_PROTOTYPE_API USI_DialogueDataAsset : public ULGDialogueDataAsset
 {
@@ -20,18 +18,23 @@ protected:
 
 	virtual void UpdateDialogue_Internal() override;
 
-	virtual void OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, const FGuid& InDialogueDataID) override;
+	virtual void OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, FGuid& InDialogueDataID, FGuid& InDialogueArrayID) override;
 	virtual bool StructTypeHasEmbeddedCsv_Implementation(const FGameplayTag& InStructType) override; 
+
+	virtual void UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr) override;
+	virtual void InitializeDialogueDataTableByIDs(UDataTable* InDataTable, const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
 	
-	virtual FArrayProperty* GetArrayPropertyByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID) override;
-	virtual void* GetDialogueStructArrayByTag(const FGameplayTag& InGameplayTag, const FGuid& InDialogueDataID, bool bReturnUScriptContainer = false) override;
+	virtual UScriptStruct* GetStructContainerByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
+	virtual UScriptStruct* GetStructTypeByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
+
+	virtual void* GetDialogueStructArrayByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
 	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag) override;
 	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag) override;
-	
+	virtual UDataTable* GenerateNewDataTable(UScriptStruct* InStructPtr, FRuntimeDataTableCallbackInfo& InCallbackInfo) override;
+		
 	FSI_DialogueArrayData* GetDialogueDataByID(const FGuid& InDialogueDataID);
-
-	FLGDialogueArray* GetDialogueStructArrayByTagAndID(const FGameplayTag& InStructTypeTag, const FGuid& InDialogueDataID);
-
+	FLGDialogueArray* GetDialogueArrayStructByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
+	
 	template <class StructPtr, class ArrayPtr>
 	TArray<ArrayPtr>* GetDialogueArrayFromStruct(FLGDialogueArray* InArrayPtr);
 
