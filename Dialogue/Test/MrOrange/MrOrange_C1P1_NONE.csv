@@ -1,9 +1,0 @@
-Key,Line,SpeakerName,Dialogue,EmphasizedWordsString,EmphasizedColorsString,PressURL,ResponseURL,IsTrueStatement
-1,1,Player,Hello Mr Orange. How are you?,,,,,TRUE
-2,2,Mr Orange,I'm great!,,,https://docs.google.com/spreadsheets/d/1CPopbKT_llS4tviSqTP11RVxe0uZFI3X8JdfjFZMkzM/edit#gid=1074326265,https://docs.google.com/spreadsheets/d/1CPopbKT_llS4tviSqTP11RVxe0uZFI3X8JdfjFZMkzM/edit#gid=1924750587,FALSE
-3,3,Player,Well that's good to hear.,,,,,TRUE
-4,4,Player,So what did Mr Blue give you earlier?,,,,,TRUE
-5,5,Mr Orange,"Oh, he gave me quite a lot!",,,,,TRUE
-6,6,Mr Orange,First thing he gave me were two tickets to tonights football game! Then he gave me twenty bucks to spend while I'm there! Finally he gave me his car!,"tonights, twenty","blue, red",https://docs.google.com/spreadsheets/d/1CPopbKT_llS4tviSqTP11RVxe0uZFI3X8JdfjFZMkzM/edit#gid=2030994417,https://docs.google.com/spreadsheets/d/1CPopbKT_llS4tviSqTP11RVxe0uZFI3X8JdfjFZMkzM/edit#gid=712025297,FALSE
-7,7,Player,"That is quite a lot. Well, I'll see you later!",,,,,TRUE
-8,8,Mr Orange,See ya!,,,,,TRUE

@@ -1,5 +1,5 @@
-Key,PressLine,SpeakerName,Dialogue,EmphasizedWords,EmphasizedColors,CanPresentEvidence
-1,1,Player,Really? That's not what I hear.,,,FALSE
-2,2,Mr Orange,What did you hear?,,,FALSE
-3,3,Player,Mr. Blue said your girlfriend dumped you this morning.,,,FALSE
-4,4,Mr Orange,What...? No way.,,,TRUE
+"Key","PressLine","SpeakerName","Dialogue","EmphasizedWordsString","EmphasizedColorsString","CanPresentEvidence","DialogueID"
+"1","1","Player","Really? That's not what I hear.","","","False","00000000000000000000000000000000"
+"2","2","Mr Orange","What did you hear?","","","False","00000000000000000000000000000000"
+"3","3","Player","Mr. Blue said your girlfriend dumped you this morning.","","","False","00000000000000000000000000000000"
+"4","4","Mr Orange","What...? No way.","","","True","00000000000000000000000000000000"

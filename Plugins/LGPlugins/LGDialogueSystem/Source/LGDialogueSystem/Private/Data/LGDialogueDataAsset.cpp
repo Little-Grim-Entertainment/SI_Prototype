@@ -54,7 +54,7 @@ void ULGDialogueDataAsset::InitializeDialogueDataTableByIDs(UDataTable* InDataTa
 	
 }
 
-UDataTable* ULGDialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructPtr,  FRuntimeDataTableCallbackInfo& InCallbackInfo)
+UDataTable* ULGDialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructPtr, const FString& InPackagePath, FRuntimeDataTableCallbackInfo& InCallbackInfo)
 {
 	return nullptr;
 }

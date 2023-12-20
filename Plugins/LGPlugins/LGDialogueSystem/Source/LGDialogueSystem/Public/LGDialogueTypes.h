@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-//#include "LGCoreTypes.h"
 #include "LGDialogueTypes.generated.h"
 
 class ULGDialogueDataAsset;
@@ -18,27 +17,6 @@ struct LGDIALOGUESYSTEM_API FLGEmphasizedWord
 
 	
 };
-
-/*USTRUCT(BlueprintType)
-struct LGDIALOGUESYSTEM_API FLGDialogueGuid : public FLGGuid
-{
-	GENERATED_BODY()
-
-};
-
-USTRUCT(BlueprintType)
-struct LGDIALOGUESYSTEM_API FLGDialogueArrayGuid : public FLGDialogueGuid
-{
-	GENERATED_BODY()
-	
-};
-
-USTRUCT(BlueprintType)
-struct LGDIALOGUESYSTEM_API FLGDialogueDataGuid : public FLGDialogueGuid
-{
-	GENERATED_BODY()
-	
-};*/
 
 USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogueArray

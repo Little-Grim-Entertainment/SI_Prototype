@@ -6,7 +6,7 @@
 DEFINE_LOG_CATEGORY(LogLGDialogue);
 
 
-FLGDialogueArray::FLGDialogueArray() : DialogueArrayID(FGuid())
+FLGDialogueArray::FLGDialogueArray() : DialogueArrayID(FGuid::NewGuid())
 {
 }
 

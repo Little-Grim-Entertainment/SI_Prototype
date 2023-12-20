@@ -275,7 +275,7 @@ FName USI_DialogueDataAsset::GetStructPropertyNameByTag(const FGameplayTag& InGa
 
 FName USI_DialogueDataAsset::GetStructTypeNameByTag(const FGameplayTag& InGameplayTag)
 {
-	FString TagString = InGameplayTag.ToString();
+	const FString TagString = InGameplayTag.ToString();
 	
 	int32 StartingIndex;
 	TagString.FindLastChar(TEXT('.'), StartingIndex);
@@ -285,18 +285,52 @@ FName USI_DialogueDataAsset::GetStructTypeNameByTag(const FGameplayTag& InGamepl
 	return FName(TagString.RightChop(StartingIndex + 1));
 }
 
-UDataTable* USI_DialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructPtr,  FRuntimeDataTableCallbackInfo& InCallbackInfo)
+void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr)
 {
-	FGuid DialogueDataGuidPtr = InCallbackInfo.DialogueStructID;
-	FGuid DialogueArrayGuidPtr = InCallbackInfo.DialogueArrayID;
+	const FString FileName = "DT_" + InCallbackInfo.FileName;
+	int32 ChopIndex = InCallbackInfo.FilePath.Find("Dialogue/");
+	const FString DialogueFolderPath = InCallbackInfo.FilePath.RightChop(ChopIndex + 9);
+
+	FString FilePath = UKismetSystemLibrary::GetProjectContentDirectory();
+	FilePath.Append("SI/Data/Dialogue/");
+	FilePath.Append(DialogueFolderPath);
+	FilePath.Append(InCallbackInfo.FolderName + "/");
+	FilePath.Append(FileName);
+
+	FString PackagePath = "/Game/";
+	ChopIndex = FilePath.Find("SI/");
+	PackagePath.Append(FilePath.RightChop(ChopIndex));
 	
-	FString PackagePath = "/Game/SI/Data/Dialogue/" + InCallbackInfo.FolderName + "/" + InCallbackInfo.FileName;
-	UPackage* Package = CreatePackage(*PackagePath);
+	const UDataTable* DataTable = LoadObject<UDataTable>(nullptr, *FilePath);
+	if(!IsValid(DataTable))
+	{
+		DataTable = GenerateNewDataTable(InStructPtr, PackagePath, InCallbackInfo);
+		if(!IsValid(DataTable))
+		{
+			UE_LOG(LogSI_Dialogue, Error, TEXT("Unable to generate new %s type data table."), *GetStructTypeNameByTag(InCallbackInfo.CsvArrayTypeTag).ToString());
+			return;
+		}
+		return;
+	}
+	
+	UE_LOG(LogSI_Dialogue, Warning, TEXT("Updating Data Table: %s."), *GetNameSafe(DataTable));
+}
+
+UDataTable* USI_DialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructPtr, const FString& InPackagePath, FRuntimeDataTableCallbackInfo& InCallbackInfo)
+{
+	const FGuid DialogueDataGuidPtr = InCallbackInfo.DialogueStructID;
+	const FGuid DialogueArrayGuidPtr = InCallbackInfo.DialogueArrayID;
+
+	UPackage* Package = CreatePackage(*InPackagePath);
 	Package->FullyLoad();
 
-	EObjectFlags Flags = RF_Public | RF_Standalone;
+	const EObjectFlags Flags = RF_Public | RF_Standalone;
 
-	UDataTable* NewDataTable = NewObject<UDataTable>(Package->GetOutermost(), UDataTable::StaticClass(), *InCallbackInfo.FileName, Flags);
+	const FString FileName = "DT_" + InCallbackInfo.FileName;
+
+	UDataTable* NewDataTable = NewObject<UDataTable>(Package->GetOutermost(), UDataTable::StaticClass(), *FileName, Flags);
+	if(!IsValid(NewDataTable)) {UE_LOG(LogSI_Dialogue, Error, TEXT("Unable to create new data table object for file: %s."), *InCallbackInfo.FileName); return nullptr;}
+	
 	NewDataTable->RowStruct = GetStructTypeByIDs(DialogueDataGuidPtr, DialogueArrayGuidPtr);
 
 	InitializeDialogueDataTableByIDs(NewDataTable, DialogueDataGuidPtr, DialogueArrayGuidPtr);
@@ -308,31 +342,16 @@ UDataTable* USI_DialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructP
 	SavePackageArgs.TopLevelFlags = Flags;
 	SavePackageArgs.SaveFlags = SAVE_NoError;
 	
-	FString PackageName = FPackageName::LongPackageNameToFilename(PackagePath, FPackageName::GetAssetPackageExtension());
-	UPackage::SavePackage(Package, NewDataTable, *PackageName, SavePackageArgs);
-
-	return NewDataTable;
-}
-
-void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr)
-{
-	FString FileName = "DT_" + InCallbackInfo.FileName;
-
-	FString FilePath = UKismetSystemLibrary::GetProjectContentDirectory();
-	FilePath.Append("/SI/Data/Dialogue/");
-	FilePath.Append(InCallbackInfo.FolderName + "/");
-	FilePath.Append(FileName);
-	
-	UDataTable* DataTable = LoadObject<UDataTable>(nullptr, *FilePath);
-	if(!IsValid(DataTable))
+	const FString PackageName = FPackageName::LongPackageNameToFilename(InPackagePath, FPackageName::GetAssetPackageExtension());
+	const bool SaveSuccess = UPackage::SavePackage(Package, NewDataTable, *PackageName, SavePackageArgs);
+	if(!SaveSuccess)
 	{
-		DataTable = GenerateNewDataTable(InStructPtr, InCallbackInfo);
-		if(!IsValid(DataTable))
-		{
-			UE_LOG(LogSI_Dialogue, Warning, TEXT("Unable to generate new %s type data table."), *GetStructTypeNameByTag(InCallbackInfo.CsvArrayTypeTag).ToString());
-			return;
-		}
+		UE_LOG(LogSI_Dialogue, Error, TEXT("Unable to save new data table: %s."), *PackageName);
+		return nullptr;
 	}
+
+	UE_LOG(LogSI_Dialogue, Warning, TEXT("Successfully saved new data table: %s."), *PackageName);
+	return NewDataTable;
 }
 
 void USI_DialogueDataAsset::InitializeDialogueDataTableByIDs(UDataTable* InDataTable, const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID)

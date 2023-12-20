@@ -74,7 +74,7 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 
 			if(DialogueProcessorObject->Execute_StructTypeHasEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag))
 			{
-				FString EmbeddedSavePath = ProjectSavePath + "/" + InCallbackInfo.FolderName;
+				FString EmbeddedSavePath = ProjectSavePath + InCallbackInfo.FolderName;
 				DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.DialogueLabel, InCallbackInfo.DialogueStructID, InCallbackInfo.DialogueArrayID);
 			}
 		}

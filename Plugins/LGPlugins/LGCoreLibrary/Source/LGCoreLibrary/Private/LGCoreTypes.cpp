@@ -2,7 +2,3 @@
 
 
 #include "LGCoreTypes.h"
-
-FLGGuid::FLGGuid(const FGuid& InGuid)
-{
-}

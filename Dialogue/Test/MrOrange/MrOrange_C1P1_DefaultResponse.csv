@@ -1,4 +1,4 @@
-Key,ResponseLine,SpeakerName,Dialogue,EmphasizedWords,EmphasizedColors
-1,1,Player,You should see this!,,
-2,2,Mr Orange,Uhh... what is that supposed to be?,,
-3,3,Player,Oh.. haha nevermind.,,
+"Key","CorrectedLine","SpeakerLine","SpeakerName","DialogueID"
+"1","0","0","Player","00000000000000000000000000000000"
+"2","0","0","Mr Orange","00000000000000000000000000000000"
+"3","0","0","Player","00000000000000000000000000000000"

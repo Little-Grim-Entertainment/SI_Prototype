@@ -30,7 +30,7 @@ protected:
 	virtual void* GetDialogueStructArrayByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
 	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag) override;
 	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag) override;
-	virtual UDataTable* GenerateNewDataTable(UScriptStruct* InStructPtr, FRuntimeDataTableCallbackInfo& InCallbackInfo) override;
+	virtual UDataTable* GenerateNewDataTable(UScriptStruct* InStructPtr, const FString& InPackagePath, FRuntimeDataTableCallbackInfo& InCallbackInfo) override;
 		
 	FSI_DialogueArrayData* GetDialogueDataByID(const FGuid& InDialogueDataID);
 	FLGDialogueArray* GetDialogueArrayStructByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
