@@ -3,12 +3,9 @@
 
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
 #include "LGCsvDataProcessorFunctionLibrary.h"
-#include "Data/Characters/SI_CharacterData.h"
-#include "DataTableEditorUtils.h"
 #include "LGDialogueTypes.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "GameplayTag/SI_NativeGameplayTagLibrary.h"
-#include "Kismet/DataTableFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UObject/SavePackage.h"
 
@@ -60,6 +57,10 @@ void USI_DialogueDataAsset::UpdateDialogue_Internal()
 			if(!CurrentPart.DialogueData.DialogueArrayPtrs.IsEmpty())
 			{
 				CurrentPart.DialogueData.DialogueArrayPtrs.Empty();
+			}
+			if(!CurrentPart.DialogueData.DialogueArrays.IsEmpty())
+			{
+				CurrentPart.DialogueData.DialogueArrays.Empty();
 			}
 			
 			for (FLGDialogueURL& CurrentURL : CurrentPart.DialogueURLs)
@@ -287,7 +288,7 @@ FName USI_DialogueDataAsset::GetStructTypeNameByTag(const FGameplayTag& InGamepl
 
 void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr)
 {
-	const FString FileName = "DT_" + InCallbackInfo.FileName;
+	FString FileName = "DT_" + InCallbackInfo.FileName;
 	int32 ChopIndex = InCallbackInfo.FilePath.Find("Dialogue/");
 	const FString DialogueFolderPath = InCallbackInfo.FilePath.RightChop(ChopIndex + 9);
 
@@ -300,8 +301,10 @@ void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCal
 	FString PackagePath = "/Game/";
 	ChopIndex = FilePath.Find("SI/");
 	PackagePath.Append(FilePath.RightChop(ChopIndex));
-	
-	const UDataTable* DataTable = LoadObject<UDataTable>(nullptr, *FilePath);
+
+	const FString PackageName = PackagePath + "." + FileName;
+
+	UDataTable* DataTable = LoadObject<UDataTable>(NULL, *PackageName);
 	if(!IsValid(DataTable))
 	{
 		DataTable = GenerateNewDataTable(InStructPtr, PackagePath, InCallbackInfo);
@@ -312,8 +315,39 @@ void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCal
 		}
 		return;
 	}
-	
+
 	UE_LOG(LogSI_Dialogue, Warning, TEXT("Updating Data Table: %s."), *GetNameSafe(DataTable));
+	UpdateDataTableRows(DataTable, InCallbackInfo);
+}
+
+void USI_DialogueDataAsset::UpdateDataTableRows(UDataTable* InDataTable, FRuntimeDataTableCallbackInfo& InCallbackInfo)
+{
+	FSI_DialogueArrayData* DialogueData = GetDialogueDataByID(InCallbackInfo.DialogueStructID);
+	if(!DialogueData) {return;}
+
+	FLGDialogueArray* DialogueArrayPtr = DialogueData->GetDialogueArrayByID(InCallbackInfo.DialogueArrayID);
+	if(!DialogueArrayPtr) {return;}
+
+	if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue)
+	{
+		UpdateDataTableStructByType<FSI_PrimaryDialogue, FSI_PrimaryDialogueArray>(InDataTable, DialogueArrayPtr);
+	}
+	else if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue)
+	{
+		UpdateDataTableStructByType<FSI_CorrectedDialogue, FSI_CorrectedDialogueArray>(InDataTable, DialogueArrayPtr);
+	}
+	else if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse)
+	{
+		UpdateDataTableStructByType<FSI_DefaultResponse, FSI_DefaultResponseArray>(InDataTable, DialogueArrayPtr);
+	}
+	else if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
+	{
+		UpdateDataTableStructByType<FSI_PressDialogue, FSI_PressDialogueArray>(InDataTable, DialogueArrayPtr);
+	}
+	else if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue)
+	{
+		UpdateDataTableStructByType<FSI_ResponseDialogue, FSI_ResponseDialogueArray>(InDataTable, DialogueArrayPtr);
+	}
 }
 
 UDataTable* USI_DialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructPtr, const FString& InPackagePath, FRuntimeDataTableCallbackInfo& InCallbackInfo)

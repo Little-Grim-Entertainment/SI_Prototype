@@ -1,4 +1,4 @@
-"Key","CorrectedLine","SpeakerLine","SpeakerName","DialogueID"
-"1","0","0","Player","00000000000000000000000000000000"
-"2","0","0","Mr Orange","00000000000000000000000000000000"
-"3","0","0","Player","00000000000000000000000000000000"
+"Key","ResponseLine","SpeakerName","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueID"
+"1","1","Player","You should see this!","","","8A464D3E4CE5BF7C6CBB5BAB55F88EBC"
+"2","2","Mr Orange","Uhh... what is that supposed to be?","","","BEA093AD4353235DE589ABBE9C51BF95"
+"3","3","Player","Oh.. haha nevermind.","","","8A1910D4409F145E8462C587953D9DED"

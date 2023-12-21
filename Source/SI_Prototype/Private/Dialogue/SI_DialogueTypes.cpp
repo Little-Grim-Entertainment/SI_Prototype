@@ -67,6 +67,42 @@ FSI_PrimaryDialogueArray::FSI_PrimaryDialogueArray()
 	PropertyName = "PrimaryDialogueArray";
 }
 
+void FSI_PrimaryDialogueArray::UpdateDataTableStructValues(TArray<FSI_PrimaryDialogue*>& OutDataTableStructArray)
+{
+	if(OutDataTableStructArray.Num() != PrimaryDialogueArray.Num()) {return;}
+	
+	for(int32 ArrayIndex = 0; ArrayIndex < PrimaryDialogueArray.Num(); ArrayIndex++)
+	{
+		OutDataTableStructArray[ArrayIndex]->Line = PrimaryDialogueArray[ArrayIndex].Line;
+		OutDataTableStructArray[ArrayIndex]->PressURL = PrimaryDialogueArray[ArrayIndex].PressURL;
+		OutDataTableStructArray[ArrayIndex]->PressDialogue = PrimaryDialogueArray[ArrayIndex].PressDialogue;
+		OutDataTableStructArray[ArrayIndex]->ResponseURL = PrimaryDialogueArray[ArrayIndex].ResponseURL;
+		OutDataTableStructArray[ArrayIndex]->ResponseDialogue = PrimaryDialogueArray[ArrayIndex].ResponseDialogue;
+		OutDataTableStructArray[ArrayIndex]->IsTrueStatement = PrimaryDialogueArray[ArrayIndex].IsTrueStatement;
+		OutDataTableStructArray[ArrayIndex]->SpeakerName = PrimaryDialogueArray[ArrayIndex].SpeakerName;
+		OutDataTableStructArray[ArrayIndex]->Dialogue = PrimaryDialogueArray[ArrayIndex].Dialogue;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedWordsString = PrimaryDialogueArray[ArrayIndex].EmphasizedWordsString;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedColorsString = PrimaryDialogueArray[ArrayIndex].EmphasizedColorsString;
+		OutDataTableStructArray[ArrayIndex]->DialogueID = PrimaryDialogueArray[ArrayIndex].DialogueID;
+	}
+}
+
+void FSI_CorrectedDialogueArray::UpdateDataTableStructValues(TArray<FSI_CorrectedDialogue*>& OutDataTableStructArray)
+{
+	if(OutDataTableStructArray.Num() != CorrectedDialogueArray.Num()) {return;}
+	
+	for(int32 ArrayIndex = 0; ArrayIndex < CorrectedDialogueArray.Num(); ArrayIndex++)
+	{
+		OutDataTableStructArray[ArrayIndex]->CorrectedLine = CorrectedDialogueArray[ArrayIndex].CorrectedLine;
+		OutDataTableStructArray[ArrayIndex]->SpeakerLine = CorrectedDialogueArray[ArrayIndex].SpeakerLine;
+		OutDataTableStructArray[ArrayIndex]->SpeakerName = CorrectedDialogueArray[ArrayIndex].SpeakerName;
+		OutDataTableStructArray[ArrayIndex]->Dialogue = CorrectedDialogueArray[ArrayIndex].Dialogue;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedWordsString = CorrectedDialogueArray[ArrayIndex].EmphasizedWordsString;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedColorsString = CorrectedDialogueArray[ArrayIndex].EmphasizedColorsString;
+		OutDataTableStructArray[ArrayIndex]->DialogueID = CorrectedDialogueArray[ArrayIndex].DialogueID;
+	}
+}
+
 TArray<FSI_PrimaryDialogue>* FSI_PrimaryDialogueArray::GetDialogueArray()
 {
 	return &PrimaryDialogueArray;
@@ -119,6 +155,21 @@ FSI_DefaultResponseArray::FSI_DefaultResponseArray()
 	PropertyName = "DefaultResponseArray";
 }
 
+void FSI_DefaultResponseArray::UpdateDataTableStructValues(TArray<FSI_DefaultResponse*>& OutDataTableStructArray)
+{
+	if(OutDataTableStructArray.Num() != DefaultResponseArray.Num()) {return;}
+	
+	for(int32 ArrayIndex = 0; ArrayIndex < DefaultResponseArray.Num(); ArrayIndex++)
+	{
+		OutDataTableStructArray[ArrayIndex]->ResponseLine = DefaultResponseArray[ArrayIndex].ResponseLine;
+		OutDataTableStructArray[ArrayIndex]->SpeakerName = DefaultResponseArray[ArrayIndex].SpeakerName;
+		OutDataTableStructArray[ArrayIndex]->Dialogue = DefaultResponseArray[ArrayIndex].Dialogue;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedWordsString = DefaultResponseArray[ArrayIndex].EmphasizedWordsString;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedColorsString = DefaultResponseArray[ArrayIndex].EmphasizedColorsString;
+		OutDataTableStructArray[ArrayIndex]->DialogueID = DefaultResponseArray[ArrayIndex].DialogueID;
+	}
+}
+
 TArray<FSI_DefaultResponse>* FSI_DefaultResponseArray::GetDialogueArray()
 {
 	return &DefaultResponseArray;
@@ -143,6 +194,22 @@ FSI_PressDialogueArray::FSI_PressDialogueArray()
 {
 	DialogueStructTypeTag = SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue;
 	PropertyName = "PressDialogueArray";
+}
+
+void FSI_PressDialogueArray::UpdateDataTableStructValues(TArray<FSI_PressDialogue*>& OutDataTableStructArray)
+{
+	if(OutDataTableStructArray.Num() != PressDialogueArray.Num()) {return;}
+	
+	for(int32 ArrayIndex = 0; ArrayIndex < PressDialogueArray.Num(); ArrayIndex++)
+	{
+		OutDataTableStructArray[ArrayIndex]->PressLine = PressDialogueArray[ArrayIndex].PressLine;
+		OutDataTableStructArray[ArrayIndex]->CanPresentEvidence = PressDialogueArray[ArrayIndex].CanPresentEvidence;
+		OutDataTableStructArray[ArrayIndex]->SpeakerName = PressDialogueArray[ArrayIndex].SpeakerName;
+		OutDataTableStructArray[ArrayIndex]->Dialogue = PressDialogueArray[ArrayIndex].Dialogue;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedWordsString = PressDialogueArray[ArrayIndex].EmphasizedWordsString;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedColorsString = PressDialogueArray[ArrayIndex].EmphasizedColorsString;
+		OutDataTableStructArray[ArrayIndex]->DialogueID = PressDialogueArray[ArrayIndex].DialogueID;
+	}
 }
 
 TArray<FSI_PressDialogue>* FSI_PressDialogueArray::GetDialogueArray()
@@ -171,6 +238,22 @@ FSI_ResponseDialogueArray::FSI_ResponseDialogueArray()
 	PropertyName = "ResponseDialogueArray";
 }
 
+
+void FSI_ResponseDialogueArray::UpdateDataTableStructValues(TArray<FSI_ResponseDialogue*>& OutDataTableStructArray)
+{
+	if(OutDataTableStructArray.Num() != ResponseDialogueArray.Num()) {return;}
+	
+	for(int32 ArrayIndex = 0; ArrayIndex < ResponseDialogueArray.Num(); ArrayIndex++)
+	{
+		OutDataTableStructArray[ArrayIndex]->ResponseLine = ResponseDialogueArray[ArrayIndex].ResponseLine;
+		OutDataTableStructArray[ArrayIndex]->IsEvidenceCorrect = ResponseDialogueArray[ArrayIndex].IsEvidenceCorrect;
+		OutDataTableStructArray[ArrayIndex]->SpeakerName = ResponseDialogueArray[ArrayIndex].SpeakerName;
+		OutDataTableStructArray[ArrayIndex]->Dialogue = ResponseDialogueArray[ArrayIndex].Dialogue;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedWordsString = ResponseDialogueArray[ArrayIndex].EmphasizedWordsString;
+		OutDataTableStructArray[ArrayIndex]->EmphasizedColorsString = ResponseDialogueArray[ArrayIndex].EmphasizedColorsString;
+		OutDataTableStructArray[ArrayIndex]->DialogueID = ResponseDialogueArray[ArrayIndex].DialogueID;
+	}
+}
 
 TArray<FSI_ResponseDialogue>* FSI_ResponseDialogueArray::GetDialogueArray()
 {

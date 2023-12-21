@@ -28,6 +28,7 @@ public class SI_Prototype : ModuleRules
 			"MoviePlayer",
 			"MovieScene", 
 			"NavigationSystem", 
+			"RuntimeDataTable",
 			"Slate", 
 			"SlateCore",
 			"UMG", 

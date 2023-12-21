@@ -49,6 +49,10 @@ void ULGDialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCall
 	UE_LOG(LogLGDialogue, Warning, TEXT("Unable to generate new %s type data table."), *GetStructTypeNameByTag(InCallbackInfo.CsvArrayTypeTag).ToString());
 }
 
+void ULGDialogueDataAsset::UpdateDataTableRows(UDataTable* InDataTable, FRuntimeDataTableCallbackInfo& InCallbackInfo)
+{
+}
+
 void ULGDialogueDataAsset::InitializeDialogueDataTableByIDs(UDataTable* InDataTable, const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID)
 {
 	
@@ -67,6 +71,8 @@ void ULGDialogueDataAsset::OnSheetStructsDownloaded(FRuntimeDataTableCallbackInf
 	const FGameplayTag& CsvArrayType = InCallbackInfo.CsvArrayTypeTag;
 	const FName& PropertyName = GetStructPropertyNameByTag(CsvArrayType);
 	void* DialogueStructArray = GetDialogueStructArrayByIDs(DialogueDataGuidPtr, DialogueArrayGuidPtr);
+
+	
 	
 	ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(InCallbackInfo, DialogueStructArray, GetStructContainerByIDs(DialogueDataGuidPtr, DialogueArrayGuidPtr), PropertyName);
 }

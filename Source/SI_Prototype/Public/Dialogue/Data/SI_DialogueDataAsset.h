@@ -22,6 +22,7 @@ protected:
 	virtual bool StructTypeHasEmbeddedCsv_Implementation(const FGameplayTag& InStructType) override; 
 
 	virtual void UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr) override;
+	virtual void UpdateDataTableRows(UDataTable* InDataTable, FRuntimeDataTableCallbackInfo& InCallbackInfo) override;
 	virtual void InitializeDialogueDataTableByIDs(UDataTable* InDataTable, const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
 	
 	virtual UScriptStruct* GetStructContainerByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
@@ -37,6 +38,9 @@ protected:
 	
 	template <class StructPtr, class ArrayPtr>
 	TArray<ArrayPtr>* GetDialogueArrayFromStruct(FLGDialogueArray* InArrayPtr);
+
+	template <class StructPtr, class ArrayPtr>
+	void UpdateDataTableStructByType(UDataTable* InDataTable, FLGDialogueArray* InArrayPtr);
 
 private:
 
@@ -64,4 +68,17 @@ TArray<ArrayPtr>* USI_DialogueDataAsset::GetDialogueArrayFromStruct(FLGDialogueA
 		return DialogueArray;
 	}
 	return nullptr;
+}
+
+template <class StructType, class ArrayType>
+void USI_DialogueDataAsset::UpdateDataTableStructByType(UDataTable* InDataTable, FLGDialogueArray* InArrayPtr)
+{
+	TArray<StructType*> DialoguePtrs;
+	InDataTable->GetAllRows(TEXT(""),DialoguePtrs);
+
+	ArrayType* ArrayPtr = static_cast<ArrayType*>(InArrayPtr);
+	if(!ArrayPtr) {return;}
+
+	ArrayPtr->UpdateDataTableStructValues(DialoguePtrs);
+	InDataTable->MarkPackageDirty();
 }

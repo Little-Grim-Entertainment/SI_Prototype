@@ -34,13 +34,10 @@ struct LGDIALOGUESYSTEM_API FLGDialogueArray
 
 	UPROPERTY(VisibleAnywhere)
 	FGuid DialogueArrayID;
-
-	UPROPERTY(EditAnywhere, meta = (RequiredAssetDataTags = "RowStructure=/Script/SI_Prototype.SI_PrimaryDialogue, /Script/SI_Prototype.SI_CorrectedDialogue, /Script/SI_Prototype.SI_DefaultResponse, /Script/SI_Prototype.SI_PressDialogue, /Script/SI_Prototype.SI_ResponseDialogue, /Script/SI_Prototype.SI_BubbleDialogue"))
-	TSoftObjectPtr<UDataTable> ConnectedDataTable;
-
+	
 	virtual UScriptStruct* GetStructContainer();
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable);
-
+	
 	bool operator==(const FLGDialogueArray& OtherDialogue) const;
 	bool operator!=(const FLGDialogueArray& OtherDialogue) const;
 };
@@ -52,6 +49,18 @@ struct LGDIALOGUESYSTEM_API FLGDialogue : public FTableRowBase
 
 	FLGDialogue();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FText SpeakerName;
+	
+	UPROPERTY(VisibleAnywhere)
+	FText Dialogue;
+
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedWordsString;
+
+	UPROPERTY(VisibleAnywhere)
+	FString EmphasizedColorsString;
+	
 	UPROPERTY(VisibleAnywhere)
 	FGuid DialogueID;
 

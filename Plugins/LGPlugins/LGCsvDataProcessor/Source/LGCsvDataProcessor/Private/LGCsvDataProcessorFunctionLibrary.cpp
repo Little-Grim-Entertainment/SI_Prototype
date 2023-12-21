@@ -59,11 +59,8 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 	
 	if(!UEasyCsv::SaveStringToFile(CSVString,StringToFilePath, InCallbackInfo.FileName)){UE_LOG(LogDemo, Error, TEXT("SaveStringToFile failed.")); return;}
 
-	FEasyCsvInfo CsvInfoResults;
-	if(!UEasyCsv::MakeCsvInfoStructFromFile(CsvFilePath, CsvInfoResults)){UE_LOG(LogDemo, Error, TEXT("MakeCsvInfoStructFromFile failed.")); return;}
+	if(!UEasyCsv::MakeCsvInfoStructFromFile(CsvFilePath, CSVInfo.CSVInfoResults)){UE_LOG(LogDemo, Error, TEXT("MakeCsvInfoStructFromFile failed.")); return;}
 
-	CSVInfo.CSVInfoResults = CsvInfoResults;
-		
 	if(URuntimeDataTableObject::UpdateArrayFromCsvInfo_Internal(ArrayProperty, InArrayPtr, InCallbackInfo.Caller, CSVInfo.CSVInfoResults, true))
 	{
 		if (!IsValid(InCallbackInfo.Caller) || !InCallbackInfo.Caller->Implements<ULGCsvProcessorInterface>()) {return;}
