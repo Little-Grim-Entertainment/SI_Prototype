@@ -48,6 +48,18 @@ struct LGDIALOGUESYSTEM_API FLGDialogue : public FTableRowBase
 	GENERATED_BODY()
 
 	FLGDialogue();
+	
+	UPROPERTY(VisibleAnywhere)
+	FGuid DialogueID;
+
+	bool operator==(const FLGDialogue& OtherDialogue) const;
+	bool operator!=(const FLGDialogue& OtherDialogue) const;
+};
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGConversationDialogue : public FLGDialogue
+{
+	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FText SpeakerName;
@@ -60,12 +72,6 @@ struct LGDIALOGUESYSTEM_API FLGDialogue : public FTableRowBase
 
 	UPROPERTY(VisibleAnywhere)
 	FString EmphasizedColorsString;
-	
-	UPROPERTY(VisibleAnywhere)
-	FGuid DialogueID;
-
-	bool operator==(const FLGDialogue& OtherDialogue) const;
-	bool operator!=(const FLGDialogue& OtherDialogue) const;
 };
 
 USTRUCT(BlueprintType)

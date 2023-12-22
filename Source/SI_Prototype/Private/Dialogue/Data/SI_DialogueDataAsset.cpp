@@ -9,46 +9,168 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "UObject/SavePackage.h"
 
-void USI_DialogueDataAsset::InitializeDialogueLabels()
+void USI_DialogueDataAsset::InitializeDialogueLabels(const ESI_MainDialogueTypes& InMainDialogueType)
 {
-	for(FSI_CaseDialogue& CurrentCase : CaseDialogue)
+	switch (InMainDialogueType)
 	{
-		const FString DialogueLabel = "C" +  FString::FromInt(CurrentCase.CaseNumber);
-	
-		for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+		case MD_CaseDialogue:
 		{
-			FString UpdatedDialogueLabel = DialogueLabel + ("P" + FString::FromInt(CurrentPart.PartNumber));
-			CurrentPart.DialogueData.DialogueLabel = UpdatedDialogueLabel;
+			for(FSI_CaseDialogue& CurrentCase : CaseDialogue)
+			{
+				FString DialogueLabel = "InvalidCase";
+				FString CaseNameNoSpace = CurrentCase.GetCaseNameNoSpace();
+
+				DialogueLabel = CaseNameNoSpace;
+				DialogueLabel.Append("_");
+
+				for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+				{
+					DialogueLabel.Append("P" + FString::FromInt(CurrentPart.PartNumber));
+					CurrentPart.DialogueData.DialogueLabel = DialogueLabel;
+				}
+			}
+		}
+		case MD_DefaultDialogue:
+		{
+			DefaultDialogue.DefaultDialogueData.DialogueLabel = "DefaultDialogue";
+		}
+		case MD_BubbleDialogue:
+		{
+			DefaultBubbleDialogue.BubbleDialogueData.DialogueLabel = "";
+		}
+		default:
+		{
+			break;
 		}
 	}
 }
 
-void USI_DialogueDataAsset::InitializeFileNames()
+void USI_DialogueDataAsset::InitializeFileNames(const ESI_MainDialogueTypes& InMainDialogueType)
 {
 	const FString InitialFileName = FolderName + "_";
-	
-	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
+
+	switch (InMainDialogueType)
 	{
-		for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+		case MD_CaseDialogue:
 		{
-			FString DialogueID = CurrentPart.DialogueData.DialogueLabel;
-			FString FileNameWithID = InitialFileName + DialogueID;
+			for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
+			{
+				for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+				{
+					FString DialogueLabel = CurrentPart.DialogueData.DialogueLabel;
+					FString FileNameWithID = InitialFileName + DialogueLabel;
 			
-			for (FLGDialogueURL& CurrentURL : CurrentPart.DialogueURLs)
+					for (FLGDialogueURL& CurrentURL : CurrentPart.DialogueURLs)
+					{
+						CurrentURL.FileName = FileNameWithID + "_" + GetStructTypeNameByTag(CurrentURL.DialogueStructType).ToString();
+					}
+				}
+			}
+		}
+		case MD_DefaultDialogue:
+		{
+			FString DialogueLabel = DefaultDialogue.DefaultDialogueData.DialogueLabel;
+			FString FileNameWithID = InitialFileName + DialogueLabel;
+			for (FLGDialogueURL& CurrentURL : DefaultDialogue.DefaultDialogueURLs)
 			{
 				CurrentURL.FileName = FileNameWithID + "_" + GetStructTypeNameByTag(CurrentURL.DialogueStructType).ToString();
 			}
+		}
+		case MD_BubbleDialogue:
+		{	
+			DefaultBubbleDialogue.RandomBubbleDialogueURL.FileName = InitialFileName + "Default" + GetStructTypeNameByTag(DefaultBubbleDialogue.RandomBubbleDialogueURL.DialogueStructType).ToString();
+			DefaultBubbleDialogue.SeeNickBubbleDialogueURL.FileName = InitialFileName + "SeeNick" + GetStructTypeNameByTag(DefaultBubbleDialogue.RandomBubbleDialogueURL.DialogueStructType).ToString();
+		}
+		default:
+		{
+			break;
 		}
 	}
 }
 
 USI_DialogueDataAsset::USI_DialogueDataAsset()
 {
-	InitializeDialogueLabels();
-	InitializeFileNames();
 }
 
 void USI_DialogueDataAsset::UpdateDialogue_Internal()
+{
+	UpdateDefaultDialogue();
+	UpdateBubbleDialogue();
+	UpdateCaseDialogue();
+}
+
+void USI_DialogueDataAsset::UpdateDefaultDialogue()
+{
+	for (FLGDialogueURL& CurrentURL : DefaultDialogue.DefaultDialogueURLs)
+	{
+		FString FilePath = UKismetSystemLibrary::GetProjectDirectory();
+		FilePath.Append(FolderPath + "/");
+		FilePath.Append(FolderName + "/");
+		FilePath.Append("DefaultDialogue/");
+
+		const FSI_DialogueArrayData& DefaultDialogueArrayData = DefaultDialogue.DefaultDialogueData;
+
+		FString DialogueLabel = DefaultDialogueArrayData.DialogueLabel;
+		const FGuid DialogueDataID = DefaultDialogueArrayData.DialogueDataID;
+		
+		FLGCsvInfoImportPayload ImportPayload;
+		ImportPayload.DialogueStructID = DialogueDataID;
+		ImportPayload.DialogueLabel = DialogueLabel;
+		ImportPayload.Caller = this;
+		ImportPayload.FolderName = FolderName;
+		ImportPayload.FilePath = FilePath;
+		ImportPayload.FileName = CurrentURL.FileName;
+		ImportPayload.URL = CurrentURL.URL;
+		ImportPayload.CsvArrayTypeTag = CurrentURL.DialogueStructType;
+			
+		DefaultDialogue.DefaultDialogueData.AddNewArrayByTag(CurrentURL.DialogueStructType, ImportPayload);
+		OnPayLoadReadyForImport(ImportPayload);
+	}
+}
+
+void USI_DialogueDataAsset::UpdateBubbleDialogue()
+{
+	FString FilePath = UKismetSystemLibrary::GetProjectDirectory();
+	FilePath.Append(FolderPath + "/");
+	FilePath.Append(FolderName + "/");
+	FilePath.Append("BubbleDialogue/");
+
+	FSI_DialogueArrayData& BubbleDialogueArrayData = DefaultBubbleDialogue.BubbleDialogueData;
+	FLGDialogueURL DialogueURL = DefaultBubbleDialogue.RandomBubbleDialogueURL;
+
+	FString DialogueLabel = BubbleDialogueArrayData.DialogueLabel;
+	FGuid DialogueDataID = BubbleDialogueArrayData.DialogueDataID;
+								
+	FLGCsvInfoImportPayload RandomBubbleImportPayload;
+	RandomBubbleImportPayload.DialogueStructID = DialogueDataID;
+	RandomBubbleImportPayload.DialogueLabel = DialogueLabel;
+	RandomBubbleImportPayload.Caller = this;
+	RandomBubbleImportPayload.FolderName = FolderName;
+	RandomBubbleImportPayload.FilePath = FilePath;
+	RandomBubbleImportPayload.FileName = DialogueURL.FileName;
+	RandomBubbleImportPayload.URL = DialogueURL.URL;
+	RandomBubbleImportPayload.CsvArrayTypeTag = DialogueURL.DialogueStructType;
+			
+	DefaultBubbleDialogue.BubbleDialogueData.AddNewArrayByTag(DialogueURL.DialogueStructType, RandomBubbleImportPayload);
+	OnPayLoadReadyForImport(RandomBubbleImportPayload);
+
+	DialogueURL = DefaultBubbleDialogue.SeeNickBubbleDialogueURL;
+	
+	FLGCsvInfoImportPayload SeeNickBubbleImportPayload;
+	SeeNickBubbleImportPayload.DialogueStructID = DialogueDataID;
+	SeeNickBubbleImportPayload.DialogueLabel = "";
+	SeeNickBubbleImportPayload.Caller = this;
+	SeeNickBubbleImportPayload.FolderName = FolderName;
+	SeeNickBubbleImportPayload.FilePath = FilePath;
+	SeeNickBubbleImportPayload.FileName = DialogueURL.FileName;
+	SeeNickBubbleImportPayload.URL = DialogueURL.URL;
+	SeeNickBubbleImportPayload.CsvArrayTypeTag = DialogueURL.DialogueStructType;
+			
+	DefaultBubbleDialogue.BubbleDialogueData.AddNewArrayByTag(DialogueURL.DialogueStructType, SeeNickBubbleImportPayload);
+	OnPayLoadReadyForImport(SeeNickBubbleImportPayload);
+}
+
+void USI_DialogueDataAsset::UpdateCaseDialogue()
 {
 	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
 	{
@@ -67,6 +189,8 @@ void USI_DialogueDataAsset::UpdateDialogue_Internal()
 			{
 				FString FilePath = UKismetSystemLibrary::GetProjectDirectory();
 				FilePath.Append(FolderPath + "/");
+				FilePath.Append(FolderName + "/");
+				FilePath.Append(CurrentCase.GetCaseNameNoSpace() + "/");
 				
 				FString DialogueLabel = CurrentPart.DialogueData.DialogueLabel;
 				
@@ -108,7 +232,7 @@ void USI_DialogueDataAsset::OnRequestCheckForEmbeddedCsv_Implementation(const FG
 			ImportPayload.DialogueLabel = DialogueLabel;
 			ImportPayload.Caller = this;
 			ImportPayload.FolderName = "PressDialogue";
-			ImportPayload.FilePath = InSavePath + "/";
+			ImportPayload.FilePath = InSavePath + "PressDialogue" + "/";
 			ImportPayload.FileName = FolderName + "_" + DialogueLabel + "_PressDialogue";
 			ImportPayload.URL = CurrentPrimaryDialogue.PressURL;
 			ImportPayload.CsvArrayTypeTag = SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue;
@@ -126,7 +250,7 @@ void USI_DialogueDataAsset::OnRequestCheckForEmbeddedCsv_Implementation(const FG
 			ImportPayload.DialogueLabel = DialogueLabel;
 			ImportPayload.Caller = this;
 			ImportPayload.FolderName = "ResponseDialogue";
-			ImportPayload.FilePath = InSavePath + "/";
+			ImportPayload.FilePath = InSavePath + "ResponseDialogue" + "/";
 			ImportPayload.FileName = FolderName + "_" + DialogueLabel + "_ResponseDialogue";
 			ImportPayload.URL = CurrentPrimaryDialogue.PressURL;
 			ImportPayload.CsvArrayTypeTag = SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue;
@@ -201,6 +325,14 @@ UScriptStruct* USI_DialogueDataAsset::GetStructTypeByIDs(const FGuid& InDialogue
 			return FSI_ResponseDialogue::StaticStruct();
 		}
 	}
+	else if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue)
+	{
+		FSI_BubbleDialogueArray* BubbleDialogueArray = static_cast<FSI_BubbleDialogueArray*>(DialogueArrayPtr);;
+		if(BubbleDialogueArray)
+		{
+			return FSI_BubbleDialogue::StaticStruct();
+		}
+	}
 	return nullptr;
 }
 
@@ -237,21 +369,38 @@ void* USI_DialogueDataAsset::GetDialogueStructArrayByIDs(const FGuid& InDialogue
 	{
 		return ResponseDialogueArray;
 	}
+	TArray<FSI_BubbleDialogue>* BubbleDialogueArray = GetDialogueArrayFromStruct<FSI_BubbleDialogueArray, FSI_BubbleDialogue>(DialogueArrayPtr);
+	if(BubbleDialogueArray)
+	{
+		return BubbleDialogueArray;
+	}
 
 	return Super::GetDialogueStructArrayByIDs(InDialogueDataID, InDialogueArrayID);
 }
 
 FSI_DialogueArrayData* USI_DialogueDataAsset::GetDialogueDataByID(const FGuid& InDialogueDataID)
 {
+	FSI_DialogueArrayData& DefaultDialogueArrayData = DefaultDialogue.DefaultDialogueData;
+	if(DefaultDialogueArrayData.DialogueDataID == InDialogueDataID)
+	{
+		return &DefaultDialogueArrayData;
+	}
+
+	FSI_DialogueArrayData& BubbleDialogueArrayData = DefaultBubbleDialogue.BubbleDialogueData;
+	if(BubbleDialogueArrayData.DialogueDataID == InDialogueDataID)
+	{
+		return &BubbleDialogueArrayData;
+	}
+	
 	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
 	{
 		for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
 		{
-			FSI_DialogueArrayData& DialogueArrayData = CurrentPart.DialogueData;
+			FSI_DialogueArrayData& CaseDialogueArrayData = CurrentPart.DialogueData;
 
-			if(InDialogueDataID == DialogueArrayData.DialogueDataID)
+			if(InDialogueDataID == CaseDialogueArrayData.DialogueDataID)
 			{
-				return &DialogueArrayData;
+				return &CaseDialogueArrayData;
 			}
 		}
 	}
@@ -295,7 +444,6 @@ void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCal
 	FString FilePath = UKismetSystemLibrary::GetProjectContentDirectory();
 	FilePath.Append("SI/Data/Dialogue/");
 	FilePath.Append(DialogueFolderPath);
-	FilePath.Append(InCallbackInfo.FolderName + "/");
 	FilePath.Append(FileName);
 
 	FString PackagePath = "/Game/";
@@ -347,6 +495,10 @@ void USI_DialogueDataAsset::UpdateDataTableRows(UDataTable* InDataTable, FRuntim
 	else if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue)
 	{
 		UpdateDataTableStructByType<FSI_ResponseDialogue, FSI_ResponseDialogueArray>(InDataTable, DialogueArrayPtr);
+	}
+	else if(DialogueArrayPtr->DialogueStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue)
+	{
+		UpdateDataTableStructByType<FSI_BubbleDialogue, FSI_BubbleDialogueArray>(InDataTable, DialogueArrayPtr);
 	}
 }
 
@@ -400,7 +552,6 @@ void USI_DialogueDataAsset::InitializeDialogueDataTableByIDs(UDataTable* InDataT
 }
 
 #if WITH_EDITOR
-
 // Called when a property is changed in the editor
 void USI_DialogueDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
@@ -410,8 +561,18 @@ void USI_DialogueDataAsset::PostEditChangeProperty(FPropertyChangedEvent& Proper
 
 	if (MemberPropertyName == GET_MEMBER_NAME_CHECKED(USI_DialogueDataAsset, CaseDialogue))
 	{
-		InitializeDialogueLabels();
-		InitializeFileNames();
+		InitializeDialogueLabels(MD_CaseDialogue);
+		InitializeFileNames(MD_CaseDialogue);
+	}
+	else if(MemberPropertyName == GET_MEMBER_NAME_CHECKED(USI_DialogueDataAsset, DefaultDialogue))
+	{
+		InitializeDialogueLabels(MD_DefaultDialogue);
+		InitializeFileNames(MD_DefaultDialogue);
+	}
+	else if (MemberPropertyName == GET_MEMBER_NAME_CHECKED(USI_DialogueDataAsset, DefaultBubbleDialogue))
+	{
+		InitializeDialogueLabels(MD_BubbleDialogue);
+		InitializeFileNames(MD_BubbleDialogue);
 	}
 }
 #endif

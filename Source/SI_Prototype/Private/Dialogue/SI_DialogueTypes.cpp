@@ -2,6 +2,7 @@
 
 
 #include "Dialogue/SI_DialogueTypes.h"
+#include "Data/Cases/SI_CaseData.h"
 #include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogSI_Dialogue);
@@ -46,6 +47,13 @@ void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag
 		DialogueArrayPtrs.Add(NewResponseDialogueArray);
 		DialogueArrays.Add(*NewResponseDialogueArray);
 		OutPayload.DialogueArrayID = NewResponseDialogueArray->DialogueArrayID;
+	}
+	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue)
+	{
+		FSI_BubbleDialogueArray* NewBubbleDialogueArray = new FSI_BubbleDialogueArray();
+		DialogueArrayPtrs.Add(NewBubbleDialogueArray);
+		DialogueArrays.Add(*NewBubbleDialogueArray);
+		OutPayload.DialogueArrayID = NewBubbleDialogueArray->DialogueArrayID;
 	}	
 }
 
@@ -59,6 +67,21 @@ FLGDialogueArray* FSI_DialogueArrayData::GetDialogueArrayByID(const FGuid& InDia
 		}
 	}
 	return nullptr;
+}
+
+FString FSI_CaseDialogue::GetCaseNameNoSpace() const
+{
+	if(!IsValid(CaseReference)) {return "NONE";}
+
+	FString CaseNameNoSpace = CaseReference->CaseName.ToString();
+	int32 SpaceIndex;
+	CaseNameNoSpace.FindChar(' ', SpaceIndex);
+	if(SpaceIndex != INDEX_NONE)
+	{
+		CaseNameNoSpace.RemoveAt(SpaceIndex);
+	}
+
+	return CaseNameNoSpace;
 }
 
 FSI_PrimaryDialogueArray::FSI_PrimaryDialogueArray()
@@ -187,6 +210,42 @@ void FSI_DefaultResponseArray::InitializeDialogueDataTable(UDataTable* InDataTab
 	for (int32 CurrentIndex = 0; CurrentIndex < DefaultResponseArray.Num(); CurrentIndex++)
 	{
 		InDataTable->AddRow(FName(FString::FromInt(CurrentIndex + 1)), DefaultResponseArray[CurrentIndex]);
+	}
+}
+
+FSI_BubbleDialogueArray::FSI_BubbleDialogueArray()
+{
+	DialogueStructTypeTag = SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue;
+	PropertyName = "BubbleDialogueArray";
+}
+
+void FSI_BubbleDialogueArray::UpdateDataTableStructValues(TArray<FSI_BubbleDialogue*>& OutDataTableStructArray)
+{
+	if(OutDataTableStructArray.Num() != BubbleDialogueArray.Num()) {return;}
+	
+	for(int32 ArrayIndex = 0; ArrayIndex < BubbleDialogueArray.Num(); ArrayIndex++)
+	{
+		OutDataTableStructArray[ArrayIndex]->DialogueID = BubbleDialogueArray[ArrayIndex].DialogueID;
+	}
+}
+
+TArray<FSI_BubbleDialogue>* FSI_BubbleDialogueArray::GetDialogueArray()
+{
+	return &BubbleDialogueArray;
+}
+
+UScriptStruct* FSI_BubbleDialogueArray::GetStructContainer()
+{
+	return StaticStruct();
+}
+
+void FSI_BubbleDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
+{
+	if(!IsValid(InDataTable)){return;}
+
+	for (int32 CurrentIndex = 0; CurrentIndex < BubbleDialogueArray.Num(); CurrentIndex++)
+	{
+		InDataTable->AddRow(FName(FString::FromInt(CurrentIndex + 1)), BubbleDialogueArray[CurrentIndex]);
 	}
 }
 

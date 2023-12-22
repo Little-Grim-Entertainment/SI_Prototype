@@ -1,0 +1,3 @@
+"Key","PressLine","CanPresentEvidence","CorrectEvidence","SpeakerName","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueID"
+"1","1","False","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","Player","One of those things seem a bit far fetched...","","","953E5B354E7A3967E7DE289F4FDFA73E"
+"2","2","True","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","Mr Orange","Which one?","","","A8FF09874C9268BE68624799AB3E7B14"

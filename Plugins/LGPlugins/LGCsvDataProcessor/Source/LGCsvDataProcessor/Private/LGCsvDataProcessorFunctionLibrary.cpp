@@ -35,7 +35,7 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 	ERuntimeDataTableBackupResultCode RuntimeDataTableBackupResultCode;
 	FString ProjectSavePath = InCallbackInfo.FilePath;
 
-	FString CsvFilePath = ProjectSavePath + InCallbackInfo.FolderName + "/" + InCallbackInfo.FileName + ".csv";
+	FString CsvFilePath = ProjectSavePath + "/" + InCallbackInfo.FileName + ".csv";
 
 	if(!URuntimeDataTableObject::ValidateGoogleSheetsDownloadAndLoadBackupIfNeeded(InCallbackInfo, EasyCsvInfo, RuntimeDataTableBackupResultCode, CsvFilePath, CsvFilePath))
 	{
@@ -55,7 +55,7 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 
 	FString CSVString = URuntimeDataTableObject::GenerateCsvFromArray_Internal(ArrayProperty, InArrayPtr, CSVInfo.ExportKeys, InCallbackInfo.Caller);
 
-	FString StringToFilePath = ProjectSavePath + InCallbackInfo.FolderName;
+	FString StringToFilePath = ProjectSavePath;
 	
 	if(!UEasyCsv::SaveStringToFile(CSVString,StringToFilePath, InCallbackInfo.FileName)){UE_LOG(LogDemo, Error, TEXT("SaveStringToFile failed.")); return;}
 
@@ -71,7 +71,7 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 
 			if(DialogueProcessorObject->Execute_StructTypeHasEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag))
 			{
-				FString EmbeddedSavePath = ProjectSavePath + InCallbackInfo.FolderName;
+				FString EmbeddedSavePath = ProjectSavePath;
 				DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.DialogueLabel, InCallbackInfo.DialogueStructID, InCallbackInfo.DialogueArrayID);
 			}
 		}

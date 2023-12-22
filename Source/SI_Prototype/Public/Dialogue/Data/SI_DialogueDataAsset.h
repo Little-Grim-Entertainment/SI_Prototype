@@ -17,7 +17,7 @@ class SI_PROTOTYPE_API USI_DialogueDataAsset : public ULGDialogueDataAsset
 protected:
 
 	virtual void UpdateDialogue_Internal() override;
-
+	
 	virtual void OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, FGuid& InDialogueDataID, FGuid& InDialogueArrayID) override;
 	virtual bool StructTypeHasEmbeddedCsv_Implementation(const FGameplayTag& InStructType) override; 
 
@@ -46,12 +46,19 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Dialogue")
 	FSI_DefaultDialogue DefaultDialogue;
+
+	UPROPERTY(EditAnywhere, Category = "Dialogue")
+	FSI_DefaultBubbleDialogue DefaultBubbleDialogue;
 	
 	UPROPERTY(EditAnywhere, Category = "Dialogue")
 	TArray<FSI_CaseDialogue> CaseDialogue;
 
-	void InitializeDialogueLabels();
-	void InitializeFileNames();
+	void UpdateDefaultDialogue();
+	void UpdateBubbleDialogue();
+	void UpdateCaseDialogue();
+	
+	void InitializeDialogueLabels(const ESI_MainDialogueTypes& InMainDialogueType);
+	void InitializeFileNames(const ESI_MainDialogueTypes& InMainDialogueType);
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;

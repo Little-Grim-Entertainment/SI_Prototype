@@ -7,12 +7,22 @@
 #include "LGDialogueTypes.h"
 #include "SI_DialogueTypes.generated.h"
 
+class USI_CaseData;
 DECLARE_LOG_CATEGORY_EXTERN(LogSI_Dialogue, Log, All);
 
 class ASI_Evidence;
 
+UENUM()
+enum ESI_MainDialogueTypes : uint8
+{
+	MD_NONE				UMETA(DisplayName = "NONE"),
+	MD_DefaultDialogue	UMETA(DisplayName = "DefaultDialogue"),
+	MD_BubbleDialogue   UMETA(DisplayName = "BubbleDialogue"),
+	MD_CaseDialogue		UMETA(DisplayName = "CaseDialogue"),
+};
+
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGDialogue
+struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
@@ -44,7 +54,7 @@ struct FSI_PressDialogueArray : public FLGDialogueArray
 };
 
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGDialogue
+struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
@@ -73,7 +83,7 @@ struct FSI_ResponseDialogueArray : public FLGDialogueArray
 };
 
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGDialogue
+struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
@@ -114,7 +124,7 @@ struct FSI_PrimaryDialogueArray : public FLGDialogueArray
 };
 
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGDialogue
+struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
@@ -143,7 +153,7 @@ struct FSI_CorrectedDialogueArray : public FLGDialogueArray
 };
 
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGDialogue
+struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
@@ -158,12 +168,41 @@ struct FSI_DefaultResponseArray : public FLGDialogueArray
 
 	FSI_DefaultResponseArray();
 
+	UPROPERTY(VisibleAnywhere)
+	FGuid DialogueID;
+
 	UPROPERTY()
 	TArray<FSI_DefaultResponse> DefaultResponseArray;
 
 	void UpdateDataTableStructValues(TArray<FSI_DefaultResponse*>& OutDataTableStructArray);
 
 	TArray<FSI_DefaultResponse>* GetDialogueArray();
+	virtual UScriptStruct* GetStructContainer() override;
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
+};
+
+USTRUCT(BlueprintType)
+struct SI_PROTOTYPE_API FSI_BubbleDialogue : public FLGDialogue
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString BubbleTest;
+};
+
+USTRUCT(BlueprintType)
+struct FSI_BubbleDialogueArray : public FLGDialogueArray
+{
+	GENERATED_BODY()
+
+	FSI_BubbleDialogueArray();
+
+	UPROPERTY()
+	TArray<FSI_BubbleDialogue> BubbleDialogueArray;
+
+	void UpdateDataTableStructValues(TArray<FSI_BubbleDialogue*>& OutDataTableStructArray);
+
+	TArray<FSI_BubbleDialogue>* GetDialogueArray();
 	virtual UScriptStruct* GetStructContainer() override;
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 };
@@ -181,7 +220,7 @@ struct FSI_DialogueArrayData
 	UPROPERTY(VisibleAnywhere)
 	FString DialogueLabel;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	TArray<FLGDialogueArray> DialogueArrays;
 
 	TArray<FLGDialogueArray*> DialogueArrayPtrs;
@@ -211,23 +250,27 @@ struct SI_PROTOTYPE_API FSI_CaseDialogue
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 CaseNumber;
+	USI_CaseData* CaseReference;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FSI_PartDialogue> PartDialogue;
+
+	FString GetCaseNameNoSpace() const;
 };
 
 USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_DefaultDialogue
 {
 	GENERATED_BODY()
-
 	UPROPERTY(EditAnywhere, Category = "URLs")
-	FLGDialogueURL DefaultDialogueURL;
+	TArray<FLGDialogueURL> DefaultDialogueURLs;
+
+	UPROPERTY(EditAnywhere, Category = "DialogueData")
+	FSI_DialogueArrayData DefaultDialogueData;
 };
 
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_BubbleDialogue
+struct SI_PROTOTYPE_API FSI_DefaultBubbleDialogue
 {
 	GENERATED_BODY()
 
@@ -236,4 +279,7 @@ struct SI_PROTOTYPE_API FSI_BubbleDialogue
 
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	FLGDialogueURL SeeNickBubbleDialogueURL;
+
+	UPROPERTY(EditAnywhere, Category = "DialogueData")
+	FSI_DialogueArrayData BubbleDialogueData;
 };
