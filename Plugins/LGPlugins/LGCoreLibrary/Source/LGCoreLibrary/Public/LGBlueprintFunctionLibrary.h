@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "LGBlueprintFunctionLibrary.generated.h"
 
@@ -18,5 +19,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Array Conversion")
 	static void FNameArrayToFStringArray(const TArray<FName>& InNameArray, TArray<FString>& OutStringArray);
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay Tags")
+	static FString GetLastValueInTagAsString(const FGameplayTag& InGameplayTag);
 	
 };

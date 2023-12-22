@@ -11,3 +11,15 @@ void ULGBlueprintFunctionLibrary::FNameArrayToFStringArray(const TArray<FName>& 
 		OutStringArray.Add(CurrentString);
 	}
 }
+
+FString ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(const FGameplayTag& InGameplayTag)
+{
+	const FString TagString = InGameplayTag.ToString();
+	
+	int32 StartingIndex;
+	TagString.FindLastChar(TEXT('.'), StartingIndex);
+
+	if(StartingIndex == INDEX_NONE) {return "NONE";}
+	
+	return TagString.RightChop(StartingIndex + 1);
+}

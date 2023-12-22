@@ -19,7 +19,7 @@ namespace SI_CharacterGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_PrimroseCadwell)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_ShirleyKnockout)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_ThomasLockheart)
-
+	
 	// Other NPCs	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type)
@@ -29,4 +29,8 @@ namespace SI_CharacterGameplayTagLibrary
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Officer)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Officer_Female)
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Officer_Male)
+
+	// Test Characters
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Test)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Test_MrOrange)
 }

@@ -44,6 +44,9 @@ protected:
 
 private:
 
+	UPROPERTY(EditAnywhere, Category = "FileInfo", meta=(Categories="Character"))
+	FGameplayTag CharacterTag;
+
 	UPROPERTY(EditAnywhere, Category = "Dialogue")
 	FSI_DefaultDialogue DefaultDialogue;
 

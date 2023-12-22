@@ -2,6 +2,8 @@
 
 
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
+
+#include "LGBlueprintFunctionLibrary.h"
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "LGDialogueTypes.h"
 #include "AssetRegistry/AssetRegistryModule.h"
@@ -47,6 +49,7 @@ void USI_DialogueDataAsset::InitializeDialogueLabels(const ESI_MainDialogueTypes
 
 void USI_DialogueDataAsset::InitializeFileNames(const ESI_MainDialogueTypes& InMainDialogueType)
 {
+	FolderName = ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(CharacterTag);
 	const FString InitialFileName = FolderName + "_";
 
 	switch (InMainDialogueType)
@@ -101,14 +104,22 @@ void USI_DialogueDataAsset::UpdateDialogue_Internal()
 
 void USI_DialogueDataAsset::UpdateDefaultDialogue()
 {
+	FSI_DialogueArrayData& DefaultDialogueArrayData = DefaultDialogue.DefaultDialogueData;
+	if(!DefaultDialogueArrayData.DialogueArrayPtrs.IsEmpty())
+	{
+		DefaultDialogueArrayData.DialogueArrayPtrs.Empty();
+	}
+	if(!DefaultDialogueArrayData.DialogueArrays.IsEmpty())
+	{
+		DefaultDialogueArrayData.DialogueArrays.Empty();
+	}
+	
 	for (FLGDialogueURL& CurrentURL : DefaultDialogue.DefaultDialogueURLs)
 	{
 		FString FilePath = UKismetSystemLibrary::GetProjectDirectory();
 		FilePath.Append(FolderPath + "/");
 		FilePath.Append(FolderName + "/");
 		FilePath.Append("DefaultDialogue/");
-
-		const FSI_DialogueArrayData& DefaultDialogueArrayData = DefaultDialogue.DefaultDialogueData;
 
 		FString DialogueLabel = DefaultDialogueArrayData.DialogueLabel;
 		const FGuid DialogueDataID = DefaultDialogueArrayData.DialogueDataID;
@@ -130,12 +141,21 @@ void USI_DialogueDataAsset::UpdateDefaultDialogue()
 
 void USI_DialogueDataAsset::UpdateBubbleDialogue()
 {
+	FSI_DialogueArrayData& BubbleDialogueArrayData = DefaultBubbleDialogue.BubbleDialogueData;
+	if(!BubbleDialogueArrayData.DialogueArrayPtrs.IsEmpty())
+	{
+		BubbleDialogueArrayData.DialogueArrayPtrs.Empty();
+	}
+	if(!BubbleDialogueArrayData.DialogueArrays.IsEmpty())
+	{
+		BubbleDialogueArrayData.DialogueArrays.Empty();
+	}
+	
 	FString FilePath = UKismetSystemLibrary::GetProjectDirectory();
 	FilePath.Append(FolderPath + "/");
 	FilePath.Append(FolderName + "/");
 	FilePath.Append("BubbleDialogue/");
 
-	FSI_DialogueArrayData& BubbleDialogueArrayData = DefaultBubbleDialogue.BubbleDialogueData;
 	FLGDialogueURL DialogueURL = DefaultBubbleDialogue.RandomBubbleDialogueURL;
 
 	FString DialogueLabel = BubbleDialogueArrayData.DialogueLabel;
@@ -425,14 +445,7 @@ FName USI_DialogueDataAsset::GetStructPropertyNameByTag(const FGameplayTag& InGa
 
 FName USI_DialogueDataAsset::GetStructTypeNameByTag(const FGameplayTag& InGameplayTag)
 {
-	const FString TagString = InGameplayTag.ToString();
-	
-	int32 StartingIndex;
-	TagString.FindLastChar(TEXT('.'), StartingIndex);
-
-	if(StartingIndex == INDEX_NONE) {return Super::GetStructTypeNameByTag(InGameplayTag);}
-	
-	return FName(TagString.RightChop(StartingIndex + 1));
+	return FName(ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(InGameplayTag));
 }
 
 void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr)

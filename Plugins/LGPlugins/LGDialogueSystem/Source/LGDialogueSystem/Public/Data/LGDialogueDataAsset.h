@@ -31,7 +31,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "FileInfo")
 	FString FolderPath;
 	
-	UPROPERTY(EditAnywhere, Category = "FileInfo")
+	UPROPERTY(VisibleAnywhere, Category = "FileInfo")
 	FString FolderName;
 
 	void OnPayLoadReadyForImport(const FLGCsvInfoImportPayload& InImportPayload);
