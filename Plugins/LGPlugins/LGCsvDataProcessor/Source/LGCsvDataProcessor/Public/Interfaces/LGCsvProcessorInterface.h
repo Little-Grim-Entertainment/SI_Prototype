@@ -22,15 +22,17 @@ class LGCSVDATAPROCESSOR_API ILGCsvProcessorInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
+	// This gets called once the CSVs have successfully been downloaded.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
 	void OnCsvProcessComplete(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr);
 
+	// This should be overriden to get any embedded CSVs and process them as well.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
 	void OnRequestCheckForEmbeddedCsv(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, FGuid& InDialogueDataID, FGuid& InDialogueArrayID);
 
+	// Use if there is a quick check to determine if OnRequestCheckForEmbeddedCsv should be ran.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
 	bool StructTypeHasEmbeddedCsv(const FGameplayTag& InStructType);
 };
