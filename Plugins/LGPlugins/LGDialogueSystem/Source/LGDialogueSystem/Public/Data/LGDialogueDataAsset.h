@@ -25,6 +25,7 @@ public:
 	virtual void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
 
 	virtual void OnCsvProcessComplete_Implementation(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr) override;
+	virtual const FGameplayTag& GetCharacterTag();
 
 protected:
 

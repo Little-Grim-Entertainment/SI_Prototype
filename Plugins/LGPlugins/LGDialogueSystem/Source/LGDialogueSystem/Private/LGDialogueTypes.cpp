@@ -2,11 +2,16 @@
 
 
 #include "LGDialogueTypes.h"
+#include "Data/LGDialogueDataAsset.h"
 
 DEFINE_LOG_CATEGORY(LogLGDialogue);
 
 
 FLGDialogueArray::FLGDialogueArray() : DialogueArrayID(FGuid::NewGuid())
+{
+}
+
+void FLGDialogueArray::SetDataTable(UDataTable* InDataTable)
 {
 }
 
@@ -41,4 +46,12 @@ bool FLGDialogue::operator==(const FLGDialogue& OtherDialogue) const
 bool FLGDialogue::operator!=(const FLGDialogue& OtherDialogue) const
 {
 	return OtherDialogue.DialogueID != DialogueID;
+}
+
+FLGCharacterDialogue::FLGCharacterDialogue()
+{
+	if(IsValid(CharacterDialogueData))
+	{
+		CharacterTag = CharacterDialogueData->GetCharacterTag();
+	}
 }

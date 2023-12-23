@@ -32,7 +32,9 @@ protected:
 	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag) override;
 	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag) override;
 	virtual UDataTable* GenerateNewDataTable(UScriptStruct* InStructPtr, const FString& InPackagePath, FRuntimeDataTableCallbackInfo& InCallbackInfo) override;
-		
+
+	virtual const FGameplayTag& GetCharacterTag() override;
+	
 	FSI_DialogueArrayData* GetDialogueDataByID(const FGuid& InDialogueDataID);
 	FLGDialogueArray* GetDialogueArrayStructByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
 	
@@ -47,14 +49,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = "FileInfo", meta=(Categories="Character"))
 	FGameplayTag CharacterTag;
 
-	UPROPERTY(EditAnywhere, Category = "Dialogue")
-	FSI_DefaultDialogue DefaultDialogue;
+	UPROPERTY(EditAnywhere, Category = "Dialogue | DialogueData")
+	FSI_DefaultDialogueData DefaultDialogue;
 
-	UPROPERTY(EditAnywhere, Category = "Dialogue")
-	FSI_DefaultBubbleDialogue DefaultBubbleDialogue;
+	UPROPERTY(EditAnywhere, Category = "Dialogue | DialogueData")
+	FSI_DefaultBubbleDialogueData DefaultBubbleDialogue;
 	
-	UPROPERTY(EditAnywhere, Category = "Dialogue")
-	TArray<FSI_CaseDialogue> CaseDialogue;
+	UPROPERTY(EditAnywhere, Category = "Dialogue | DialogueData")
+	TArray<FSI_CaseDialogueData> CaseDialogue;
 
 	void UpdateDefaultDialogue();
 	void UpdateBubbleDialogue();

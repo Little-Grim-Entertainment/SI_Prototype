@@ -19,6 +19,11 @@ void ULGDialogueDataAsset::OnCsvProcessComplete_Implementation(FRuntimeDataTable
 	UE_LOG(LogLGDialogue, Warning, TEXT("Dilogue Asset Interaction Complete!"));
 }
 
+const FGameplayTag& ULGDialogueDataAsset::GetCharacterTag()
+{
+	return FGameplayTag::EmptyTag;
+}
+
 UScriptStruct* ULGDialogueDataAsset::GetStructContainerByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID)
 {
 	return nullptr;

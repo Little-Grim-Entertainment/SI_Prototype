@@ -7,6 +7,7 @@
 #include "LGDialogueTypes.generated.h"
 
 class ULGDialogueDataAsset;
+class UDataTable;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogLGDialogue, Log, All);
 
@@ -34,6 +35,8 @@ struct LGDIALOGUESYSTEM_API FLGDialogueArray
 
 	UPROPERTY(VisibleAnywhere)
 	FGuid DialogueArrayID;
+
+	virtual void SetDataTable(UDataTable* InDataTable);
 	
 	virtual UScriptStruct* GetStructContainer();
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable);
@@ -62,7 +65,7 @@ struct LGDIALOGUESYSTEM_API FLGConversationDialogue : public FLGDialogue
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FText SpeakerName;
+	FGameplayTag SpeakerTag;
 	
 	UPROPERTY(VisibleAnywhere)
 	FText Dialogue;
@@ -94,9 +97,11 @@ struct LGDIALOGUESYSTEM_API FLGCharacterDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText CharacterName;
+	FLGCharacterDialogue();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FGameplayTag CharacterTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<ULGDialogueDataAsset*> DialogueData; 
+	ULGDialogueDataAsset* CharacterDialogueData = nullptr;
 };

@@ -1,3 +1,3 @@
-"Key","ResponseLine","IsEvidenceCorrect","SpeakerName","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueID"
-"1","0","False","Player","One of those things seem a bit far fetched...","","","233B414441F065D552197AA79EF3E78F"
-"2","0","False","Mr Orange","Which one?","","","9FB30A464B4B47EE6362108311BF8464"
+"Key","ResponseLine","IsEvidenceCorrect","SpeakerTag","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueID"
+"1","0","False","(TagName=""Character.Main.NickSpade"")","One of those things seem a bit far fetched...","","","55681B1D465CE43926BECD9D5158F283"
+"2","0","False","(TagName=""Character.Test.MrOrange"")","Which one?","","","F88E8DA04709B510A2B0919FD566CB6B"

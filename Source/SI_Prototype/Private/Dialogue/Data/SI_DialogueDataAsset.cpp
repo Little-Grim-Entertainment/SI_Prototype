@@ -7,6 +7,7 @@
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "LGDialogueTypes.h"
 #include "AssetRegistry/AssetRegistryModule.h"
+#include "Data/SI_DialogueDataTable.h"
 #include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UObject/SavePackage.h"
@@ -17,7 +18,7 @@ void USI_DialogueDataAsset::InitializeDialogueLabels(const ESI_MainDialogueTypes
 	{
 		case MD_CaseDialogue:
 		{
-			for(FSI_CaseDialogue& CurrentCase : CaseDialogue)
+			for(FSI_CaseDialogueData& CurrentCase : CaseDialogue)
 			{
 				FString DialogueLabel = "InvalidCase";
 				FString CaseNameNoSpace = CurrentCase.GetCaseNameNoSpace();
@@ -25,7 +26,7 @@ void USI_DialogueDataAsset::InitializeDialogueLabels(const ESI_MainDialogueTypes
 				DialogueLabel = CaseNameNoSpace;
 				DialogueLabel.Append("_");
 
-				for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+				for (FSI_PartDialogueData& CurrentPart : CurrentCase.PartDialogue)
 				{
 					DialogueLabel.Append("P" + FString::FromInt(CurrentPart.PartNumber));
 					CurrentPart.DialogueData.DialogueLabel = DialogueLabel;
@@ -56,9 +57,9 @@ void USI_DialogueDataAsset::InitializeFileNames(const ESI_MainDialogueTypes& InM
 	{
 		case MD_CaseDialogue:
 		{
-			for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
+			for (FSI_CaseDialogueData& CurrentCase : CaseDialogue)
 			{
-				for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+				for (FSI_PartDialogueData& CurrentPart : CurrentCase.PartDialogue)
 				{
 					FString DialogueLabel = CurrentPart.DialogueData.DialogueLabel;
 					FString FileNameWithID = InitialFileName + DialogueLabel;
@@ -192,9 +193,9 @@ void USI_DialogueDataAsset::UpdateBubbleDialogue()
 
 void USI_DialogueDataAsset::UpdateCaseDialogue()
 {
-	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
+	for (FSI_CaseDialogueData& CurrentCase : CaseDialogue)
 	{
-		for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+		for (FSI_PartDialogueData& CurrentPart : CurrentCase.PartDialogue)
 		{
 			if(!CurrentPart.DialogueData.DialogueArrayPtrs.IsEmpty())
 			{
@@ -412,9 +413,9 @@ FSI_DialogueArrayData* USI_DialogueDataAsset::GetDialogueDataByID(const FGuid& I
 		return &BubbleDialogueArrayData;
 	}
 	
-	for (FSI_CaseDialogue& CurrentCase : CaseDialogue)
+	for (FSI_CaseDialogueData& CurrentCase : CaseDialogue)
 	{
-		for (FSI_PartDialogue& CurrentPart : CurrentCase.PartDialogue)
+		for (FSI_PartDialogueData& CurrentPart : CurrentCase.PartDialogue)
 		{
 			FSI_DialogueArrayData& CaseDialogueArrayData = CurrentPart.DialogueData;
 
@@ -513,6 +514,8 @@ void USI_DialogueDataAsset::UpdateDataTableRows(UDataTable* InDataTable, FRuntim
 	{
 		UpdateDataTableStructByType<FSI_BubbleDialogue, FSI_BubbleDialogueArray>(InDataTable, DialogueArrayPtr);
 	}
+
+	InDataTable->PostEditChange();
 }
 
 UDataTable* USI_DialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructPtr, const FString& InPackagePath, FRuntimeDataTableCallbackInfo& InCallbackInfo)
@@ -527,10 +530,17 @@ UDataTable* USI_DialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructP
 
 	const FString FileName = "DT_" + InCallbackInfo.FileName;
 
-	UDataTable* NewDataTable = NewObject<UDataTable>(Package->GetOutermost(), UDataTable::StaticClass(), *FileName, Flags);
+	USI_DialogueDataTable* NewDataTable = NewObject<USI_DialogueDataTable>(Package->GetOutermost(), USI_DialogueDataTable::StaticClass(), *FileName, Flags);
 	if(!IsValid(NewDataTable)) {UE_LOG(LogSI_Dialogue, Error, TEXT("Unable to create new data table object for file: %s."), *InCallbackInfo.FileName); return nullptr;}
 	
 	NewDataTable->RowStruct = GetStructTypeByIDs(DialogueDataGuidPtr, DialogueArrayGuidPtr);
+	NewDataTable->CharacterTag = GetCharacterTag();
+
+	FLGDialogueArray* DialogueArray = GetDialogueArrayStructByIDs(DialogueDataGuidPtr, DialogueArrayGuidPtr);
+	if(DialogueArray)
+	{
+		DialogueArray->SetDataTable(NewDataTable);
+	}
 
 	InitializeDialogueDataTableByIDs(NewDataTable, DialogueDataGuidPtr, DialogueArrayGuidPtr);
 
@@ -551,6 +561,11 @@ UDataTable* USI_DialogueDataAsset::GenerateNewDataTable(UScriptStruct* InStructP
 
 	UE_LOG(LogSI_Dialogue, Warning, TEXT("Successfully saved new data table: %s."), *PackageName);
 	return NewDataTable;
+}
+
+const FGameplayTag& USI_DialogueDataAsset::GetCharacterTag()
+{
+	return CharacterTag;
 }
 
 void USI_DialogueDataAsset::InitializeDialogueDataTableByIDs(UDataTable* InDataTable, const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID)
