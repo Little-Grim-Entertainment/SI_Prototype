@@ -27,13 +27,13 @@ struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	int32 PressLine;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	bool CanPresentEvidence;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="CanPresentEvidence", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(EditCondition="CanPresentEvidence", EditConditionHides))
 	TSubclassOf<ASI_Evidence> CorrectEvidence;
 };
 
@@ -63,10 +63,10 @@ struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	int32 ResponseLine;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	bool IsEvidenceCorrect;
 };
 
@@ -96,23 +96,23 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	int32 Line;
 
-	UPROPERTY(VisibleAnywhere)
-	FString PressURL;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
 	FSI_PressDialogueArray PressDialogue;
-	
-	UPROPERTY(VisibleAnywhere)
-	FString ResponseURL;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
 	FSI_ResponseDialogueArray ResponseDialogue;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
     bool IsTrueStatement;
+
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
+	FString PressURL;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
+	FString ResponseURL;
 };
 
 USTRUCT(BlueprintType)
@@ -141,10 +141,10 @@ struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue", BlueprintReadOnly)
 	int32 CorrectedLine;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue", BlueprintReadOnly)
 	int32 SpeakerLine;
 };
 
@@ -174,7 +174,7 @@ struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGConversationDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	int32 ResponseLine;
 };
 
@@ -207,7 +207,7 @@ struct SI_PROTOTYPE_API FSI_BubbleDialogue : public FLGDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	FString BubbleTest;
 };
 

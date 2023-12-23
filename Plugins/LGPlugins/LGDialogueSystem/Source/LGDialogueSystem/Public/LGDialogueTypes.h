@@ -52,7 +52,7 @@ struct LGDIALOGUESYSTEM_API FLGDialogue : public FTableRowBase
 
 	FLGDialogue();
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
 	FGuid DialogueID;
 
 	bool operator==(const FLGDialogue& OtherDialogue) const;
@@ -64,16 +64,16 @@ struct LGDIALOGUESYSTEM_API FLGConversationDialogue : public FLGDialogue
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	FGameplayTag SpeakerTag;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="SpeakerTag"))
 	FText Dialogue;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="SpeakerTag"))
 	FString EmphasizedWordsString;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="SpeakerTag"))
 	FString EmphasizedColorsString;
 };
 
