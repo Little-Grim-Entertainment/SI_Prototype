@@ -15,15 +15,15 @@ UCLASS()
 class SI_PROTOTYPE_API ASI_NPC_Interactable : public ASI_NPC, public ISI_InteractInterface
 {
 	GENERATED_BODY()
-	
+
+public:
+		
+	ASI_NPC_Interactable();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* NPC_Cam;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* NickCam;
-	
-public:
-		
-	ASI_NPC_Interactable();
 
 	UPROPERTY()
 	class ASI_NPCController_Interactable* AIController;
@@ -42,6 +42,10 @@ protected:
 
 	virtual void BeginPlay() override;
 
+#if WITH_EDITOR
+	virtual void SetupPreviewCharacter() override;
+#endif
+		
 	UFUNCTION()
 	void OnBeginOverlap(ASI_Nick* InNickActor);
 	UFUNCTION()

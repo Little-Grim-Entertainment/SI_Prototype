@@ -31,7 +31,8 @@ public class SI_Prototype : ModuleRules
 			"RuntimeDataTable",
 			"Slate", 
 			"SlateCore",
-			"UMG", 
+			"UMG",
+			"UnrealEd",
 			"StateTreeModule",
 			"SmartObjectsModule",
 			
