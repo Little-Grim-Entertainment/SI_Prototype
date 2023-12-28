@@ -3,7 +3,6 @@
 
 #include "Characters/SI_NPC_Interactable.h"
 #include "Components/Scene/SI_InteractableComponent.h"
-#include "BehaviorTree/BehaviorTree.h"
 #include "Components/WidgetComponent.h"
 #include "Camera/CameraComponent.h"
 #include "UI/SI_InteractionPrompt.h"
@@ -44,6 +43,20 @@ void ASI_NPC_Interactable::BeginPlay()
 		InteractableComponent->OnPlayerEndOverlap.AddDynamic(this, &ThisClass::OnEndOverlap);	
 	}
 }
+
+#if WITH_EDITOR
+void ASI_NPC_Interactable::SetupPreviewCharacter()
+{
+	Super::SetupPreviewCharacter();
+
+	if(IsValid(InteractableComponent)){InteractableComponent->DestroyComponent(true);}
+	if(IsValid(InteractionIcon)){InteractionIcon->DestroyComponent(true);}
+	if(IsValid(InteractionPrompt)){InteractionPrompt->DestroyComponent(true);}
+	if(IsValid(NickCam)){NickCam->DestroyComponent(true);}
+	if(IsValid(NPC_Cam)){NPC_Cam->DestroyComponent(true);}
+	if(IsValid(NickPosition)){NickPosition->DestroyComponent(true);}
+}
+#endif
 
 void ASI_NPC_Interactable::OnBeginOverlap(ASI_Nick* InNickActor)
 {

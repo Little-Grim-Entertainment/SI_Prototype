@@ -6,6 +6,7 @@
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_CharacterManager.generated.h"
 
+class ASI_Character;
 class USI_PartData;
 class USI_CharacterData;
 
@@ -17,9 +18,11 @@ class SI_PROTOTYPE_API USI_CharacterManager : public USI_GameInstanceSubsystem
 public:
 
 	// returns nullptr if character's name is not found in the list
-	USI_CharacterData* GetActiveCharacterData(FText CharacterName);
+	USI_CharacterData* GetActiveCharacterData(const FGameplayTag& CharacterTag);
 	bool GetIsActiveCharacter(USI_CharacterData* InCharacterData);
 
+	TSubclassOf<ASI_Character> GetCharacterClassByTag(const FGameplayTag& InCharacterTag);
+	
 protected:
 
 	virtual void OnGameInstanceInit() override;

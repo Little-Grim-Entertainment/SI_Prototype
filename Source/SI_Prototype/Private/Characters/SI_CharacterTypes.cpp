@@ -17,12 +17,14 @@ const FGameplayTag& FSI_CharacterState::GetCharacterTag() const
 	return CharacterTag;
 }
 
-FSI_PrimaryDialogueArray& FSI_CharacterState::GetPrimaryDialogueArray()
+FSI_DialogueState* FSI_CharacterState::GetDialogueStateByCase(const FGameplayTag& InCaseTag)
 {
-	return CurrentPrimaryDialogueArray;
+	return CaseDialogueStates.Find(InCaseTag);
 }
 
-void FSI_CharacterState::SetPrimaryDialogueArray(const FSI_PrimaryDialogueArray& InPrimaryDialogueArray)
+void FSI_CharacterState::AddNewDialogueState(const FGameplayTag& InCaseTag, const FSI_DialogueState& InDialogueState)
 {
-	CurrentPrimaryDialogueArray = InPrimaryDialogueArray;
+	CaseDialogueStates.Add(InCaseTag, InDialogueState);
 }
+
+

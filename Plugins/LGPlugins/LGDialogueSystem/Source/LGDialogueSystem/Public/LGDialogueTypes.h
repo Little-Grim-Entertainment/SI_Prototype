@@ -105,3 +105,11 @@ struct LGDIALOGUESYSTEM_API FLGCharacterDialogue
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ULGDialogueDataAsset* CharacterDialogueData = nullptr;
 };
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGDialogueState
+{
+	GENERATED_BODY()
+	
+	
+};

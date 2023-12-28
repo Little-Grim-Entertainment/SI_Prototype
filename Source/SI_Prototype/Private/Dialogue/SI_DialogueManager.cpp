@@ -2,11 +2,7 @@
 
 
 #include "Dialogue/SI_DialogueManager.h"
-#include "SI_GameInstance.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "Characters/SI_CharacterManager.h"
-#include "Data/Cases/SI_CaseManager.h"
-#include "Data/Characters/SI_CharacterData.h"
+#include "Characters/Data/SI_CharacterData.h"
 
 void USI_DialogueManager::StartDialogue(const FGameplayTag& InCharacterTag)
 {

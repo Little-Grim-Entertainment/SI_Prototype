@@ -7,6 +7,7 @@
 #include "LGDialogueTypes.h"
 #include "SI_DialogueTypes.generated.h"
 
+class USI_PartData;
 class USI_DialogueDataTable;
 class USI_CaseData;
 DECLARE_LOG_CATEGORY_EXTERN(LogSI_Dialogue, Log, All);
@@ -260,7 +261,7 @@ struct SI_PROTOTYPE_API FSI_PartDialogueData
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 PartNumber;
+	USI_PartData* PartReference;
 
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DialogueURLs;
@@ -307,4 +308,16 @@ struct SI_PROTOTYPE_API FSI_DefaultBubbleDialogueData
 
 	UPROPERTY(EditAnywhere, Category = "DialogueData")
 	FSI_DialogueArrayData BubbleDialogueData;
+};
+
+USTRUCT(BlueprintType)
+struct SI_PROTOTYPE_API FSI_DialogueState : public FLGDialogueState
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
+	FSI_PrimaryDialogueArray StatePrimaryDialogueArray;
+
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
+	TSoftObjectPtr<USI_DialogueDataTable> StateDialogueDataTable;
 };

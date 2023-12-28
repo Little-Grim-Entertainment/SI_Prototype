@@ -2,9 +2,9 @@
 
 
 #include "Dialogue/SI_DialogueTypes.h"
-#include "Data/Cases/SI_CaseData.h"
+#include "Cases/Data/SI_CaseData.h"
 #include "Data/SI_DialogueDataTable.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogSI_Dialogue);
 

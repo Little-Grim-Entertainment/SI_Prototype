@@ -19,8 +19,10 @@ class SI_PROTOTYPE_API USI_SaveData_CharacterStates : public USaveGame
 
 public:
 
+	const FSI_CharacterState* GetCharacterState(const FGameplayTag& InCharacterTag);
+	
 	void UpdateCharacterState(const FSI_CharacterState& InCharacterState);
-
+	
 private:
 
 	TMap<FGameplayTag, FSI_CharacterState> CharacterStates;

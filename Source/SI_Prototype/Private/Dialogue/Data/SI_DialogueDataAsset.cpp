@@ -7,8 +7,9 @@
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "LGDialogueTypes.h"
 #include "AssetRegistry/AssetRegistryModule.h"
+#include "Cases/Data/SI_PartData.h"
 #include "Data/SI_DialogueDataTable.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UObject/SavePackage.h"
 
@@ -28,7 +29,10 @@ void USI_DialogueDataAsset::InitializeDialogueLabels(const ESI_MainDialogueTypes
 
 				for (FSI_PartDialogueData& CurrentPart : CurrentCase.PartDialogue)
 				{
-					DialogueLabel.Append("P" + FString::FromInt(CurrentPart.PartNumber));
+					const USI_PartData* PartData = CurrentPart.PartReference;
+					if(!IsValid(PartData)) {continue;}
+					
+					DialogueLabel.Append("P" + PartData->PartNumber.ToString());
 					CurrentPart.DialogueData.DialogueLabel = DialogueLabel;
 				}
 			}

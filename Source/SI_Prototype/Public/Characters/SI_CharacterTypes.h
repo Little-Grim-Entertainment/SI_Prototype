@@ -14,15 +14,16 @@ struct SI_PROTOTYPE_API FSI_CharacterState
 	FSI_CharacterState();
 	FSI_CharacterState(const FGameplayTag& InCharacterTag);
 
-	const FGameplayTag& GetCharacterTag()const;
-	FSI_PrimaryDialogueArray& GetPrimaryDialogueArray();
-	void SetPrimaryDialogueArray(const FSI_PrimaryDialogueArray& InPrimaryDialogueArray);
-
-private:
-
-	UPROPERTY()
-	FGameplayTag CharacterTag;
+	void AddNewDialogueState(const FGameplayTag& InCaseTag, const FSI_DialogueState& InDialogueState);
 	
-	UPROPERTY()
-	FSI_PrimaryDialogueArray CurrentPrimaryDialogueArray;
+	const FGameplayTag& GetCharacterTag()const;
+	FSI_DialogueState* GetDialogueStateByCase(const FGameplayTag& InCaseTag);
+	
+protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	FGameplayTag CharacterTag;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo | Dialogue")
+	TMap<FGameplayTag, FSI_DialogueState> CaseDialogueStates;
 };

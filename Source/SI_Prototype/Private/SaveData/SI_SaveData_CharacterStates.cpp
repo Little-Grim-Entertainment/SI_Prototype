@@ -7,6 +7,11 @@ USI_SaveData_CharacterStates::USI_SaveData_CharacterStates()
 {
 }
 
+const FSI_CharacterState* USI_SaveData_CharacterStates::GetCharacterState(const FGameplayTag& InCharacterTag)
+{
+	return CharacterStates.Find(InCharacterTag);
+}
+
 void USI_SaveData_CharacterStates::UpdateCharacterState(const FSI_CharacterState& InCharacterState)
 {
 	FSI_CharacterState* FoundCharacterState = CharacterStates.Find(InCharacterState.GetCharacterTag());
