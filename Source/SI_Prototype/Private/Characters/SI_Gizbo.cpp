@@ -4,7 +4,7 @@
 #include "Characters/SI_Gizbo.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Actors/SI_InteractableActor.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"

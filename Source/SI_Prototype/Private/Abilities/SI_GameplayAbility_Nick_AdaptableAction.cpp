@@ -8,7 +8,7 @@
 #include "Characters/SI_Nick.h"
 #include "Controllers/SI_PlayerController.h"
 #include "EngineUtils.h" // ActorIterator
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"

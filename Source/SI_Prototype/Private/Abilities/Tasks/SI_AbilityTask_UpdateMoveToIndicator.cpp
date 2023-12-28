@@ -8,7 +8,7 @@
 #include "Actors/SI_MoveToIndicator.h"
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Interfaces/SI_MovableInterface.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 USI_AbilityTask_UpdateMoveToIndicator::USI_AbilityTask_UpdateMoveToIndicator(
 	const FObjectInitializer& ObjectInitializer)

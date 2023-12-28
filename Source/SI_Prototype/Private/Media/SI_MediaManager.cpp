@@ -4,19 +4,17 @@
 #include "Media/SI_MediaManager.h"
 
 #include "SI_GameInstance.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
 #include "GameplayTagContainer.h"
-#include "LevelSequence.h"
-#include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 #include "Debug/SI_DebugManager.h"
 #include "Controllers/SI_PlayerController.h"
-#include "Data/Media/SI_CinematicDataAsset.h"
+#include "Media/Data/SI_CinematicDataAsset.h"
 #include "Levels/SI_LevelManager.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
-#include "Data/Media/SI_VideoDataAsset.h"
+#include "Media/Data/SI_VideoDataAsset.h"
 
 void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {

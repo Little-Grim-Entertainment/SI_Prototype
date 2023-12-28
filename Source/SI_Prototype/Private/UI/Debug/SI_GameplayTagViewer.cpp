@@ -3,12 +3,12 @@
 
 #include "UI/Debug/SI_GameplayTagViewer.h"
 
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "GameplayTag/SI_GameplayTagTypes.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "Components/PanelWidget.h"
 #include "UI/GameplayTags/LGGameplayTagCategoryWidget.h"
 #include "UI/GameplayTags/LGGameplayTagEntryWidget.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 
 USI_GameplayTagViewer::USI_GameplayTagViewer()
 {

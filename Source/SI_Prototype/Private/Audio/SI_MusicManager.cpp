@@ -3,10 +3,9 @@
 
 #include "Audio/SI_MusicManager.h"
 #include "SI_GameInstance.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "AudioDevice.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "Components/AudioComponent.h"
-#include "Data/Maps/SI_MapData.h"
+#include "Levels/Data/SI_MapData.h"
 #include "GameModes/SI_GameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Levels/SI_LevelManager.h"

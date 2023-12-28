@@ -4,7 +4,7 @@
 #include "Characters/SI_NPC.h"
 
 #include "LG_DebugMacros.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Components/StateTreeComponent.h"
 #include "SI_Prototype/SI_Prototype.h"
 

@@ -5,16 +5,16 @@
 #include "SI_GameInstance.h"
 
 // Subsystems
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
-#include "Data/Cases/SI_CaseManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
+#include "Cases/SI_CaseManager.h"
 #include "Media/SI_MediaManager.h"
 #include "Levels/SI_LevelManager.h"
 
 // Case Data
-#include "Data/Cases/SI_CaseData.h"
-#include "Data/Cases/SI_PartData.h"
-#include "Data/Cases/SI_ObjectiveData.h"
+#include "Cases/Data/SI_CaseData.h"
+#include "Cases/Data/SI_PartData.h"
+#include "Cases/Data/SI_ObjectiveData.h"
 
 // UI
 #include "UI/SI_DialogueBox.h"
@@ -26,11 +26,9 @@
 #include "UI/SI_SkipWidget.h"
 
 #include "Controllers/SI_PlayerController.h"
-#include "Data/Maps/SI_MenuMapData.h"
-#include "Data/Media/SI_VideoDataAsset.h"
+#include "Levels/Data/SI_MenuMapData.h"
+#include "Media/Data/SI_VideoDataAsset.h"
 #include "GameModes/SI_GameMode.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
-#include "SI_Prototype/SI_Prototype.h"
 
 #if !UE_BUILD_SHIPPING
 static TAutoConsoleVariable<int32> CvarDisableTitleCard(

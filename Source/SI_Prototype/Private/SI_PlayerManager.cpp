@@ -2,10 +2,10 @@
 
 
 #include "SI_PlayerManager.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "Controllers/SI_PlayerController.h"
-#include "Data/Maps/SI_MapData.h"
+#include "Levels/Data/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"

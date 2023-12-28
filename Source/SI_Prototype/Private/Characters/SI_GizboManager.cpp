@@ -6,10 +6,10 @@
 #include "SI_GameInstance.h"
 #include "Characters/SI_Character.h"
 #include "Characters/SI_Gizbo.h"
-#include "Data/Characters/SI_CharacterData.h"
+#include "Characters/Data/SI_CharacterData.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameModes/SI_GameMode.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 void USI_GizboManager::SpawnGizbo()
 {

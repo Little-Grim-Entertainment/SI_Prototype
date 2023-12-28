@@ -4,7 +4,7 @@
 #include "Abilities/SI_GameplayAbility_Nick_SetAIRotation.h"
 
 #include "Actors/SI_MoveToIndicator.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Characters/SI_Gizbo.h"
 #include "Characters/SI_GizboManager.h"
