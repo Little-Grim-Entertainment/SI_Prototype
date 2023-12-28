@@ -1,0 +1,5 @@
+"Key","PressLine","CanPresentEvidence","CorrectEvidence","SpeakerTag","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueID"
+"1","1","False","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Main.NickSpade"")","Really? That's not what I hear.","","","48A6330F4E7116AF31B1C6ADCCF88B20"
+"2","2","False","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Test.MrOrange"")","What did you hear?","","","8C78397F4E1CCC5355DBD2A23D8E613B"
+"3","3","False","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Main.NickSpade"")","Mr. Blue said your girlfriend dumped you this morning.","","","F4FC5E7A40533A86191A6EB84D47BA8A"
+"4","4","True","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Test.MrOrange"")","What...? No way!","","","0D9179EB4B862AFBBCECD48F9C611B0B"

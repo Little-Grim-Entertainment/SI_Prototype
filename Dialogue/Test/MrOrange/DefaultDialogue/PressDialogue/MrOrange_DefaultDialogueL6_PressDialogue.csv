@@ -1,3 +1,3 @@
 "Key","PressLine","CanPresentEvidence","CorrectEvidence","SpeakerTag","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueID"
-"1","1","False","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Main.NickSpade"")","One of those things seem a bit far fetched...","","","4B22A6E84657FB17890F4AA6AA4F57E7"
-"2","2","True","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Test.MrOrange"")","Which one?","","","EBD5B4EF4B9D3625F2AB96BC028F6C63"
+"1","1","False","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Main.NickSpade"")","One of those things seem a bit far fetched...","","","9DD687DE49D6B97B3A490AB95390FFF1"
+"2","2","True","ClassProperty /Script/SI_Prototype.SI_PressDialogue:CorrectEvidence","(TagName=""Character.Test.MrOrange"")","Which one?","","","8E01F0854B67CF4F93FF5996BC43CBAC"
