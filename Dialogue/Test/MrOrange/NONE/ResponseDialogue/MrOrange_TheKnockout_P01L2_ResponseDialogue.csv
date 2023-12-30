@@ -1,0 +1,5 @@
+"Key","ResponseLine","IsEvidenceCorrect","SpeakerTag","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueID"
+"1","0","False","(TagName=""Character.Main.NickSpade"")","Really? That's not what I hear.","","","39C2B6D94B9076A82C1F5F87EAE4A87A"
+"2","0","False","(TagName=""Character.Test.MrOrange"")","What did you hear?","","","9F138F9040FD69496699B097E4300DE7"
+"3","0","False","(TagName=""Character.Main.NickSpade"")","Mr. Blue said your girlfriend dumped you this morning.","","","B1C9FDFA401AAF2A6532ED9F883D51BF"
+"4","0","False","(TagName=""Character.Test.MrOrange"")","What...? No way!","","","BA725408417AC8CA7EAD81BCD9F9DA2C"
