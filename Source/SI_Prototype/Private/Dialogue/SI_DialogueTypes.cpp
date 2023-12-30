@@ -4,6 +4,7 @@
 #include "Dialogue/SI_DialogueTypes.h"
 #include "Cases/Data/SI_CaseData.h"
 #include "Data/SI_DialogueDataTable.h"
+#include "LGBlueprintFunctionLibrary.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogSI_Dialogue);
@@ -17,6 +18,7 @@ void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue)
 	{
 		FSI_PrimaryDialogueArray* NewPrimaryDialogueArray = new FSI_PrimaryDialogueArray();
+		NewPrimaryDialogueArray->DialogueArrayLabel = OutPayload.DialogueLabel;
 		DialogueArrayPtrs.Add(NewPrimaryDialogueArray);
 		DialogueArrays.Add(*NewPrimaryDialogueArray);
 		OutPayload.DialogueArrayID = NewPrimaryDialogueArray->DialogueArrayID;
@@ -24,6 +26,7 @@ void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue)
 	{
 		FSI_CorrectedDialogueArray* NewCorrectedDialogueArray = new FSI_CorrectedDialogueArray();
+		NewCorrectedDialogueArray->DialogueArrayLabel = OutPayload.DialogueLabel;
 		DialogueArrayPtrs.Add(NewCorrectedDialogueArray);
 		DialogueArrays.Add(*NewCorrectedDialogueArray);
 		OutPayload.DialogueArrayID = NewCorrectedDialogueArray->DialogueArrayID;
@@ -31,6 +34,7 @@ void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse)
 	{
 		FSI_DefaultResponseArray* NewDefaultResponseArray = new FSI_DefaultResponseArray();
+		NewDefaultResponseArray->DialogueArrayLabel = OutPayload.DialogueLabel;
 		DialogueArrayPtrs.Add(NewDefaultResponseArray);
 		DialogueArrays.Add(*NewDefaultResponseArray);
 		OutPayload.DialogueArrayID = NewDefaultResponseArray->DialogueArrayID;
@@ -38,6 +42,7 @@ void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
 	{
 		FSI_PressDialogueArray* NewPressDialogueArray = new FSI_PressDialogueArray();
+		NewPressDialogueArray->DialogueArrayLabel = OutPayload.DialogueLabel;
 		DialogueArrayPtrs.Add(NewPressDialogueArray);
 		DialogueArrays.Add(*NewPressDialogueArray);
 		OutPayload.DialogueArrayID = NewPressDialogueArray->DialogueArrayID;
@@ -45,6 +50,7 @@ void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue)
 	{
 		FSI_ResponseDialogueArray* NewResponseDialogueArray = new FSI_ResponseDialogueArray();
+		NewResponseDialogueArray->DialogueArrayLabel = OutPayload.DialogueLabel;
 		DialogueArrayPtrs.Add(NewResponseDialogueArray);
 		DialogueArrays.Add(*NewResponseDialogueArray);
 		OutPayload.DialogueArrayID = NewResponseDialogueArray->DialogueArrayID;
@@ -52,6 +58,7 @@ void FSI_DialogueArrayData::AddNewArrayByTag(const FGameplayTag& InStructTypeTag
 	if(InStructTypeTag == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue)
 	{
 		FSI_BubbleDialogueArray* NewBubbleDialogueArray = new FSI_BubbleDialogueArray();
+		NewBubbleDialogueArray->DialogueArrayLabel = OutPayload.DialogueLabel;
 		DialogueArrayPtrs.Add(NewBubbleDialogueArray);
 		DialogueArrays.Add(*NewBubbleDialogueArray);
 		OutPayload.DialogueArrayID = NewBubbleDialogueArray->DialogueArrayID;
@@ -74,15 +81,12 @@ FString FSI_CaseDialogueData::GetCaseNameNoSpace() const
 {
 	if(!IsValid(CaseReference)) {return "NONE";}
 
-	FString CaseNameNoSpace = CaseReference->CaseName.ToString();
-	int32 SpaceIndex;
-	CaseNameNoSpace.FindChar(' ', SpaceIndex);
-	if(SpaceIndex != INDEX_NONE)
-	{
-		CaseNameNoSpace.RemoveAt(SpaceIndex);
-	}
-
+	FString CaseNameNoSpace = ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(CaseReference->CaseTag);
 	return CaseNameNoSpace;
+}
+
+FSI_DialogueState::FSI_DialogueState(FSI_PrimaryDialogueArray* InPrimaryDialogueArray) : CasePrimaryDialogueArray(*InPrimaryDialogueArray)
+{
 }
 
 FSI_PrimaryDialogueArray::FSI_PrimaryDialogueArray()
@@ -137,6 +141,11 @@ UScriptStruct* FSI_PrimaryDialogueArray::GetStructContainer()
 	return StaticStruct();
 }
 
+UDataTable* FSI_PrimaryDialogueArray::GetDialogueDataTable()
+{
+	return PrimaryDialogueDataTable;
+}
+
 void FSI_PrimaryDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
 {
 	if(!IsValid(InDataTable)){return;}
@@ -166,6 +175,11 @@ TArray<FSI_CorrectedDialogue>* FSI_CorrectedDialogueArray::GetDialogueArray()
 UScriptStruct* FSI_CorrectedDialogueArray::GetStructContainer()
 {
 	return StaticStruct();
+}
+
+UDataTable* FSI_CorrectedDialogueArray::GetDialogueDataTable()
+{
+	return CorrectedDialogueDataTable;
 }
 
 void FSI_CorrectedDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
@@ -214,6 +228,11 @@ UScriptStruct* FSI_DefaultResponseArray::GetStructContainer()
 	return StaticStruct();
 }
 
+UDataTable* FSI_DefaultResponseArray::GetDialogueDataTable()
+{
+	return DefaultResponseDataTable;
+}
+
 void FSI_DefaultResponseArray::InitializeDialogueDataTable(UDataTable* InDataTable)
 {
 	if(!IsValid(InDataTable)){return;}
@@ -253,6 +272,11 @@ TArray<FSI_BubbleDialogue>* FSI_BubbleDialogueArray::GetDialogueArray()
 UScriptStruct* FSI_BubbleDialogueArray::GetStructContainer()
 {
 	return StaticStruct();
+}
+
+UDataTable* FSI_BubbleDialogueArray::GetDialogueDataTable()
+{
+	return BubbleDialogueDataTable;
 }
 
 void FSI_BubbleDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
@@ -302,6 +326,11 @@ UScriptStruct* FSI_PressDialogueArray::GetStructContainer()
 	return StaticStruct();
 }
 
+UDataTable* FSI_PressDialogueArray::GetDialogueDataTable()
+{
+	return PressDialogueDataTable;
+}
+
 void FSI_PressDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
 {
 	if(!IsValid(InDataTable)){return;}
@@ -348,6 +377,11 @@ TArray<FSI_ResponseDialogue>* FSI_ResponseDialogueArray::GetDialogueArray()
 UScriptStruct* FSI_ResponseDialogueArray::GetStructContainer()
 {
 	return StaticStruct();
+}
+
+UDataTable* FSI_ResponseDialogueArray::GetDialogueDataTable()
+{
+	return ResponseDialogueDataTable;
 }
 
 void FSI_ResponseDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)

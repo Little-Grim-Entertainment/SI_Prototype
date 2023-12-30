@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
 #include "UI/SI_CaseTitleCard.h"
 
@@ -24,7 +25,7 @@ public:
 	USI_CaseData();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
-	FText CaseName;
+	FGameplayTag CaseTag;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")
 	TArray<USI_PartData*> Parts;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CaseDetails")

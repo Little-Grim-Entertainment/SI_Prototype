@@ -42,10 +42,6 @@ protected:
 
 	virtual void BeginPlay() override;
 
-#if WITH_EDITOR
-	virtual void SetupPreviewCharacter() override;
-#endif
-		
 	UFUNCTION()
 	void OnBeginOverlap(ASI_Nick* InNickActor);
 	UFUNCTION()

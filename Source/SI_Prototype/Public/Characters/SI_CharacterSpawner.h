@@ -7,6 +7,7 @@
 #include "Engine/NavigationObjectBase.h"
 #include "SI_CharacterSpawner.generated.h"
 
+class USI_CharacterData;
 class ASI_Character;
 
 UCLASS(Blueprintable)
@@ -21,22 +22,23 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void Destroyed() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
-	FGameplayTag CharacterTag;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
-	TSubclassOf<ASI_Character> CharacterClass;
+	USI_CharacterData* CharacterData;
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	virtual void SpawnPreviewCharacter(const TSubclassOf<ASI_Character>& InCharacterClass);
+	void DuplicateSkeletalMeshComponents(const TArray<USkeletalMeshComponent*>& InSkeletalMeshArray);
+	void DuplicateStaticMeshComponents(const TArray<UStaticMeshComponent*>& InStaticMeshArray);
 #endif
 	
 #if WITH_EDITORONLY_DATA
 	UPROPERTY()
-	ASI_Character* PreviewCharacter;
+	TArray<USkeletalMeshComponent*> PreviewSkeletalMeshComponents;
+	UPROPERTY()
+	TArray<UStaticMeshComponent*> PreviewStaticMeshComponents;
 #endif
 
 #if WITH_EDITORONLY_DATA
@@ -49,4 +51,11 @@ private:
 
 	void ResetCharacterSpawner();
 #endif
+
+private:
+
+	UPROPERTY()
+	TSoftObjectPtr<ASI_Character> SpawnedCharacter;
+	
+	void SpawnCharacter();
 };

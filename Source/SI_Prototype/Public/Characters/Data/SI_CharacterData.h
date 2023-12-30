@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "Characters/SI_Character.h"
 #include "Engine/DataAsset.h"
+#include "GameplayTagContainer.h"
 #include "SI_CharacterData.generated.h"
 
-class ULGDialogueDataAsset;
+class USI_DialogueDataAsset;
 class UDialogueSession;
 class UDialogueSessionNode;
 class USI_CaseData;
@@ -31,5 +32,5 @@ public:
 	TSubclassOf<ASI_Character> CharacterClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterDetails")
-	TSoftObjectPtr<ULGDialogueDataAsset> CharacterDialogue;
+	USI_DialogueDataAsset* CharacterDialogue;
 };

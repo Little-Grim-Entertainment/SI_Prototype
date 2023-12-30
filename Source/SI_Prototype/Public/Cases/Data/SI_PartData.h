@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
 	bool bCompleteObjectivesInOrder;
 	UPROPERTY(EditAnywhere, Category = "PartDetails")
-	TArray<USI_CharacterData*> ActiveCharacters;
+	TArray<TSoftObjectPtr<USI_CharacterData>> ActiveCharacters;
 
 	UFUNCTION(BlueprintPure)
 	TArray<USI_ObjectiveData*> GetAllObjectives() const {return Objectives;}

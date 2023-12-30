@@ -44,20 +44,6 @@ void ASI_NPC_Interactable::BeginPlay()
 	}
 }
 
-#if WITH_EDITOR
-void ASI_NPC_Interactable::SetupPreviewCharacter()
-{
-	Super::SetupPreviewCharacter();
-
-	if(IsValid(InteractableComponent)){InteractableComponent->DestroyComponent(true);}
-	if(IsValid(InteractionIcon)){InteractionIcon->DestroyComponent(true);}
-	if(IsValid(InteractionPrompt)){InteractionPrompt->DestroyComponent(true);}
-	if(IsValid(NickCam)){NickCam->DestroyComponent(true);}
-	if(IsValid(NPC_Cam)){NPC_Cam->DestroyComponent(true);}
-	if(IsValid(NickPosition)){NickPosition->DestroyComponent(true);}
-}
-#endif
-
 void ASI_NPC_Interactable::OnBeginOverlap(ASI_Nick* InNickActor)
 {
 	if (!IsValid(InteractableComponent)) {return;}

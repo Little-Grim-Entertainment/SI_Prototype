@@ -2,13 +2,11 @@
 
 
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
-
 #include "LGBlueprintFunctionLibrary.h"
 #include "LGCsvDataProcessorFunctionLibrary.h"
 #include "LGDialogueTypes.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Cases/Data/SI_PartData.h"
-#include "Data/SI_DialogueDataTable.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UObject/SavePackage.h"
@@ -458,7 +456,7 @@ void USI_DialogueDataAsset::UpdateDataTable(FRuntimeDataTableCallbackInfo& InCal
 	FString FileName = "DT_" + InCallbackInfo.FileName;
 	int32 ChopIndex = InCallbackInfo.FilePath.Find("Dialogue/");
 	const FString DialogueFolderPath = InCallbackInfo.FilePath.RightChop(ChopIndex + 9);
-
+	
 	FString FilePath = UKismetSystemLibrary::GetProjectContentDirectory();
 	FilePath.Append("SI/Data/Dialogue/");
 	FilePath.Append(DialogueFolderPath);

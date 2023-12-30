@@ -36,9 +36,13 @@ struct LGDIALOGUESYSTEM_API FLGDialogueArray
 	UPROPERTY(VisibleAnywhere)
 	FGuid DialogueArrayID;
 
+	UPROPERTY(VisibleAnywhere)
+	FString DialogueArrayLabel;
+
 	virtual void SetDataTable(UDataTable* InDataTable);
 	
 	virtual UScriptStruct* GetStructContainer();
+	virtual UDataTable* GetDialogueDataTable();
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable);
 	
 	bool operator==(const FLGDialogueArray& OtherDialogue) const;

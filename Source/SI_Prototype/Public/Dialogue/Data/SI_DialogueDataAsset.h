@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Data/LGDialogueDataAsset.h"
 #include "Dialogue/SI_DialogueTypes.h"
+#include "Cases/Data/SI_CaseData.h"
+#include "Data/SI_DialogueDataTable.h"
 #include "SI_DialogueDataAsset.generated.h"
 
 UCLASS()
@@ -14,6 +16,11 @@ class SI_PROTOTYPE_API USI_DialogueDataAsset : public ULGDialogueDataAsset
 
 	USI_DialogueDataAsset();
 
+public:
+	
+	template<class StructType>
+	StructType* GetDialogueArrayStructByCaseAndLabel(const FGameplayTag& InCaseTag, const FString& InDialogueLabel);
+	
 protected:
 
 	virtual void UpdateDialogue_Internal() override;
@@ -93,4 +100,26 @@ void USI_DialogueDataAsset::UpdateDataTableStructByType(UDataTable* InDataTable,
 
 	ArrayPtr->UpdateDataTableStructValues(DialoguePtrs);
 	InDataTable->MarkPackageDirty();
+}
+
+template <class StructType>
+StructType* USI_DialogueDataAsset::GetDialogueArrayStructByCaseAndLabel(const FGameplayTag& InCaseTag, const FString& InDialogueLabel)
+{
+	for(FSI_CaseDialogueData& CurrentCaseDialogueData : CaseDialogue)
+	{
+		if(!IsValid(CurrentCaseDialogueData.CaseReference) || CurrentCaseDialogueData.CaseReference->CaseTag != InCaseTag) {continue;}
+
+		for(FSI_PartDialogueData& CurrentPartDialogueData : CurrentCaseDialogueData.PartDialogue)
+		{
+			for (FLGDialogueArray& CurrentDialogueArray : CurrentPartDialogueData.DialogueData.DialogueArrays)
+			{
+				StructType* StructArray = static_cast<StructType*>(&CurrentDialogueArray);
+				if(!StructArray || StructArray->DialogueArrayLabel != InDialogueLabel) {continue;}
+								
+				return StructArray;
+			}
+		}
+	}
+
+	return nullptr;
 }

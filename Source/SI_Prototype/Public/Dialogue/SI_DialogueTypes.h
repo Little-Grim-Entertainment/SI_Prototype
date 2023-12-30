@@ -55,6 +55,7 @@ struct FSI_PressDialogueArray : public FLGDialogueArray
 
 	TArray<FSI_PressDialogue>* GetDialogueArray();
 	virtual UScriptStruct* GetStructContainer() override;
+	virtual UDataTable* GetDialogueDataTable() override;
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
@@ -88,6 +89,7 @@ struct FSI_ResponseDialogueArray : public FLGDialogueArray
 
 	TArray<FSI_ResponseDialogue>* GetDialogueArray();
 	virtual UScriptStruct* GetStructContainer() override;
+	virtual UDataTable* GetDialogueDataTable() override;
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
@@ -133,6 +135,7 @@ struct FSI_PrimaryDialogueArray : public FLGDialogueArray
 	
 	TArray<FSI_PrimaryDialogue>* GetDialogueArray();
 	virtual UScriptStruct* GetStructContainer() override;
+	virtual UDataTable* GetDialogueDataTable() override;
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
@@ -166,6 +169,7 @@ struct FSI_CorrectedDialogueArray : public FLGDialogueArray
 
 	TArray<FSI_CorrectedDialogue>* GetDialogueArray();
 	virtual UScriptStruct* GetStructContainer() override;
+	virtual UDataTable* GetDialogueDataTable() override;
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
@@ -199,6 +203,7 @@ struct FSI_DefaultResponseArray : public FLGDialogueArray
 
 	TArray<FSI_DefaultResponse>* GetDialogueArray();
 	virtual UScriptStruct* GetStructContainer() override;
+	virtual UDataTable* GetDialogueDataTable() override;
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
@@ -229,6 +234,7 @@ struct FSI_BubbleDialogueArray : public FLGDialogueArray
 
 	TArray<FSI_BubbleDialogue>* GetDialogueArray();
 	virtual UScriptStruct* GetStructContainer() override;
+	virtual UDataTable* GetDialogueDataTable() override;
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
 	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
@@ -315,9 +321,9 @@ struct SI_PROTOTYPE_API FSI_DialogueState : public FLGDialogueState
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
-	FSI_PrimaryDialogueArray StatePrimaryDialogueArray;
+	FSI_DialogueState(){}
+	FSI_DialogueState(FSI_PrimaryDialogueArray* InPrimaryDialogueArray);
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
-	TSoftObjectPtr<USI_DialogueDataTable> StateDialogueDataTable;
+	FSI_PrimaryDialogueArray CasePrimaryDialogueArray;
 };

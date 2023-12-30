@@ -20,6 +20,11 @@ UScriptStruct* FLGDialogueArray::GetStructContainer()
 	return nullptr;
 }
 
+UDataTable* FLGDialogueArray::GetDialogueDataTable()
+{
+	return nullptr;
+}
+
 void FLGDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
 {
 }

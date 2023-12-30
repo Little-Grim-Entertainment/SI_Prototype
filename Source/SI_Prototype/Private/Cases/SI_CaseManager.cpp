@@ -8,7 +8,7 @@
 #include "Cases/Data/SI_PartData.h"
 #include "Cases/Data/SI_ObjectiveData.h"
 #include "Cases/Data/SI_CaseList.h"
-#include "GameModes/SI_GameMode.h"
+#include "LGBlueprintFunctionLibrary.h"
 #include "GAmeplayTags/SI_GameplayTagManager.h"
 #include "Levels/SI_LevelManager.h"
 #include "Media/Data/SI_CinematicDataAsset.h"
@@ -202,7 +202,8 @@ USI_CaseData* USI_CaseManager::GetCaseByName(const FString& InCaseName)
 {
 	for(const TPair<USI_CaseData*, FSI_CaseDetails*>& CurrentCase : AllCases)
 	{
-		if(CurrentCase.Key->CaseName.ToString() == InCaseName)
+		const FString CaseNameString = ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(CurrentCase.Key->CaseTag);
+		if(CaseNameString == InCaseName)
 		{
 			return CurrentCase.Key;
 		}

@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "SI_GameInstance.generated.h"
 
+class USI_CharacterList;
 class USI_CaseList;
 class USI_InputConfig;
 class USI_MapList;
@@ -37,6 +38,8 @@ public:
 	USI_MapList* MapList;
 	UPROPERTY(EditAnywhere, Category = Data)
 	USI_CaseList* CaseList;
+	UPROPERTY(EditAnywhere, Category = Data)
+	USI_CharacterList* CharacterList;
 
 	FOnGameInstanceInit& OnGameInstanceInit();
 	FOnGameModeBeginPlay& OnGameModeBeginPlay();
