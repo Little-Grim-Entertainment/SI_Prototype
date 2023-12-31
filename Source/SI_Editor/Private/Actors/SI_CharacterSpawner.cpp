@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/SI_CharacterSpawner.h"
+#include "Actors/SI_CharacterSpawner.h"
 #include "Async/TaskGraphInterfaces.h"
 #include "Characters/SI_Character.h"
 #include "Characters/Data/SI_CharacterData.h"
