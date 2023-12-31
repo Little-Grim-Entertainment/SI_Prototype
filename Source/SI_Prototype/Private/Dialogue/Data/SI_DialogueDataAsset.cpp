@@ -7,6 +7,7 @@
 #include "LGDialogueTypes.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Cases/Data/SI_PartData.h"
+#include "Data/SI_DialogueDataTable.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UObject/SavePackage.h"
