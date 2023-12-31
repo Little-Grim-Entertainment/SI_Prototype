@@ -20,17 +20,8 @@ public:
 		
 	ASI_NPC_Interactable();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* NPC_Cam;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* NickCam;
-
 	UPROPERTY()
 	class ASI_NPCController_Interactable* AIController;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	USceneComponent* NickPosition;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
-	FText CharacterName;	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction")
 	USI_InteractableComponent* InteractableComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,  Category = "Interaction")
