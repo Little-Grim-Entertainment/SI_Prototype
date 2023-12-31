@@ -2,19 +2,18 @@
 
 
 #include "Cases/SI_CaseManager.h"
-
+#include "GameplayTagContainer.h"
 #include "SI_GameInstance.h"
 #include "Cases/Data/SI_CaseData.h"
 #include "Cases/Data/SI_PartData.h"
 #include "Cases/Data/SI_ObjectiveData.h"
 #include "Cases/Data/SI_CaseList.h"
 #include "LGBlueprintFunctionLibrary.h"
-#include "GAmeplayTags/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "Levels/SI_LevelManager.h"
 #include "Media/Data/SI_CinematicDataAsset.h"
 #include "Media/Data/SI_VideoDataAsset.h"
 #include "Media/SI_MediaManager.h"
-#include "SI_PlayerManager.h"
 #include "Levels/Data/SI_MapData.h"
 
 USI_CaseManager::USI_CaseManager()
