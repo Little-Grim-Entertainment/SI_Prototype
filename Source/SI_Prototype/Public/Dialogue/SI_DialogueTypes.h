@@ -7,6 +7,7 @@
 #include "LGDialogueTypes.h"
 #include "SI_DialogueTypes.generated.h"
 
+class USI_CaseDialogueDataAsset;
 class USI_PartData;
 class USI_DialogueDataTable;
 class USI_CaseData;
@@ -38,7 +39,7 @@ struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGConversationDialogue
 	TSubclassOf<ASI_Evidence> CorrectEvidence;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FSI_PressDialogueArray : public FLGDialogueArray
 {
 	GENERATED_BODY()
@@ -72,7 +73,7 @@ struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGConversationDialogue
 	bool IsEvidenceCorrect;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FSI_ResponseDialogueArray : public FLGDialogueArray
 {
 	GENERATED_BODY()
@@ -118,7 +119,7 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
 	FString ResponseURL;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FSI_PrimaryDialogueArray : public FLGDialogueArray
 {
 	GENERATED_BODY()
@@ -152,7 +153,7 @@ struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGConversationDialogue
 	int32 SpeakerLine;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FSI_CorrectedDialogueArray : public FLGDialogueArray
 {
 	GENERATED_BODY()
@@ -183,7 +184,7 @@ struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGConversationDialogue
 	int32 ResponseLine;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FSI_DefaultResponseArray : public FLGDialogueArray
 {
 	GENERATED_BODY()
@@ -217,7 +218,7 @@ struct SI_PROTOTYPE_API FSI_BubbleDialogue : public FLGDialogue
 	FString BubbleTest;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FSI_BubbleDialogueArray : public FLGDialogueArray
 {
 	GENERATED_BODY()
@@ -239,22 +240,16 @@ struct FSI_BubbleDialogueArray : public FLGDialogueArray
 	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct FSI_DialogueArrayData
 {
 	GENERATED_BODY()
 
 	FSI_DialogueArrayData();
 
-	UPROPERTY(VisibleAnywhere)
 	FGuid DialogueDataID;
-
-	UPROPERTY(VisibleAnywhere)
 	FString DialogueLabel;
-
-	UPROPERTY(VisibleAnywhere)
 	TArray<FLGDialogueArray> DialogueArrays;
-
 	TArray<FLGDialogueArray*> DialogueArrayPtrs;
 
 	void AddNewArrayByTag(const FGameplayTag& InStructTypeTag, FLGCsvInfoImportPayload& OutPayload);
@@ -272,7 +267,6 @@ struct SI_PROTOTYPE_API FSI_PartDialogueData
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DialogueURLs;
 
-	UPROPERTY(EditAnywhere, Category = "DialogueData")
 	FSI_DialogueArrayData DialogueData;
 };
 
@@ -288,6 +282,15 @@ struct SI_PROTOTYPE_API FSI_CaseDialogueData
 	TArray<FSI_PartDialogueData> PartDialogue;
 
 	FString GetCaseNameNoSpace() const;
+};
+
+USTRUCT(BlueprintType)
+struct SI_PROTOTYPE_API FSI_CaseDialogueDataTable : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TSoftObjectPtr<USI_CaseDialogueDataAsset> CaseDialogueData;
 };
 
 USTRUCT(BlueprintType)

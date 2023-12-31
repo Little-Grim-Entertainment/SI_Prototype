@@ -19,7 +19,7 @@ struct LGDIALOGUESYSTEM_API FLGEmphasizedWord
 	
 };
 
-USTRUCT(BlueprintType)
+USTRUCT()
 struct LGDIALOGUESYSTEM_API FLGDialogueArray
 {
 	GENERATED_BODY()
@@ -27,16 +27,16 @@ struct LGDIALOGUESYSTEM_API FLGDialogueArray
 	FLGDialogueArray();
 	virtual ~FLGDialogueArray(){}
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	FGameplayTag DialogueStructTypeTag;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	FName PropertyName;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	FGuid DialogueArrayID;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	FString DialogueArrayLabel;
 
 	virtual void SetDataTable(UDataTable* InDataTable);
