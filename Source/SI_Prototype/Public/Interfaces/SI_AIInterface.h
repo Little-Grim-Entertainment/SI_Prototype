@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "SI_AIInterface.generated.h"
 
 using namespace SI_NativeGameplayTagLibrary;

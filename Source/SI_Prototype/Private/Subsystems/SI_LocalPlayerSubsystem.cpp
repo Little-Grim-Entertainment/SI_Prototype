@@ -3,8 +3,8 @@
 
 #include "Subsystems/SI_LocalPlayerSubsystem.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
-#include "SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "SI_PlayerManager.h"
 #include "SI_AbilityManager.h"
 

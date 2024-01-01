@@ -13,7 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/SI_UIManager.h"
 #include "UI/Debug/SI_GameplayTagViewer.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "Widgets/SViewport.h"
 
 USI_CheatManager::USI_CheatManager()

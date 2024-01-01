@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SI_Types.h"
-#include "SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "Subsystems/SI_WorldSubsystem.h"
 #include "SI_MusicManager.generated.h"
 

@@ -3,8 +3,8 @@
 
 #include "Levels/SI_LevelManager.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "LevelSequencePlayer.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 #include "Characters/SI_GizboManager.h"

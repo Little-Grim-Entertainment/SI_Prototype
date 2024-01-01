@@ -5,7 +5,7 @@
 
 #include "LG_DebugMacros.h"
 #include "SI_Prototype/SI_Prototype.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "Characters/SI_NPC.h"
 #include "Characters/SI_Nick.h"
 #include "GameFramework/CharacterMovementComponent.h"

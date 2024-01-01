@@ -8,9 +8,8 @@
 #include "Characters/SI_Nick.h"
 #include "Controllers/SI_PlayerController.h"
 #include "EngineUtils.h" // ActorIterator
-#include "SI_GameplayTagManager.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
-#include "Actors/SI_MovableActor.h"
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Interfaces/SI_MovableInterface.h"
@@ -100,7 +99,7 @@ void USI_GameplayAbility_Nick_AdaptableAction::UpdateMoveToIndicatorPosition()
 	FHitResult HitResult;
 	FVector Start = SICameraManger->GetCameraLocation();
 	FVector End = SICameraManger->GetCameraLocation() + SICameraManger->GetActorForwardVector() * AdaptableActionMaximumRadius;
-	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_GameTraceChannel2);
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_GameTraceChannel2); // ECC_GameTraceChannel2 = SI_TraceChannel_Movable
 
 	if (HitResult.GetActor())
 	{

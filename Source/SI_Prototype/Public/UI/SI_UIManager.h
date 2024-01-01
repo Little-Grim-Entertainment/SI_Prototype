@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SI_QuickActionWidget.h"
-#include "SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "TimerManager.h"
 #include "Subsystems/SI_GameInstanceSubsystem.h"
 #include "SI_UIManager.generated.h"

@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "SI_GameplayTagTypes.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "SI_WorldSubsystem.generated.h"
 
 enum class EPlayerMode : uint8;

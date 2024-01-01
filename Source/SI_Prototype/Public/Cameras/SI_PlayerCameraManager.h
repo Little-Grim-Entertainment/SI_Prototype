@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "SI_GameplayTagTypes.h"
+#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "Camera/PlayerCameraManager.h"
 #include "SI_PlayerCameraManager.generated.h"
 

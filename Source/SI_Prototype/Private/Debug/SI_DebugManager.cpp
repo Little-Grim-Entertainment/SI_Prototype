@@ -2,8 +2,8 @@
 
 
 #include "Debug/SI_DebugManager.h"
-#include "SI_GameplayTagManager.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Debug/SI_GameplayTagViewer.h"
 
