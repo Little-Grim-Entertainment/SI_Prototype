@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Engine/NavigationObjectBase.h"
 #include "SI_CharacterSpawner.generated.h"
 
-class USI_CharacterData;
 class ASI_Character;
+class USI_CharacterData;
 
 UCLASS(Blueprintable)
-class SI_PROTOTYPE_API ASI_CharacterSpawner : public ANavigationObjectBase
+class SI_EDITOR_API ASI_CharacterSpawner : public ANavigationObjectBase
 {
 	GENERATED_BODY()
 

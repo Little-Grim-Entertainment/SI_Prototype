@@ -19,36 +19,6 @@ struct LGDIALOGUESYSTEM_API FLGEmphasizedWord
 	
 };
 
-USTRUCT()
-struct LGDIALOGUESYSTEM_API FLGDialogueArray
-{
-	GENERATED_BODY()
-
-	FLGDialogueArray();
-	virtual ~FLGDialogueArray(){}
-	
-	UPROPERTY()
-	FGameplayTag DialogueStructTypeTag;
-
-	UPROPERTY()
-	FName PropertyName;
-
-	UPROPERTY()
-	FGuid DialogueArrayID;
-
-	UPROPERTY()
-	FString DialogueArrayLabel;
-
-	virtual void SetDataTable(UDataTable* InDataTable);
-	
-	virtual UScriptStruct* GetStructContainer();
-	virtual UDataTable* GetDialogueDataTable();
-	virtual void InitializeDialogueDataTable(UDataTable* InDataTable);
-	
-	bool operator==(const FLGDialogueArray& OtherDialogue) const;
-	bool operator!=(const FLGDialogueArray& OtherDialogue) const;
-};
-
 USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogue : public FTableRowBase
 {
@@ -85,9 +55,6 @@ USTRUCT(BlueprintType)
 struct LGDIALOGUESYSTEM_API FLGDialogueURL
 {
 	GENERATED_BODY()
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FString FileName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString URL;

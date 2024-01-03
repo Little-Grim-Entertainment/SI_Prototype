@@ -28,7 +28,7 @@ public class LGDialogueSystem : ModuleRules
 				"Core",
 				"EasyCsv", 
 				"LGCoreLibrary",
-				"LGCsvDataProcessor",
+				"GameplayTags",
 				"RuntimeDataTable",
 				"StructUtils", 
 				// ... add other public dependencies that you statically link with here ...
@@ -41,7 +41,6 @@ public class LGDialogueSystem : ModuleRules
 			{
 				"CoreUObject",
 				"Engine",
-				"GameplayTags",
 				"Slate",
 				"SlateCore",
 				// ... add private dependencies that you statically link with here ...	

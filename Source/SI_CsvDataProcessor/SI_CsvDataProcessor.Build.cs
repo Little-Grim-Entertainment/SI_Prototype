@@ -1,38 +1,37 @@
 ﻿using UnrealBuildTool;
 
-public class SI_Editor : ModuleRules
+public class SI_CsvDataProcessor : ModuleRules
 {
-    public SI_Editor(ReadOnlyTargetRules Target) : base(Target)
+    public SI_CsvDataProcessor(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core",
+                // Unreal
+                "Core", 
                 "GameplayTags",
-                "UMG",
-                "UnrealEd",
+
+                // Plugins
+                "RuntimeDataTable",
+                "EasyCsv",
                 
                 // Spade Investigations
                 "SI_Prototype",
-                "SI_CsvDataProcessor",
 
                 // Little Grim
                 "LGCoreLibrary",
                 "LGCsvDataProcessor",
+                "LGDialogueSystem"
             }
         );
 
         PrivateDependencyModuleNames.AddRange(
             new string[]
             {
-                "Blutility",
                 "CoreUObject",
                 "Engine",
-                "InputCore",
-                "LevelEditor",
-                "PropertyEditor",
                 "Slate",
                 "SlateCore",
             }

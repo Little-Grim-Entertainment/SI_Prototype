@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "EasyCsvTypes.h"
 #include "GameplayTagContainer.h"
-//#include "LGDialogueTypes.h"
 #include "LGCsvDataTypes.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCsvDataProcessor, Log, All);
@@ -41,10 +40,7 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 
 	UPROPERTY()
 	FGuid DialogueArrayID;
-
-	UPROPERTY()
-	FString DialogueLabel;
-	
+		
 	UPROPERTY()
 	FString FileName;
 
@@ -52,11 +48,56 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 	FString FilePath;
 
 	UPROPERTY()
-	FString FolderName;
-
-	UPROPERTY()
 	UObject* Caller;
 
 	UPROPERTY()
 	FGameplayTag CsvArrayTypeTag;
+};
+
+
+USTRUCT()
+struct LGCSVDATAPROCESSOR_API FLGDialogueArray
+{
+	GENERATED_BODY()
+
+	FLGDialogueArray() {}
+	virtual ~FLGDialogueArray(){}
+	
+	UPROPERTY()
+	FGameplayTag DialogueStructTypeTag;
+
+	UPROPERTY()
+	FName PropertyName;
+
+	UPROPERTY()
+	FGuid DialogueArrayID;
+
+	UPROPERTY()
+	FString DialogueArrayLabel;
+
+	virtual void SetDataTable(UDataTable* InDataTable);
+	
+	virtual UScriptStruct* GetStructContainer();
+	virtual UDataTable* GetDialogueDataTable();
+	virtual void InitializeDialogueDataTable(UDataTable* InDataTable);
+	
+	bool operator==(const FLGDialogueArray& OtherDialogue) const;
+	bool operator!=(const FLGDialogueArray& OtherDialogue) const;
+};
+
+USTRUCT()
+struct LGCSVDATAPROCESSOR_API FLGDialogueArrayData
+{
+	GENERATED_BODY()
+
+	FLGDialogueArrayData();
+	virtual ~FLGDialogueArrayData(){}
+
+	FGuid DialogueDataID;
+	FString DialogueLabel;
+	TArray<FLGDialogueArray> DialogueArrays;
+	TArray<FLGDialogueArray*> DialogueArrayPtrs;
+
+	virtual void AddNewArrayByTag(const FGameplayTag& InStructTypeTag, FLGCsvInfoImportPayload& OutPayload);
+	virtual FLGDialogueArray* GetDialogueArrayByID(const FGuid& InDialogueArrayID);
 };

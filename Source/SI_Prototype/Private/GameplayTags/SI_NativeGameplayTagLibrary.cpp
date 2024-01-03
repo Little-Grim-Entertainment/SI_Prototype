@@ -2,7 +2,6 @@
 
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 
-
 namespace SI_NativeGameplayTagLibrary
 {
 	UE_DEFINE_GAMEPLAY_TAG(SITag_None, "None")

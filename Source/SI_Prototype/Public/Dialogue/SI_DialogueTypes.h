@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LGCsvDataTypes.h"
 #include "LGDialogueTypes.h"
 #include "SI_DialogueTypes.generated.h"
 
@@ -39,27 +38,6 @@ struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGConversationDialogue
 	TSubclassOf<ASI_Evidence> CorrectEvidence;
 };
 
-USTRUCT()
-struct FSI_PressDialogueArray : public FLGDialogueArray
-{
-	GENERATED_BODY()
-
-	FSI_PressDialogueArray();
-
-	UPROPERTY()
-	TArray<FSI_PressDialogue> PressDialogueArray;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USI_DialogueDataTable* PressDialogueDataTable;
-
-	void UpdateDataTableStructValues(TArray<FSI_PressDialogue*>& OutDataTableStructArray);
-
-	TArray<FSI_PressDialogue>* GetDialogueArray();
-	virtual UScriptStruct* GetStructContainer() override;
-	virtual UDataTable* GetDialogueDataTable() override;
-	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
-	virtual void SetDataTable(UDataTable* InDataTable) override;
-};
 
 USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGConversationDialogue
@@ -73,28 +51,6 @@ struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGConversationDialogue
 	bool IsEvidenceCorrect;
 };
 
-USTRUCT()
-struct FSI_ResponseDialogueArray : public FLGDialogueArray
-{
-	GENERATED_BODY()
-
-	FSI_ResponseDialogueArray();
-
-	UPROPERTY()
-	TArray<FSI_ResponseDialogue> ResponseDialogueArray;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USI_DialogueDataTable* ResponseDialogueDataTable;
-
-	void UpdateDataTableStructValues(TArray<FSI_ResponseDialogue*>& OutDataTableStructArray);
-
-	TArray<FSI_ResponseDialogue>* GetDialogueArray();
-	virtual UScriptStruct* GetStructContainer() override;
-	virtual UDataTable* GetDialogueDataTable() override;
-	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
-	virtual void SetDataTable(UDataTable* InDataTable) override;
-};
-
 USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
 {
@@ -103,11 +59,12 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	int32 Line;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
+	//TODO: @Jeff replace with Data Asset references
+	/*UPROPERTY()
 	FSI_PressDialogueArray PressDialogue;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
-	FSI_ResponseDialogueArray ResponseDialogue;
+	UPROPERTY()
+	FSI_ResponseDialogueArray ResponseDialogue;*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
     bool IsTrueStatement;
@@ -117,28 +74,6 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
 	
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
 	FString ResponseURL;
-};
-
-USTRUCT()
-struct FSI_PrimaryDialogueArray : public FLGDialogueArray
-{
-	GENERATED_BODY()
-
-	FSI_PrimaryDialogueArray();
-
-	UPROPERTY()
-	TArray<FSI_PrimaryDialogue> PrimaryDialogueArray;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USI_DialogueDataTable* PrimaryDialogueDataTable;
-
-	void UpdateDataTableStructValues(TArray<FSI_PrimaryDialogue*>& OutDataTableStructArray);
-	
-	TArray<FSI_PrimaryDialogue>* GetDialogueArray();
-	virtual UScriptStruct* GetStructContainer() override;
-	virtual UDataTable* GetDialogueDataTable() override;
-	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
-	virtual void SetDataTable(UDataTable* InDataTable) override;
 };
 
 USTRUCT(BlueprintType)
@@ -153,28 +88,6 @@ struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGConversationDialogue
 	int32 SpeakerLine;
 };
 
-USTRUCT()
-struct FSI_CorrectedDialogueArray : public FLGDialogueArray
-{
-	GENERATED_BODY()
-
-	FSI_CorrectedDialogueArray();
-
-	UPROPERTY()
-	TArray<FSI_CorrectedDialogue> CorrectedDialogueArray;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USI_DialogueDataTable* CorrectedDialogueDataTable;
-
-	void UpdateDataTableStructValues(TArray<FSI_CorrectedDialogue*>& OutDataTableStructArray);
-
-	TArray<FSI_CorrectedDialogue>* GetDialogueArray();
-	virtual UScriptStruct* GetStructContainer() override;
-	virtual UDataTable* GetDialogueDataTable() override;
-	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
-	virtual void SetDataTable(UDataTable* InDataTable) override;
-};
-
 USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGConversationDialogue
 {
@@ -184,31 +97,6 @@ struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGConversationDialogue
 	int32 ResponseLine;
 };
 
-USTRUCT()
-struct FSI_DefaultResponseArray : public FLGDialogueArray
-{
-	GENERATED_BODY()
-
-	FSI_DefaultResponseArray();
-
-	UPROPERTY(VisibleAnywhere)
-	FGuid DialogueID;
-
-	UPROPERTY()
-	TArray<FSI_DefaultResponse> DefaultResponseArray;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USI_DialogueDataTable* DefaultResponseDataTable;
-
-	void UpdateDataTableStructValues(TArray<FSI_DefaultResponse*>& OutDataTableStructArray);
-
-	TArray<FSI_DefaultResponse>* GetDialogueArray();
-	virtual UScriptStruct* GetStructContainer() override;
-	virtual UDataTable* GetDialogueDataTable() override;
-	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
-	virtual void SetDataTable(UDataTable* InDataTable) override;
-};
-
 USTRUCT(BlueprintType)
 struct SI_PROTOTYPE_API FSI_BubbleDialogue : public FLGDialogue
 {
@@ -216,44 +104,6 @@ struct SI_PROTOTYPE_API FSI_BubbleDialogue : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	FString BubbleTest;
-};
-
-USTRUCT()
-struct FSI_BubbleDialogueArray : public FLGDialogueArray
-{
-	GENERATED_BODY()
-
-	FSI_BubbleDialogueArray();
-
-	UPROPERTY()
-	TArray<FSI_BubbleDialogue> BubbleDialogueArray;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USI_DialogueDataTable* BubbleDialogueDataTable;
-
-	void UpdateDataTableStructValues(TArray<FSI_BubbleDialogue*>& OutDataTableStructArray);
-
-	TArray<FSI_BubbleDialogue>* GetDialogueArray();
-	virtual UScriptStruct* GetStructContainer() override;
-	virtual UDataTable* GetDialogueDataTable() override;
-	virtual void InitializeDialogueDataTable(UDataTable* InDataTable) override;
-	virtual void SetDataTable(UDataTable* InDataTable) override;
-};
-
-USTRUCT()
-struct FSI_DialogueArrayData
-{
-	GENERATED_BODY()
-
-	FSI_DialogueArrayData();
-
-	FGuid DialogueDataID;
-	FString DialogueLabel;
-	TArray<FLGDialogueArray> DialogueArrays;
-	TArray<FLGDialogueArray*> DialogueArrayPtrs;
-
-	void AddNewArrayByTag(const FGameplayTag& InStructTypeTag, FLGCsvInfoImportPayload& OutPayload);
-	FLGDialogueArray* GetDialogueArrayByID(const FGuid& InDialogueArrayID);
 };
 
 USTRUCT(BlueprintType)
@@ -267,7 +117,7 @@ struct SI_PROTOTYPE_API FSI_PartDialogueData
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DialogueURLs;
 
-	FSI_DialogueArrayData DialogueData;
+	FString GetPartNameNoSpace() const;
 };
 
 USTRUCT(BlueprintType)
@@ -299,9 +149,6 @@ struct SI_PROTOTYPE_API FSI_DefaultDialogueData
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DefaultDialogueURLs;
-
-	UPROPERTY(EditAnywhere, Category = "DialogueData")
-	FSI_DialogueArrayData DefaultDialogueData;
 };
 
 USTRUCT(BlueprintType)
@@ -314,9 +161,6 @@ struct SI_PROTOTYPE_API FSI_DefaultBubbleDialogueData
 
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	FLGDialogueURL SeeNickBubbleDialogueURL;
-
-	UPROPERTY(EditAnywhere, Category = "DialogueData")
-	FSI_DialogueArrayData BubbleDialogueData;
 };
 
 USTRUCT(BlueprintType)
@@ -324,9 +168,9 @@ struct SI_PROTOTYPE_API FSI_DialogueState : public FLGDialogueState
 {
 	GENERATED_BODY()
 
-	FSI_DialogueState(){}
+	/*FSI_DialogueState(){}
 	FSI_DialogueState(FSI_PrimaryDialogueArray* InPrimaryDialogueArray);
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
-	FSI_PrimaryDialogueArray CasePrimaryDialogueArray;
+	FSI_PrimaryDialogueArray CasePrimaryDialogueArray;*/
 };

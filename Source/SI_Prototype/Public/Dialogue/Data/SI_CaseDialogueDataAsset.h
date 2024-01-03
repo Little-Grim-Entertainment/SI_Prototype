@@ -15,6 +15,8 @@ class SI_PROTOTYPE_API USI_CaseDialogueDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 
+protected:
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USI_CaseData* CaseReference;
 	

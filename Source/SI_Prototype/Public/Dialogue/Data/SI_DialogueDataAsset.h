@@ -5,52 +5,15 @@
 #include "CoreMinimal.h"
 #include "Data/LGDialogueDataAsset.h"
 #include "Dialogue/SI_DialogueTypes.h"
-#include "Cases/Data/SI_CaseData.h"
-#include "Data/SI_DialogueDataTable.h"
 #include "SI_DialogueDataAsset.generated.h"
+
+class USI_CsvDataProcessorObject;
 
 UCLASS()
 class SI_PROTOTYPE_API USI_DialogueDataAsset : public ULGDialogueDataAsset
 {
 	GENERATED_BODY()
-
-	USI_DialogueDataAsset();
-
-public:
 	
-	template<class StructType>
-	StructType* GetDialogueArrayStructByCaseAndLabel(const FGameplayTag& InCaseTag, const FString& InDialogueLabel);
-	
-protected:
-
-	virtual void UpdateDialogue_Internal() override;
-	
-	virtual void OnRequestCheckForEmbeddedCsv_Implementation(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InDialogueLabel, FGuid& InDialogueDataID, FGuid& InDialogueArrayID) override;
-	virtual bool StructTypeHasEmbeddedCsv_Implementation(const FGameplayTag& InStructType) override; 
-
-	virtual void UpdateDataTable(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr) override;
-	virtual void UpdateDataTableRows(UDataTable* InDataTable, FRuntimeDataTableCallbackInfo& InCallbackInfo) override;
-	virtual void InitializeDialogueDataTableByIDs(UDataTable* InDataTable, const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
-	
-	virtual UScriptStruct* GetStructContainerByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
-	virtual UScriptStruct* GetStructTypeByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
-
-	virtual void* GetDialogueStructArrayByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID) override;
-	virtual FName GetStructPropertyNameByTag(const FGameplayTag& InGameplayTag) override;
-	virtual FName GetStructTypeNameByTag(const FGameplayTag& InGameplayTag) override;
-	virtual UDataTable* GenerateNewDataTable(UScriptStruct* InStructPtr, const FString& InPackagePath, FRuntimeDataTableCallbackInfo& InCallbackInfo) override;
-
-	virtual const FGameplayTag& GetCharacterTag() override;
-	
-	FSI_DialogueArrayData* GetDialogueDataByID(const FGuid& InDialogueDataID);
-	FLGDialogueArray* GetDialogueArrayStructByIDs(const FGuid& InDialogueDataID, const FGuid& InDialogueArrayID);
-	
-	template <class StructPtr, class ArrayPtr>
-	TArray<ArrayPtr>* GetDialogueArrayFromStruct(FLGDialogueArray* InArrayPtr);
-
-	template <class StructPtr, class ArrayPtr>
-	void UpdateDataTableStructByType(UDataTable* InDataTable, FLGDialogueArray* InArrayPtr);
-
 private:
 
 	UPROPERTY(EditAnywhere, Category = "FileInfo", meta=(Categories="Character"))
@@ -64,62 +27,4 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Dialogue | DialogueData")
 	TArray<FSI_CaseDialogueData> CaseDialogue;
-
-	void UpdateDefaultDialogue();
-	void UpdateBubbleDialogue();
-	void UpdateCaseDialogue();
-	
-	void InitializeDialogueLabels(const ESI_MainDialogueTypes& InMainDialogueType);
-	void InitializeFileNames(const ESI_MainDialogueTypes& InMainDialogueType);
-
-#if WITH_EDITOR
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
 };
-
-template <class StructPtr, class ArrayPtr>
-TArray<ArrayPtr>* USI_DialogueDataAsset::GetDialogueArrayFromStruct(FLGDialogueArray* InArrayPtr)
-{
-	StructPtr* DialogueArrayPtr = static_cast<StructPtr*>(InArrayPtr);
-	if(DialogueArrayPtr)
-	{
-		TArray<ArrayPtr>* DialogueArray = DialogueArrayPtr->GetDialogueArray();
-		return DialogueArray;
-	}
-	return nullptr;
-}
-
-template <class StructType, class ArrayType>
-void USI_DialogueDataAsset::UpdateDataTableStructByType(UDataTable* InDataTable, FLGDialogueArray* InArrayPtr)
-{
-	TArray<StructType*> DialoguePtrs;
-	InDataTable->GetAllRows(TEXT(""),DialoguePtrs);
-
-	ArrayType* ArrayPtr = static_cast<ArrayType*>(InArrayPtr);
-	if(!ArrayPtr) {return;}
-
-	ArrayPtr->UpdateDataTableStructValues(DialoguePtrs);
-	InDataTable->MarkPackageDirty();
-}
-
-template <class StructType>
-StructType* USI_DialogueDataAsset::GetDialogueArrayStructByCaseAndLabel(const FGameplayTag& InCaseTag, const FString& InDialogueLabel)
-{
-	for(FSI_CaseDialogueData& CurrentCaseDialogueData : CaseDialogue)
-	{
-		if(!IsValid(CurrentCaseDialogueData.CaseReference) || CurrentCaseDialogueData.CaseReference->CaseTag != InCaseTag) {continue;}
-
-		for(FSI_PartDialogueData& CurrentPartDialogueData : CurrentCaseDialogueData.PartDialogue)
-		{
-			for (FLGDialogueArray& CurrentDialogueArray : CurrentPartDialogueData.DialogueData.DialogueArrays)
-			{
-				StructType* StructArray = static_cast<StructType*>(&CurrentDialogueArray);
-				if(!StructArray || StructArray->DialogueArrayLabel != InDialogueLabel) {continue;}
-								
-				return StructArray;
-			}
-		}
-	}
-
-	return nullptr;
-}

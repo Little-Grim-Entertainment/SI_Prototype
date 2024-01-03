@@ -5,7 +5,7 @@
 #define LOCTEXT_NAMESPACE "FSI_EditorModule"
 
 DEFINE_LOG_CATEGORY(SI_Editor);
-IMPLEMENT_MODULE(FSI_EditorModule, SI_Editor)
+IMPLEMENT_MODULE(FDefaultModuleImpl, SI_Editor)
 
 void FSI_EditorModule::StartupModule()
 {

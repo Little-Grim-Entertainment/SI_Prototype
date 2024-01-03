@@ -23,7 +23,7 @@ class USI_PartData;
 class USI_ObjectiveData;
 
 USTRUCT(BlueprintType)
-struct FSI_MusicSettings
+struct SI_PROTOTYPE_API FSI_MusicSettings
 {
 	GENERATED_BODY()
 
@@ -57,7 +57,7 @@ struct FSI_MusicSettings
 };
 
 USTRUCT(BlueprintType)
-struct FSI_InputAction
+struct SI_PROTOTYPE_API FSI_InputAction
 {
 	GENERATED_BODY()
 
@@ -77,7 +77,7 @@ private:
 };
 
 USTRUCT(BlueprintType)
-struct FSI_InputMapping
+struct SI_PROTOTYPE_API FSI_InputMapping
 {
 	GENERATED_BODY()
 
@@ -107,7 +107,7 @@ private:
 };
 
 USTRUCT(BlueprintType)
-struct FSI_ObjectiveDetails
+struct SI_PROTOTYPE_API FSI_ObjectiveDetails
 {
 	GENERATED_BODY()
 
@@ -137,7 +137,7 @@ private:
 };
 
 USTRUCT(BlueprintType)
-struct FSI_PartDetails
+struct SI_PROTOTYPE_API FSI_PartDetails
 {
 	GENERATED_BODY()
 
@@ -181,7 +181,7 @@ private:
 };
 
 USTRUCT(BlueprintType)
-struct FSI_CaseDetails
+struct SI_PROTOTYPE_API FSI_CaseDetails
 {
 	GENERATED_BODY()
 
@@ -229,7 +229,7 @@ private:
 };
 
 USTRUCT(BlueprintType)
-struct FSI_MapState
+struct SI_PROTOTYPE_API FSI_MapState
 {
 	GENERATED_BODY()
 
@@ -280,7 +280,7 @@ struct FSI_MapState
 };
 
 USTRUCT(BlueprintType)
-struct FSI_QuckActionOptions : public FTableRowBase
+struct SI_PROTOTYPE_API FSI_QuckActionOptions : public FTableRowBase
 {
 	GENERATED_BODY()
 	
@@ -295,7 +295,7 @@ struct FSI_QuckActionOptions : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
-struct FSIGameplayAbilities
+struct SI_PROTOTYPE_API FSIGameplayAbilities
 {
 	GENERATED_BODY()
 

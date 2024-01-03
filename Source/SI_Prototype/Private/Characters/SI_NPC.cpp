@@ -95,9 +95,9 @@ void ASI_NPC::InitializeCharacterState()
 		const FString CaseName = ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(CurrentCase->CaseTag);
 		const FString DialogueLabel = CaseName + "_" + "P" + CaseManager->GetActivePart()->PartName.ToString();
 
-		FSI_PrimaryDialogueArray* PrimaryDialogueArray = CharacterData->CharacterDialogue->GetDialogueArrayStructByCaseAndLabel<FSI_PrimaryDialogueArray>(CurrentCase->CaseTag, DialogueLabel);
+		/*FSI_PrimaryDialogueArray* PrimaryDialogueArray = CharacterData->CharacterDialogue->GetDialogueArrayStructByCaseAndLabel<FSI_PrimaryDialogueArray>(CurrentCase->CaseTag, DialogueLabel);
 		FSI_DialogueState* NewDialogueState = new FSI_DialogueState(PrimaryDialogueArray);
 
-		CharacterState->AddNewDialogueState(CurrentCase->CaseTag, NewDialogueState);
+		CharacterState->AddNewDialogueState(CurrentCase->CaseTag, NewDialogueState);*/
 	}
 }

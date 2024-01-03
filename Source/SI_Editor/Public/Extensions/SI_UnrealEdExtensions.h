@@ -17,6 +17,7 @@ public:
 
 private:
 
+	
 	static TSharedRef<FExtender> ExtendPIEMenu(const TSharedRef<FUICommandList> CommandList);
 	static void CreateExtendedPIEMenu(FMenuBuilder& MenuBuilder);
 

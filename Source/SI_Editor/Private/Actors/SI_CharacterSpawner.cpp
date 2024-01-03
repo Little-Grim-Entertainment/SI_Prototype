@@ -245,3 +245,4 @@ void ASI_CharacterSpawner::SpawnCharacter()
 	AActor* SpawnedActor = World->SpawnActor(CharacterData->CharacterClass, &SpawnLocation, &SpawnRotation, ActorSpawnParameters);
 	SpawnedCharacter = Cast<ASI_Character>(SpawnedActor);
 }
+

@@ -11,7 +11,7 @@ void ULGProjectDialogueData::UpdateAllDialogue()
 		ULGDialogueDataAsset* CurrentDialogueData = CurrentCharacterDialogue.CharacterDialogueData;
 		
 		if(!IsValid(CurrentDialogueData)){continue;}
-		CurrentDialogueData->UpdateDialogue_Internal();
+		//CurrentDialogueData->UpdateDialogue_Internal();
 	}
 }
 
@@ -41,7 +41,7 @@ void ULGProjectDialogueData::PostEditChangeProperty(FPropertyChangedEvent& Prope
 			ULGDialogueDataAsset* CurrentDialogueDataAsset = Cast<ULGDialogueDataAsset>(ObjectPtr);
 			if(!IsValid(CurrentDialogueDataAsset)) {continue;}
 			
-			CurrentCharacterDialogue.CharacterTag = CurrentDialogueDataAsset->GetCharacterTag();
+			//CurrentCharacterDialogue.CharacterTag = CurrentDialogueDataAsset->GetCharacterTag();
 			return;
 		}
 	}

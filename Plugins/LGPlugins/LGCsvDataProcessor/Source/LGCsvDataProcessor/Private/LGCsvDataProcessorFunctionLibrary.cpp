@@ -14,13 +14,11 @@ void ULGCsvDataProcessorFunctionLibrary::ImportCsvFromURL(const FLGCsvInfoImport
 	FRuntimeDataTableOperationParams RuntimeDataTableOperationParams;
 	RuntimeDataTableOperationParams.OperationName = FName(TEXT("CsvUpdate"));
 	RuntimeDataTableOperationParams.FilePath = InImportPayload.FilePath;
-	RuntimeDataTableOperationParams.FolderName = InImportPayload.FolderName;
 	RuntimeDataTableOperationParams.FileName = InImportPayload.FileName;
 	RuntimeDataTableOperationParams.Caller = InImportPayload.Caller;
 	RuntimeDataTableOperationParams.CsvArrayTypeTag = InImportPayload.CsvArrayTypeTag;
 	RuntimeDataTableOperationParams.DialogueStructID = InImportPayload.DialogueStructID;
 	RuntimeDataTableOperationParams.DialogueArrayID = InImportPayload.DialogueArrayID;
-	RuntimeDataTableOperationParams.DialogueLabel = InImportPayload.DialogueLabel;
 	
 	if(!InCallbackDelegate.IsBound()) {UE_LOG(LogCsvDataProcessor, Warning, TEXT("Delegate is not bound."));}
 	
@@ -72,7 +70,7 @@ void ULGCsvDataProcessorFunctionLibrary::OnSheetStructsDownloaded(FRuntimeDataTa
 			if(DialogueProcessorObject->Execute_StructTypeHasEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag))
 			{
 				FString EmbeddedSavePath = ProjectSavePath;
-				DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.DialogueLabel, InCallbackInfo.DialogueStructID, InCallbackInfo.DialogueArrayID);
+				DialogueProcessorObject->Execute_OnRequestCheckForEmbeddedCsv(InCallbackInfo.Caller, InCallbackInfo.CsvArrayTypeTag, EmbeddedSavePath, InCallbackInfo.FileName, InCallbackInfo.DialogueStructID, InCallbackInfo.DialogueArrayID);
 			}
 		}
 	}

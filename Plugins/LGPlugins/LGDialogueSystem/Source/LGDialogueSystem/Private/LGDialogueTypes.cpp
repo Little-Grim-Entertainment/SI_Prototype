@@ -2,42 +2,8 @@
 
 
 #include "LGDialogueTypes.h"
-#include "Data/LGDialogueDataAsset.h"
 
 DEFINE_LOG_CATEGORY(LogLGDialogue);
-
-
-FLGDialogueArray::FLGDialogueArray() : DialogueArrayID(FGuid::NewGuid())
-{
-}
-
-void FLGDialogueArray::SetDataTable(UDataTable* InDataTable)
-{
-}
-
-UScriptStruct* FLGDialogueArray::GetStructContainer()
-{
-	return nullptr;
-}
-
-UDataTable* FLGDialogueArray::GetDialogueDataTable()
-{
-	return nullptr;
-}
-
-void FLGDialogueArray::InitializeDialogueDataTable(UDataTable* InDataTable)
-{
-}
-
-bool FLGDialogueArray::operator==(const FLGDialogueArray& OtherDialogue) const
-{
-	return OtherDialogue.DialogueStructTypeTag == DialogueStructTypeTag;
-}
-
-bool FLGDialogueArray::operator!=(const FLGDialogueArray& OtherDialogue) const
-{
-	return OtherDialogue.DialogueStructTypeTag != DialogueStructTypeTag;
-}
 
 FLGDialogue::FLGDialogue() : DialogueID(FGuid::NewGuid())
 {
@@ -55,8 +21,4 @@ bool FLGDialogue::operator!=(const FLGDialogue& OtherDialogue) const
 
 FLGCharacterDialogue::FLGCharacterDialogue()
 {
-	if(IsValid(CharacterDialogueData))
-	{
-		CharacterTag = CharacterDialogueData->GetCharacterTag();
-	}
 }

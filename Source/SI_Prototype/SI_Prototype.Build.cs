@@ -7,11 +7,8 @@ public class SI_Prototype : ModuleRules
 	public SI_Prototype(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PrivateDependencyModuleNames.AddRange(new string[] { 
-			"GameplayAbilities",
-			"GameplayTags",
-			"GameplayTasks",
-			"GameplayStateTreeModule",
-			"StateTreeModule"
+			"CoreUObject",
+			"Engine",
 		});
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -19,9 +16,11 @@ public class SI_Prototype : ModuleRules
 			"AdvancedThirdPersonCamera",
 			"AIModule",
 			"Core", 
-			"CoreUObject",
-			"Engine",
+			"EnhancedInput",
 			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks",
+			"GameplayStateTreeModule",
 			"InputCore",
 			"LevelSequence",
 			"MediaAssets",
@@ -32,13 +31,11 @@ public class SI_Prototype : ModuleRules
 			"Slate", 
 			"SlateCore",
 			"UMG",
-			"UnrealEd",
 			"StateTreeModule",
 			"SmartObjectsModule",
 			
 			// LG Plugins
 			"LGCoreLibrary",
-			"LGCsvDataProcessor",
 			"LGDebug", 
 			"LGDialogueSystem",
 		});
