@@ -25,10 +25,13 @@ struct LGDIALOGUESYSTEM_API FLGDialogue : public FTableRowBase
 	GENERATED_BODY()
 
 	FLGDialogue();
+
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
+	FName DialogueTag;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
 	FGuid DialogueID;
-
+	
 	bool operator==(const FLGDialogue& OtherDialogue) const;
 	bool operator!=(const FLGDialogue& OtherDialogue) const;
 };
@@ -49,6 +52,17 @@ struct LGDIALOGUESYSTEM_API FLGConversationDialogue : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="SpeakerTag"))
 	FString EmphasizedColorsString;
+};
+
+USTRUCT(BlueprintType)
+struct LGDIALOGUESYSTEM_API FLGDialogueData
+{
+	GENERATED_BODY()
+
+	FLGDialogueData();
+	
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
+	FGuid DialogueDataID;
 };
 
 USTRUCT(BlueprintType)

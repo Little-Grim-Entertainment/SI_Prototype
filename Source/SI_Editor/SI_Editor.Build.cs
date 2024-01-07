@@ -9,10 +9,15 @@ public class SI_Editor : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
+                "Blutility",
                 "Core",
                 "GameplayTags",
                 "UMG",
                 "UnrealEd",
+                
+                // Plugins
+                "RuntimeDataTable",
+                "EasyCsv",
                 
                 // Spade Investigations
                 "SI_Prototype",
@@ -21,13 +26,13 @@ public class SI_Editor : ModuleRules
                 // Little Grim
                 "LGCoreLibrary",
                 "LGCsvDataProcessor",
+                "LGDialogueSystem", 
             }
         );
 
         PrivateDependencyModuleNames.AddRange(
             new string[]
             {
-                "Blutility",
                 "CoreUObject",
                 "Engine",
                 "InputCore",

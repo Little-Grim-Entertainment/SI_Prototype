@@ -162,8 +162,11 @@ void URuntimeDataTableObject::OnResponseReceived_GET_SheetAsCSV(
 	CallbackInfo.FileName = OperationParams.FileName;
 	CallbackInfo.Caller = OperationParams.Caller;
 	CallbackInfo.CsvArrayTypeTag = OperationParams.CsvArrayTypeTag;
+	CallbackInfo.DialogueTag = OperationParams.DialogueTag;
 	CallbackInfo.DialogueStructID = OperationParams.DialogueStructID;
 	CallbackInfo.DialogueArrayID = OperationParams.DialogueArrayID;
+	CallbackInfo.DataTableOwnerID = OperationParams.DataTableOwnerID;
+	CallbackInfo.DataTableSoftPtr = OperationParams.DataTableSoftPtr;
 	CallbackInfo.bWasSuccessful = bWasSuccessful;
 	GenericValidateHttpResponse(Request, Response, CallbackInfo);
 	CallOnComplete.ExecuteIfBound(CallbackInfo);

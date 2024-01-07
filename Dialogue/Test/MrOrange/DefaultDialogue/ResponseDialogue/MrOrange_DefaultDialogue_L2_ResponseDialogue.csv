@@ -1,0 +1,5 @@
+"Key","ResponseLine","IsEvidenceCorrect","SpeakerTag","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueTag","DialogueID"
+"1","1","False","(TagName=""Character.Test.MrOrange"")","Yea, I figued you didn't know what you're talking about.","","","None","3838C6004A06F2E1DF75D5BD8366DF37"
+"2","1","True","(TagName=""Character.Main.NickSpade"")","Take a look at this.","","","None","F33B72AB44629225C9E853AD3AF1E16E"
+"3","2","True","(TagName=""Character.Test.MrOrange"")","WHERE DID YOU GET THAT PHOTO!","","","None","037ADB2E4E15E28C39F6978420E018C1"
+"4","3","True","(TagName=""Character.Test.MrOrange"")","I can't believe this...","","","None","07B2F6304ED6FEE1214299920CB63B1A"

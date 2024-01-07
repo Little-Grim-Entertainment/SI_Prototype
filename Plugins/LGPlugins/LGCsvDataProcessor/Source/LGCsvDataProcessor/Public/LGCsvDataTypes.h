@@ -39,6 +39,9 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 	FGuid DialogueStructID;
 
 	UPROPERTY()
+	FGuid DataTableOwnerID;
+
+	UPROPERTY()
 	FGuid DialogueArrayID;
 		
 	UPROPERTY()
@@ -52,6 +55,12 @@ struct LGCSVDATAPROCESSOR_API FLGCsvInfoImportPayload
 
 	UPROPERTY()
 	FGameplayTag CsvArrayTypeTag;
+
+	UPROPERTY()
+	FName DialogueTag;
+
+	UPROPERTY()
+	TSoftObjectPtr<UDataTable> DataTableSoftPtr;
 };
 
 
@@ -60,12 +69,15 @@ struct LGCSVDATAPROCESSOR_API FLGDialogueArray
 {
 	GENERATED_BODY()
 
-	FLGDialogueArray() {}
+	FLGDialogueArray();
 	virtual ~FLGDialogueArray(){}
 	
 	UPROPERTY()
 	FGameplayTag DialogueStructTypeTag;
 
+	UPROPERTY()
+    FName DialogueTag;
+	
 	UPROPERTY()
 	FName PropertyName;
 
@@ -75,11 +87,14 @@ struct LGCSVDATAPROCESSOR_API FLGDialogueArray
 	UPROPERTY()
 	FString DialogueArrayLabel;
 
+	void GenerateDialogueTagFromTypeName(FName& OutDialogueTag, const FGameplayTag& InStructType);
+
 	virtual void SetDataTable(UDataTable* InDataTable);
-	
+		
 	virtual UScriptStruct* GetStructContainer();
 	virtual UDataTable* GetDialogueDataTable();
 	virtual void InitializeDialogueDataTable(UDataTable* InDataTable);
+	virtual void InitializeContainedDialogueTags();
 	
 	bool operator==(const FLGDialogueArray& OtherDialogue) const;
 	bool operator!=(const FLGDialogueArray& OtherDialogue) const;
@@ -95,9 +110,8 @@ struct LGCSVDATAPROCESSOR_API FLGDialogueArrayData
 
 	FGuid DialogueDataID;
 	FString DialogueLabel;
-	TArray<FLGDialogueArray> DialogueArrays;
-	TArray<FLGDialogueArray*> DialogueArrayPtrs;
+	TArray<FLGDialogueArray*> DialogueArrays;
 
-	virtual void AddNewArrayByTag(const FGameplayTag& InStructTypeTag, FLGCsvInfoImportPayload& OutPayload);
+	virtual void AddNewArrayByTag(const FGameplayTag& InStructTypeTag, FLGCsvInfoImportPayload& OutPayload, const FName& InDialogueTag = FName());
 	virtual FLGDialogueArray* GetDialogueArrayByID(const FGuid& InDialogueArrayID);
 };

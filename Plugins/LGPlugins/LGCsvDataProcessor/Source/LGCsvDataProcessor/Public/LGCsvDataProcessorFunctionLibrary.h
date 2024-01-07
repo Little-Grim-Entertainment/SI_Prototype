@@ -8,8 +8,6 @@
 #include "LGCsvDataTypes.h"
 #include "LGCsvDataProcessorFunctionLibrary.generated.h"
 
-struct FRuntimeDataTableCallbackInfo;
-
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnRequestCheckForEmbeddedCsv, const void* InArrayPtr);
 
 UCLASS()

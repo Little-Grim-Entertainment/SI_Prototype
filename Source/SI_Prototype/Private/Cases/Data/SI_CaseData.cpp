@@ -2,9 +2,8 @@
 
 
 #include "Cases/Data/SI_CaseData.h"
+#include "Cases/Data/SI_PartData.h"
 
 USI_CaseData::USI_CaseData()
 {
 }
-
-

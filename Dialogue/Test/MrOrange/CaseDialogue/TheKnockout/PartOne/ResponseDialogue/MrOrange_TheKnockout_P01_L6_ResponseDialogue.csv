@@ -1,0 +1,4 @@
+"Key","ResponseLine","IsEvidenceCorrect","SpeakerTag","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueTag","DialogueID"
+"1","1","False","(TagName=""Character.Test.MrOrange"")","No, he really did give me that! I have it right here.","","","None","C11BC0D7440FC1B4DBCC319D883DEDBE"
+"2","1","True","(TagName=""Character.Main.NickSpade"")","Mr Blue doesn't even drive a car!","","","None","57F5E5F8469EACD929C7E69FAAA7577E"
+"3","2","True","(TagName=""Character.Test.MrOrange"")","Oh... right. You caught me.","","","None","A8A772254C19DBBAE18C92A1A513AE8B"

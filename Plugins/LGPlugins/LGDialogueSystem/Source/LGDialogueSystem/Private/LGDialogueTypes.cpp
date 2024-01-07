@@ -19,6 +19,11 @@ bool FLGDialogue::operator!=(const FLGDialogue& OtherDialogue) const
 	return OtherDialogue.DialogueID != DialogueID;
 }
 
+FLGDialogueData::FLGDialogueData() : DialogueDataID(FGuid::NewGuid())
+{
+	
+}
+
 FLGCharacterDialogue::FLGCharacterDialogue()
 {
 }

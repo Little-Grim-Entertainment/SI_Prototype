@@ -42,6 +42,9 @@ struct FRuntimeDataTableCallbackInfo
 	FGuid DialogueStructID = FGuid();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FGuid DataTableOwnerID = FGuid();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
 	FGuid DialogueArrayID = FGuid();
 
 	UPROPERTY()
@@ -49,6 +52,12 @@ struct FRuntimeDataTableCallbackInfo
 
 	UPROPERTY()
 	FGameplayTag CsvArrayTypeTag;
+
+	UPROPERTY()
+	FName DialogueTag;
+
+	UPROPERTY()
+	TSoftObjectPtr<UDataTable> DataTableSoftPtr;
 };
 
 // Used to return a JWT internally. Don't use this.
@@ -82,6 +91,9 @@ struct FRuntimeDataTableOperationParams
 	FGuid DialogueStructID = FGuid();
 
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FGuid DataTableOwnerID = FGuid();
+
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	FGuid DialogueArrayID = FGuid();
 
 	/** The caller that begins the CSV Import */
@@ -90,6 +102,12 @@ struct FRuntimeDataTableOperationParams
 
 	UPROPERTY()
 	FGameplayTag CsvArrayTypeTag;
+	
+	UPROPERTY()
+	FName DialogueTag;
+
+	UPROPERTY()
+	TSoftObjectPtr<UDataTable> DataTableSoftPtr;
 };
 
 // Used to build an authentication token

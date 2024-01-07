@@ -23,3 +23,22 @@ FString ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(const FGameplayTa
 	
 	return TagString.RightChop(StartingIndex + 1);
 }
+
+FName ULGBlueprintFunctionLibrary::ConvertFileNameToTagName(const FString& InFileName)
+{
+	FString TagString = InFileName;
+
+	const FString Underscore = "_";
+	const FString Period = ".";
+	
+	TagString = TagString.Replace(*Underscore, *Period);
+
+	const FName ConvertedTag = FName(TagString);
+	
+	return ConvertedTag;
+}
+
+int32 ULGBlueprintFunctionLibrary::ConvertIntStringToInt(const FString& InIntString)
+{
+	return *NumberList.Find(InIntString);
+}

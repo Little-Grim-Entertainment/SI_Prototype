@@ -33,9 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TitleCard")
 	TSubclassOf<USI_CaseTitleCard> TitleCardWidget;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TitleCard", meta=(EditCondition="TitleCardWidget != nullptr", EditConditionHides))
-	UTexture2D* TitleCardBackground;
+	UTexture2D* TitleCardBackground = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TitleCard", meta=(EditCondition="TitleCardWidget != nullptr", EditConditionHides))
-	USoundBase* TitleCardMusic;
+	USoundBase* TitleCardMusic = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TitleCard", meta=(EditCondition="TitleCardWidget != nullptr", EditConditionHides))
 	float TitleCardLength = 7.0f;
 	

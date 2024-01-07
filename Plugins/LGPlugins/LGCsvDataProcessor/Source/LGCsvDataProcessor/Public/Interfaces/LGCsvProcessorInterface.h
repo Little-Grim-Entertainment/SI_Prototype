@@ -30,7 +30,7 @@ public:
 
 	// This should be overriden to get any embedded CSVs and process them as well.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
-	void OnRequestCheckForEmbeddedCsv(const FGameplayTag& InStructType, const FString& InSavePath, const FString& InFileName, FGuid& InDialogueDataID, FGuid& InDialogueArrayID);
+	void OnRequestCheckForEmbeddedCsv(const FRuntimeDataTableCallbackInfo& InCallbackInfo, const FString& InSavePath);
 
 	// Use if there is a quick check to determine if OnRequestCheckForEmbeddedCsv should be ran.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
