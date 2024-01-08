@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "GameplayTag/SI_GameplayTagTypes.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
-#include "..\Levels\SI_MapGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
+#include "Levels\SI_MapGameplayTagLibrary.h"
 #include "SI_GameInstanceSubsystem.generated.h"
 
 

@@ -25,7 +25,8 @@ public class LGCoreLibrary : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", 
+				"GameplayTags",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LGCsvDataTypes.h"
+#include "RuntimeDataTable.h"
+#include "LGDialogueTypes.h"
 #include "UObject/Interface.h"
 #include "LGCsvProcessorInterface.generated.h"
 
@@ -21,9 +22,17 @@ class LGCSVDATAPROCESSOR_API ILGCsvProcessorInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
+	// This gets called once the CSVs have successfully been downloaded.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
-	void OnInteractComplete(UObject* Caller, const FLGCsvInfo& InCvsInfo);
+	void OnCsvProcessComplete(FRuntimeDataTableCallbackInfo& InCallbackInfo, UScriptStruct* InStructPtr);
+
+	// This should be overriden to get any embedded CSVs and process them as well.
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
+	void OnRequestCheckForEmbeddedCsv(const FRuntimeDataTableCallbackInfo& InCallbackInfo, const FString& InSavePath);
+
+	// Use if there is a quick check to determine if OnRequestCheckForEmbeddedCsv should be ran.
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "DialogueProcessing")
+	bool StructTypeHasEmbeddedCsv(const FGameplayTag& InStructType);
 };

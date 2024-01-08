@@ -17,4 +17,4 @@ void FLGCoreLibraryModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FLGCoreLibraryModule, LGCoreLibrary)
+IMPLEMENT_MODULE(FDefaultModuleImpl, LGCoreLibrary)

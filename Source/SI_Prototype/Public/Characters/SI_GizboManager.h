@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/SI_GameInstanceSubsystem.h"
-#include "GameplayTag/SI_GameplayTagTypes.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "SI_GizboManager.generated.h"
 
 class USI_AbilitySystemComponent;

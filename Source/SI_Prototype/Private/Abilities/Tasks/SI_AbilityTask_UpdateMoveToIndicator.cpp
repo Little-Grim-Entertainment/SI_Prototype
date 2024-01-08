@@ -8,7 +8,7 @@
 #include "Actors/SI_MoveToIndicator.h"
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Interfaces/SI_MovableInterface.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 USI_AbilityTask_UpdateMoveToIndicator::USI_AbilityTask_UpdateMoveToIndicator(
 	const FObjectInitializer& ObjectInitializer)
@@ -105,7 +105,7 @@ void USI_AbilityTask_UpdateMoveToIndicator::UpdateMoveToIndicatorPosition()
 			// Update HUD
 			if(!bHitActorIsMovable)
 			{
-				PC->GetSITagManager()->AddNewGameplayTag(SITag_UI_HUD_QuickAction_Movable);
+				PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_UI_HUD_QuickAction_Movable);
 				bHitActorIsMovable = true;
 			}
 			//	FGameplayEventData Payload;
@@ -117,7 +117,7 @@ void USI_AbilityTask_UpdateMoveToIndicator::UpdateMoveToIndicatorPosition()
 		{
 			if(bHitActorIsMovable)
 			{
-				PC->GetSITagManager()->RemoveTag(SITag_UI_HUD_QuickAction_Movable);
+				PC->GetSITagManager()->RemoveTag_Internal(SITag_UI_HUD_QuickAction_Movable);
 			}
 			bHitActorIsMovable = false;
 		}

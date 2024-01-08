@@ -5,16 +5,16 @@
 #include "SI_GameInstance.h"
 
 // Subsystems
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
-#include "Data/Cases/SI_CaseManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
+#include "Cases/SI_CaseManager.h"
 #include "Media/SI_MediaManager.h"
 #include "Levels/SI_LevelManager.h"
 
 // Case Data
-#include "Data/Cases/SI_CaseData.h"
-#include "Data/Cases/SI_PartData.h"
-#include "Data/Cases/SI_ObjectiveData.h"
+#include "Cases/Data/SI_CaseData.h"
+#include "Cases/Data/SI_PartData.h"
+#include "Cases/Data/SI_ObjectiveData.h"
 
 // UI
 #include "UI/SI_DialogueBox.h"
@@ -26,11 +26,9 @@
 #include "UI/SI_SkipWidget.h"
 
 #include "Controllers/SI_PlayerController.h"
-#include "Data/Maps/SI_MenuMapData.h"
-#include "Data/Media/SI_VideoDataAsset.h"
+#include "Levels/Data/SI_MenuMapData.h"
+#include "Media/Data/SI_VideoDataAsset.h"
 #include "GameModes/SI_GameMode.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
-#include "SI_Prototype/SI_Prototype.h"
 
 #if !UE_BUILD_SHIPPING
 static TAutoConsoleVariable<int32> CvarDisableTitleCard(
@@ -74,12 +72,12 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPay
 
 	if(InAddedTag == SITag_Player_State_Exploration)
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_HUD);
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_HUD);
 	}
 
 	if(InAddedTag == SITag_Media_Video)
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_Screen_Video);
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_Screen_Video);
 	}
 	
 	if(!SITagManager->HasParentTag(InAddedTag, SITag_UI)){return;}
@@ -90,7 +88,7 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPay
 
 		if(InAddedTag != SITag_UI_HUD_QuickAction_GadgetsOne)
 		{
-			SITagManager->RemoveTag(SITag_UI_HUD_QuickAction_GadgetsOne);
+			SITagManager->RemoveTag_Internal(SITag_UI_HUD_QuickAction_GadgetsOne);
 		}
 		return;
 	}
@@ -106,17 +104,17 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITa
 
 	if(InRemovedTag == SITag_Game_State_Loading)
 	{
-		SITagManager->RemoveTag(SITag_UI_Screen_Loading);
+		SITagManager->RemoveTag_Internal(SITag_UI_Screen_Loading);
 	}
 
 	if(InRemovedTag == SITag_Player_State_Exploration)
 	{
-		SITagManager->RemoveTag(SITag_UI_HUD);
+		SITagManager->RemoveTag_Internal(SITag_UI_HUD);
 	}
 
 	if(InRemovedTag == SITag_Media_Video)
 	{
-		SITagManager->RemoveTag(SITag_UI_Screen_Video);
+		SITagManager->RemoveTag_Internal(SITag_UI_Screen_Video);
 	}
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_UI)){return;}
@@ -151,7 +149,7 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITa
 
 	if(InRemovedTag != SITag_UI_HUD_QuickAction_GadgetsOne && SITagManager->HasParentTag(InRemovedTag, SITag_UI_HUD_QuickAction))
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_HUD_QuickAction_GadgetsOne);
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_HUD_QuickAction_GadgetsOne);
 	}
 	
 	RemoveSIWidget(GetActiveUIWidgetByTag<USI_UserWidget>(InRemovedTag));

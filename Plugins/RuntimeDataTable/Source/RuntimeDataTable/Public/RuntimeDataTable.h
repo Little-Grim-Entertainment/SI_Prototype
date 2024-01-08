@@ -3,6 +3,7 @@
 #pragma once
 
 #include "EasyCsvTypes.h"
+#include "GameplayTagContainer.h"
 
 #include "HttpModule.h"
 #include "UObject/Object.h"
@@ -38,10 +39,25 @@ struct FRuntimeDataTableCallbackInfo
 	FString FileName = "";
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
-	FString FolderName = "";
+	FGuid DialogueStructID = FGuid();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FGuid DataTableOwnerID = FGuid();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime DataTable")
+	FGuid DialogueArrayID = FGuid();
 
 	UPROPERTY()
 	UObject* Caller = nullptr;
+
+	UPROPERTY()
+	FGameplayTag CsvArrayTypeTag;
+
+	UPROPERTY()
+	FName DialogueTag;
+
+	UPROPERTY()
+	TSoftObjectPtr<UDataTable> DataTableSoftPtr;
 };
 
 // Used to return a JWT internally. Don't use this.
@@ -69,15 +85,29 @@ struct FRuntimeDataTableOperationParams
 
 	/** A name for the CSV file */
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
-	FString FolderName = "";
-
-	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 	FString FileName = "";
 
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FGuid DialogueStructID = FGuid();
+
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FGuid DataTableOwnerID = FGuid();
+
+	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
+	FGuid DialogueArrayID = FGuid();
 
 	/** The caller that begins the CSV Import */
 	UPROPERTY()
 	UObject* Caller = nullptr;
+
+	UPROPERTY()
+	FGameplayTag CsvArrayTypeTag;
+	
+	UPROPERTY()
+	FName DialogueTag;
+
+	UPROPERTY()
+	TSoftObjectPtr<UDataTable> DataTableSoftPtr;
 };
 
 // Used to build an authentication token
@@ -89,7 +119,7 @@ struct FRuntimeDataTableTokenInfo
 	// Maps to: private_key in the json
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 		FString PrivateKey;
-
+ 
 	// Maps to: client_email in the json
 	UPROPERTY(BlueprintReadWrite, Category = "Runtime DataTable")
 		FString ServiceAccountEmail;

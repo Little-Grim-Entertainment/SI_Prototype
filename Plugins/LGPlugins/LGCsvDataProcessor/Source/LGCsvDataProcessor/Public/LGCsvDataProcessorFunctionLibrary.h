@@ -8,7 +8,7 @@
 #include "LGCsvDataTypes.h"
 #include "LGCsvDataProcessorFunctionLibrary.generated.h"
 
-struct FRuntimeDataTableCallbackInfo;
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnRequestCheckForEmbeddedCsv, const void* InArrayPtr);
 
 UCLASS()
 class LGCSVDATAPROCESSOR_API ULGCsvDataProcessorFunctionLibrary : public UBlueprintFunctionLibrary
@@ -18,11 +18,6 @@ public:
 	
 	UFUNCTION()
 	static void ImportCsvFromURL(const FLGCsvInfoImportPayload& InImportPayload, FRDTGetStringDelegate InCallbackDelegate);
-	
-	UFUNCTION()
-	static void FNameArrayToFStringArray(const TArray<FName>& InNameArray, TArray<FString>& OutStringArray);
 
-	UFUNCTION()
-	static void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
-
+	static void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo, void* InArrayPtr, UScriptStruct* InStructPtr, const FName& InPropertyName);
 };

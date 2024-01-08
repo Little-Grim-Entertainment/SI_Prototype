@@ -3,9 +3,7 @@
 
 #include "Characters/SI_NPC_Interactable.h"
 #include "Components/Scene/SI_InteractableComponent.h"
-#include "BehaviorTree/BehaviorTree.h"
 #include "Components/WidgetComponent.h"
-#include "Camera/CameraComponent.h"
 #include "UI/SI_InteractionPrompt.h"
 
 ASI_NPC_Interactable::ASI_NPC_Interactable()
@@ -15,14 +13,7 @@ ASI_NPC_Interactable::ASI_NPC_Interactable()
 	InteractionIcon = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionIcon"));
 	InteractionIcon->SetupAttachment(RootComponent);
 	InteractionPrompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractionPrompt"));
-	InteractionPrompt->SetupAttachment(RootComponent);
-	NPC_Cam = CreateDefaultSubobject<UCameraComponent>(TEXT("NPC Cam"));
-	NPC_Cam->SetupAttachment(RootComponent);
-	NickCam = CreateDefaultSubobject<UCameraComponent>(TEXT("Nick Cam"));
-	NickCam->SetupAttachment(RootComponent);
-	NickPosition = CreateDefaultSubobject<USceneComponent>(TEXT("NickPosition"));
-	NickPosition->SetupAttachment(RootComponent);
-	
+	InteractionPrompt->SetupAttachment(RootComponent);	
 }
 
 

@@ -9,7 +9,24 @@ public class SI_Editor : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
+                "Blutility",
                 "Core",
+                "GameplayTags",
+                "UMG",
+                "UnrealEd",
+                
+                // Plugins
+                "RuntimeDataTable",
+                "EasyCsv",
+                
+                // Spade Investigations
+                "SI_Prototype",
+                "SI_CsvDataProcessor",
+
+                // Little Grim
+                "LGCoreLibrary",
+                "LGCsvDataProcessor",
+                "LGDialogueSystem", 
             }
         );
 
@@ -18,8 +35,11 @@ public class SI_Editor : ModuleRules
             {
                 "CoreUObject",
                 "Engine",
+                "InputCore",
+                "LevelEditor",
+                "PropertyEditor",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
             }
         );
     }

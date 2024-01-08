@@ -9,6 +9,9 @@ public class SI_PrototypeTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
+		
 		ExtraModuleNames.Add("SI_Prototype");
+		ExtraModuleNames.Add("SI_Editor");
+		ExtraModuleNames.Add("SI_CsvDataProcessor");
 	}
 }

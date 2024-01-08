@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SI_Character.generated.h"
 
+class USI_CharacterData;
 class USI_AbilitySystemComponent;
 
 UCLASS()
@@ -17,13 +18,18 @@ public:
 	// Sets default values for this character's properties
 	ASI_Character();
 
-	USI_AbilitySystemComponent* GetAbilitySystemComponent() {return AbilitySystemComponent; };
+	USI_AbilitySystemComponent* GetAbilitySystemComponent() {return AbilitySystemComponent;}
+
+	USI_CharacterData* GetCharacterData();
 
 protected:
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
-	USI_AbilitySystemComponent* AbilitySystemComponent;
 	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Character | Abilities")
+	USI_AbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character | Info")
+	USI_CharacterData* CharacterData;
 };

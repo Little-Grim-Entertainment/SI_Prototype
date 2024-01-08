@@ -7,7 +7,7 @@
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_Nick.h"
 #include "Controllers/SI_PlayerController.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Data/UI/SI_UIProjectDefaults.h"
+#include "UI/Data/SI_UIProjectDefaults.h"
 #include "SI_UserWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFadeOutComplete);

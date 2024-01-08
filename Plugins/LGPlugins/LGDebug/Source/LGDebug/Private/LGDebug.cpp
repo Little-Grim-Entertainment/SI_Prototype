@@ -17,4 +17,4 @@ void FLGDebugModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FLGDebugModule, LGDebug)
+IMPLEMENT_MODULE(FDefaultModuleImpl, LGDebug)

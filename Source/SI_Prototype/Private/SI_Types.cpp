@@ -4,13 +4,10 @@
 #include "SI_Types.h"
 
 #include "Engine/LevelStreaming.h"
-#include "Data/Maps/SI_MapData.h"
-#include "Data/Cases/SI_CaseData.h"
-#include "Data/Cases/SI_PartData.h"
-#include "Data/Cases/SI_ObjectiveData.h"
-#include "Data/Media/SI_MediaDataAsset.h"
-#include "InputMappingContext.h"
-#include "InputAction.h"
+#include "Levels/Data/SI_MapData.h"
+#include "Cases/Data/SI_PartData.h"
+#include "Cases/Data/SI_ObjectiveData.h"
+#include "Media/Data/SI_MediaDataAsset.h"
 
 FSI_MusicSettings::FSI_MusicSettings()
 {

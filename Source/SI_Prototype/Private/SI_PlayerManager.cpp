@@ -2,10 +2,10 @@
 
 
 #include "SI_PlayerManager.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "Controllers/SI_PlayerController.h"
-#include "Data/Maps/SI_MapData.h"
+#include "Levels/Data/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
@@ -160,7 +160,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 		SecondaryMenuTag = FGameplayTag();
 		if(InRemovedTag == SITag_UI_Menu_Map)
 		{
-			SITagManager->RemoveTag(SITag_Player_State_Menu);
+			SITagManager->RemoveTag_Internal(SITag_Player_State_Menu);
 		}
 		else
 		{
@@ -181,7 +181,7 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 	
 	if(SITagManager->HasParentTag(InRemovedTag, SITag_UI_Screen))
 	{
-		SITagManager->RemoveTag(SITag_Player_State_Inactive);
+		SITagManager->RemoveTag_Internal(SITag_Player_State_Inactive);
 		return;
 	}
 	

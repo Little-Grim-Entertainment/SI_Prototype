@@ -5,8 +5,8 @@
 
 #include "EngineUtils.h"
 #include "SI_GameInstance.h"
-#include "Data/Characters/SI_CharacterData.h"
-#include "Data/Input/SI_InputConfig.h"
+#include "Characters/Data/SI_CharacterData.h"
+#include "Input/Data/SI_InputConfig.h"
 #include "Abilities/SI_GameplayAbility.h"
 #include "Debug/SI_DebugManager.h"
 #include "GameFramework/PlayerStart.h"

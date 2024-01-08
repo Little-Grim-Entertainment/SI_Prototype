@@ -6,14 +6,13 @@
 #include "SI_GameInstance.h"
 #include "Blueprint/UserWidget.h"
 #include "Media/SI_MediaManager.h"
-#include "Data/Cases/SI_CaseManager.h"
-#include "Data/Media/SI_VideoDataAsset.h"
-#include "Data/Media/SI_CinematicDataAsset.h"
-#include "GameModes/SI_GameMode.h"
+#include "Cases/SI_CaseManager.h"
+#include "Media/Data/SI_VideoDataAsset.h"
+#include "Media/Data/SI_CinematicDataAsset.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/SI_UIManager.h"
 #include "UI/Debug/SI_GameplayTagViewer.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "Widgets/SViewport.h"
 
 USI_CheatManager::USI_CheatManager()
@@ -103,11 +102,11 @@ void USI_CheatManager::CheatHideHud(const bool bShouldHide)
 	
 	if(bShouldHide)
 	{
-		SITagManager->RemoveTag(SITag_UI_HUD);
+		SITagManager->RemoveTag_Internal(SITag_UI_HUD);
 	}
 	else
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_HUD);
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_HUD);
 	}		
 }
 
@@ -117,11 +116,11 @@ void USI_CheatManager::CheatHideMapMenu(const bool bShouldHide)
 	
 	if(bShouldHide)
 	{
-		SITagManager->RemoveTag(SITag_UI_Menu_Map);
+		SITagManager->RemoveTag_Internal(SITag_UI_Menu_Map);
 	}
 	else
 	{
-		SITagManager->AddNewGameplayTag(SITag_UI_Menu_Map);
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_Menu_Map);
 	}	
 }
 

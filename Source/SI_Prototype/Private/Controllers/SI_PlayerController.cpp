@@ -5,7 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "SI_GameInstance.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
 #include "Interfaces/SI_InteractInterface.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
@@ -15,14 +15,14 @@
 #include "LG_DebugMacros.h"
 #include "Characters/SI_GizboManager.h"
 #include "Media/SI_MediaManager.h"
-#include "Data/Media/SI_VideoDataAsset.h"
-#include "Data/Media/SI_CinematicDataAsset.h"
+#include "Media/Data/SI_VideoDataAsset.h"
+#include "Media/Data/SI_CinematicDataAsset.h"
 #include "Dialogue/SI_DialogueManager.h"
 #include "UI/SI_DialogueBox.h"
 #include "UI/SI_HUD.h"
 #include "UI/SI_UIManager.h"
-#include "Data/Input/SI_InputConfig.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "Input/Data/SI_InputConfig.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
@@ -309,7 +309,7 @@ void ASI_PlayerController::RequestToggleSystemMenu()
 	
 	if(SITagManager->HasGameplayTag(SITag_UI_Menu_System))
 	{
-		SITagManager->RemoveTag(SITag_UI_Menu_System);
+		SITagManager->RemoveTag_Internal(SITag_UI_Menu_System);
 	}
 	else
 	{
@@ -323,7 +323,7 @@ void ASI_PlayerController::RequestUseGadgetPrimary()
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UsePrimary, Payload);
 }
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
@@ -332,7 +332,7 @@ void ASI_PlayerController::RequestUseGadgetSecondary()
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UseSecondary, Payload);
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
@@ -341,7 +341,7 @@ void ASI_PlayerController::RequestToggleGizboFollow()
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);	
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_AI_Follow, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_AI_Follow, Payload);
 }
 
 void ASI_PlayerController::RequestToggleAdaptableAction()
@@ -349,28 +349,28 @@ void ASI_PlayerController::RequestToggleAdaptableAction()
 	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager or Nick is null cannot add tag") return;}
 	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag(SITag_Ability_Nick_AdaptableAction, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Nick_AdaptableAction, Payload);
 }
 
 void ASI_PlayerController::RequestCancelAbility()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Cancel);	
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Cancel);	
 }
 
 void ASI_PlayerController::RequestConfirmAbility()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager Is Null cannot add tag") return;}
 	
- 	SITagManager->AddNewGameplayTag(SITag_Ability_Confirm);
+ 	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Confirm);
 }
 
 void ASI_PlayerController::RequestHoldConfirmAbility()
 {
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager Is Null cannot add tag") return;}
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_HoldConfirm);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_HoldConfirm);
 }
 
 void ASI_PlayerController::RequestGizboUseGadgetPrimary()
@@ -379,7 +379,7 @@ void ASI_PlayerController::RequestGizboUseGadgetPrimary()
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UsePrimary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UsePrimary, Payload);
 }
 
 void ASI_PlayerController::RequestGizboUseGadgetSecondary()
@@ -388,7 +388,7 @@ void ASI_PlayerController::RequestGizboUseGadgetSecondary()
 	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 	
-	SITagManager->AddNewGameplayTag(SITag_Ability_Gadget_UseSecondary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UseSecondary, Payload);
 }
 
 void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetTag)
@@ -407,7 +407,7 @@ void ASI_PlayerController::RequestMultiOptionUp()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestMutliOptionDown()
@@ -418,7 +418,7 @@ void ASI_PlayerController::RequestMutliOptionDown()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestMultiOptionLeft()
@@ -429,7 +429,7 @@ void ASI_PlayerController::RequestMultiOptionLeft()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestMultiOptionRight()
@@ -440,7 +440,7 @@ void ASI_PlayerController::RequestMultiOptionRight()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestGizboMultiOptionUp()
@@ -451,7 +451,7 @@ void ASI_PlayerController::RequestGizboMultiOptionUp()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestGizboMutliOptionDown()
@@ -462,7 +462,7 @@ void ASI_PlayerController::RequestGizboMutliOptionDown()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestGizboMultiOptionLeft()
@@ -473,7 +473,7 @@ void ASI_PlayerController::RequestGizboMultiOptionLeft()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::RequestGizboMultiOptionRight()
@@ -484,7 +484,7 @@ void ASI_PlayerController::RequestGizboMultiOptionRight()
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
 
 	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)

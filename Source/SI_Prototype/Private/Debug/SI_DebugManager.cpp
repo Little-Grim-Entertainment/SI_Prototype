@@ -2,10 +2,9 @@
 
 
 #include "Debug/SI_DebugManager.h"
-#include "GameplayTag/SI_GameplayTagManager.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/Debug/SI_GameplayTagViewer.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 

@@ -5,37 +5,14 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "LGDialogueTypes.h"
-#include "Interfaces/LGCsvProcessorInterface.h"
 #include "LGDialogueDataAsset.generated.h"
 
 
 struct FRuntimeDataTableCallbackInfo;
 
 UCLASS()
-class LGDIALOGUESYSTEM_API ULGDialogueDataAsset : public UDataAsset, public ILGCsvProcessorInterface
+class LGDIALOGUESYSTEM_API ULGDialogueDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 
-public:
-	
-	void UpdateDialogue_Internal();
-
-	virtual void OnInteractComplete_Implementation(UObject* Caller, const FLGCsvInfo& InCvsInfo) override;
-
-	UFUNCTION()
-	void OnSheetStructsDownloaded(FRuntimeDataTableCallbackInfo InCallbackInfo);
-
-private:
-
-	UFUNCTION(CallInEditor)
-	void UpdateDialogue();
-
-	UPROPERTY(EditAnywhere)
-	FString FolderPath;
-	
-	UPROPERTY(EditAnywhere)
-	FString FolderName;
-
-	UPROPERTY(EditAnywhere, Category = "URLs")
-	TArray<FLGDialogueURL> DialogueURLs;
 };
