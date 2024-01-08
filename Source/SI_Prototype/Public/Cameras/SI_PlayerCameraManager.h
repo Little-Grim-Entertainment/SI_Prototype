@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "GameplayTag/SI_GameplayTagTypes.h"
 #include "Camera/PlayerCameraManager.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "SI_PlayerCameraManager.generated.h"
 
 class USI_LevelManager;

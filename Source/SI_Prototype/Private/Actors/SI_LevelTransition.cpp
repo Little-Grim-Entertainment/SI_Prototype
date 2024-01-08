@@ -5,14 +5,9 @@
 #include "Engine/Texture2D.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/BillboardComponent.h"
-#include "Media/SI_MediaManager.h"
-#include "Data/Maps/SI_MapData.h"
-#include "Data/Media/SI_CinematicDataAsset.h"
-#include "Data/Media/SI_VideoDataAsset.h"
+#include "Levels/Data/SI_MapData.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Levels/SI_LevelManager.h"
-#include "Levels/SI_MapGameplayTagLibrary.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
 
 
 ASI_LevelTransition::ASI_LevelTransition()

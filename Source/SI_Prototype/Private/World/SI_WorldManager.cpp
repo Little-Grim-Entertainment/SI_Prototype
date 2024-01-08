@@ -3,7 +3,6 @@
 
 #include "World/SI_WorldManager.h"
 #include "SI_GameInstance.h"
-#include "Data/Maps/SI_MapData.h"
 #include "Actors/SI_SkySphere.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetTextLibrary.h"

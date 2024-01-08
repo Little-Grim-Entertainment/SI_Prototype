@@ -17,4 +17,4 @@ void FLGDialogueSystemModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FLGDialogueSystemModule, LGDialogueSystem)
+IMPLEMENT_MODULE(FDefaultModuleImpl, LGDialogueSystem)

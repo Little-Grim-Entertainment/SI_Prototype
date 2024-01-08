@@ -4,15 +4,14 @@
 #include "Characters/SI_Nick.h"
 #include "ATPCCameraComponent.h"
 #include "AI/SI_AIPerceptionStimuliSource.h"
-#include "SI_GameInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Data/Characters/SI_NickCharacterData.h"
+#include "Characters/Data/SI_NickCharacterData.h"
 #include "Perception/AISense_Hearing.h"
 #include "Perception/AISense_Sight.h"
-#include "Data/Maps/SI_MapData.h"
+#include "Levels/Data/SI_MapData.h"
 #include "Levels/SI_LevelManager.h"
 
 // ******************* TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED

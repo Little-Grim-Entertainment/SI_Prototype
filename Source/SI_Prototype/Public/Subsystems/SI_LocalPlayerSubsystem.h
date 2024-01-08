@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
-#include "GameplayTag/SI_GameplayTagTypes.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "SI_LocalPlayerSubsystem.generated.h"
 
 enum class EPlayerMode : uint8;

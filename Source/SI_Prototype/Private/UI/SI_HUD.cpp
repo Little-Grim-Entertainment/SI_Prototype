@@ -3,7 +3,7 @@
 
 #include "UI/SI_HUD.h"
 #include "UI/SI_DialogueBox.h"
-#include "Data/Cases/SI_CaseManager.h"
+#include "Cases/SI_CaseManager.h"
 #include "UI/SI_QuickActionWidget.h"
 
 USI_HUD::USI_HUD()

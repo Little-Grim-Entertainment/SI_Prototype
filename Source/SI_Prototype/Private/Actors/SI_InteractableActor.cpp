@@ -3,11 +3,10 @@
 
 #include "Actors/SI_InteractableActor.h"
 #include "Components/Scene/SI_InteractableComponent.h"
-#include "Characters/SI_Nick.h"
 #include "Components/WidgetComponent.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "UI/SI_InteractionPrompt.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 

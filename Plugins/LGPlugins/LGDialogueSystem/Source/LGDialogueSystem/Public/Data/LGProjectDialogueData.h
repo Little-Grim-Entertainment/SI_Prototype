@@ -18,7 +18,11 @@ public:
 	
 	UFUNCTION(CallInEditor)
 	void UpdateAllDialogue();
-	
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Dialogue")

@@ -1,0 +1,36 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "NativeGameplayTags.h"
+
+namespace SI_CharacterGameplayTagLibrary
+{
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character)
+
+	// Main Characters
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_ArnoldCadwell)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_BettyLockheart)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_Gizbo)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_LesterWatts)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_NickSpade)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_PrimroseCadwell)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_ShirleyKnockout)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Main_ThomasLockheart)
+	
+	// Other NPCs	
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Civilian)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Civilian_Female)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Civilian_Male)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Officer)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Officer_Female)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_NPC_Type_Officer_Male)
+
+	// Test Characters
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Test)
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SITag_Character_Test_MrOrange)
+}

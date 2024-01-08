@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SI_CharacterTypes.h"
 #include "Characters/SI_Character.h"
-#include "GameplayTag/SI_NativeGameplayTagLibrary.h"
+#include "GameplayTagContainer.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "SI_NPC.generated.h"
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -32,6 +34,8 @@ public:
 	UFUNCTION(BlueprintGetter, Category = "AI")
 	bool IsPerformingMainAction() const;
 
+	FSI_CharacterState* GetCharacterState();
+
 	FBehaviorTagUpdated OnBehaviorTagUpdated;
 	
 protected:
@@ -42,4 +46,10 @@ protected:
 	FGameplayTag CurrentBehaviorTag = SITag_Behavior;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
 	TObjectPtr<UStateTreeComponent> StateTreeComponent;
+	
+	FSI_CharacterState* CharacterState;
+
+private:
+
+	void InitializeCharacterState();
 };

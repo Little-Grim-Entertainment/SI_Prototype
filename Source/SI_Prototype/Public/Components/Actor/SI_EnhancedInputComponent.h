@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnhancedInputComponent.h"
-#include "Data/Input/SI_InputConfig.h"
+#include "Input/Data/SI_InputConfig.h"
 #include "SI_Types.h"
 
 #include "SI_EnhancedInputComponent.generated.h"

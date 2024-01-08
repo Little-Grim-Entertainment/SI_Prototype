@@ -3,26 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/SI_GameInstanceSubsystem.h"
+#include "SI_CharacterTypes.h"
+#include "Subsystems/SI_WorldSubsystem.h"
 #include "SI_CharacterManager.generated.h"
 
+class ASI_Character;
 class USI_PartData;
 class USI_CharacterData;
 
 UCLASS()
-class SI_PROTOTYPE_API USI_CharacterManager : public USI_GameInstanceSubsystem
+class SI_PROTOTYPE_API USI_CharacterManager : public USI_WorldSubsystem
 {
 	GENERATED_BODY()
 
 public:
 
 	// returns nullptr if character's name is not found in the list
-	USI_CharacterData* GetActiveCharacterData(FText CharacterName);
-	bool GetIsActiveCharacter(USI_CharacterData* InCharacterData);
+	USI_CharacterData* GetActiveCharacterData(const FGameplayTag& CharacterTag);
 
+	USI_CharacterData* GetCharacterDataByTag(const FGameplayTag& InCharacterTag);
+	FSI_CharacterState* GetCharacterStateByTag(const FGameplayTag& InCharacterTag);
+
+
+	bool IsActiveCharacter(USI_CharacterData* InCharacterData);
+	TSubclassOf<ASI_Character> GetCharacterClassByTag(const FGameplayTag& InCharacterTag);
+	
 protected:
 
-	virtual void OnGameInstanceInit() override;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 private: 
 
