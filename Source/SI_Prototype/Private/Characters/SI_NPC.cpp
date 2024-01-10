@@ -15,12 +15,20 @@
 #include "Dialogue/SI_DialogueManager.h"
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
 
+#include "Actors/SI_InteractableActor.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
 ASI_NPC::ASI_NPC()
 {
 	StateTreeComponent = CreateDefaultSubobject<UStateTreeComponent>(TEXT("State Tree Component"));
+
+	//Picked up object Dampening;
+	AdjustedDampening = 1000.0f;
+	//Furthest distance gizbo can be from object and Interact
+	InteractDistance = 75.0f;
+	// Distance item is held in front of character
+	CarryOffset = 75.0f;
 }
 
 void ASI_NPC::SetCurrentBehavior(const FGameplayTag NewBehaviorTag)

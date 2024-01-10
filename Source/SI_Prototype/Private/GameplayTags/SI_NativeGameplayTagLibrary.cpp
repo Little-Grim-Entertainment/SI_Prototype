@@ -154,6 +154,7 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD, "UI.HUD")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction, "UI.HUD.QuickAction")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_Movable, "UI.HUD.QuickAction.Movable")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_Pickupable, "UI.HUD.QuickAction.Pickupable")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_GadgetsOne, "UI.HUD.QuickAction.GadgetsOne")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_GadgetsTwo, "UI.HUD.QuickAction.GadgetsTwo")
 

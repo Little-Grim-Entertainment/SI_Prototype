@@ -9,6 +9,9 @@
 /**
  * 
  */
+
+class ASI_Character;
+
 UCLASS()
 class SI_PROTOTYPE_API USI_GameplayAbility_Interact : public USI_GameplayAbility
 {
@@ -16,5 +19,5 @@ class SI_PROTOTYPE_API USI_GameplayAbility_Interact : public USI_GameplayAbility
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-
+	void LocateInteractable(TObjectPtr<ASI_Character> InActor);
 };

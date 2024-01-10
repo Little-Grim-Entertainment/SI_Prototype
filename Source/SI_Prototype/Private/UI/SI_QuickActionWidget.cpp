@@ -24,7 +24,7 @@ void USI_QuickActionWidget::RefreshQuickActionWidget(const FGameplayTag& InUITag
 	{
 		UpdateQuickActionUp(SITag_None);
 		UpdateQuickActionDown(SITag_None);
-		UpdateQuickActionLeft(SITag_None);
+		UpdateQuickActionLeft(SITag_Ability_Interact_Pickup);
 		UpdateQuickActionRight(SITag_Ability_Nick_PossessMovable);
 	}
 }

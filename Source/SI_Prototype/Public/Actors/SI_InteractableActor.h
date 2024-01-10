@@ -41,6 +41,10 @@ public:
 	USI_AbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	bool bIsObservable = false;
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	bool bIsPushable = false;
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	bool bIsPickupable = false;
 
 
 protected:

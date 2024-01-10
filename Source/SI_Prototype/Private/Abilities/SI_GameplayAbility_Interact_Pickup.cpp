@@ -18,3 +18,12 @@ void USI_GameplayAbility_Interact_Pickup::EndAbility(const FGameplayAbilitySpecH
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
+
+/*void USI_GameplayAbility_Interact::PickupObject(AActor* InHitActor)
+{
+	HeldActor = InHitActor;
+	USkeletalMeshComponent* GizboMesh = GetMesh();
+	FAttachmentTransformRules AttachRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
+	HeldActor->AttachToComponent(GizboMesh, AttachRules, PickupSocket);
+	bIsHoldingItem = true;
+}*/

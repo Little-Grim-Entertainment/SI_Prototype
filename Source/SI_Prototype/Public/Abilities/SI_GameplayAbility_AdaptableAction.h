@@ -98,4 +98,6 @@ private:
 	FTimerHandle IndicatorPositionTimerHandle;
 	bool bIsActive;
 	bool bHitActorIsMovable;
+	bool bHitActorIsPickupable
+	;
 };

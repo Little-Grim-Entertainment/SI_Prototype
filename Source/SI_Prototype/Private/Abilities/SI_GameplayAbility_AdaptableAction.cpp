@@ -12,7 +12,6 @@
 #include "Abilities/Tasks/SI_AbilityTask_WaitCancelConfirmHoldTagAdded.h"
 #include "Characters/SI_GizboManager.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
-#include "Interfaces/SI_MovableInterface.h"
 #include "Characters/SI_Gizbo.h"
 #include "Controllers/SI_NPCController.h"
 
@@ -94,7 +93,7 @@ void USI_GameplayAbility_AdaptableAction::CancelUpdateIndicatorPositionTimer()
 
 void USI_GameplayAbility_AdaptableAction::UpdateMoveToIndicatorPosition()
 {
-	if(!MoveToIndicator) return;
+	if(!IsValid(MoveToIndicator)) return;
 	
 	FHitResult HitResult;
 	FVector Start = SICameraManger->GetCameraLocation();
@@ -104,25 +103,30 @@ void USI_GameplayAbility_AdaptableAction::UpdateMoveToIndicatorPosition()
 	if (HitResult.GetActor())
 	{
 		FVector HitLocation = HitResult.ImpactPoint;
-		
-		if (HitResult.GetActor()->Implements<USI_MovableInterface>())
+		TObjectPtr<ASI_InteractableActor> HitInteractableActor = Cast<ASI_InteractableActor>(HitResult.GetActor());
+		if(IsValid(HitInteractableActor))
 		{
-			// Update HUD
-			if(!bHitActorIsMovable)
+			if (!HitInteractableActor->bIsPushable)
 			{
 				PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_UI_HUD_QuickAction_Movable);
 				bHitActorIsMovable = true;
 			}
-		}
-		else
-		{
-			if(bHitActorIsMovable)
+			else if (!HitInteractableActor->bIsPickupable)
 			{
 				PC->GetSITagManager()->RemoveTag_Internal(SITag_UI_HUD_QuickAction_Movable);
+//				PC->GetSITagManager()->AddNewGameplayTag(SITag_UI_HUD_QuickAction_Pickupable);
+				bHitActorIsPickupable = true;
 			}
-			bHitActorIsMovable = false;
+			else
+			{
+				if(bHitActorIsMovable || bHitActorIsPickupable)
+				{
+					PC->GetSITagManager()->RemoveTag(SITag_UI_HUD_QuickAction_Movable);
+				}
+				bHitActorIsMovable = false;
+				bHitActorIsPickupable = false;
+			}
 		}
-		
 		MoveToIndicator->SetActorLocation(HitLocation);
 		MoveToIndicator->SetActorRotation(Nick->GetActorRotation());
 	}

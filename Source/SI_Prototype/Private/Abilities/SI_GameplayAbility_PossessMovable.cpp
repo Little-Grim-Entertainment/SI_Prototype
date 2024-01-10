@@ -28,12 +28,6 @@ void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilityS
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_PossessMovable, SITag_Player_State);
 		UpdateMoveToLocation();
 	}
-
-	// Get Object Selected
-	// Spawn Camera w/ boom or Use Existing Camera & boom attached to Nick
-	// Move Existing Camera Boom to selected object nia update location
-	// or
-	// Spawn new Camera w/ Boom 
 	
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Orange,"Ability: PossessMovable");
 }

@@ -8,6 +8,7 @@
 
 class USI_CharacterData;
 class USI_AbilitySystemComponent;
+class UPhysicsHandleComponent;
 
 UCLASS()
 class SI_PROTOTYPE_API ASI_Character : public ACharacter
@@ -18,10 +19,16 @@ public:
 	// Sets default values for this character's properties
 	ASI_Character();
 
-	USI_AbilitySystemComponent* GetAbilitySystemComponent() {return AbilitySystemComponent;}
-
 	USI_CharacterData* GetCharacterData();
+	USI_AbilitySystemComponent* GetAbilitySystemComponent() {return AbilitySystemComponent; };
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UPhysicsHandleComponent> PhysicsHandle;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsHoldingItem;
+	UPROPERTY(EditAnywhere, Category = "AI | Item Interaction")
+	float InteractDistance;
+	
 protected:
 	
 	// Called when the game starts or when spawned
@@ -32,4 +39,19 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character | Info")
 	USI_CharacterData* CharacterData;
+	void HeldItemPosition();
+	
+	UPROPERTY(EditAnywhere, Category = "AI | Item Interaction")
+	float CarryOffset;
+	UPROPERTY(EditAnywhere, Category = "AI | Item Interaction")
+	float AdjustedDampening;
+	// Used to restore item state after NPC drops it
+	float DefaultDampening;
+	UPROPERTY()
+	TObjectPtr<UPrimitiveComponent> ObjectBeingCarried;
+	UPROPERTY()
+	TObjectPtr<AActor> HeldActor;
+	FRotator CarriedObjectRotation;
+	FName PickupSocket = TEXT("Socket_Chest");	
+	
 };
