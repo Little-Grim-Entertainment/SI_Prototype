@@ -72,8 +72,7 @@ void ASI_FlashlightSegment::OnPowerEndOverlap(UPrimitiveComponent* OverlappedCom
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
 	{
 		PowerInterfaceActor->Execute_OnPowerLost(OtherActor, this, Power);
-	}			
-			
+	}					
 }
 
 // Called every frame

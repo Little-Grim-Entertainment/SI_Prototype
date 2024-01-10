@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SI_BaseGadget.h"
 #include "SI_FlashlightSegment.h"
+#include "SI_SegmentPathfinder.h"
 #include "SI_Flashlight.generated.h"
 
 class USpotLightComponent;
@@ -25,11 +26,12 @@ public:
 
 	// PUBLIC FUNCTIONS
 	void PlaceSegment();
-	void BindPickUpSegment();
+	void BindPickUpSegment(ASI_FlashlightSegment* inFlashlightSegment);
 	void SpawnSegment();
 	void SpotlightHandler();
 	void PowerCalculationHandler();
 	void DebugSpotlightInfo();
+	void SpawnSegmentPathfinder();
 
 	// PUBLIC UFUNCTIONS
 	// TODO: Can adjust to non-UFunction
@@ -38,15 +40,21 @@ public:
 
 	// PUBLIC VARIABLES
 	
-	// Timer
+	// Timers
 	UPROPERTY(EditAnywhere, Category = Power)
 	FTimerHandle FlashlightTraceTimerHandle;
+	UPROPERTY(EditAnywhere, Category = Power)
+	FTimerHandle SegmentPathfinderTimerHandle;
 	
 	// Class References
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASI_FlashlightSegment> FlashlightSegmentClass = ASI_FlashlightSegment::StaticClass();
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASI_SegmentPathfinder> SegmentPathfinderClass = ASI_SegmentPathfinder::StaticClass();
+	UPROPERTY(EditAnywhere)
 	ASI_FlashlightSegment* FlashlightSegment;
+	UPROPERTY(EditAnywhere, Category = Segment)
+	TArray<ASI_FlashlightSegment*> PlacedSegmentsArray;
 	
 	// Public Variables
 	UPROPERTY(EditAnywhere, Category = Power)
@@ -55,10 +63,12 @@ public:
 	float CurrentPower;
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	bool bFlashlightOn;
-	UPROPERTY(EditAnywhere, Category = SegmentPieces)
+	UPROPERTY(EditAnywhere, Category = Segment)
 	int SegmentsPlaced;	
-	UPROPERTY(EditAnywhere, Category = SegmentPiece)
-	int MaxPlaceableSegments;	
+	UPROPERTY(EditAnywhere, Category = Segment)
+	int MaxPlaceableSegments;
+	UPROPERTY(EditAnywhere, Category = Segment)
+	float SegmentPathfindingFrequency;	
 	UPROPERTY(EditAnywhere, Category = Spotlight)
 	float MaxSpotlightIntensity;
 	UPROPERTY(EditAnywhere, Category = Spotlight)

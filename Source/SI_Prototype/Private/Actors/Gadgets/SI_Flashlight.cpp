@@ -7,8 +7,7 @@
 #include "Interfaces/SI_PowerInterface.h"
 #include "DrawDebugHelpers.h"
 #include "Actors/SI_PowerActor.h"
-
-// TODO: CHANGING CONE SIZE WITH SEGMENTS PLACED
+#include "Actors/Gadgets/SI_SegmentPathfinder.h"
 
 ASI_Flashlight::ASI_Flashlight()
 {	
@@ -49,8 +48,8 @@ ASI_Flashlight::ASI_Flashlight()
 	Spotlight->SetInnerConeAngle(MaxSpotlightConeAngle);
 	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle);	
 	Spotlight->SetAttenuationRadius(MaxSpotlightAttenuationRadius);
-
-	ConeRootScale = FVector(25.75f,25.75f,15.3f);
+	ConeRootScale = FVector(25.75f,25.75f,15.3f);	// Default size of spotlight cone
+	SegmentPathfindingFrequency = 4.0f;
 }
 
 void ASI_Flashlight::BeginPlay()
@@ -71,12 +70,9 @@ void ASI_Flashlight::OnConeBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	// If other actor doesn't implement PowerInterface then return
 	if (!OtherActor->Implements<USI_PowerInterface>()) {return;}
 	
-	// LT01. [LT = Line Trace process flow] 
-	// Add Overlapping Power Actors to array
-	PowerActorsHit.Add(OtherActor);
-
-	// Execute trace for instant power actor calculation
-	ExecuteTrace();
+	// LT01. [LT = Line Trace process flow]	
+	PowerActorsHit.Add(OtherActor);					// Add Overlapping Power Actors to array
+	ExecuteTrace();									// Execute trace for first power actor trace
 	
 	// Start timer if timer has not been set
 	if (!GetWorldTimerManager().IsTimerActive(FlashlightTraceTimerHandle))
@@ -87,22 +83,11 @@ void ASI_Flashlight::OnConeBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	// TODO: See steps below
 	// > Line trace to object
 	// ON END OVERLAP - Find matching object in array and end timer
-	
-	
-	/*// Ensure that the Power Actor has a reference to this Flashlight before passing power
-	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
-	{
-		if (!PowerInterfaceActor->Execute_IsFlashlightSet(OtherActor))
-		{
-			PowerInterfaceActor->Execute_SetFlashlight(OtherActor, this);
-		}
-		PowerInterfaceActor->Execute_OnFlashlightPowerReceived(OtherActor, this, CurrentPower);	
-	}	*/
 }
 
 void ASI_Flashlight::OnConeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
+{ 
 	if (!OtherActor->Implements<USI_PowerInterface>()) {return;}
 	
 	if (const ISI_PowerInterface* PowerInterfaceActor = Cast<ISI_PowerInterface>(OtherActor))
@@ -118,7 +103,6 @@ void ASI_Flashlight::ExecuteTrace()
 	// For each power actor in the array
 	for (AActor* PowerActor : PowerActorsHit)
 	{
-		// Check if power actor is valid
 		if (PowerActor)
 		{			
 			// Prepare the multi-line trace 
@@ -180,16 +164,23 @@ void ASI_Flashlight::CancelPrimaryAction_Implementation()
 }
 
 void ASI_Flashlight::ActivateSecondaryAction_Implementation()
-{	
+{
+	// Place a segment if max placeable segments have not been reached
 	if (SegmentsPlaced == MaxPlaceableSegments)
-	 {
-		LG_PRINT(15.0f, Yellow, "Cannot place any more Flashlight Segments");
-		// Trigger audio/ visual notification to player that no more segments can be placed
+	{
+		LG_PRINT(4.0f, Yellow, "Cannot place any more Flashlight Segments");
+		// Trigger audio / visual notification to player that no more segments can be placed
 		// todo: Fire beam between all segments
-	 }
+	}
 	else
 	{	
 		PlaceSegment();								
+	}
+	
+	// Start segment pathfinder timer if timer has not been set
+	if (!GetWorldTimerManager().IsTimerActive(SegmentPathfinderTimerHandle))
+	{
+		GetWorld()->GetTimerManager().SetTimer(SegmentPathfinderTimerHandle, this, &ASI_Flashlight::SpawnSegmentPathfinder, SegmentPathfindingFrequency, true);
 	}	
 }
 
@@ -203,14 +194,13 @@ void ASI_Flashlight::PlaceSegment()
 	// GadgetIconHandler();
 }
 
-void ASI_Flashlight::BindPickUpSegment()
+void ASI_Flashlight::BindPickUpSegment(ASI_FlashlightSegment* inFlashlightSegment)
 {
 	FlashlightSegment->SegmentPickUpDelegate.BindUObject(this, &ThisClass::PickUpSegment);		
 }
 
 void ASI_Flashlight::PickUpSegment(int InSegmentNumber)
 {	
-	// todo: if 
 	// Todo: Segment number not consistent with order/ unique segment
 	// PlayAnimation;
 	// DestroyOverlappingSegment;
@@ -219,6 +209,7 @@ void ASI_Flashlight::PickUpSegment(int InSegmentNumber)
 	SpotlightHandler();
 	PowerCalculationHandler();	
 	// GadgetIconHandler();
+	// todo: if segments placed == maxplaceablesegments then cancel segmentpathfinder timer  
 }
 
 void ASI_Flashlight::SpawnSegment()
@@ -226,10 +217,16 @@ void ASI_Flashlight::SpawnSegment()
 	// todo: if (segments placed == max segments placed) spawn segment in front of nick and bind to hand
 	if (FlashlightSegmentClass)
 	{				
+			// Spawn segment
 			FTransform const SegmentSpawnTransform = GetActorTransform();
 			FlashlightSegment = GetWorld()->SpawnActor<ASI_FlashlightSegment>(FlashlightSegmentClass, SegmentSpawnTransform);
+
+			// Initialize placed segment
 			FlashlightSegment->InitializeSegment(MaxPower/(MaxPlaceableSegments + 1));
-			BindPickUpSegment();
+			BindPickUpSegment(FlashlightSegment);
+		
+			// Add Segment to array of placed segments
+			PlacedSegmentsArray.Add(FlashlightSegment);
 	}
 	SegmentsPlaced++;
 }
@@ -239,24 +236,14 @@ void ASI_Flashlight::SpotlightHandler()
 	// Adjust Spotlight Details	
 	Spotlight->SetInnerConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);
 	Spotlight->SetOuterConeAngle(MaxSpotlightConeAngle - (MaxSpotlightConeAngle/(MaxPlaceableSegments+1)) * SegmentsPlaced);
-
-	// Adjust collision cone size to match flashlight spotlight cone
-	if (SegmentsPlaced == 0)
-	{
-		ConeRootScale = FVector(25.75f,25.75f,15.3f);
-	}
-	else if (SegmentsPlaced == 1)
-	{
-		ConeRootScale = FVector(20.3f,20.3f,17.5f);
-	}
-	else if (SegmentsPlaced == 2)
-	{
-		ConeRootScale = FVector(13.9f,13.9f,19.0f);
-	}
-	else
-	{
-		ConeRootScale = FVector(6.7f,6.7f,19.0f);
-	}
+	
+	// Adjust collision cone size to match flashlight spotlight cone todo: change into switch statement
+	if		(SegmentsPlaced == 0) {	ConeRootScale = FVector(25.75f,25.75f,15.3f);}
+	else if (SegmentsPlaced == 1) {	ConeRootScale = FVector(20.3f,20.3f,17.5f);	}
+	else if (SegmentsPlaced == 2) {	ConeRootScale = FVector(13.9f,13.9f,19.0f);	}
+	else						  { ConeRootScale = FVector(6.7f,6.7f,19.0f);	}
+	
+	// Set relative scale
 	ConeRootSC->SetRelativeScale3D(ConeRootScale);
 	
 	// Print Debug Info
@@ -273,10 +260,39 @@ void ASI_Flashlight::DebugSpotlightInfo()
 	/*if(GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("Flashlight: Inside LightIntensityHandler %f"),Spotlight->Intensity));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("Flashlight: Inside LightIntensityHandler %f"),Spotlight->InnerConeAngle));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("Flashlight: Inside LightIntensityHandler %f"),Spotlight->OuterConeAngle));
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, FString::Printf(TEXT("Flashlight: Inside LightIntensityHandler %f"),Spotlight->AttenuationRadius));
 	}*/
+}
+
+void ASI_Flashlight::SpawnSegmentPathfinder()
+{
+	LG_PRINT(2.0f, White, "Segment Pathfinder spawned");
+	
+	// todo: iterate through tarray of placed segments
+	
+	// Iterate through Tarray of placed segments
+	for (ASI_FlashlightSegment* CurrentSegment : PlacedSegmentsArray)
+	{
+		if (CurrentSegment)
+		{
+			// Spawn SegmentPathfinder				
+			FTransform const SegmentTransform = CurrentSegment->GetActorTransform();
+			ASI_SegmentPathfinder* CurrentSegmentPathfinder = GetWorld()->SpawnActor<ASI_SegmentPathfinder>(SegmentPathfinderClass, SegmentTransform);
+
+			// Initialize and run pathfinder
+			if (CurrentSegmentPathfinder)
+			{
+				// TODO : Send flashlight data in function that starts the AI
+			}
+			
+		}
+	}
+		// For each element in array
+		// Initialize pathfinder
+		// Create Fvectors for current segment location and current flashlight location
+			// If (Segment is within certain distance - don't spawn)
+			// Spawn SegmentPathfinder class
+	//todo: don't forget that Tarray must be updated on PickUpSegment
+		
 }
 
 

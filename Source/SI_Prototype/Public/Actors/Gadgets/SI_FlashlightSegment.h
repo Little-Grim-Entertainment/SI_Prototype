@@ -1,11 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Actors/SI_InteractableActor.h"
 #include "Components/SphereComponent.h"
-
 #include "SI_FlashlightSegment.generated.h"
 
 DECLARE_DELEGATE_OneParam(FSegmentPickedUp, int);
