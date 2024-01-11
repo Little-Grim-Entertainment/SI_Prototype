@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dialogue/SI_DialogueTypes.h"
 #include "UI/SI_UserWidget.h"
 #include "SI_DialogueBox.generated.h"
 
@@ -26,10 +27,6 @@ class SI_PROTOTYPE_API USI_DialogueBox : public USI_UserWidget
 
 public:
 
-	UFUNCTION(BlueprintCallable)
-	void SetCharacterName(FText InCharacterName);
-	UFUNCTION(BlueprintCallable)
-	void SetCharacterDialogue(FText InCharacterDialogue);
 	UFUNCTION(BlueprintCallable)
 	FText GetCurrentSpeaker() const;
 	UFUNCTION(BlueprintCallable)
@@ -66,8 +63,7 @@ protected:
 
 private:
 	
-	FText CurrentSpeaker;
-	FText CurrentDialogue;
+	FSI_PrimaryDialogue CurrentPrimaryDialogue;
 
 	FOnNextClickedDelegate OnNextClickedDelegate;
 	FOnNextHoveredDelegate OnNextHoveredDelegate;

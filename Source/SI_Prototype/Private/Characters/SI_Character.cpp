@@ -3,6 +3,10 @@
 
 #include "Characters/SI_Character.h"
 
+
+#include "Characters/SI_CharacterManager.h"
+
+
 // Sets default values
 ASI_Character::ASI_Character()
 {
@@ -10,14 +14,7 @@ ASI_Character::ASI_Character()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-USI_CharacterData* ASI_Character::GetCharacterData()
+USI_CharacterData* ASI_Character::GetCharacterData() const
 {
 	return CharacterData;
-}
-
-// Called when the game starts or when spawned
-void ASI_Character::BeginPlay()
-{
-	Super::BeginPlay();
-	
 }

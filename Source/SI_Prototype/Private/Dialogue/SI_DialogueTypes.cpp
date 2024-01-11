@@ -425,3 +425,23 @@ FSI_CaseDialogueDataTableRow::FSI_CaseDialogueDataTableRow(const FSI_CaseDialogu
 {
 }
 
+FSI_DialogueState::FSI_DialogueState(const TArray<FSI_PrimaryDialogue*>& InPrimaryDialogueArray)
+{
+	for(const FSI_PrimaryDialogue* CurrentPrimaryDialogue : InPrimaryDialogueArray)
+	{
+		CurrentPrimaryDialogueArray.Add(*CurrentPrimaryDialogue);
+	}
+}
+
+FSI_DialogueState::FSI_DialogueState(const UDataTable* InActivePartDialogueTable) :
+	ActivePartDialogueTable(InActivePartDialogueTable)
+{
+	TArray<FSI_PrimaryDialogue*> PrimaryDialogueArray;
+	InActivePartDialogueTable->GetAllRows<FSI_PrimaryDialogue>(nullptr, PrimaryDialogueArray);
+
+	for(const FSI_PrimaryDialogue* CurrentPrimaryDialogue : PrimaryDialogueArray)
+	{
+		CurrentPrimaryDialogueArray.Add(*CurrentPrimaryDialogue);
+	}
+}
+

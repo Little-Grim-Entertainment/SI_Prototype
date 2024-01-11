@@ -21,6 +21,7 @@ void USI_GameInstanceSubsystem::InitializeDelegates()
 
 	GameInstance->OnGameInstanceInit().AddUObject(this, &ThisClass::OnGameInstanceInit);
 	GameInstance->OnGameModeBeginPlay().AddUObject(this, &ThisClass::OnGameModeBeginPlay);
+	GameInstance->OnGameModeEndPlay().AddUObject(this, &ThisClass::OnGameModeEndPlay);
 	GameInstance->OnPlayerStart().AddUObject(this, &ThisClass::OnPlayerStart);
 }
 
@@ -42,6 +43,10 @@ void USI_GameInstanceSubsystem::OnGameInstanceInit()
 }
 
 void USI_GameInstanceSubsystem::OnGameModeBeginPlay()
+{
+}
+
+void USI_GameInstanceSubsystem::OnGameModeEndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 }
 

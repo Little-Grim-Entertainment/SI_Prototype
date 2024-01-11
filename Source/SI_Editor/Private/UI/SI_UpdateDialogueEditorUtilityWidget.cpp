@@ -532,7 +532,7 @@ void USI_UpdateDialogueEditorUtilityWidget::UpdateDialogueDataTable(FRuntimeData
 
 	const FString PackageName = PackagePath + "." + FileName;
 
-	UDataTable* DataTable = LoadObject<UDataTable>(NULL, *PackageName);
+	UDataTable* DataTable = LoadObject<UDataTable>(nullptr, *PackageName);
 	if(!IsValid(DataTable))
 	{
 		DataTable = GenerateNewDialogueDataTable(InStructPtr, PackagePath, InCallbackInfo);

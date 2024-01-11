@@ -16,6 +16,7 @@
 
 // ******************* TODO: DELETE WHEN GADGET SYSTEM IS IMPLEMENTED
 #include "Actors/Gadgets/SI_Flashlight.h"
+#include "Characters/SI_CharacterManager.h"
 
 ASI_Nick::ASI_Nick()
 {	
@@ -97,6 +98,11 @@ void ASI_Nick::BeginPlay()
 {
 	Super::BeginPlay();
 
+	USI_CharacterManager* CharacterManager = GetWorld()->GetSubsystem<USI_CharacterManager>();
+	if(IsValid(CharacterManager))
+	{
+		CharacterManager->SetNickRef(this);
+	}
 
 	USI_LevelManager* LevelManager = GetGameInstance()->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(LevelManager)){return;}

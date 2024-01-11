@@ -26,7 +26,12 @@ FOnGameInstanceInit& USI_GameInstance::OnGameInstanceInit()
 
 FOnGameModeBeginPlay& USI_GameInstance::OnGameModeBeginPlay()
 {
-	return OnOnGameModeBeginPlayDelegate;
+	return OnGameModeBeginPlayDelegate;
+}
+
+FOnGameModeEndPlay& USI_GameInstance::OnGameModeEndPlay()
+{
+	return OnGameModeEndPlayDelegate;
 }
 
 FOnPlayerStart& USI_GameInstance::OnPlayerStart()

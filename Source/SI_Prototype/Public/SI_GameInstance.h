@@ -16,6 +16,7 @@ class ASI_GameMode;
 
 DECLARE_MULTICAST_DELEGATE(FOnGameInstanceInit);
 DECLARE_MULTICAST_DELEGATE(FOnGameModeBeginPlay);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameModeEndPlay, const EEndPlayReason::Type);
 DECLARE_MULTICAST_DELEGATE(FOnPlayerStart);
 DECLARE_MULTICAST_DELEGATE(FOnTagManagerInitialized);
 
@@ -43,6 +44,8 @@ public:
 
 	FOnGameInstanceInit& OnGameInstanceInit();
 	FOnGameModeBeginPlay& OnGameModeBeginPlay();
+	FOnGameModeEndPlay& OnGameModeEndPlay();
+
 	FOnPlayerStart& OnPlayerStart();
 	FOnTagManagerInitialized& OnTagManagerInitialized();
 
@@ -58,7 +61,8 @@ protected:
 private:
 
 	FOnGameInstanceInit OnGameInstanceInitDelegate;
-	FOnGameModeBeginPlay OnOnGameModeBeginPlayDelegate;
+	FOnGameModeBeginPlay OnGameModeBeginPlayDelegate;
+	FOnGameModeEndPlay OnGameModeEndPlayDelegate;
 	FOnPlayerStart OnOnPlayerStartDelegate;
 	FOnTagManagerInitialized OnTagManagerInitializedDelegate;
 	

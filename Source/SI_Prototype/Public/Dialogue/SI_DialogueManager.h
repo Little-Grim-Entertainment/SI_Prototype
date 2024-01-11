@@ -3,13 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/SI_CharacterTypes.h"
 #include "Subsystems/SI_WorldSubsystem.h"
 #include "SI_DialogueManager.generated.h"
 
+class ASI_NPC;
 class UDialogueSessionNode;
 class USI_CaseData;
 class USI_PartData;
 class USI_CharacterData;
+class ASI_DialogueCamera;
 
 UCLASS()
 class SI_PROTOTYPE_API USI_DialogueManager : public USI_WorldSubsystem
@@ -21,9 +24,9 @@ public:
 	// assumes that active characters using non-default dialogue have an associated SI_CharacterData
 	// loaded into the CharacterManager's ActiveCharactersData
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void StartDialogue(const FGameplayTag& InCharacterTag);
+	void StartDialogue(ASI_NPC* InNPC);
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void ExitDialogue(int32 NewAngerLevel);
+	void ExitDialogue();
 
 
 	// --- Functions to respond to button presses --- //
@@ -39,6 +42,12 @@ public:
 	void OnItemOptionSelected(UObject* RelatedItem = nullptr);
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	void OnInterrogationPressed();
+
+	UFUNCTION(BlueprintPure, Category = "Dialogue")
+	FSI_PrimaryDialogue GetCurrentPrimaryDialogue() const;
+
+	UFUNCTION(BlueprintPure, Category = "Dialogue")
+	ASI_Character* GetActiveSpeaker();
 
 	void SetupBindings();
 
@@ -56,7 +65,19 @@ public:
 
 private:
 
-	void StartDefaultDialogue(USI_CharacterData* InCharacterData);
+	UPROPERTY()
+	TSoftObjectPtr<ASI_Character> ActiveSpeaker;
 
-	USI_CharacterData* CurrentCharacterData;
+	UPROPERTY()
+	TSoftObjectPtr<ASI_NPC> ActiveNPC;
+	
+	UPROPERTY()
+	TSoftObjectPtr<ASI_DialogueCamera> DialogueCamera;
+	
+	FSI_DialogueState* ActiveDialogueState;
+	int32 CurrentDialogueIndex;
+
+	void SetNickLocation();
+	void UpdateActiveSpeaker();
+	void SpawnDialogueCamera();
 };

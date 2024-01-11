@@ -6,8 +6,7 @@
 #include "EngineUtils.h"
 #include "SI_GameInstance.h"
 #include "Characters/Data/SI_CharacterData.h"
-#include "Input/Data/SI_InputConfig.h"
-#include "Abilities/SI_GameplayAbility.h"
+#include "Characters/SI_CharacterManager.h"
 #include "Debug/SI_DebugManager.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -31,9 +30,17 @@ void ASI_GameMode::InitGame(const FString& MapName, const FString& Options, FStr
 	GameInstance->OnGameModeBeginPlay().Broadcast();
 	
 	USI_DebugManager* DebugManager = GameInstance->GetSubsystem<USI_DebugManager>();
-	if(!IsValid(DebugManager)) {return;}
+	if(IsValid(DebugManager))
+	{
+		DebugManager->InitializeDebugCommands(Options);
+	}
 
-	DebugManager->InitializeDebugCommands(Options);
+	USI_CharacterManager* CharacterManager = GetWorld()->GetSubsystem<USI_CharacterManager>();
+	if(IsValid(CharacterManager))
+	{
+		CharacterManager->LoadCharacterStates();
+	}
+
 }
 
 void ASI_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -61,6 +68,22 @@ void ASI_GameMode::HandleStartingNewPlayer_Implementation(APlayerController* New
 	if(IsValid(GameInstance))
 	{
 		GameInstance->OnPlayerStart().Broadcast();
+	}
+}
+
+void ASI_GameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	USI_CharacterManager* CharacterManager = GetWorld()->GetSubsystem<USI_CharacterManager>();
+	if(IsValid(CharacterManager))
+	{
+		CharacterManager->LoadCharacterStates();
+	}
+	
+	if(IsValid(GameInstance))
+	{
+		GameInstance->OnGameModeEndPlay().Broadcast(EndPlayReason);
 	}
 }
 

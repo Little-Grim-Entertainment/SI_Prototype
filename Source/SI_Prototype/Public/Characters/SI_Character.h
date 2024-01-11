@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SI_CharacterTypes.h"
 #include "GameFramework/Character.h"
 #include "SI_Character.generated.h"
 
+class USI_CharacterManager;
 class USI_CharacterData;
 class USI_AbilitySystemComponent;
 
@@ -20,16 +22,15 @@ public:
 
 	USI_AbilitySystemComponent* GetAbilitySystemComponent() {return AbilitySystemComponent;}
 
-	USI_CharacterData* GetCharacterData();
-
+	USI_CharacterData* GetCharacterData() const;
+	
 protected:
 	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Character | Abilities")
-	USI_AbilitySystemComponent* AbilitySystemComponent;
+	USI_AbilitySystemComponent* AbilitySystemComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character | Info")
-	USI_CharacterData* CharacterData;
+	USI_CharacterData* CharacterData = nullptr;
+
+
 };

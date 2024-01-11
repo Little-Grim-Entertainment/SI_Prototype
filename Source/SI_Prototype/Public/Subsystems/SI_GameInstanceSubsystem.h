@@ -45,11 +45,13 @@ protected:
 	UFUNCTION()
 	virtual void OnGameModeBeginPlay();
 	UFUNCTION()
+	virtual void OnGameModeEndPlay(const EEndPlayReason::Type EndPlayReason);
+	UFUNCTION()
 	virtual void OnPlayerStart();
 
 	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr);
 	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr);
-
+	
 private:
 
 	FGameplayTag PreviouslyAddedTag;

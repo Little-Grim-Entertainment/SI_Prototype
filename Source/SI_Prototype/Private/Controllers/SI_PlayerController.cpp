@@ -268,10 +268,7 @@ void ASI_PlayerController::RequestNextDialogue()
 	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
 	if (UIManager && DialogueManager)
 	{
-		if (DialogueManager->HasNextOption())
-		{
-			UIManager->GetPlayerHUD()->GetDialogueBox()->OnNextClicked();
-		}
+		UIManager->GetPlayerHUD()->GetDialogueBox()->OnNextClicked();
 	}
 }
 

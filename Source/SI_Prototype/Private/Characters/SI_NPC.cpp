@@ -7,14 +7,11 @@
 #include "Characters/SI_CharacterManager.h"
 #include "Components/StateTreeComponent.h"
 #include "Characters/Data/SI_CharacterData.h"
-#include "LGBlueprintFunctionLibrary.h"
 #include "SI_Prototype/SI_Prototype.h"
 #include "Dialogue/SI_DialogueTypes.h"
 #include "Cases/SI_CaseManager.h"
-#include "Cases/Data/SI_PartData.h"
 #include "Dialogue/SI_DialogueManager.h"
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
-
 
 using namespace SI_NativeGameplayTagLibrary;
 
@@ -43,61 +40,95 @@ bool ASI_NPC::IsPerformingMainAction() const
 	return CurrentBehaviorTag == SITag_Behavior_Default;
 }
 
+void ASI_NPC::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CharacterManager = GetWorld()->GetSubsystem<USI_CharacterManager>();
+	if(!IsValid(CharacterManager.Get())) {return;}
+
+	InitializeCharacterState();
+
+	//StateTreeComponent->StartLogic();
+}
+
+void ASI_NPC::InitializeCharacterState()
+{
+	if(!IsValid(CharacterManager.Get()) || !IsValid(CharacterData)) {return;}
+
+	CharacterState = CharacterManager->GetCharacterStateByTag(CharacterData->CharacterTag, this);
+	if(CharacterState)
+	{
+		InitializeCharacterDialogueState();
+	}
+}
+
+void ASI_NPC::InitializeCharacterDialogueState()
+{
+	const USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
+	if(!IsValid(GameInstance) || !CharacterState  || !IsValid(CharacterManager.Get())) {return;}
+	
+	const USI_CaseManager* CaseManager = GameInstance->GetSubsystem<USI_CaseManager>();
+	const USI_DialogueDataAsset* CharacterDialogue = CharacterData->CharacterDialogue;
+	if(!IsValid(CaseManager) || !IsValid(CharacterDialogue)) {return;}
+	
+	const USI_CaseData* ActiveCase = CaseManager->GetActiveCase();
+	if(!IsValid(ActiveCase) || !CharacterManager->IsActiveCharacter(CharacterData))
+	{
+		return;
+	}
+	
+	if(CharacterState->CharacterCaseStates.IsEmpty() || !HasCharacterStateForCase(ActiveCase->CaseTag))
+	{
+		const UDataTable* PrimaryDialogueDataTable = CharacterDialogue->GetDialogueDataTableByType(SITag_Dialogue_Struct_PrimaryDialogue);
+		CharacterState->AddNewCaseState(ActiveCase, PrimaryDialogueDataTable);
+	}
+}
+
+bool ASI_NPC::HasCharacterStateForCase(const FGameplayTag& InCaseTag) const
+{
+	const FSI_CharacterCaseState* CharacterCaseState = CharacterState->CharacterCaseStates.Find(InCaseTag);
+	return CharacterCaseState != nullptr;
+}
+
+FSI_CharacterState* ASI_NPC::GetCharacterState() const
+{
+	return CharacterState;
+}
+
 FSI_CharacterState* ASI_NPC::GetCharacterState()
 {
 	return CharacterState;
 }
 
-void ASI_NPC::BeginPlay()
+FSI_DialogueState* ASI_NPC::GetActiveDialogueState() const
 {
-	Super::BeginPlay();
+	const USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
+	if(!IsValid(GameInstance) || !CharacterState) {return nullptr;}
 
-	//StateTreeComponent->StartLogic();
+	const USI_CaseManager* CaseManager = GameInstance->GetSubsystem<USI_CaseManager>();
+	if(!IsValid(CaseManager)) {return nullptr;}
 
-	InitializeCharacterState();
+	if(HasCharacterStateForCase(CaseManager->GetActiveCaseTag()))
+	{
+		return CharacterState->GetDialogueStateByCaseTag(CaseManager->GetActiveCaseTag());
+	}
+
+	return &CharacterState->DefaultDialogueState;
 }
 
-void ASI_NPC::InitializeCharacterState()
+FSI_DialogueState* ASI_NPC::GetActiveDialogueState()
 {
-	const UWorld* World = GetWorld();
-	const USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetGameInstance());
+	const USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
+	if(!IsValid(GameInstance) || !CharacterState) {return nullptr;}
 
-	if(!IsValid(World) || !IsValid(GameInstance) || !IsValid(CharacterData)) {return;}
+	const USI_CaseManager* CaseManager = GameInstance->GetSubsystem<USI_CaseManager>();
+	if(!IsValid(CaseManager)) {return nullptr;}
 
-	USI_CharacterManager* CharacterManager = World->GetSubsystem<USI_CharacterManager>();
-	if(!IsValid(CharacterManager) || !CharacterManager->IsActiveCharacter(CharacterData)) {return;}
-
-	CharacterState = CharacterManager->GetCharacterStateByTag(CharacterData->CharacterTag);
-	if(!CharacterState) {return;}
-
-	USI_CaseManager* CaseManager = GameInstance->GetSubsystem<USI_CaseManager>();
-	if(!IsValid(CaseManager)) {return;}
-
-	USI_CaseData* CurrentCase = CaseManager->GetActiveCase();
-	if(!IsValid(CurrentCase)) {return;}
-
-	const FSI_CharacterCaseState* CaseState = CharacterState->GetCaseStateByTag(CurrentCase->CaseTag);
-	if(!CaseState)
+	if(HasCharacterStateForCase(CaseManager->GetActiveCaseTag()))
 	{
-		CaseState = CharacterState->AddNewCaseState(CurrentCase);
-		if(!CaseState)
-		{
-			return;
-		}
+		return CharacterState->GetDialogueStateByCaseTag(CaseManager->GetActiveCaseTag());
 	}
-	
-	const FSI_DialogueState* DialogueState = CharacterState->GetDialogueStateByCaseTag(CurrentCase->CaseTag);
-	if(!DialogueState)
-	{
-		const USI_DialogueManager* DialogueManager = World->GetSubsystem<USI_DialogueManager>();
-		if(!IsValid(DialogueManager)) {return;}
 
-		const FString CaseName = ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(CurrentCase->CaseTag);
-		const FString DialogueLabel = CaseName + "_" + "P" + CaseManager->GetActivePart()->PartName.ToString();
-
-		/*FSI_PrimaryDialogueArray* PrimaryDialogueArray = CharacterData->CharacterDialogue->GetDialogueArrayStructByCaseAndLabel<FSI_PrimaryDialogueArray>(CurrentCase->CaseTag, DialogueLabel);
-		FSI_DialogueState* NewDialogueState = new FSI_DialogueState(PrimaryDialogueArray);
-
-		CharacterState->AddNewDialogueState(CurrentCase->CaseTag, NewDialogueState);*/
-	}
+	return &CharacterState->DefaultDialogueState;
 }

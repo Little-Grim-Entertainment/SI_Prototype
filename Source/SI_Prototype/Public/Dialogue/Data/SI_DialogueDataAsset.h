@@ -50,9 +50,10 @@ public:
 	void SetDataTableByTypeAndTag(const UDataTable* InDataTable, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag);
 	void SetEmbeddedDialogueDataTableByTypeTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag, const UDataTable* InDataTable);
 
-
 	UDataTable* GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
 	UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
+
+	UDataTable* GetCaseDialogueDataTableByType(const FGameplayTag& InCaseTag, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
 
 	template <class DialogueStruct>
 	DialogueStruct* GetTableDialogueByTag(const UDataTable* InDataTable, const FSI_DialogueTag& InDialogueTag);

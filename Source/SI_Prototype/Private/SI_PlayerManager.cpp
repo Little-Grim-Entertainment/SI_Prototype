@@ -121,6 +121,11 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 		CurrentPlayerState = InAddedTag;
 	}
 
+	if(InAddedTag != SITag_Player_State_Exploration && InAddedTag != SITag_Player_State_Dialogue)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD);
+	}
+
 	if(InAddedTag == SITag_Player_State_Media)
 	{
 		if (!IsValid(PlayerController))
@@ -170,6 +175,12 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 			{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to set menu mode!")); return;}
 
 		PlayerController->SetMenuMode(false);
+		return;
+	}
+
+	if(InRemovedTag == SITag_Player_State_Dialogue)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD_Dialogue);
 		return;
 	}
 
@@ -252,6 +263,8 @@ void USI_PlayerManager::InitializeDelegateMaps()
 
 void USI_PlayerManager::SetupDialogueState()
 {
+	SITagManager->AddNewGameplayTag(SITag_UI_HUD_Dialogue);
+	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_Dialogue, SITag_Camera_Mode);
 }
 
 void USI_PlayerManager::SetupExplorationState()
@@ -263,6 +276,11 @@ void USI_PlayerManager::SetupExplorationState()
 	TObjectPtr<USI_LevelManager> SILevelManager = TempGameInstance->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(SILevelManager) || !IsValid(SILevelManager->GetCurrentMap()))
 		{UE_LOG(LogLG_PlayerManager, Error, TEXT("SILevelManager or SILevelManager->GetCurrentMap() is null unable to set exploration mode!")); return;}
+
+	if(!SITagManager->HasGameplayTag(SITag_UI_HUD))
+	{
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_HUD);
+	}
 	
 	if (SILevelManager->GetCurrentMap()->MapType == SITag_Map_Type_Interior)
 	{

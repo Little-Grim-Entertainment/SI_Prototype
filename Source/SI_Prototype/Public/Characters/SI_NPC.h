@@ -33,23 +33,31 @@ public:
 	void SetCurrentBehavior(const FGameplayTag NewBehaviorTag);
 	UFUNCTION(BlueprintGetter, Category = "AI")
 	bool IsPerformingMainAction() const;
+	
+	FBehaviorTagUpdated OnBehaviorTagUpdated;
 
+	FSI_CharacterState* GetCharacterState() const;
 	FSI_CharacterState* GetCharacterState();
 
-	FBehaviorTagUpdated OnBehaviorTagUpdated;
+	FSI_DialogueState* GetActiveDialogueState() const;
+	FSI_DialogueState* GetActiveDialogueState();
 	
 protected:
 
-	virtual void BeginPlay() override;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
 	FGameplayTag CurrentBehaviorTag = SITag_Behavior;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, NoClear, Category = "AI")
 	TObjectPtr<UStateTreeComponent> StateTreeComponent;
+
+	UPROPERTY()
+	TSoftObjectPtr<USI_CharacterManager> CharacterManager;
+
+	FSI_CharacterState* CharacterState = nullptr;
+
+	virtual void BeginPlay() override;
 	
-	FSI_CharacterState* CharacterState;
-
-private:
-
 	void InitializeCharacterState();
+	void InitializeCharacterDialogueState();
+
+	bool HasCharacterStateForCase(const FGameplayTag& InCaseTag) const;
 };

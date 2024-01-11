@@ -58,6 +58,7 @@ namespace SI_NativeGameplayTagLibrary
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera, "Camera")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode, "Camera.Mode")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_Dialogue, "Camera.Mode.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_OutDoor, "Camera.Mode.OutDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_InDoor, "Camera.Mode.InDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_Observation, "Camera.Mode.Observation")
@@ -149,9 +150,11 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Observation, "Player.State.Observation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_PossessIndicator, "Player.State.PossessIndicator")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_PossessMovable, "Player.State.PossessMovable")
-	
+
+	// UI
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI, "UI")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD, "UI.HUD")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_Dialogue, "UI.HUD.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction, "UI.HUD.QuickAction")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_Movable, "UI.HUD.QuickAction.Movable")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_GadgetsOne, "UI.HUD.QuickAction.GadgetsOne")
@@ -163,7 +166,6 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Game, "UI.Menu.Game")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Vendor, "UI.Menu.Vendor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Interrogation, "UI.Menu.Interrogation")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Dialogue, "UI.Menu.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Validation, "UI.Prompt.Validation")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Screen, "UI.Screen")

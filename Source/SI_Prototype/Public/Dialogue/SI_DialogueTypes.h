@@ -130,10 +130,10 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	TSoftObjectPtr<UDataTable> ResponseDialogueDataTable;
 
-	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
+	UPROPERTY(meta=(DisplayAfter="EmphasizedColorsString"))
 	FString PressURL;
 
-	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
+	UPROPERTY(meta=(DisplayAfter="EmphasizedColorsString"))
 	FString ResponseURL;
 
 	static FGameplayTag GetTypeTag();
@@ -288,9 +288,13 @@ struct SI_PROTOTYPE_API FSI_DialogueState : public FLGDialogueState
 {
 	GENERATED_BODY()
 
-	/*FSI_DialogueState(){}
-	FSI_DialogueState(FSI_PrimaryDialogueArray* InPrimaryDialogueArray);
+	FSI_DialogueState(){}
+	FSI_DialogueState(const TArray<FSI_PrimaryDialogue*>& InPrimaryDialogueArray);
+	FSI_DialogueState(const UDataTable* InActivePartDialogueTable);
+	
+	UPROPERTY()
+	TSoftObjectPtr<UDataTable> ActivePartDialogueTable;
 
-	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
-	FSI_PrimaryDialogueArray CasePrimaryDialogueArray;*/
+	UPROPERTY()
+	TArray<FSI_PrimaryDialogue> CurrentPrimaryDialogueArray;
 };

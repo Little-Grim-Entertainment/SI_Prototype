@@ -3,6 +3,7 @@
 
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
 
+#include "Cases/Data/SI_CaseData.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 
 void USI_DialogueDataAsset::SetDataTableByTypeAndTag(const UDataTable* InDataTable, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag)
@@ -129,5 +130,29 @@ UDataTable* USI_DialogueDataAsset::GetEmbeddedDialogueDataTableByTag(const FGame
 			}
 		}
 	}
+	return nullptr;
+}
+
+UDataTable* USI_DialogueDataAsset::GetCaseDialogueDataTableByType(const FGameplayTag& InCaseTag, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
+{
+	TArray<FSI_CaseDialogueDataTableRow*> CaseDialogueDataTables;
+	CaseDialogueDataTable->GetAllRows(nullptr, CaseDialogueDataTables);
+	
+	for(FSI_CaseDialogueDataTableRow* CurrentCaseTableRow : CaseDialogueDataTables)
+	{
+		if(!CurrentCaseTableRow) {continue;}
+		{
+			const USI_CaseData* CurrentCaseData = CurrentCaseTableRow->CaseDialogueData.CaseReference.Get();
+			if(!IsValid(CurrentCaseData) || CurrentCaseData->CaseTag != InCaseTag) {continue;}
+			{
+				const FSI_CaseDialogueData& CaseDialogueData =  CurrentCaseTableRow->CaseDialogueData;
+				for(const FSI_PartDialogueData& CurrentPartDialogueData : CaseDialogueData.PartDialogueData)
+				{
+					return CurrentPartDialogueData.GetDialogueDataTableByType(InStructType, InDialogueTag);
+				}
+			}
+		}
+	}
+
 	return nullptr;
 }

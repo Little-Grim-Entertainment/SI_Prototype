@@ -48,40 +48,28 @@ void USI_DialogueBox::NativeDestruct()
 	//OnPreviousClickedDelegate.RemoveDynamic(DialogueManager, &USI_DialogueManager::OnPreviousPressed);
 }
 
-void USI_DialogueBox::SetCharacterName(FText InCharacterName)
+FText USI_DialogueBox::GetCurrentSpeaker() const
 {
-	if (!IsValid(TXT_CharacterName)){return;}
-
-	TXT_CharacterName->SetText(InCharacterName);
-	CurrentSpeaker = InCharacterName;
+	return CurrentPrimaryDialogue.GetSpeakerNameFromTag();
 }
 
-void USI_DialogueBox::SetCharacterDialogue(FText InCharacterDialogue)
+FText USI_DialogueBox::GetCurrentDialogue() const
 {
-	if (!IsValid(TXT_CharacterDialogue)){return;}
-	
-	TXT_CharacterDialogue->SetText(InCharacterDialogue);
-	CurrentDialogue = InCharacterDialogue;
+	return CurrentPrimaryDialogue.Dialogue;
 }
-
 
 void USI_DialogueBox::RefreshDialogueBox()
 {
 	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
 	if (!IsValid(DialogueManager)){return;}
+
+	CurrentPrimaryDialogue = DialogueManager->GetCurrentPrimaryDialogue();
+	
+	TXT_CharacterName->SetText(CurrentPrimaryDialogue.GetSpeakerNameFromTag());
+	TXT_CharacterDialogue->SetText(CurrentPrimaryDialogue.Dialogue);
 	
 	ShowNextButton(DialogueManager);
 	ShowPreviousButton(DialogueManager);
-}
-
-FText USI_DialogueBox::GetCurrentSpeaker() const
-{
-	return CurrentSpeaker;
-}
-
-FText USI_DialogueBox::GetCurrentDialogue() const
-{
-	return CurrentDialogue;
 }
 
 FOnNextClickedDelegate& USI_DialogueBox::GetOnNextClickedDelegate()
