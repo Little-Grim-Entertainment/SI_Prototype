@@ -198,7 +198,7 @@ void USI_DialogueManager::SpawnDialogueCamera()
 	if(!IsValid(World) || !IsValid(ActiveSpeakerPtr)) {return;}
 
 	const ASI_GameMode* GameMode = Cast<ASI_GameMode>(World->GetAuthGameMode());
-	if(!IsValid(GameMode) || !IsValid(GameMode->DialogueCameraClass)) {return;}
+	if(!IsValid(GameMode) || !IsValid(GameMode->DialogueCameraClass) || !IsValid(ActiveSpeaker.Get())) {return;}
 		
 	DialogueCamera = World->SpawnActor<ASI_DialogueCamera>(GameMode->DialogueCameraClass, ActiveSpeakerPtr->GetActorLocation(), ActiveSpeakerPtr->GetActorRotation());
 
