@@ -9,7 +9,7 @@
 void USI_GameplayAbility_Gadget_UseSecondary::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	LG_LOG_LOG(LogLG_Ability," Ability Activated");
 	
 	ASI_Character* Character = Cast<ASI_Character>(ActorInfo->OwnerActor.Get());
 	TArray<AActor*> AttachedActors;

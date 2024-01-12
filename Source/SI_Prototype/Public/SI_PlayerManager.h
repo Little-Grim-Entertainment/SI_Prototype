@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/SI_LocalPlayerSubsystem.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "SI_PlayerManager.generated.h"
 
 class USI_GameplayAbility;
@@ -12,7 +13,7 @@ class USI_UserWidget;
 class ASI_PlayerController;
 class USI_EnhancedInputComponent;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogSI_PlayerManager, Log, All);
+
 
 UCLASS()
 class SI_PROTOTYPE_API USI_PlayerManager : public USI_LocalPlayerSubsystem
@@ -30,8 +31,8 @@ public:
 protected:
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag) override;
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag) override;
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr) override;
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr) override;
 	virtual void OnPlayerStart() override;
 	virtual void OnGameModeBeginPlay() override;
 	
@@ -46,6 +47,7 @@ private:
 	void SetupInterrogationState();
 	void SetupMenuState();
 	void SetupObservationState();
+	void SetupPossessIndicatorState();
 	void SetupPossessMovableState();
 	
 	UPROPERTY()
@@ -70,5 +72,6 @@ private:
 	FSimpleDelegate MenuStateDelegate;
 	FSimpleDelegate ObservationStateDelegate;
 	FSimpleDelegate PossessMovableStateDelegate;
+	FSimpleDelegate PossessIndicatorStateDelegate;
 
 };

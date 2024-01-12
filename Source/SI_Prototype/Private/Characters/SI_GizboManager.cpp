@@ -6,20 +6,18 @@
 #include "SI_GameInstance.h"
 #include "Characters/SI_Character.h"
 #include "Characters/SI_Gizbo.h"
-#include "Data/Characters/SI_CharacterData.h"
+#include "Characters/Data/SI_CharacterData.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameModes/SI_GameMode.h"
-#include "SI_GameplayTagManager.h"
-
-DEFINE_LOG_CATEGORY(LogSI_GizboManager);
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 void USI_GizboManager::SpawnGizbo()
 {
 	if (!GameInstance->GetGameMode()->GizboCDA)
-		{UE_LOG(LogSI_GizboManager, Error, TEXT("GizboCDA is null unable to spawn gizbo!"));	return;}
+		{UE_LOG(LogLG_GizboManager, Error, TEXT("GizboCDA is null unable to spawn gizbo!"));	return;}
 	
 	if (!GameInstance->GetGameMode()->GizboCDA->CharacterClass)
-		{UE_LOG(LogSI_GizboManager, Error, TEXT("GizboCDA->CharacterClass is null unable to spawn gizbo!"));return;}
+		{UE_LOG(LogLG_GizboManager, Error, TEXT("GizboCDA->CharacterClass is null unable to spawn gizbo!"));return;}
 
 	if (GizboStartTag == "")
 	{
@@ -60,9 +58,20 @@ ASI_Gizbo* USI_GizboManager::GetGizbo()
 void USI_GizboManager::ShowGizbo(bool bShouldHide)
 {
 	if (!IsValid(GizboCharacter))
-		{UE_LOG(LogSI_GizboManager, Error, TEXT("GizboCharacter is null unable to show gizbo!")); return;}
+		{UE_LOG(LogLG_GizboManager, Error, TEXT("GizboCharacter is null unable to show gizbo!")); return;}
 	
 	GizboCharacter->SetActorHiddenInGame(bShouldHide);
+}
+
+void USI_GizboManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
+{
+	Super::OnGameplayTagAdded(InAddedTag);
+
+	if(SITagManager->HasParentTag(InAddedTag, SITag_Behavior))
+	{
+		SITagManager->ReplaceTagWithSameParent(InAddedTag, SITag_Behavior);
+		return;
+	}
 }
 
 void USI_GizboManager::OnGameModeBeginPlay()

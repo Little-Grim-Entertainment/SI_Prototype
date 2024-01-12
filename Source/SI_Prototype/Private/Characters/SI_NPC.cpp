@@ -2,64 +2,25 @@
 
 
 #include "Characters/SI_NPC.h"
+#include "LG_DebugMacros.h"
+#include "SI_GameInstance.h"
+#include "Characters/SI_CharacterManager.h"
+#include "Components/StateTreeComponent.h"
+#include "Characters/Data/SI_CharacterData.h"
+#include "LGBlueprintFunctionLibrary.h"
 #include "SI_Prototype/SI_Prototype.h"
-#include "BehaviorTree/BehaviorTree.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "Dialogue/SI_DialogueTypes.h"
+#include "Cases/SI_CaseManager.h"
+#include "Cases/Data/SI_PartData.h"
+#include "Dialogue/SI_DialogueManager.h"
+#include "Dialogue/Data/SI_DialogueDataAsset.h"
+
 
 using namespace SI_NativeGameplayTagLibrary;
 
 ASI_NPC::ASI_NPC()
 {
-	NothingTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Do Nothing Behavior Tree"));
-	WanderingTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Wandering Behavior Tree"));
-	PatrollingTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Patrolling Behavior Tree"));
-	MovingToTargetTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Moving To Target Behavior Tree"));
-	DefaultTree = CreateDefaultSubobject<UBehaviorTree>(TEXT("Main Action Behavior Tree"));
-}
-
-UBehaviorTree* ASI_NPC::GetNothingTree() const
-{
-	if (IsValid(NothingTree)) { return NothingTree; }
-	
-	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetNothingTree NothingTree is not valid"), *GetNameSafe(this));
-	return nullptr;
-}
-
-UBehaviorTree* ASI_NPC::GetWanderingTree() const
-{
-	if (IsValid(WanderingTree)) { return WanderingTree; }
-		
-	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetWanderingTree WanderingTree is not valid"), *GetNameSafe(this));
-	return nullptr;
-}
-
-UBehaviorTree* ASI_NPC::GetPatrollingTree() const
-{
-	if (IsValid(PatrollingTree)) { return PatrollingTree; }
-		
-	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetPatrollingTree PatrollingTree is not valid"), *GetNameSafe(this));
-	return nullptr;
-}
-
-UBehaviorTree* ASI_NPC::GetMovingToTargetTree() const
-{
-	if (IsValid(MovingToTargetTree)) { return MovingToTargetTree; }
-		
-	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetMovingToTargetTree MovingToTargetTree is not valid"), *GetNameSafe(this));
-	return nullptr;
-}
-
-UBehaviorTree* ASI_NPC::GetMainTree() const
-{
-	if (IsValid(DefaultTree)) { return DefaultTree; }
-		
-	UE_LOG(LogSI_AI, Warning, TEXT("%s : SI_NPC::GetMainTree MainTree is not valid"), *GetNameSafe(this));
-	return nullptr;
-}
-
-FGameplayTag& ASI_NPC::GetCurrentBehaviorTag()
-{
-	return CurrentBehaviorTag;
+	StateTreeComponent = CreateDefaultSubobject<UStateTreeComponent>(TEXT("State Tree Component"));
 }
 
 void ASI_NPC::SetCurrentBehavior(const FGameplayTag NewBehaviorTag)
@@ -67,30 +28,76 @@ void ASI_NPC::SetCurrentBehavior(const FGameplayTag NewBehaviorTag)
 	if (CurrentBehaviorTag != NewBehaviorTag)
 	{
 		CurrentBehaviorTag = NewBehaviorTag;
+		OnBehaviorTagUpdated.Broadcast(CurrentBehaviorTag);
 	}
+	LG_LOG(LogLG_AI, Log, "ASI_NPC::SetCurrentBehavior %s", *CurrentBehaviorTag.ToString());
 }
 
-bool ASI_NPC::IsDoingNothing() const
+FGameplayTag& ASI_NPC::GetCurrentBehaviorTag()
 {
-	return CurrentBehaviorTag == SITag_Behavior_None;
-}
-
-bool ASI_NPC::IsWandering() const
-{
-	return CurrentBehaviorTag == SITag_Behavior_Wandering;
-}
-
-bool ASI_NPC::IsPatrolling() const
-{
-	return CurrentBehaviorTag == SITag_Behavior_Patrolling;
-}
-
-bool ASI_NPC::IsMovingToTarget() const
-{
-	return CurrentBehaviorTag == SITag_Behavior_MoveTo;
+	return CurrentBehaviorTag;
 }
 
 bool ASI_NPC::IsPerformingMainAction() const
 {
 	return CurrentBehaviorTag == SITag_Behavior_Default;
+}
+
+FSI_CharacterState* ASI_NPC::GetCharacterState()
+{
+	return CharacterState;
+}
+
+void ASI_NPC::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//StateTreeComponent->StartLogic();
+
+	InitializeCharacterState();
+}
+
+void ASI_NPC::InitializeCharacterState()
+{
+	const UWorld* World = GetWorld();
+	const USI_GameInstance* GameInstance = Cast<USI_GameInstance>(GetGameInstance());
+
+	if(!IsValid(World) || !IsValid(GameInstance) || !IsValid(CharacterData)) {return;}
+
+	USI_CharacterManager* CharacterManager = World->GetSubsystem<USI_CharacterManager>();
+	if(!IsValid(CharacterManager) || !CharacterManager->IsActiveCharacter(CharacterData)) {return;}
+
+	CharacterState = CharacterManager->GetCharacterStateByTag(CharacterData->CharacterTag);
+	if(!CharacterState) {return;}
+
+	USI_CaseManager* CaseManager = GameInstance->GetSubsystem<USI_CaseManager>();
+	if(!IsValid(CaseManager)) {return;}
+
+	USI_CaseData* CurrentCase = CaseManager->GetActiveCase();
+	if(!IsValid(CurrentCase)) {return;}
+
+	const FSI_CharacterCaseState* CaseState = CharacterState->GetCaseStateByTag(CurrentCase->CaseTag);
+	if(!CaseState)
+	{
+		CaseState = CharacterState->AddNewCaseState(CurrentCase);
+		if(!CaseState)
+		{
+			return;
+		}
+	}
+	
+	const FSI_DialogueState* DialogueState = CharacterState->GetDialogueStateByCaseTag(CurrentCase->CaseTag);
+	if(!DialogueState)
+	{
+		const USI_DialogueManager* DialogueManager = World->GetSubsystem<USI_DialogueManager>();
+		if(!IsValid(DialogueManager)) {return;}
+
+		const FString CaseName = ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(CurrentCase->CaseTag);
+		const FString DialogueLabel = CaseName + "_" + "P" + CaseManager->GetActivePart()->PartName.ToString();
+
+		/*FSI_PrimaryDialogueArray* PrimaryDialogueArray = CharacterData->CharacterDialogue->GetDialogueArrayStructByCaseAndLabel<FSI_PrimaryDialogueArray>(CurrentCase->CaseTag, DialogueLabel);
+		FSI_DialogueState* NewDialogueState = new FSI_DialogueState(PrimaryDialogueArray);
+
+		CharacterState->AddNewDialogueState(CurrentCase->CaseTag, NewDialogueState);*/
+	}
 }

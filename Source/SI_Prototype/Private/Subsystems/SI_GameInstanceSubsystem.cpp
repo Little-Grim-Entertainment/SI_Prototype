@@ -2,13 +2,9 @@
 
 
 #include "Subsystems/SI_GameInstanceSubsystem.h"
-
-#include "LG_DebugMacros.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
 #include "Characters/SI_GizboManager.h"
-
-DEFINE_LOG_CATEGORY(LogSI_GameInstanceSubsystem);
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 void USI_GameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -53,13 +49,13 @@ void USI_GameInstanceSubsystem::OnPlayerStart()
 {
 }
 
-void USI_GameInstanceSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_GameInstanceSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	/*if(InAddedTag == PreviouslyAddedTag) {return;}
 	PreviouslyAddedTag = InAddedTag;*/
 }
 
-void USI_GameInstanceSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_GameInstanceSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	/*if(InRemovedTag == PreviouslyRemovedTag) {return;}
 	PreviouslyRemovedTag = InRemovedTag;*/

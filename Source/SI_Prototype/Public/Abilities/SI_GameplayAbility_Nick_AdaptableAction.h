@@ -7,7 +7,6 @@
 #include "Interfaces/SI_AIInterface.h"
 #include "SI_GameplayAbility_Nick_AdaptableAction.generated.h"
 
-
 class ASI_Gizbo;
 class USI_AbilityTask_WaitCancelConfirmHoldTagAdded;
 class ASI_Nick;
@@ -29,39 +28,72 @@ public:
 	TSubclassOf<ASI_MoveToIndicator> GetMoveToIndicatorClass() const { return MoveToIndicatorClass;}
 
 protected:
-	
+
+	/** Initiates an adaptable action based on the provided actor's location.
+	* This function begins an adaptable action by calculating a trace from the camera's location towards a specific distance. It checks for potential obstructions and responds accordingly:
+	* - If there is an obstruction, it creates or updates a 'MoveToIndicator' to guide the action towards the obstacle.
+	* - If the 'MoveToIndicator' is not valid, it spawns a new one at the location of the obstruction.
+	* - Additionally, it starts a timer to continuously update the indicator's position to guide the action effectively.
+	* @param InActor The actor used as a reference for initiating the adaptable action.
+	*/
 	void StartAdaptableAction(const AActor* InActor);
 	void StartUpdateIndicatorPositionTimer();
 	void CancelUpdateIndicatorPositionTimer();
 	void UpdateMoveToIndicatorPosition();
 	ASI_MoveToIndicator* SpawnMoveToIndicator(const FVector InHitLocation);
 	void DestroyMoveToIndicator();
+
+	/** Highlights interactable actors within a specified radius of the given actor.
+	* This function iterates through all ASI_InteractableActor instances in the current world and checks their distance from the provided actor.
+	* If an actor is within the specified radius (AdaptableActionMaximumRadius), its highlight mesh is set to be visible; otherwise, it's hidden.
+	* @param InActor The actors location used as the center point for the radius calculation.
+	* This function is used to visually indicate interactable objects that are within the interaction range of the given actor.
+	*/
 	void HighlightInteractables(const AActor* InActor);
+
+	/** Cancels the highlighting of interactable actors.
+	* This function iterates through all ASI_InteractableActor instances in the current world and hides their highlight meshes, effectively canceling their visual highlighting.
+	*/
 	void CancelInteractableHighlight();
+
+	/** Called when the Cancel tag has been received and ends the ability.
+	*/
 	UFUNCTION()
 	void CancelTagReceived();
+
+	/** Called when the confirm tag has been received.
+	* It first checks if the current object implements the 'ISI_AIInterface' interface. If not, it logs an error and exits.
+	* If the interface is implemented, it calls 'OnUpdateTargetLocation' via the interface, updates gameplay tags, and ends the ability.
+	*/
 	UFUNCTION()
 	void ConfirmTagReceived();
+
+	/** Called after HoldConfirm tag is received.
+	* It first checks if the current object implements the 'ISI_AIInterface' interface. If the interface is not implemented, it logs an error and exits.
+	* If the interface is implemented, it executes 'OnUpdateTargetLocation' via the interface, and then ends the ability.
+	*/
 	UFUNCTION()
 	void HoldConfirmTagReceived();
-	
+
 	UPROPERTY()
 	USI_AbilityTask_WaitCancelConfirmHoldTagAdded* WaitCancelConfirmHoldTagAddedTask;
 	
 	UPROPERTY()
-	ASI_Nick* Nick;
+	TObjectPtr<ASI_Nick> Nick;
 	UPROPERTY()
-	ASI_Gizbo* Gizbo;
+	TObjectPtr<ASI_Gizbo> Gizbo;
 	UPROPERTY()
-	ASI_PlayerController* PC;
-	UPROPERTY()
-	ASI_MoveToIndicator* MoveToIndicator;
-	UPROPERTY(EditAnywhere)
+	TObjectPtr<ASI_PlayerController> PC;
+	UPROPERTY(EditAnywhere, Category = "Ability")
+	TObjectPtr<ASI_MoveToIndicator> MoveToIndicator;
+	UPROPERTY(EditAnywhere, Category = "Ability")
 	TSubclassOf<ASI_MoveToIndicator> MoveToIndicatorClass;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "Ability")
 	float AdaptableActionMaximumRadius = 2000.0f;
 	UPROPERTY()
-	ASI_PlayerCameraManager* SICameraManger;
+	TObjectPtr<ASI_PlayerCameraManager> SICameraManger;
+
+private:
 	float UpdateIndicatorDelay = 0.001f;
 	FTimerHandle IndicatorPositionTimerHandle;
 	bool bIsActive;

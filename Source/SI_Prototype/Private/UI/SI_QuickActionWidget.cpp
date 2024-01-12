@@ -4,7 +4,7 @@
 #include "UI/SI_QuickActionWidget.h"
 
 #include "EnhancedInputSubsystems.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "SI_Types.h"
 #include "Components/TextBlock.h"
 #include "UI/SI_OptionWidget.h"
@@ -15,8 +15,8 @@ void USI_QuickActionWidget::RefreshQuickActionWidget(const FGameplayTag& InUITag
 {
 	if (InUITag == SITag_UI_HUD_QuickAction_GadgetsOne)
 	{
-		UpdateQuickActionUp(SITag_Ability_Gizbo_Follow);
-		UpdateQuickActionDown(SITag_Ability_Gizbo_Wait);
+		UpdateQuickActionUp(SITag_Ability_AI_Follow);
+		UpdateQuickActionDown(SITag_Ability_AI_Wait);
 		UpdateQuickActionLeft(SITag_Ability_Gizbo_Construct_Flashlight);
 		UpdateQuickActionRight(SITag_Ability_Gizbo_Construct_Lockpicks);
 	}
@@ -27,7 +27,6 @@ void USI_QuickActionWidget::RefreshQuickActionWidget(const FGameplayTag& InUITag
 		UpdateQuickActionLeft(SITag_None);
 		UpdateQuickActionRight(SITag_Ability_Nick_PossessMovable);
 	}
-
 }
 
 void USI_QuickActionWidget::NativeConstruct()

@@ -4,7 +4,7 @@
 #include "Characters/SI_Gizbo.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Actors/SI_InteractableActor.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
@@ -133,12 +133,12 @@ void ASI_Gizbo::LocateInteractable()
 				ASI_InteractableActor* HitInteractable = Cast<ASI_InteractableActor>(Hit.GetActor());
 				if(!IsValid(HitInteractable)) return;
 
-				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interact_Pickupable))
+				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interaction_Pickup))
 				{
 					PickupObject(HitInteractable);
 					return;
 				}
-				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interact_Pushable) )
+				if(HitInteractable->InteractionTags.HasTagExact(SITag_Interaction_Push) )
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Gizbo: Pushable Located %s"), *Hit.GetActor()->GetName()));
 				}

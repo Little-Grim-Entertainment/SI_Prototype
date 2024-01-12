@@ -3,16 +3,13 @@
 
 #include "Audio/SI_MusicManager.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
-#include "AudioDevice.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "Components/AudioComponent.h"
-#include "Data/Maps/SI_MapData.h"
+#include "Levels/Data/SI_MapData.h"
 #include "GameModes/SI_GameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Levels/SI_LevelManager.h"
 #include "Audio/SI_MusicGameplayTagLibrary.h"
-
-DEFINE_LOG_CATEGORY(LogSI_MusicManager);
 
 using namespace SI_MusicGameplayTagLibrary;
 
@@ -36,7 +33,7 @@ void USI_MusicManager::OnWorldBeginPlay(UWorld& InWorld)
 	
 }
 
-void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
 
@@ -58,7 +55,7 @@ void USI_MusicManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	}
 }
 
-void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_MusicManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagRemoved(InRemovedTag);
 
@@ -114,8 +111,8 @@ UAudioComponent* USI_MusicManager::PlayBackgroundMusic(FSI_MusicSettings InMusic
 			BackgroundMusic->Play();
 		}
 
-		SITagManager->AddNewGameplayTag(InMusicSettings.MusicTag);
-		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Playing);
+		SITagManager->AddNewGameplayTag_Internal(InMusicSettings.MusicTag);
+		SITagManager->AddNewGameplayTag_Internal(SITag_Audio_Music_Playing);
 		OnBackgroundMusicStarted.Broadcast();
 		bMusicIsPlaying = true;
 		bMusicIsPaused = false;
@@ -180,10 +177,10 @@ void USI_MusicManager::StopBackgroundMusic(bool bShouldFade, float FadeVolumeLev
 		if (!bMusicIsPaused)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(MusicTimecode);
-			SITagManager->RemoveTag(CurrentMusicSettings.MusicTag);
+			SITagManager->RemoveTag_Internal(CurrentMusicSettings.MusicTag);
 			OnBackgroundMusicStopped.Broadcast();
 		}
-		SITagManager->RemoveTag(SITag_Audio_Music_Playing);
+		SITagManager->RemoveTag_Internal(SITag_Audio_Music_Playing);
 		BackgroundMusic->DestroyComponent();
 		bMusicIsPlaying = false;
 	}

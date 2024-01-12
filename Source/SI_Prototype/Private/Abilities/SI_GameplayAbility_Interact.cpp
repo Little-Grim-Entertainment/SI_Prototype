@@ -14,11 +14,11 @@ void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHan
                                                    const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	LG_LOG_LOG(LogLG_Ability," Ability Activated");
 	
 	ASI_PlayerController* PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 
-	if(!IsValid(PlayerController)) {LG_LOG_LOG(LogSI_Ability,"PlayerController is not valid"); return; }
+	if(!IsValid(PlayerController)) {LG_LOG_LOG(LogLG_Ability,"PlayerController is not valid"); return; }
 
 	if(PlayerController->GetInteractableActor())
 	{
@@ -29,10 +29,10 @@ void USI_GameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHan
 	}
 
 	ASI_Nick* Nick = Cast<ASI_Nick>(ActorInfo->AvatarActor.Get());
-	if(!IsValid(Nick)) {LG_LOG_LOG(LogSI_Ability,"Nick is not valid"); return; }
+	if(!IsValid(Nick)) {LG_LOG_LOG(LogLG_Ability,"Nick is not valid"); return; }
 
 	ASI_InteractableActor* ObservableActor = Cast<ASI_InteractableActor>(Nick->GetCurrentInteractableActor());
-	if(!IsValid(ObservableActor)) {LG_LOG_LOG(LogSI_Ability,"ObservableActor is not valid"); return; }
+	if(!IsValid(ObservableActor)) {LG_LOG_LOG(LogLG_Ability,"ObservableActor is not valid"); return; }
 	
 	ObservableActor->Execute_OnObserved(Cast<UObject>(ObservableActor), ObservableActor);
 

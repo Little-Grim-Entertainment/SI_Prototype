@@ -2,7 +2,7 @@
 
 
 #include "Abilities/Tasks/SI_AbilityTask_Observation.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
@@ -28,9 +28,9 @@ void USI_AbilityTask_Observation::Activate()
 	Super::Activate();
 
 	PlayerController = OwningAbility->GetOwningActorFromActorInfo()->GetInstigatorController<APlayerController>();
-	if(!IsValid(PlayerController)) {LG_LOG(LogSI_Ability, Error, "PlayerController is not valid"); return; }
+	if(!IsValid(PlayerController)) {LG_LOG(LogLG_Ability, Error, "PlayerController is not valid"); return; }
 	Nick = Cast<ASI_Nick>(PlayerController->GetPawn());
-	if(!IsValid(Nick)) {LG_LOG(LogSI_Ability, Error, "Nick is not valid"); return; }
+	if(!IsValid(Nick)) {LG_LOG(LogLG_Ability, Error, "Nick is not valid"); return; }
 }
 
 void USI_AbilityTask_Observation::TickTask(float DeltaTime)

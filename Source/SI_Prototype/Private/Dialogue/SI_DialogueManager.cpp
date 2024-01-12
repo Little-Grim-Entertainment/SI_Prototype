@@ -2,49 +2,16 @@
 
 
 #include "Dialogue/SI_DialogueManager.h"
-#include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
-#include "Characters/SI_CharacterManager.h"
-#include "Data/Cases/SI_CaseManager.h"
-#include "Data/Characters/SI_CharacterData.h"
+#include "Characters/Data/SI_CharacterData.h"
 
-void USI_DialogueManager::StartDialogue(USI_CharacterData* InCharacterData)
+void USI_DialogueManager::StartDialogue(const FGameplayTag& InCharacterTag)
 {
-	// TO DO: Get GameInstance
 	
-	//GameInstance = Cast<USI_GameInstance>(GetWorld()->GetGameInstance());
-	//if (!IsValid(GameInstance)) return;
-	USI_CharacterManager* CharacterManager = GameInstance->GetSubsystem<USI_CharacterManager>();
-	if (!IsValid(CharacterManager))
-	{
-		UE_LOG(LogTemp, Error, TEXT("CharacterManager not found!"));
-		StartDefaultDialogue(InCharacterData);
-		return;
-	}
-
-	// TO DO: need a function that updates the dialogue on the character
-    USI_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_CaseManager>();
-	if (!IsValid(CaseManager)) {return;}
-	CurrentCharacterData = Cast<USI_CharacterData>(InCharacterData);
-	if (!CurrentCharacterData)
-	{
-		StartDefaultDialogue(CurrentCharacterData);
-		return;
-	}
-
-	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Dialogue, SITag_Player_State);
 }
 
 void USI_DialogueManager::ExitDialogue(int32 NewAngerLevel)
 {
-	check(CurrentCharacterData);
-    USI_CaseManager* CaseManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_CaseManager>();
-	if (!IsValid(CaseManager)) {return;}
-	CurrentCharacterData->GetCurrentDialogueData(CaseManager).AngerLevel = NewAngerLevel;
-
-	CurrentCharacterData = nullptr;
-
-	//GameInstance->RequestNewPlayerMode(GameInstance->GetPreviousPlayerMode());
+	
 }
 
 void USI_DialogueManager::OnNextPressed()

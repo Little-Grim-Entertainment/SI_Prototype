@@ -21,7 +21,7 @@ public:
 	// assumes that active characters using non-default dialogue have an associated SI_CharacterData
 	// loaded into the CharacterManager's ActiveCharactersData
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void StartDialogue(USI_CharacterData* InCharacterData);
+	void StartDialogue(const FGameplayTag& InCharacterTag);
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	void ExitDialogue(int32 NewAngerLevel);
 

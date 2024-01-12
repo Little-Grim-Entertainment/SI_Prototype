@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "SI_AIInterface.generated.h"
 
 using namespace SI_NativeGameplayTagLibrary;
@@ -29,5 +29,7 @@ class SI_PROTOTYPE_API ISI_AIInterface
 	public:
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AI")
-	void OnUpdateTarget(FVector TargetLocation);
+	void OnUpdateBehaviorTag(FVector TargetLocation);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AI")
+	void OnUpdateTargetRotation(FRotator TargeRotation);
 };

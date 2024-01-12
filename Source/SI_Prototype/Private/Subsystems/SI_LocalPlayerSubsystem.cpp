@@ -3,7 +3,8 @@
 
 #include "Subsystems/SI_LocalPlayerSubsystem.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
 #include "SI_AbilityManager.h"
 
@@ -46,12 +47,12 @@ void USI_LocalPlayerSubsystem::OnGameModeBeginPlay()
 	
 }
 
-void USI_LocalPlayerSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_LocalPlayerSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	
 }
 
-void USI_LocalPlayerSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_LocalPlayerSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	
 }

@@ -22,7 +22,7 @@ USI_AbilityTask_WaitCancelConfirmHoldTagAdded* USI_AbilityTask_WaitCancelConfirm
 void USI_AbilityTask_WaitCancelConfirmHoldTagAdded::Activate()
 {
 	USI_AbilitySystemComponent* ASC = GetTargetASC();
-	if(!IsValid(ASC)) {LG_LOG(LogSI_AbilityTask, Error, "ASC is invalid!") return;}
+	if(!IsValid(ASC)) {LG_LOG(LogLG_Ability, Error, "ASC is invalid!") return;}
 
 	if (ASC)
 	{

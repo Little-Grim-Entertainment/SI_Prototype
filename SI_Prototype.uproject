@@ -7,23 +7,17 @@
 		{
 			"Name": "SI_Prototype",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine",
-				"AIModule",
-				"UMG",
-				"EnhancedInput",
-				"GameplayAbilities"
-			]
+			"LoadingPhase": "Default"
 		},
 		{
 			"Name": "SI_Editor",
-			"Type": "UncookedOnly",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"SI_Prototype",
-				"UnrealEd"
-			]
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "SI_CsvDataProcessor",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
@@ -62,11 +56,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "GuidFixer",
-			"Enabled": false,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/40897ef99c8b4d00a4d05dc1ca8e0481"
-		},
-		{
 			"Name": "RiderLink",
 			"Enabled": false
 		},
@@ -97,6 +86,36 @@
 		},
 		{
 			"Name": "StateTree",
+			"Enabled": true
+		},
+		{
+			"Name": "ProtoAnimatedText",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/0dd4efc6c34b46cab7d195a0002ecf01"
+		},
+		{
+			"Name": "RuntimeDataTable",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/4c7c4f8d523f4c90b2e26d23502c526c"
+		},
+		{
+			"Name": "SmartObjects",
+			"Enabled": true
+		},
+		{
+			"Name": "LGCoreLibrary",
+			"Enabled": true
+		},
+		{
+			"Name": "LGCsvDataProcessor",
+			"Enabled": true
+		},
+		{
+			"Name": "LGDebug",
+			"Enabled": true
+		},
+		{
+			"Name": "LGDialogueSystem",
 			"Enabled": true
 		}
 	]

@@ -7,12 +7,12 @@
 #include "Cameras/SI_PlayerCameraManager.h"
 #include "Characters/SI_Nick.h"
 #include "Controllers/SI_PlayerController.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogSI_Ability," Ability Activated");
+	LG_LOG_LOG(LogLG_Ability," Ability Activated");
 	
 	Nick = Cast<ASI_Nick>(ActorInfo->OwnerActor);
 	if(!IsValid(Nick)) return;
@@ -28,6 +28,12 @@ void USI_GameplayAbility_PossessMovable::ActivateAbility(const FGameplayAbilityS
 		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_PossessMovable, SITag_Player_State);
 		UpdateMoveToLocation();
 	}
+
+	// Get Object Selected
+	// Spawn Camera w/ boom or Use Existing Camera & boom attached to Nick
+	// Move Existing Camera Boom to selected object nia update location
+	// or
+	// Spawn new Camera w/ Boom 
 	
 	GEngine->AddOnScreenDebugMessage(-1,5.0f,FColor::Orange,"Ability: PossessMovable");
 }

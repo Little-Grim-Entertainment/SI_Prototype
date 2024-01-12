@@ -4,21 +4,19 @@
 #include "Media/SI_MediaManager.h"
 
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
 #include "GameplayTagContainer.h"
-#include "LevelSequence.h"
-#include "LevelSequenceActor.h"
 #include "LevelSequencePlayer.h"
 #include "Debug/SI_DebugManager.h"
 #include "Controllers/SI_PlayerController.h"
-#include "Data/Media/SI_CinematicDataAsset.h"
+#include "Media/Data/SI_CinematicDataAsset.h"
 #include "Levels/SI_LevelManager.h"
 #include "MediaAssets/Public/MediaPlayer.h"
 #include "MediaAssets/Public/MediaSoundComponent.h"
-#include "Data/Media/SI_VideoDataAsset.h"
+#include "Media/Data/SI_VideoDataAsset.h"
 
-void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagAdded(InAddedTag);
 	
@@ -38,7 +36,7 @@ void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
 	}
 }
 
-void USI_MediaManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_MediaManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 	Super::OnGameplayTagRemoved(InRemovedTag);
 	
@@ -75,7 +73,7 @@ void USI_MediaManager::PlayMedia(USI_MediaDataAsset* InMediaToPlay, FSI_MediaSet
 			PlayCinematic(CinematicDataAsset);
 		}
 		
-		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Pause);
+		SITagManager->AddNewGameplayTag_Internal(SITag_Audio_Music_Pause);
 		return;
 	}
 
@@ -92,7 +90,7 @@ void USI_MediaManager::PlayMedia(USI_MediaDataAsset* InMediaToPlay, FSI_MediaSet
 			PlayVideo(VideoDataAsset);
 		}
 
-		SITagManager->AddNewGameplayTag(SITag_Audio_Music_Pause);
+		SITagManager->AddNewGameplayTag_Internal(SITag_Audio_Music_Pause);
 	}
 }
 
@@ -321,8 +319,8 @@ void USI_MediaManager::OnCinematicSkipped()
 		}
 	}
 
-	SITagManager->RemoveTag(SITag_Audio_Music_Pause);
-	SITagManager->RemoveTag(SITag_Media_Cinematic);
+	SITagManager->RemoveTag_Internal(SITag_Audio_Music_Pause);
+	SITagManager->RemoveTag_Internal(SITag_Media_Cinematic);
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
@@ -344,8 +342,8 @@ void USI_MediaManager::OnCinematicEnded()
 		}
 	}
 
-	SITagManager->RemoveTag(SITag_Audio_Music_Pause);
-	SITagManager->RemoveTag(SITag_Media_Cinematic);
+	SITagManager->RemoveTag_Internal(SITag_Audio_Music_Pause);
+	SITagManager->RemoveTag_Internal(SITag_Media_Cinematic);
 	OnCinematicEndPlay.Broadcast(LoadedCinematic);
 }
 
@@ -395,8 +393,8 @@ void USI_MediaManager::OnVideoEnded()
 		}
 	}
 
-	SITagManager->RemoveTag(SITag_Audio_Music_Pause);
-	SITagManager->RemoveTag(SITag_Media_Video);
+	SITagManager->RemoveTag_Internal(SITag_Audio_Music_Pause);
+	SITagManager->RemoveTag_Internal(SITag_Media_Video);
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
 
@@ -418,8 +416,8 @@ void USI_MediaManager::OnVideoSkipped()
 		}
 	}
 
-	SITagManager->RemoveTag(SITag_Audio_Music_Pause);
-	SITagManager->RemoveTag(SITag_Media_Video);
+	SITagManager->RemoveTag_Internal(SITag_Audio_Music_Pause);
+	SITagManager->RemoveTag_Internal(SITag_Media_Video);
 	OnVideoEndPlay.Broadcast(LoadedVideo);
 }
 	

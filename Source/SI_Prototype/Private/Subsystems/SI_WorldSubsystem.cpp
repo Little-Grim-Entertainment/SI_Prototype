@@ -3,7 +3,7 @@
 
 #include "Subsystems/SI_WorldSubsystem.h"
 #include "SI_GameInstance.h"
-#include "SI_GameplayTagManager.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 
 void USI_WorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -35,11 +35,11 @@ void USI_WorldSubsystem::InitializeDelegateMaps()
 	
 }
 
-void USI_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag)
+void USI_WorldSubsystem::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)
 {
 
 }
 
-void USI_WorldSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag)
+void USI_WorldSubsystem::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
 {
 }

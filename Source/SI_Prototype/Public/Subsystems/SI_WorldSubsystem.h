@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTags/SI_GameplayTagTypes.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "SI_NativeGameplayTagLibrary.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "SI_WorldSubsystem.generated.h"
 
 enum class EPlayerMode : uint8;
@@ -32,8 +33,7 @@ protected:
 	virtual void InitializeDelegates();
 	UFUNCTION()
 	virtual void InitializeDelegateMaps();
-	UFUNCTION()
-	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag);
-	UFUNCTION()
-	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag);
+
+	virtual void OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload = nullptr);
+	virtual void OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload = nullptr);
 };

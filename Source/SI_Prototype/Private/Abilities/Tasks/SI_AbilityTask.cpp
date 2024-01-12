@@ -7,9 +7,6 @@
 #include "LG_DebugMacros.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 
-DEFINE_LOG_CATEGORY(LogSI_AbilityTask);
-
-
 /** Helping function to avoid having to manually cast */
 USI_AbilitySystemComponent* USI_AbilityTask::GetSIAbilitySystemComponentFromActor(const AActor* Actor)
 {
@@ -26,6 +23,6 @@ USI_AbilitySystemComponent* USI_AbilityTask::GetSIAbilitySystemComponentFromActo
 USI_AbilitySystemComponent* USI_AbilityTask::GetTargetASC()
 {
 	SI_AbilitySystemComponent = Cast<USI_AbilitySystemComponent>(AbilitySystemComponent);
-	if(!IsValid(SI_AbilitySystemComponent)) LG_LOG(LogSI_AbilityTask, Error, "AI_AbilitySystemCompoenet is invalid!")
+	if(!IsValid(SI_AbilitySystemComponent)) LG_LOG(LogLG_Ability, Error, "AI_AbilitySystemCompoenet is invalid!")
 	return SI_AbilitySystemComponent;
 }
