@@ -7,13 +7,14 @@
 #include "SI_SegmentPathfinder.generated.h"
 
 UCLASS()
-class ASI_SegmentPathfinder : public APawn
+class SI_PROTOTYPE_API ASI_SegmentPathfinder : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
 	ASI_SegmentPathfinder();
+	InitializePathfinder(FVector3d* inFlashlightLocation);
 
 protected:
 	// Called when the game starts or when spawned
