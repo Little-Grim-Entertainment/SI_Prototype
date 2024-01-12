@@ -1,4 +1,4 @@
 "Key","ResponseLine","SpeakerTag","Dialogue","EmphasizedWordsString","EmphasizedColorsString","DialogueTag","DialogueID"
-"1","1","(TagName=""Character.Main.NickSpade"")","You should see this!","","","None","172F085E4D0767B4625C55AD3C9CA533"
-"2","2","(TagName=""Character.Test.MrOrange"")","Uhh... what is that supposed to be?","","","None","C8AF09C448A6007A3B61C2B64C41182A"
-"3","3","(TagName=""Character.Main.NickSpade"")","Oh.. haha nevermind.","","","None","648E887C46D851B99F5D10A842926B6E"
+"1","1","(TagName=""Character.Main.NickSpade"")","You should see this!","","","None","BA54E78C4458B24D72A650B109C7337C"
+"2","2","(TagName=""Character.Test.MrOrange"")","Uhh... what is that supposed to be?","","","None","DA4089AC411CF51E8914C183F243BC10"
+"3","3","(TagName=""Character.Main.NickSpade"")","Oh.. haha nevermind.","","","None","280D936F4ED69B356C262C8B8AA3F200"

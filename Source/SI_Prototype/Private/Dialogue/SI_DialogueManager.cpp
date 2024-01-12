@@ -91,7 +91,7 @@ void USI_DialogueManager::OnInterrogationPressed()
 
 FSI_PrimaryDialogue USI_DialogueManager::GetCurrentPrimaryDialogue() const
 {
-	if(!ActiveDialogueState) {return FSI_PrimaryDialogue();}
+	if(!ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return FSI_PrimaryDialogue();}
 
 	const FSI_PrimaryDialogue& CurrentPrimaryDialogue = ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentDialogueIndex];
 
@@ -169,7 +169,7 @@ void USI_DialogueManager::SetNickLocation()
 
 void USI_DialogueManager::UpdateActiveSpeaker()
 {
-	if(!ActiveDialogueState) {return;}
+	if(!ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
 
 	const FSI_PrimaryDialogue& CurrentPrimaryDialogue = ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentDialogueIndex];
 	if(CurrentPrimaryDialogue.SpeakerTag == SI_CharacterGameplayTagLibrary::SITag_Character_Main_NickSpade)
@@ -194,12 +194,13 @@ void USI_DialogueManager::UpdateActiveSpeaker()
 void USI_DialogueManager::SpawnDialogueCamera()
 {
 	UWorld* World = GetWorld();
-	if(!IsValid(World)) {return;}
+	ASI_Character* ActiveSpeakerPtr = ActiveSpeaker.Get();
+	if(!IsValid(World) || !IsValid(ActiveSpeakerPtr)) {return;}
 
 	const ASI_GameMode* GameMode = Cast<ASI_GameMode>(World->GetAuthGameMode());
 	if(!IsValid(GameMode) || !IsValid(GameMode->DialogueCameraClass)) {return;}
 		
-	DialogueCamera = World->SpawnActor<ASI_DialogueCamera>(GameMode->DialogueCameraClass, ActiveSpeaker->GetActorLocation(), ActiveSpeaker->GetActorRotation());
+	DialogueCamera = World->SpawnActor<ASI_DialogueCamera>(GameMode->DialogueCameraClass, ActiveSpeakerPtr->GetActorLocation(), ActiveSpeakerPtr->GetActorRotation());
 
 	ASI_DialogueCamera* DialogueCameraPtr = DialogueCamera.Get();
 	if(!IsValid(DialogueCameraPtr)) {return;}
@@ -220,5 +221,5 @@ void USI_DialogueManager::SpawnDialogueCamera()
 		PlayerController->Possess(DialogueCameraPtr);
 	}
 
-	DialogueCameraPtr->SetNewFocusedCharacter(ActiveSpeaker.Get());
+	DialogueCameraPtr->SetNewFocusedCharacter(ActiveSpeakerPtr);
 }

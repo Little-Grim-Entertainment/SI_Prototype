@@ -10,29 +10,29 @@ void USI_DialogueDataAsset::SetDataTableByTypeAndTag(const UDataTable* InDataTab
 {
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue)
 	{
-		DefaultPrimaryDialogueDataTable = InDataTable->GetPathName();
+		DefaultPrimaryDialogueDataTable = InDataTable;
 		return;
 	}
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue)
 	{
-		DefaultCorrectedDialogueDataTable = InDataTable->GetPathName();
+		DefaultCorrectedDialogueDataTable = InDataTable;
 		return;
 	}
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse)
 	{
-		DefaultResponseDialogueDataTable = InDataTable->GetPathName();
+		DefaultResponseDialogueDataTable = InDataTable;
 		return;
 	}	
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue)
 	{
 		if(InDialogueTag.ContainsSectionName("RandomBubbleDialogue"))
 		{
-			DefaultRandomBubbleDialogueDataTable = InDataTable->GetPathName();
+			DefaultRandomBubbleDialogueDataTable = InDataTable;
 			return;
 		}
 		if(InDialogueTag.ContainsSectionName("SeeNickBubbleDialogue"))
 		{
-			DefaultSeeNickBubbleDialogueDataTable = InDataTable->GetPathName();
+			DefaultSeeNickBubbleDialogueDataTable = InDataTable;
 		}
 	}
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
@@ -60,43 +60,43 @@ void USI_DialogueDataAsset::SetEmbeddedDialogueDataTableByTypeTag(const FGamepla
 		{
 			if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
 			{
-				CurrentPrimaryDialogue->PressDialogueDataTable = InDataTable->GetPathName();
+				CurrentPrimaryDialogue->PressDialogueDataTable = InDataTable;
 				return;
 			}
 			if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue)
 			{
-				CurrentPrimaryDialogue->ResponseDialogueDataTable = InDataTable->GetPathName();
+				CurrentPrimaryDialogue->ResponseDialogueDataTable = InDataTable;
 				return;
 			}
 		}
 	}
 }
 
-UDataTable* USI_DialogueDataAsset::GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
+const UDataTable* USI_DialogueDataAsset::GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
 {
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue)
 	{
 		if(InDialogueTag.ContainsSectionName("RandomBubbleDialogue"))
 		{
-			return DefaultRandomBubbleDialogueDataTable.Get();
+			return DefaultRandomBubbleDialogueDataTable;
 		}
 		if(InDialogueTag.ContainsSectionName("SeeNickBubbleDialogue"))
 		{
-			return DefaultSeeNickBubbleDialogueDataTable.Get();
+			return DefaultSeeNickBubbleDialogueDataTable;
 		}
 		return nullptr;
 	}
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse)
 	{
-		return DefaultResponseDialogueDataTable.Get();
+		return DefaultResponseDialogueDataTable;
 	}
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue)
 	{
-		return DefaultCorrectedDialogueDataTable.Get();
+		return DefaultCorrectedDialogueDataTable;
 	}
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue)
 	{
-		return DefaultPrimaryDialogueDataTable.Get();
+		return DefaultPrimaryDialogueDataTable;
 	}
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
 	{
@@ -111,7 +111,7 @@ UDataTable* USI_DialogueDataAsset::GetDialogueDataTableByType(const FGameplayTag
 	return nullptr;
 }
 
-UDataTable* USI_DialogueDataAsset::GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
+const UDataTable* USI_DialogueDataAsset::GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
 {
 	TArray<FSI_PrimaryDialogue*> PrimaryDialogueArray;
 	DefaultPrimaryDialogueDataTable->GetAllRows(nullptr, PrimaryDialogueArray);
@@ -122,18 +122,18 @@ UDataTable* USI_DialogueDataAsset::GetEmbeddedDialogueDataTableByTag(const FGame
 		{
 			if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue)
 			{
-				return CurrentPrimaryDialogue->PressDialogueDataTable.Get();
+				return CurrentPrimaryDialogue->PressDialogueDataTable;
 			}
 			if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue)
 			{
-				return CurrentPrimaryDialogue->ResponseDialogueDataTable.Get();
+				return CurrentPrimaryDialogue->ResponseDialogueDataTable;
 			}
 		}
 	}
 	return nullptr;
 }
 
-UDataTable* USI_DialogueDataAsset::GetCaseDialogueDataTableByType(const FGameplayTag& InCaseTag, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
+const UDataTable* USI_DialogueDataAsset::GetCaseDialogueDataTableByType(const FGameplayTag& InCaseTag, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
 {
 	TArray<FSI_CaseDialogueDataTableRow*> CaseDialogueDataTables;
 	CaseDialogueDataTable->GetAllRows(nullptr, CaseDialogueDataTables);
@@ -142,7 +142,7 @@ UDataTable* USI_DialogueDataAsset::GetCaseDialogueDataTableByType(const FGamepla
 	{
 		if(!CurrentCaseTableRow) {continue;}
 		{
-			const USI_CaseData* CurrentCaseData = CurrentCaseTableRow->CaseDialogueData.CaseReference.Get();
+			const USI_CaseData* CurrentCaseData = CurrentCaseTableRow->CaseDialogueData.CaseReference;
 			if(!IsValid(CurrentCaseData) || CurrentCaseData->CaseTag != InCaseTag) {continue;}
 			{
 				const FSI_CaseDialogueData& CaseDialogueData =  CurrentCaseTableRow->CaseDialogueData;

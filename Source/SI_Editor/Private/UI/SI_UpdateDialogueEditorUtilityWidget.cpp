@@ -97,11 +97,11 @@ void USI_UpdateDialogueEditorUtilityWidget::UpdateCaseDialogue()
 
 	const FString FileName = ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(DialogueData->CharacterTag);
 
-	USI_CaseDialogueDataTable* CaseDialogueDataTable = DialogueData->CaseDialogueDataTable.Get();
+	USI_CaseDialogueDataTable* CaseDialogueDataTable = DialogueData->CaseDialogueDataTable;
 	if(!IsValid(CaseDialogueDataTable))
 	{
 		CaseDialogueDataTable = GenerateNewCaseDataTable(ContentPath, FileName);
-		DialogueData->CaseDialogueDataTable = CaseDialogueDataTable->GetPathName();
+		DialogueData->CaseDialogueDataTable = CaseDialogueDataTable;
 		if(!IsValid(CaseDialogueDataTable))
 		{
 			return;
@@ -116,6 +116,7 @@ void USI_UpdateDialogueEditorUtilityWidget::UpdateCaseDialogue()
 		if(!IsCaseInTable(CurrentCaseDataPtr->CaseTag, CaseDialogueDataTable))
 		{
 			CaseDialogueDataTable->AddNewCaseToTable(CurrentCaseDataPtr);
+			CaseDialogueDataTable->MarkPackageDirty();
 		}
 
 		FString NameWithCase = FileName + "_" + ULGBlueprintFunctionLibrary::GetLastValueInTagAsString(CurrentCaseDataPtr->CaseTag);
@@ -162,16 +163,15 @@ USI_CaseDialogueDataTable* USI_UpdateDialogueEditorUtilityWidget::GenerateNewCas
 
 	USI_CaseDialogueDataTable* NewDataTable = NewObject<USI_CaseDialogueDataTable>(Package->GetOutermost(), USI_CaseDialogueDataTable::StaticClass(), *FileName, Flags);
 	if(!IsValid(NewDataTable)) {UE_LOG(LogCsvDataProcessor, Error, TEXT("Unable to create new data table object for file: %s."), *FileName); return nullptr;}
-		
+	
 	FAssetRegistryModule::AssetCreated(NewDataTable);
 	NewDataTable->MarkPackageDirty();
 
 	FSavePackageArgs SavePackageArgs;
 	SavePackageArgs.TopLevelFlags = Flags;
-	SavePackageArgs.SaveFlags = SAVE_NoError;
 	
-	const FString PackageName = FPackageName::LongPackageNameToFilename(InPackagePath, FPackageName::GetAssetPackageExtension());
-	const bool SaveSuccess = UPackage::SavePackage(Package, NewDataTable, *PackageName, SavePackageArgs);
+	const FString PackageName = FPackageName::LongPackageNameToFilename(FilePath, FPackageName::GetAssetPackageExtension());
+	const bool SaveSuccess = UPackage::SavePackage(Package->GetOutermost(), NewDataTable, *PackageName, SavePackageArgs);
 	if(!SaveSuccess)
 	{
 		UE_LOG(LogCsvDataProcessor, Error, TEXT("Unable to save new data table: %s."), *PackageName);
@@ -180,6 +180,15 @@ USI_CaseDialogueDataTable* USI_UpdateDialogueEditorUtilityWidget::GenerateNewCas
 
 	UE_LOG(LogCsvDataProcessor, Warning, TEXT("Successfully saved new data table: %s."), *PackageName);
 	return NewDataTable;
+}
+
+void USI_UpdateDialogueEditorUtilityWidget::AddNewCaseToTable(UDataTable* InCaseDataTable, const USI_CaseData* InCaseData)
+{
+	const FName RowName = FName(InCaseData->CaseTag.ToString());
+	const FSI_CaseDialogueData CaseDialogueData = FSI_CaseDialogueData(InCaseData);
+	const FSI_CaseDialogueDataTableRow CaseDialogueDataTableRow = FSI_CaseDialogueDataTableRow(CaseDialogueData);
+
+	InCaseDataTable->AddRow(RowName, CaseDialogueDataTableRow);
 }
 
 bool USI_UpdateDialogueEditorUtilityWidget::IsCaseInTable(const FGameplayTag& InCaseTag, const UDataTable* InCaseDialogueDataTable) const
@@ -205,7 +214,7 @@ bool USI_UpdateDialogueEditorUtilityWidget::IsPartInTable(const FGameplayTag& In
 	const FSI_CaseDialogueData& CaseDialogueData = CaseRow->CaseDialogueData;
 	for(const FSI_PartDialogueData CurrentPartDialogueData : CaseDialogueData.PartDialogueData)
 	{
-		const USI_PartData* CurrentPartData = CurrentPartDialogueData.PartReference.Get();
+		const USI_PartData* CurrentPartData = CurrentPartDialogueData.PartReference;
 		if(!IsValid(CurrentPartData)) {continue;}
 		
 		if(CurrentPartData->PartTag == InPartTag)
@@ -231,7 +240,7 @@ FSI_PartDialogueData* USI_UpdateDialogueEditorUtilityWidget::GetPartDialogueData
 {
 	if(!InPartID.IsValid()) {return nullptr;}
 	
-	const USI_CaseDialogueDataTable* CaseDialogueDataTable = DialogueData->CaseDialogueDataTable.Get();
+	const UDataTable* CaseDialogueDataTable = DialogueData->CaseDialogueDataTable;
 	if(!IsValid(CaseDialogueDataTable)) {return nullptr;}
 	
 	for(const FSI_CaseDialogueInfo& CurrentCaseInfo : DialogueData->CaseDialogue)
@@ -260,7 +269,7 @@ FSI_PartDialogueData* USI_UpdateDialogueEditorUtilityWidget::GetPartDialogueData
 {
 	if(!InPartTag.IsValid()) {return nullptr;}
 	
-	const UDataTable* CaseDialogueDataTable = DialogueData->CaseDialogueDataTable.Get();
+	const UDataTable* CaseDialogueDataTable = DialogueData->CaseDialogueDataTable;
 	if(!IsValid(CaseDialogueDataTable)) {return nullptr;}
 	
 	for(const FSI_CaseDialogueInfo& CurrentCaseInfo : DialogueData->CaseDialogue)
@@ -275,7 +284,7 @@ FSI_PartDialogueData* USI_UpdateDialogueEditorUtilityWidget::GetPartDialogueData
 		FSI_CaseDialogueData& CaseDialogueData = CaseRow->CaseDialogueData;
 		for(FSI_PartDialogueData& CurrentPartDialogueData : CaseDialogueData.PartDialogueData)
 		{
-			const USI_PartData* CurrentPartData = CurrentPartDialogueData.PartReference.Get();
+			const USI_PartData* CurrentPartData = CurrentPartDialogueData.PartReference;
 			if(!IsValid(CurrentPartData)) {continue;}
 			
 			if(CurrentPartData->PartTag == InPartTag)

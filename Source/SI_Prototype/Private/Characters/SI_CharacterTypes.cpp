@@ -65,7 +65,7 @@ void FSI_CharacterState::InitializeDefaultDialogue()
 	const USI_DialogueDataAsset* CharacterDialogueData = CharacterDataPtr->CharacterDialogue;
 	if(!IsValid(CharacterDialogueData)) {return;}
 
-	const UDataTable* DefaultDialogueTable = CharacterDialogueData->DefaultPrimaryDialogueDataTable.Get();
+	const UDataTable* DefaultDialogueTable = CharacterDialogueData->DefaultPrimaryDialogueDataTable;
 	if(!IsValid(DefaultDialogueTable)) {return;}
 	
 	TArray<FSI_PrimaryDialogue*> DefaultPrimaryDialogueArray;

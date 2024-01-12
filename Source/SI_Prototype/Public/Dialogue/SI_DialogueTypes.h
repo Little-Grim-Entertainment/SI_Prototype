@@ -125,10 +125,10 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
     bool IsTrueStatement = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	TSoftObjectPtr<UDataTable> PressDialogueDataTable;
+	const UDataTable* PressDialogueDataTable;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	TSoftObjectPtr<UDataTable> ResponseDialogueDataTable;
+	const UDataTable* ResponseDialogueDataTable;
 
 	UPROPERTY(meta=(DisplayAfter="EmphasizedColorsString"))
 	FString PressURL;
@@ -181,7 +181,7 @@ struct SI_PROTOTYPE_API FSI_PartDialogueInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USI_PartData* PartReference;
+	const USI_PartData* PartReference;
 
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DialogueURLs;
@@ -198,27 +198,27 @@ struct SI_PROTOTYPE_API FSI_PartDialogueData : public FLGDialogueData
 	FSI_PartDialogueData(const USI_PartData* InPartData);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<USI_PartData> PartReference;
+	const USI_PartData* PartReference = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> RandomBubbleDialogueDataTable;
+	const UDataTable* RandomBubbleDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> SeeNickBubbleDialogueDataTable;
+	const UDataTable* SeeNickBubbleDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> DefaultResponseDataTable;
+	const UDataTable* DefaultResponseDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> CorrectedDialogueDataTable;
+	const UDataTable* CorrectedDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> PrimaryDialogueDataTable;
+	const UDataTable* PrimaryDialogueDataTable = nullptr;
 
-	UDataTable* GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
+	const UDataTable* GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
 	void SetDialogueDataTableByType(const UDataTable* InDataTable, const FGameplayTag& InStructType, const  FSI_DialogueTag& InDialogueTag = FSI_DialogueTag());
 
-	UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
+	const UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
 	void SetEmbeddedDialogueDataTableByTypeTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag, const UDataTable* InDataTable);
 };
 
@@ -228,7 +228,7 @@ struct SI_PROTOTYPE_API FSI_CaseDialogueInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USI_CaseData* CaseReference;
+	const USI_CaseData* CaseReference;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FSI_PartDialogueInfo> PartDialogue;
@@ -245,7 +245,7 @@ struct SI_PROTOTYPE_API FSI_CaseDialogueData : public FLGDialogueData
 	FSI_CaseDialogueData(const USI_CaseData* InCaseReference);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<USI_CaseData> CaseReference;
+	const USI_CaseData* CaseReference;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parts")
 	TArray<FSI_PartDialogueData> PartDialogueData;
@@ -258,6 +258,7 @@ struct SI_PROTOTYPE_API FSI_CaseDialogueDataTableRow : public FTableRowBase
 
 	FSI_CaseDialogueDataTableRow(){}
 	FSI_CaseDialogueDataTableRow(const FSI_CaseDialogueData& InCaseDialogueData);
+	FSI_CaseDialogueDataTableRow(const USI_CaseData* InCaseData);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FSI_CaseDialogueData CaseDialogueData;
@@ -293,7 +294,7 @@ struct SI_PROTOTYPE_API FSI_DialogueState : public FLGDialogueState
 	FSI_DialogueState(const UDataTable* InActivePartDialogueTable);
 	
 	UPROPERTY()
-	TSoftObjectPtr<UDataTable> ActivePartDialogueTable;
+	const UDataTable* ActivePartDialogueTable;
 
 	UPROPERTY()
 	TArray<FSI_PrimaryDialogue> CurrentPrimaryDialogueArray;
