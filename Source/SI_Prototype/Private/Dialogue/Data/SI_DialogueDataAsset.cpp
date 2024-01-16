@@ -72,7 +72,7 @@ void USI_DialogueDataAsset::SetEmbeddedDialogueDataTableByTypeTag(const FGamepla
 	}
 }
 
-const UDataTable* USI_DialogueDataAsset::GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
+const UDataTable* USI_DialogueDataAsset::GetDefaultDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const
 {
 	if(InStructType == SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue)
 	{

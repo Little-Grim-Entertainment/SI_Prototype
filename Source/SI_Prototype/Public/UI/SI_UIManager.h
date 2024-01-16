@@ -65,6 +65,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateSkipWidget();
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void CreateInterrogationWidget();
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveInterrogationWidget();
+
 	UFUNCTION(BlueprintPure, Category = "UI")
 	USI_UserWidget* GetSIWidgetByTag(const FGameplayTag& InWidgetTag);
 	

@@ -92,8 +92,6 @@ struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGConversationDialogue
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(EditCondition="CanPresentEvidence", EditConditionHides))
 	TSubclassOf<ASI_Evidence> CorrectEvidence;
-
-	static FGameplayTag GetTypeTag();
 };
 
 
@@ -107,8 +105,6 @@ struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGConversationDialogue
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	bool IsEvidenceCorrect;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -125,18 +121,16 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
     bool IsTrueStatement = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	const UDataTable* PressDialogueDataTable;
+	const UDataTable* PressDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	const UDataTable* ResponseDialogueDataTable;
+	const UDataTable* ResponseDialogueDataTable = nullptr;
 
 	UPROPERTY(meta=(DisplayAfter="EmphasizedColorsString"))
 	FString PressURL;
 
 	UPROPERTY(meta=(DisplayAfter="EmphasizedColorsString"))
 	FString ResponseURL;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -149,19 +143,12 @@ struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGConversationDialogue
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue", BlueprintReadOnly)
 	int32 SpeakerLine;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGConversationDialogue
+struct SI_PROTOTYPE_API FSI_DefaultResponse : public FSI_ResponseDialogue
 {
 	GENERATED_BODY()
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	int32 ResponseLine;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -171,8 +158,6 @@ struct SI_PROTOTYPE_API FSI_BubbleDialogue : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	FString BubbleTest;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -290,12 +275,19 @@ struct SI_PROTOTYPE_API FSI_DialogueState : public FLGDialogueState
 	GENERATED_BODY()
 
 	FSI_DialogueState(){}
-	FSI_DialogueState(const TArray<FSI_PrimaryDialogue*>& InPrimaryDialogueArray);
-	FSI_DialogueState(const UDataTable* InActivePartDialogueTable);
+	FSI_DialogueState(const UDataTable* InActivePartDialogueTable, const UDataTable* InActiveCorrectedDialogueTable, const UDataTable* InActiveDefaultResponseTable);
 	
 	UPROPERTY()
-	const UDataTable* ActivePartDialogueTable;
-
+	const UDataTable* ActivePrimaryDialogueTable  = nullptr;
+	UPROPERTY()
+	const UDataTable* ActiveCorrectedDialogueTable  = nullptr;
+	UPROPERTY()
+	const UDataTable* ActiveDefaultResponseTable  = nullptr;
+	
 	UPROPERTY()
 	TArray<FSI_PrimaryDialogue> CurrentPrimaryDialogueArray;
+	UPROPERTY()
+	TArray<FSI_CorrectedDialogue> CurrentCorrectedDialogueArray;
+	UPROPERTY()
+	TArray<FSI_DefaultResponse> CurrentDefaultResponseArray;
 };

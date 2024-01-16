@@ -149,36 +149,6 @@ void FSI_DialogueTag::GenerateDialogueTag()
 	GeneratedDialogueTag = FName(*GeneratedDialogueTagString);
 }
 
-FGameplayTag FSI_PressDialogue::GetTypeTag()
-{
-	return SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PressDialogue;
-}
-
-FGameplayTag FSI_ResponseDialogue::GetTypeTag()
-{
-	return SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_ResponseDialogue;
-}
-
-FGameplayTag FSI_PrimaryDialogue::GetTypeTag()
-{
-	return SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_PrimaryDialogue;
-}
-
-FGameplayTag FSI_CorrectedDialogue::GetTypeTag()
-{
-	return SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_CorrectedDialogue;
-}
-
-FGameplayTag FSI_DefaultResponse::GetTypeTag()
-{
-	return SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_DefaultResponse;
-}
-
-FGameplayTag FSI_BubbleDialogue::GetTypeTag()
-{
-	return SI_NativeGameplayTagLibrary::SITag_Dialogue_Struct_BubbleDialogue;
-}
-
 bool FSI_DialogueTag::IsValid() const
 {
 	return DialogueTagArray.Num() >= 2;
@@ -430,16 +400,10 @@ FSI_CaseDialogueDataTableRow::FSI_CaseDialogueDataTableRow(const USI_CaseData* I
 	CaseDialogueData = FSI_CaseDialogueData(InCaseData);
 }
 
-FSI_DialogueState::FSI_DialogueState(const TArray<FSI_PrimaryDialogue*>& InPrimaryDialogueArray)
-{
-	for(const FSI_PrimaryDialogue* CurrentPrimaryDialogue : InPrimaryDialogueArray)
-	{
-		CurrentPrimaryDialogueArray.Add(*CurrentPrimaryDialogue);
-	}
-}
-
-FSI_DialogueState::FSI_DialogueState(const UDataTable* InActivePartDialogueTable) :
-	ActivePartDialogueTable(InActivePartDialogueTable)
+FSI_DialogueState::FSI_DialogueState(const UDataTable* InActivePartDialogueTable, const UDataTable* InActiveCorrectedDialogueTable, const UDataTable* InActiveDefaultResponseTable) :
+	ActivePrimaryDialogueTable(InActivePartDialogueTable),
+	ActiveCorrectedDialogueTable(InActiveCorrectedDialogueTable),
+	ActiveDefaultResponseTable(InActiveDefaultResponseTable)
 {
 	TArray<FSI_PrimaryDialogue*> PrimaryDialogueArray;
 	InActivePartDialogueTable->GetAllRows<FSI_PrimaryDialogue>(nullptr, PrimaryDialogueArray);
@@ -447,6 +411,22 @@ FSI_DialogueState::FSI_DialogueState(const UDataTable* InActivePartDialogueTable
 	for(const FSI_PrimaryDialogue* CurrentPrimaryDialogue : PrimaryDialogueArray)
 	{
 		CurrentPrimaryDialogueArray.Add(*CurrentPrimaryDialogue);
+	}
+
+	TArray<FSI_CorrectedDialogue*> CorrectedDialogueArray;
+	InActiveCorrectedDialogueTable->GetAllRows<FSI_CorrectedDialogue>(nullptr, CorrectedDialogueArray);
+
+	for(const FSI_CorrectedDialogue* CurrentCorrectedDialogue : CorrectedDialogueArray)
+	{
+		CurrentCorrectedDialogueArray.Add(*CurrentCorrectedDialogue);
+	}
+
+	TArray<FSI_DefaultResponse*> DefaultResponseArray;
+	InActiveDefaultResponseTable->GetAllRows<FSI_DefaultResponse>(nullptr, DefaultResponseArray);
+
+	for(const FSI_DefaultResponse* CurrentDefaultResponse : DefaultResponseArray)
+	{
+		CurrentDefaultResponseArray.Add(*CurrentDefaultResponse);
 	}
 }
 

@@ -32,5 +32,8 @@ public:
 	TSubclassOf<ASI_Character> CharacterClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterDetails")
+	TSoftObjectPtr<UTexture2D> InterrogationImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterDetails")
 	USI_DialogueDataAsset* CharacterDialogue;
 };

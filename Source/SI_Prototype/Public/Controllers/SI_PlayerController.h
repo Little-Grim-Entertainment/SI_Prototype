@@ -132,6 +132,11 @@ protected:
 	void RequestTurnRight(const FInputActionValue& ActionValue);
 	void RequestLookUp(const FInputActionValue& ActionValue);
 	void RequestInteract();
+	void RequestInterrogate();
+	void RequestNextStatement();
+	void RequestPreviousStatement();
+	void RequestPress();
+	void RequestStopInterrogate();
 	void RequestToggleObservation();
 	void RequestObserveObject();
 	void RequestSkipCinematic();

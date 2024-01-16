@@ -15,7 +15,7 @@ void ULGGameplayTagCategoryWidget::AddTagEntry(const FGameplayTag& InGameplayTag
 	NewEntryWidget->SetGameplayTagText(InGameplayTag);
 
 	TagEntriesContainer->AddChild(NewEntryWidget);
-	TagEntries.AddUnique(NewEntryWidget);
+	TagEntries.Add(NewEntryWidget);
 }
 
 bool ULGGameplayTagCategoryWidget::HasTagEntry(const FGameplayTag& InGameplayTag)

@@ -8,10 +8,13 @@
 #include "Characters/SI_CharacterManager.h"
 #include "Characters/SI_Nick.h"
 #include "Characters/SI_NPC.h"
+#include "Characters/Data/SI_CharacterData.h"
 #include "Controllers/SI_PlayerController.h"
+#include "Dialogue/Data/SI_DialogueDataAsset.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameModes/SI_GameMode.h"
 #include "GameplayTags/SI_GameplayTagManager.h"
+#include "UI/SI_InterrogationWidget.h"
 
 void USI_DialogueManager::StartDialogue(ASI_NPC* InNPC)
 {
@@ -23,7 +26,14 @@ void USI_DialogueManager::StartDialogue(ASI_NPC* InNPC)
 	if(!ActiveDialogueState) {return;}
 
 	CurrentDialogueIndex = 0;
-
+	CurrentStatementIndex = 0;
+	CurrentSecondaryDialogueIndex = 0;
+	
+	bCanPress = false;
+	bIsPressing = false;
+	bIsResponding = false;
+	bInterrogationWidgetLoaded = false;
+	
 	SetNickLocation();
 	UpdateActiveSpeaker();
 	SpawnDialogueCamera();
@@ -42,13 +52,15 @@ void USI_DialogueManager::ExitDialogue()
 		{
 			PlayerController->Possess(CharacterManager->GetNick());
 		}
-		
 	}
+
+	ActiveSpeaker = nullptr;
+	ActiveNPC = nullptr;
 
 	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
 }
 
-void USI_DialogueManager::OnNextPressed()
+void USI_DialogueManager::OnNextDialoguePressed()
 {
 	if(!ActiveDialogueState) {return;}
 
@@ -64,14 +76,137 @@ void USI_DialogueManager::OnNextPressed()
 	}
 }
 
-void USI_DialogueManager::OnPreviousPressed()
+void USI_DialogueManager::OnRequestInterrogation()
 {
-
+	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Interrogation, SITag_Player_State);
 }
+
+void USI_DialogueManager::OnRequestQuitInterrogation()
+{
+	ExitDialogue();
+	ActiveInterrogationWidget = nullptr;
+}
+
+void USI_DialogueManager::OnNextStatementPressed()
+{
+	if(!bInterrogationWidgetLoaded || !ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
+
+	FLGConversationDialogue* NextDialogue;
+	
+	if(bIsPressing || bIsResponding)
+	{
+		const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
+		if(!CurrentPrimaryDialogue) {return;}
+		
+		if(bIsPressing)
+		{
+			TArray<FSI_PressDialogue*> PressDialogueArray;
+			GetCurrentPressArray(CurrentPrimaryDialogue, PressDialogueArray);
+
+			if(PressDialogueArray.IsEmpty()) {return;}
+		
+			const int32 NextIndex = CurrentSecondaryDialogueIndex + 1;
+			if(NextIndex > PressDialogueArray.Num() - 1)
+			{
+				ExitPressOrResponse();
+				return;
+			}
+		
+			CurrentSecondaryDialogueIndex = NextIndex;
+			NextDialogue = PressDialogueArray[CurrentSecondaryDialogueIndex];
+		}
+		else
+		{
+			TArray<FSI_ResponseDialogue*> ResponseDialogueArray;
+			GetCurrentResponseArray(CurrentPrimaryDialogue, ResponseDialogueArray);
+
+			const int32 NextIndex = CurrentSecondaryDialogueIndex + 1;
+			if(NextIndex > ResponseDialogueArray.Num() - 1)
+			{
+				ExitPressOrResponse();
+				return;
+			}
+		
+			CurrentSecondaryDialogueIndex = NextIndex;
+			NextDialogue = ResponseDialogueArray[CurrentSecondaryDialogueIndex];
+		}
+	}
+	else
+	{
+		int32 NextIndex = CurrentStatementIndex + 1;
+		if(NextIndex > ActiveDialogueState->CurrentPrimaryDialogueArray.Num() - 1)
+		{
+			NextIndex = 0;
+		}
+		
+		CurrentStatementIndex = NextIndex;
+		NextDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
+	}
+
+	UpdateInterrogationDialogue(NextDialogue);
+}
+
+void USI_DialogueManager::OnPreviousStatementPressed()
+{
+	if(!bInterrogationWidgetLoaded) {return;}
+	if(bIsPressing || bIsResponding)
+	{
+		// TODO: @Jeff Should we notify player can't go backwards during press dialogue or response dialogue?
+		return;
+	}
+	
+	if(!ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
+	
+	int32 NextIndex = CurrentStatementIndex - 1;
+	if(NextIndex < 0)
+	{
+		NextIndex = ActiveDialogueState->CurrentPrimaryDialogueArray.Num() - 1;
+	}
+		
+	CurrentStatementIndex = NextIndex;
+	const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
+
+	UpdateInterrogationDialogue(CurrentPrimaryDialogue);
+}
+
+
 
 void USI_DialogueManager::OnPressPressed()
 {
+	if(!bCanPress || bIsPressing || !ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
+	
+	const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
+	if(!CurrentPrimaryDialogue) {return;}
+	
+	TArray<FSI_PressDialogue*> PressDialogueArray;
+	GetCurrentPressArray(CurrentPrimaryDialogue, PressDialogueArray);
 
+	if(PressDialogueArray.IsEmpty())
+	{
+		//TODO: @Jeff do we want default Press dialogue?
+		DisplayDefaultResponse();
+		return;;
+	}
+
+	CurrentSecondaryDialogueIndex = 0;
+	
+	const FSI_PressDialogue* CurrentPressDialogue = PressDialogueArray[CurrentSecondaryDialogueIndex];
+	if(!CurrentPressDialogue) {return;}
+	
+	UpdateInterrogationDialogue(CurrentPressDialogue);
+	bIsPressing = true;
+}
+
+void USI_DialogueManager::ExitPressOrResponse()
+{
+	if(!ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
+
+	const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
+	if(!CurrentPrimaryDialogue) {return;}
+
+	UpdateInterrogationDialogue(CurrentPrimaryDialogue);
+	bIsPressing = false;
+	bIsResponding = false;
 }
 
 void USI_DialogueManager::OnTextOptionSelected(FText RelatedText)
@@ -98,6 +233,24 @@ FSI_PrimaryDialogue USI_DialogueManager::GetCurrentPrimaryDialogue() const
 	return CurrentPrimaryDialogue;
 }
 
+FSI_CorrectedDialogue USI_DialogueManager::GetCurrentCorrectedDialogue() const
+{
+	if(!ActiveDialogueState || ActiveDialogueState->CurrentCorrectedDialogueArray.IsEmpty()) {return FSI_CorrectedDialogue();}
+
+	const FSI_CorrectedDialogue& CurrentCorrectedDialogue = ActiveDialogueState->CurrentCorrectedDialogueArray[CurrentDialogueIndex];
+
+	return CurrentCorrectedDialogue;
+}
+
+FSI_DefaultResponse USI_DialogueManager::GetCurrentDefaultResponse() const
+{
+	if(!ActiveDialogueState || ActiveDialogueState->CurrentDefaultResponseArray.IsEmpty()) {return FSI_DefaultResponse();}
+
+	const FSI_DefaultResponse& CurrentDefaultResponse = ActiveDialogueState->CurrentDefaultResponseArray[CurrentDialogueIndex];
+
+	return CurrentDefaultResponse;
+}
+
 ASI_Character* USI_DialogueManager::GetActiveSpeaker()
 {
 	return ActiveSpeaker.Get();
@@ -106,6 +259,32 @@ ASI_Character* USI_DialogueManager::GetActiveSpeaker()
 void USI_DialogueManager::SetupBindings()
 {
 	// Get the HUD, get the dialogue box, bind u objects (need to make functions UFUNCTIONs)
+}
+
+void USI_DialogueManager::SetActiveInterrogationWidget(USI_InterrogationWidget* InInterrogationWidget)
+{
+	if(!IsValid(InInterrogationWidget)) {return;}
+
+	ActiveInterrogationWidget = InInterrogationWidget;
+	ActiveInterrogationWidget->OnIntroAnimationComplete().AddDynamic(this, &ThisClass::OnInterrogationIntroAnimationComplete);
+}
+
+void USI_DialogueManager::InitializeInterrogationWidget()
+{
+	const ASI_NPC* ActiveNPCPtr = ActiveNPC.Get();
+	USI_InterrogationWidget* InterrogationWidget = ActiveInterrogationWidget.Get();
+	
+	if(!IsValid(ActiveNPCPtr) || !IsValid(InterrogationWidget) || !ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
+
+	const USI_CharacterData* NPCCharacterData = ActiveNPCPtr->GetCharacterData();
+	if(!IsValid(NPCCharacterData))  {return;}
+
+	InterrogationWidget->SetNPCImage(NPCCharacterData->InterrogationImage.Get());
+	
+	CurrentStatementIndex = 0;
+	const FSI_PrimaryDialogue& InitialPrimaryDialogue = ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
+
+	UpdateInterrogationDialogue(&InitialPrimaryDialogue);
 }
 
 bool USI_DialogueManager::HasNextOption()
@@ -137,6 +316,65 @@ bool USI_DialogueManager::CanEnterInterrogation()
 {
 	//return (GameInstance->GetPlayerMode() == EPlayerMode::PM_InterrogationMode && CurrentDialogue != nullptr && CurrentDialogue->bIsInterrogationDialogue);
 	return false;
+}
+
+void USI_DialogueManager::GetCurrentPressArray(const FSI_PrimaryDialogue* InCurrentPrimaryDialogue, TArray<FSI_PressDialogue*>& OutPressArray) const
+{
+	if(!InCurrentPrimaryDialogue || !IsValid(InCurrentPrimaryDialogue->PressDialogueDataTable)) {return;}
+
+	const UDataTable* PressDialogueTable = InCurrentPrimaryDialogue->PressDialogueDataTable;
+	if(!IsValid(PressDialogueTable)) {return;}
+
+	PressDialogueTable->GetAllRows(nullptr, OutPressArray);
+}
+
+void USI_DialogueManager::GetCurrentResponseArray(const FSI_PrimaryDialogue* InCurrentPrimaryDialogue, TArray<FSI_ResponseDialogue*>& OutResponseArray) const
+{
+	if(!InCurrentPrimaryDialogue) {return;}
+
+	if(!IsValid(InCurrentPrimaryDialogue->ResponseDialogueDataTable))
+	{
+		if(!ActiveDialogueState || !IsValid(ActiveDialogueState->ActiveDefaultResponseTable)) {return;}
+		const UDataTable* DefaultResponseDialogueTable = ActiveDialogueState->ActiveDefaultResponseTable;
+
+		DefaultResponseDialogueTable->GetAllRows(nullptr, OutResponseArray);
+		return;
+	}
+
+	const UDataTable* ResponseDialogueTable = InCurrentPrimaryDialogue->ResponseDialogueDataTable;
+	if(!IsValid(ResponseDialogueTable)) {return;}
+
+	ResponseDialogueTable->GetAllRows(nullptr, OutResponseArray);
+}
+
+void USI_DialogueManager::DisplayDefaultResponse()
+{
+	if(bIsResponding || !ActiveDialogueState || ActiveDialogueState->CurrentDefaultResponseArray.IsEmpty()) {return;}
+
+	CurrentSecondaryDialogueIndex = 0;
+
+	const FSI_DefaultResponse* CurrentDefaultResponse = &ActiveDialogueState->CurrentDefaultResponseArray[CurrentSecondaryDialogueIndex];
+	if(!CurrentDefaultResponse) {return;}
+	
+	UpdateInterrogationDialogue(CurrentDefaultResponse);
+	bIsResponding = true;
+}
+
+void USI_DialogueManager::UpdateInterrogationDialogue(const FLGConversationDialogue* InCurrentDialogue)
+{
+	USI_InterrogationWidget* InterrogationWidget = ActiveInterrogationWidget.Get();
+	
+	if(!InCurrentDialogue || !IsValid(InterrogationWidget)) {return;}
+	if(InCurrentDialogue->SpeakerTag == SI_CharacterGameplayTagLibrary::SITag_Character_Main_NickSpade)
+	{
+		InterrogationWidget->SetNickDialogue(InCurrentDialogue->Dialogue);
+		bCanPress = false;
+	}
+	else
+	{
+		InterrogationWidget->SetNPCDialogue(InCurrentDialogue->Dialogue);
+		bCanPress = true;
+	}
 }
 
 void USI_DialogueManager::SetNickLocation()
@@ -222,4 +460,35 @@ void USI_DialogueManager::SpawnDialogueCamera()
 	}
 
 	DialogueCameraPtr->SetNewFocusedCharacter(ActiveSpeakerPtr);
+}
+
+void USI_DialogueManager::OnInterrogationIntroAnimationComplete()
+{
+	bInterrogationWidgetLoaded = true;
+	InitializeInterrogationWidget();
+	
+}
+
+FLGConversationDialogue* USI_DialogueManager::GetCurrentDialogueByType(const int32 InCurrentIndex, const FGameplayTag& InTypeTag)
+{
+	if(!ActiveDialogueState) {return nullptr;}
+	
+	if(InTypeTag == SITag_Dialogue_Struct_PrimaryDialogue && !ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty() && InCurrentIndex <= ActiveDialogueState->CurrentPrimaryDialogueArray.Num() - 1)
+	{
+		return &ActiveDialogueState->CurrentPrimaryDialogueArray[InCurrentIndex];
+	}
+	if(InTypeTag == SITag_Dialogue_Struct_DefaultResponse && !ActiveDialogueState->CurrentDefaultResponseArray.IsEmpty() && InCurrentIndex <= ActiveDialogueState->CurrentDefaultResponseArray.Num() - 1)
+	{
+		return &ActiveDialogueState->CurrentDefaultResponseArray[InCurrentIndex];
+	}
+	if(InTypeTag == SITag_Dialogue_Struct_PressDialogue && !ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty())
+	{
+		const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
+		TArray<FSI_PressDialogue*> PressDialogueArray;
+		GetCurrentPressArray(CurrentPrimaryDialogue, PressDialogueArray);
+		if(PressDialogueArray.IsEmpty() || InCurrentIndex > PressDialogueArray.Num() - 1) {return nullptr;}
+		
+		return  PressDialogueArray[InCurrentIndex];
+	}
+	return nullptr;
 }

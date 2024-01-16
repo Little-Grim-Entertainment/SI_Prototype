@@ -38,6 +38,8 @@ public:
 	TSubclassOf<USI_MoviePlayerWidget> MoviePlayerWidget;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
 	TSubclassOf<USI_SkipWidget> SkipWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
+	TSubclassOf<USI_UserWidget> InterrogationWidget;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes)
 	TSubclassOf<ASI_DialogueCamera> DialogueCameraClass;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes)

@@ -28,11 +28,8 @@ struct SI_PROTOTYPE_API FSI_CharacterCaseState
 	GENERATED_BODY()
 
 	FSI_CharacterCaseState(){}
-	FSI_CharacterCaseState(const USI_CaseData* InCurrentCaseData, const UDataTable* InCurrentPartDialogueTable);
+	FSI_CharacterCaseState(const USI_CaseData* InCurrentCaseData, const UDataTable* InCurrentPrimaryDialogueTable, const UDataTable* InCurrentCorrectedDialogueTable, const UDataTable* InCurrentDefaultResponseTable);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo | Dialogue")
-	FSI_DialogueState CaseDefaultDialogueState;
-	
 	// Case Dialogue by Case Tag
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo | Dialogue")
 	FSI_DialogueState CaseDialogueState;
@@ -41,9 +38,7 @@ struct SI_PROTOTYPE_API FSI_CharacterCaseState
 	FSI_CharacterMapState CaseMapState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo | Data")
-	TSoftObjectPtr<USI_CaseData> CaseData = nullptr;
-
-	void InitializeDefaultCaseDialogue();
+	const USI_CaseData* CaseData = nullptr;
 };
 
 USTRUCT(BlueprintType)
@@ -62,8 +57,10 @@ struct SI_PROTOTYPE_API FSI_CharacterState
 	
 	USI_CharacterData* GetCharacterData() const; 
 	const FGameplayTag& GetCharacterTag() const;
+
+	bool HasCaseDialogue(const FGameplayTag& InCaseTag) const;
 	
-	FSI_CharacterCaseState* AddNewCaseState(const USI_CaseData* InCurrentCaseData, const UDataTable* InCurrentPartDialogueTable);
+	FSI_CharacterCaseState* AddNewCaseState(const USI_CaseData* InCurrentCaseData, const UDataTable* InCurrentPrimaryDialogueTable, const UDataTable* InCurrentCorrectedDialogueTable, const UDataTable* InCurrentDefaultResponseTable);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo | Dialogue")
 	FSI_DialogueState DefaultDialogueState;

@@ -50,7 +50,7 @@ public:
 	void SetDataTableByTypeAndTag(const UDataTable* InDataTable, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag);
 	void SetEmbeddedDialogueDataTableByTypeTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag, const UDataTable* InDataTable);
 
-	const UDataTable* GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
+	const UDataTable* GetDefaultDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
 	const UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
 
 	const UDataTable* GetCaseDialogueDataTableByType(const FGameplayTag& InCaseTag, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
@@ -114,7 +114,7 @@ DialogueStructType* USI_DialogueDataAsset::GetDialogueByTypeAndTag(const FSI_Dia
 		return nullptr;
 	}
 
-	const UDataTable* DialogueDataTable = GetDialogueDataTableByType(DialogueStructType::GetGetTypeTag());
+	const UDataTable* DialogueDataTable = GetDefaultDialogueDataTableByType(DialogueStructType::GetGetTypeTag());
 	if(!IsValid(DialogueDataTable)) {return nullptr;}
 
 	return GetTableDialogueByTag<DialogueStructType>(DialogueDataTable, InDialogueTag);

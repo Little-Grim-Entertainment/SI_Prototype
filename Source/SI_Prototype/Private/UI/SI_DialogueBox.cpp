@@ -107,7 +107,7 @@ void USI_DialogueBox::OnNextClicked()
 	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
 	if (!IsValid(DialogueManager)) {return;}
 
-	DialogueManager->OnNextPressed();
+	DialogueManager->OnNextDialoguePressed();
 	RefreshDialogueBox();
 		
 	OnNextClickedDelegate.Broadcast();
@@ -128,7 +128,7 @@ void USI_DialogueBox::OnPreviousClicked()
 	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
 	if (!IsValid(DialogueManager)) {return;}
 
-	DialogueManager->OnPreviousPressed();
+	DialogueManager->OnPreviousStatementPressed();
 	RefreshDialogueBox();
 		
 	OnPreviousClickedDelegate.Broadcast();

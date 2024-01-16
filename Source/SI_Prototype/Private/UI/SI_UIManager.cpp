@@ -126,6 +126,12 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITa
 		return;
 	}
 
+	if (InRemovedTag == SITag_UI_Menu_Interrogation)
+	{
+		RemoveInterrogationWidget();
+		return;
+	}
+
 	if (InRemovedTag == SITag_UI_HUD)
 	{
 		ShowPlayerHUD(false);
@@ -219,6 +225,10 @@ void USI_UIManager::InitializeDelegateMaps()
 	FSimpleDelegate AddDialogueBoxDelegate;
 	AddDialogueBoxDelegate.BindUObject(this, &ThisClass::DisplayDialogueBox);
 	AddUIDelegateContainer.Add(SITag_UI_HUD_Dialogue, AddDialogueBoxDelegate);
+
+	FSimpleDelegate AddInterrogationWidgetDelegate;
+	AddInterrogationWidgetDelegate.BindUObject(this, &ThisClass::CreateInterrogationWidget);
+	AddUIDelegateContainer.Add(SITag_UI_Menu_Interrogation, AddInterrogationWidgetDelegate);
 	
 	/*
 	FSimpleDelegate AddVendorMenuDelegate;
@@ -402,6 +412,30 @@ void USI_UIManager::CreateSkipWidget()
 	}
 	
 	SkipWidget->AddToViewport();
+}
+
+void USI_UIManager::CreateInterrogationWidget()
+{
+	if (!IsValid(GameInstance->GetGameMode())){return;}
+	
+	USI_UserWidget* InterrogationWidget = CreateSIWidget<USI_UserWidget>(SITag_UI_Menu_Interrogation, GameInstance->GetGameMode()->InterrogationWidget);
+	if (!IsValid(InterrogationWidget))
+	{
+		FSimpleDelegate  InterrogationWidgetDelayDelegate;
+		InterrogationWidgetDelayDelegate.BindUObject(this, &ThisClass::CreateInterrogationWidget);
+		DelayWidgetCreation(InterrogationWidgetDelayDelegate);
+		return;
+	}
+	
+	InterrogationWidget->AddToViewport();
+}
+
+void USI_UIManager::RemoveInterrogationWidget()
+{
+	USI_UserWidget* InterrogationWidget = GetActiveUIWidgetByTag<USI_UserWidget>(SITag_UI_Menu_Interrogation);
+	if (!IsValid(InterrogationWidget)){return;}
+	
+	RemoveSIWidget(InterrogationWidget);
 }
 
 USI_UserWidget* USI_UIManager::GetSIWidgetByTag(const FGameplayTag& InWidgetTag)

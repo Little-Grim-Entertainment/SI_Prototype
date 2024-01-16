@@ -80,8 +80,10 @@ void ASI_NPC::InitializeCharacterDialogueState()
 	
 	if(CharacterState->CharacterCaseStates.IsEmpty() || !HasCharacterStateForCase(ActiveCase->CaseTag))
 	{
-		const UDataTable* PrimaryDialogueDataTable = CharacterDialogue->GetDialogueDataTableByType(SITag_Dialogue_Struct_PrimaryDialogue);
-		CharacterState->AddNewCaseState(ActiveCase, PrimaryDialogueDataTable);
+		const UDataTable* PrimaryDialogueDataTable = CharacterDialogue->GetCaseDialogueDataTableByType(ActiveCase->CaseTag,SITag_Dialogue_Struct_PrimaryDialogue);
+		const UDataTable* CorrectedDialogueDataTable = CharacterDialogue->GetCaseDialogueDataTableByType(ActiveCase->CaseTag,SITag_Dialogue_Struct_CorrectedDialogue);
+		const UDataTable* DefaultResponseDataTable = CharacterDialogue->GetCaseDialogueDataTableByType(ActiveCase->CaseTag,SITag_Dialogue_Struct_DefaultResponse);
+		CharacterState->AddNewCaseState(ActiveCase, PrimaryDialogueDataTable, CorrectedDialogueDataTable, DefaultResponseDataTable);
 	}
 }
 

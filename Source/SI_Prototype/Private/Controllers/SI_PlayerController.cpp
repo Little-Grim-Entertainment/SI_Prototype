@@ -67,22 +67,38 @@ void ASI_PlayerController::SetupInputComponent()
 	 *	Cancel is set to started so it activates as soon as you press the input.
 	 *	Confirm is set to triggered on release of the input
 	 *	HoldConfirm is set to triggered after holding the input for a set amount of time 
-	 */  
+	 */
+
+	// Menus
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
+	
+	// Player Actions
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_CancelAbility, ETriggerEvent::Started, this, &ThisClass::RequestCancelAbility);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ConfirmAbility, ETriggerEvent::Triggered, this, &ThisClass::RequestConfirmAbility);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_HoldConfirmAbility, ETriggerEvent::Triggered, this, &ThisClass::RequestHoldConfirmAbility);
-	
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableAction, ETriggerEvent::Started, this, &ThisClass::RequestToggleAdaptableAction);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ObserveObject, ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Media_Skip, ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
+	
+	// Dialogue
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Start, ETriggerEvent::Started, this, &ThisClass::RequestInterrogate);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Stop, ETriggerEvent::Started, this, &ThisClass::RequestStopInterrogate);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextStatement);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousStatement);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Press, ETriggerEvent::Started, this, &ThisClass::RequestPress);
+
+
+	// Media
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Media_Skip, ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
+
+	// Gadgets
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetPrimary);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
+	
 	// MultiAction Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Down, ETriggerEvent::Started, this, &ThisClass::RequestMutliOptionDown);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
@@ -214,6 +230,52 @@ void ASI_PlayerController::RequestInteract()
 	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false))
 	{
 		OnInteractPressed.Broadcast(InteractableActor, Nick);
+	}
+}
+
+void ASI_PlayerController::RequestInterrogate()
+{
+	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager is null cannot enter Interrogation Mode") return;}
+
+	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
+	if(!IsValid(DialogueManager)) {return;}
+
+	DialogueManager->OnRequestInterrogation();
+}
+
+void ASI_PlayerController::RequestNextStatement()
+{
+	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
+	if(IsValid(DialogueManager))
+	{
+		DialogueManager->OnNextStatementPressed();
+	}
+}
+
+void ASI_PlayerController::RequestPreviousStatement()
+{
+	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
+	if(IsValid(DialogueManager))
+	{
+		DialogueManager->OnPreviousStatementPressed();
+	}
+}
+
+void ASI_PlayerController::RequestPress()
+{
+	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
+	if(IsValid(DialogueManager))
+	{
+		DialogueManager->OnPressPressed();
+	}
+}
+
+void ASI_PlayerController::RequestStopInterrogate()
+{
+	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
+	if(IsValid(DialogueManager))
+	{
+		DialogueManager->OnRequestQuitInterrogation();
 	}
 }
 

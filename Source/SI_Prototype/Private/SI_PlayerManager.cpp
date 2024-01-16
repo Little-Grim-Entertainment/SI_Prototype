@@ -9,6 +9,7 @@
 #include "Levels/SI_LevelManager.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
+#include "Dialogue/SI_DialogueManager.h"
 
 void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 {
@@ -93,13 +94,13 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 		if(InAddedTag == SITag_UI_Menu_System)
 		{
 			SecondaryMenuTag = InAddedTag;
-		}	
-		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Menu,SITag_Player_State);
-		if (!IsValid(PlayerController))
+			SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Menu,SITag_Player_State);
+			if (!IsValid(PlayerController))
 			{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to set menu mode!")); return; }
 
-		PlayerController->SetMenuMode(true);
-		return;
+			PlayerController->SetMenuMode(true);
+			return;
+		}
 	}
 	if(SITagManager->HasParentTag(InAddedTag, SITag_UI_Screen))
 	{
@@ -178,12 +179,6 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 		return;
 	}
 
-	if(InRemovedTag == SITag_Player_State_Dialogue)
-	{
-		SITagManager->RemoveTag(SITag_UI_HUD_Dialogue);
-		return;
-	}
-
 	if(SITagManager->HasParentTag(InRemovedTag, SITag_Media))
 	{
 		SecondaryMediaTag = FGameplayTag();
@@ -198,12 +193,21 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Player))
 		{UE_LOG(LogLG_PlayerManager, VeryVerbose, TEXT("%s does not have a parenttag of SITag_Player!"),*InRemovedTag.ToString()); return;}
-	
+
+	if(InRemovedTag == SITag_Player_State_Dialogue)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD_Dialogue);
+	}
+	else if(InRemovedTag == SITag_Player_State_Interrogation)
+	{
+		SITagManager->RemoveTag(SITag_UI_Menu_Interrogation);
+	}
+
 	if(SITagManager->HasParentTag(InRemovedTag, SITag_Player_State))
 	{
 		PreviousPlayerState = InRemovedTag;
 	}
-
+	
 	if(!IsValid(PlayerController))
 		{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to remove input!")); return;}
 
@@ -296,6 +300,7 @@ void USI_PlayerManager::SetupInactiveState()
 
 void USI_PlayerManager::SetupInterrogationState()
 {
+	SITagManager->ReplaceTagWithSameParent(SITag_UI_Menu_Interrogation, SITag_UI_Menu);
 }
 
 void USI_PlayerManager::SetupMenuState()

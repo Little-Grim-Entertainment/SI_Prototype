@@ -5,14 +5,6 @@
 #include "Characters/Data/SI_CharacterData.h"
 #include "Dialogue/Data/SI_DialogueDataAsset.h"
 
-void FSI_CharacterCaseState::InitializeDefaultCaseDialogue()
-{
-	USI_CaseData* CaseDataPtr = CaseData.Get();
-	if(!IsValid(CaseDataPtr)){return;}
-
-	
-}
-
 FSI_CharacterState::FSI_CharacterState(const USI_CharacterData* InCharacterData, const ASI_Character* InCharacter) :
 	CharacterData(InCharacterData),
 	CharacterPtr(InCharacter)
@@ -48,11 +40,19 @@ const FGameplayTag& FSI_CharacterState::GetCharacterTag() const
 	return CharacterData->CharacterTag;
 }
 
-FSI_CharacterCaseState* FSI_CharacterState::AddNewCaseState(const USI_CaseData* InCurrentCaseData, const UDataTable* InCurrentPartDialogueTable)
+bool FSI_CharacterState::HasCaseDialogue(const FGameplayTag& InCaseTag) const
+{
+	if(CharacterCaseStates.Num() <= 0) {return false;}
+	
+	const FSI_CharacterCaseState* FoundCharacterCaseState = CharacterCaseStates.Find(InCaseTag);
+	return FoundCharacterCaseState != nullptr;
+}
+
+FSI_CharacterCaseState* FSI_CharacterState::AddNewCaseState(const USI_CaseData* InCurrentCaseData, const UDataTable* InCurrentPrimaryDialogueTable, const UDataTable* InCurrentCorrectedDialogueTable, const UDataTable* InCurrentDefaultResponseTable)
 {
 	if(!IsValid(InCurrentCaseData)) {return nullptr;}
 	
-	FSI_CharacterCaseState* CaseState = new FSI_CharacterCaseState(InCurrentCaseData, InCurrentPartDialogueTable);
+	FSI_CharacterCaseState* CaseState = new FSI_CharacterCaseState(InCurrentCaseData, InCurrentPrimaryDialogueTable, InCurrentCorrectedDialogueTable, InCurrentDefaultResponseTable);
 	CharacterCaseStates.Add(InCurrentCaseData->CaseTag, *CaseState);
 	return CaseState; 
 }
@@ -65,24 +65,18 @@ void FSI_CharacterState::InitializeDefaultDialogue()
 	const USI_DialogueDataAsset* CharacterDialogueData = CharacterDataPtr->CharacterDialogue;
 	if(!IsValid(CharacterDialogueData)) {return;}
 
-	const UDataTable* DefaultDialogueTable = CharacterDialogueData->DefaultPrimaryDialogueDataTable;
-	if(!IsValid(DefaultDialogueTable)) {return;}
-	
-	TArray<FSI_PrimaryDialogue*> DefaultPrimaryDialogueArray;
-	DefaultDialogueTable->GetAllRows(nullptr, DefaultPrimaryDialogueArray);
-	
-	for(const FSI_PrimaryDialogue* CurrentPrimaryDialogue : DefaultPrimaryDialogueArray)
-	{
-		DefaultDialogueState.CurrentPrimaryDialogueArray.Add(*CurrentPrimaryDialogue);
-	}
+	const UDataTable* DefaultPrimaryDialogueTable = CharacterDialogueData->DefaultPrimaryDialogueDataTable;
+	const UDataTable* DefaultCorrectedDialogueTable = CharacterDialogueData->DefaultCorrectedDialogueDataTable;
+	const UDataTable* DefaultResponseTable = CharacterDialogueData->DefaultResponseDialogueDataTable;
+
+	DefaultDialogueState = FSI_DialogueState(DefaultPrimaryDialogueTable, DefaultCorrectedDialogueTable, DefaultResponseTable);
 }
 
 
-FSI_CharacterCaseState::FSI_CharacterCaseState(const USI_CaseData* InCaseCaseData, const UDataTable* InCurrentPartDialogueTable)  : CaseData(InCaseCaseData)
+FSI_CharacterCaseState::FSI_CharacterCaseState(const USI_CaseData* InCurrentCaseData, const UDataTable* InCurrentPrimaryDialogueTable, const UDataTable* InCurrentCorrectedDialogueTable, const UDataTable* InCurrentDefaultResponseTable)  : CaseData(InCurrentCaseData)
 {	
-	CaseDialogueState = FSI_DialogueState(InCurrentPartDialogueTable);
-	CaseData = InCaseCaseData->GetPathName();
-	InitializeDefaultCaseDialogue();
+	CaseDialogueState = FSI_DialogueState(InCurrentPrimaryDialogueTable, InCurrentCorrectedDialogueTable, InCurrentDefaultResponseTable);
+	CaseData = InCurrentCaseData;
 }
 
 USI_CharacterData* FSI_CharacterState::GetCharacterData() const
