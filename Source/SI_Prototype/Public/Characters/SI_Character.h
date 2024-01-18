@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SI_Character.generated.h"
 
+class UMassAgentComponent;
 class USI_AbilitySystemComponent;
 
 UCLASS()
@@ -25,5 +26,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Abilities)
 	USI_AbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMassAgentComponent* MassAgentComponent;
 	
 };

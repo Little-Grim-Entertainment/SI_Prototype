@@ -11,7 +11,7 @@ public class SI_Prototype : ModuleRules
 			"GameplayTags",
 			"GameplayTasks",
 			"GameplayStateTreeModule",
-			"StateTreeModule"
+			"StateTreeModule", "MassActors"
 		});
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
