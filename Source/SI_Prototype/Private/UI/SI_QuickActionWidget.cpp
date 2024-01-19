@@ -17,15 +17,22 @@ void USI_QuickActionWidget::RefreshQuickActionWidget(const FGameplayTag& InUITag
 	{
 		UpdateQuickActionUp(SITag_Ability_AI_Follow);
 		UpdateQuickActionDown(SITag_Ability_AI_Wait);
-		UpdateQuickActionLeft(SITag_Ability_Gizbo_Construct_Flashlight);
-		UpdateQuickActionRight(SITag_Ability_Gizbo_Construct_Lockpicks);
+		UpdateQuickActionLeft(SITag_None);
+		UpdateQuickActionRight(SITag_None);
 	}
 	else if (InUITag == SITag_UI_HUD_QuickAction_Movable)
 	{
-		UpdateQuickActionUp(SITag_None);
-		UpdateQuickActionDown(SITag_None);
-		UpdateQuickActionLeft(SITag_None);
-		UpdateQuickActionRight(SITag_Ability_Nick_PossessMovable);
+		UpdateQuickActionUp(SITag_Ability_Interact_Drop);
+		UpdateQuickActionDown(SITag_Ability_Interact_Pickup);
+		UpdateQuickActionLeft(SITag_Ability_Interact_Pull);
+		UpdateQuickActionRight(SITag_Ability_Interact_Push);
+	}
+	else if (InUITag == SITag_UI_HUD_QuickAction_Gizbo)
+	{
+		UpdateQuickActionUp(SITag_Ability_AI_Follow);
+		UpdateQuickActionDown(SITag_Ability_AI_Wait);
+		UpdateQuickActionLeft(SITag_Ability_AI_MoveTo);
+		UpdateQuickActionRight(SITag_None);
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/SI_InteractInterface.h"
+#include "Interfaces/SI_MovableInterface.h"
 #include "SI_InteractableActor.generated.h"
 
 class USI_AbilitySystemComponent;
@@ -17,7 +18,7 @@ class UBoxComponent;
 class UWidgetComponent;
 
 UCLASS()
-class SI_PROTOTYPE_API ASI_InteractableActor : public AActor, public ISI_InteractInterface
+class SI_PROTOTYPE_API ASI_InteractableActor : public AActor, public ISI_InteractInterface, public ISI_MovableInterface
 {
 	GENERATED_BODY()
 	
