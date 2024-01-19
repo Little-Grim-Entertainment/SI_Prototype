@@ -74,6 +74,7 @@ void ASI_PlayerController::SetupInputComponent()
 	
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_AdaptableAction, ETriggerEvent::Started, this, &ThisClass::RequestToggleAdaptableAction);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interact, ETriggerEvent::Started, this, &ThisClass::RequestInteract);
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleGizboControls, ETriggerEvent::Triggered, this, &ThisClass::RequestToggleGizboCommands);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleObservationMode, ETriggerEvent::Started, this, &ThisClass::RequestToggleObservation);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ToggleSystemMenu, ETriggerEvent::Started, this, &ThisClass::RequestToggleSystemMenu);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_ObserveObject, ETriggerEvent::Started, this, &ThisClass::RequestObserveObject);
@@ -83,6 +84,7 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_UseGadget, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetPrimary);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_UseGadgetSecondary, ETriggerEvent::Started, this, &ThisClass::RequestUseGadgetSecondary);
+	
 	// MultiAction Bindings
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Down, ETriggerEvent::Started, this, &ThisClass::RequestMutliOptionDown);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_MultiOption_Left, ETriggerEvent::Started, this, &ThisClass::RequestMultiOptionLeft);
@@ -344,16 +346,34 @@ void ASI_PlayerController::RequestToggleGizboFollow()
 	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_AI_Follow, Payload);
 }
 
+void ASI_PlayerController::RequestToggleGizboCommands()
+{
+	if(!bShowingGizboCommands)
+	{
+		bShowingGizboCommands = true;
+		GetSITagManager()->AddNewGameplayTag_Internal(SITag_UI_HUD_QuickAction_Gizbo);
+	}
+	else
+	{
+		bShowingGizboCommands = false;
+		GetSITagManager()->AddNewGameplayTag_Internal(SITag_UI_HUD_QuickAction_GadgetsOne);
+	}
+}
+
 void ASI_PlayerController::RequestToggleAdaptableAction()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager or Nick is null cannot add tag") return;}
 	
 	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Nick_AdaptableAction, Payload);
+	
+	bInAdaptableActionMode = true;
 }
 
 void ASI_PlayerController::RequestCancelAbility()
 {
+	bInAdaptableActionMode = false;
+	
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager Is Null cannot add tag") return;}
 	
 	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Cancel);	
@@ -361,6 +381,8 @@ void ASI_PlayerController::RequestCancelAbility()
 
 void ASI_PlayerController::RequestConfirmAbility()
 {
+	bInAdaptableActionMode = false;
+	
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager Is Null cannot add tag") return;}
 	
  	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Confirm);
@@ -368,6 +390,8 @@ void ASI_PlayerController::RequestConfirmAbility()
 
 void ASI_PlayerController::RequestHoldConfirmAbility()
 {
+	bInAdaptableActionMode = false;
+	
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager Is Null cannot add tag") return;}
 	
 	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_HoldConfirm);
@@ -401,6 +425,11 @@ void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetT
 
 void ASI_PlayerController::RequestMultiOptionUp()
 {
+	if(bInAdaptableActionMode)
+	{
+		RequestConfirmAbility();
+	}
+	
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
@@ -412,6 +441,11 @@ void ASI_PlayerController::RequestMultiOptionUp()
 
 void ASI_PlayerController::RequestMutliOptionDown()
 {
+	if(bInAdaptableActionMode)
+	{
+		RequestConfirmAbility();
+	}
+	
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
@@ -423,6 +457,11 @@ void ASI_PlayerController::RequestMutliOptionDown()
 
 void ASI_PlayerController::RequestMultiOptionLeft()
 {
+	if(bInAdaptableActionMode)
+	{
+		RequestConfirmAbility();
+	}
+	
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
@@ -434,6 +473,11 @@ void ASI_PlayerController::RequestMultiOptionLeft()
 
 void ASI_PlayerController::RequestMultiOptionRight()
 {
+	if(bInAdaptableActionMode)
+	{
+		RequestConfirmAbility();
+	}
+	
 	USI_UIManager* UIManager = GetGameInstance()->GetSubsystem<USI_UIManager>();
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	

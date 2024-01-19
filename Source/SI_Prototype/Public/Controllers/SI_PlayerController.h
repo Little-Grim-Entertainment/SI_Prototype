@@ -147,7 +147,8 @@ protected:
 	void RequestToggleAdaptableAction();
 	
 	// Gizbo
-	void RequestToggleGizboFollow(); 
+	void RequestToggleGizboFollow();
+	void RequestToggleGizboCommands(); 
 	void RequestGizboUseGadgetPrimary();
 	void RequestGizboUseGadgetSecondary();
 
@@ -173,6 +174,8 @@ private:
 	USI_GameplayTagManager* SITagManager;
 	
 	bool bInMenuMode;
+	bool bShowingGizboCommands = false;
+	bool bInAdaptableActionMode	= false;
 
 	FTimerHandle CameraBlendHandle;
 };
