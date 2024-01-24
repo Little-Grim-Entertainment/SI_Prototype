@@ -117,6 +117,10 @@
 		{
 			"Name": "LGDialogueSystem",
 			"Enabled": true
+		},
+		{
+			"Name": "CommonUI",
+			"Enabled": true
 		}
 	]
 }

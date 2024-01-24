@@ -15,7 +15,8 @@ public class SI_Prototype : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[] {
 			"AdvancedThirdPersonCamera",
 			"AIModule",
-			"Core", 
+			"Core",
+			"CommonUI",
 			"EnhancedInput",
 			"GameplayAbilities",
 			"GameplayTags",
@@ -37,7 +38,7 @@ public class SI_Prototype : ModuleRules
 			// LG Plugins
 			"LGCoreLibrary",
 			"LGDebug", 
-			"LGDialogueSystem",
+			"LGDialogueSystem", 
 		});
 	}
 }

@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/SI_InterrogationDialogueBubble.h"
+#include "UI/Interrogation/SI_InterrogationDialogueBubble.h"
 
 #include "Components/Border.h"
 #include "Components/HorizontalBoxSlot.h"
 #include "Components/PanelWidget.h"
 #include "Components/TextBlock.h"
-#include "UI/SI_InterrogationWidget.h"
+#include "UI/Interrogation/SI_InterrogationWidget.h"
 
 
 USI_InterrogationWidget* USI_InterrogationDialogueBubble::GetInterrogationWidget()

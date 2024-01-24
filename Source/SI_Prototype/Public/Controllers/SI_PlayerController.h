@@ -141,7 +141,6 @@ protected:
 	void RequestObserveObject();
 	void RequestSkipCinematic();
 	void RequestNextDialogue();
-	void RequestPreviousDialogue();
 	void RequestExitDialogue();
 	void RequestToggleSystemMenu();
 	void RequestUseGadgetPrimary();

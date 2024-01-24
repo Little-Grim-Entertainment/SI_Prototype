@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/SI_InterrogationWidget.h"
+#include "UI/Interrogation/SI_InterrogationWidget.h"
 
 #include "Components/Image.h"
 #include "Components/Overlay.h"
 #include "Dialogue/SI_DialogueManager.h"
-#include "UI/SI_InterrogationDialogueBubble.h"
+#include "UI/Interrogation/SI_InterrogationDialogueBubble.h"
 
 void USI_InterrogationWidget::SetNickDialogue(const FText& InDialogue)
 {
@@ -50,29 +50,28 @@ void USI_InterrogationWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if(!IsValid(DialogueBubbles) || !IsValid(NickDialogueBubble) || !IsValid(NPCDialogueBubble)) {return;}
-
-	DialogueBubbles->SetVisibility(ESlateVisibility::Hidden);
-	
+	if(!IsValid(NickDialogueBubble) || !IsValid(NPCDialogueBubble)) {return;}
+		
 	NickDialogueBubble->SetInterrogationWidget(this);
 	NickDialogueBubble->SetVisibility(ESlateVisibility::Hidden);
 	NPCDialogueBubble->SetInterrogationWidget(this);
 	NPCDialogueBubble->SetVisibility(ESlateVisibility::Hidden);
 
-	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
-	if(!IsValid(DialogueManager)) {return;}
+	DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
+	if(!IsValid(DialogueManager.Get())) {return;}
 
 	DialogueManager->SetActiveInterrogationWidget(this);
+	DialogueManager->SetActiveInputDelay(true);
 	OnIntroAnimationCompleteDelegate.AddDynamic(this, &ThisClass::OnIntroAnimationComplete_Internal);
 }
 
 void USI_InterrogationWidget::OnIntroAnimationComplete_Internal()
 {
-	if(!IsValid(DialogueBubbles)) {return;}
-
-	DialogueBubbles->SetVisibility(ESlateVisibility::Visible);
 	if(!IsValid(VisibleDialogueBubble)) {return;}
-
+	
 	VisibleDialogueBubble->SetVisibility(ESlateVisibility::Visible);
 	VisibleDialogueBubble->PlayBubbleAnimation();
+
+	if(!IsValid(DialogueManager.Get())) {return;}
+	DialogueManager->SetActiveInputDelay(false);
 }

@@ -14,7 +14,7 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameModes/SI_GameMode.h"
 #include "GameplayTags/SI_GameplayTagManager.h"
-#include "UI/SI_InterrogationWidget.h"
+#include "UI/Interrogation/SI_InterrogationWidget.h"
 
 void USI_DialogueManager::StartDialogue(ASI_NPC* InNPC)
 {
@@ -33,6 +33,7 @@ void USI_DialogueManager::StartDialogue(ASI_NPC* InNPC)
 	bIsPressing = false;
 	bIsResponding = false;
 	bInterrogationWidgetLoaded = false;
+	bActiveInputDelay = false;
 	
 	SetNickLocation();
 	UpdateActiveSpeaker();
@@ -43,6 +44,8 @@ void USI_DialogueManager::StartDialogue(ASI_NPC* InNPC)
 
 void USI_DialogueManager::ExitDialogue()
 {
+	if(bActiveInputDelay) {return;}
+	
 	ActiveDialogueState = nullptr;
 	ASI_PlayerController* PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(PlayerController))
@@ -62,7 +65,7 @@ void USI_DialogueManager::ExitDialogue()
 
 void USI_DialogueManager::OnNextDialoguePressed()
 {
-	if(!ActiveDialogueState) {return;}
+	if(!ActiveDialogueState || bActiveInputDelay) {return;}
 
 	const int32 NextIndex = CurrentDialogueIndex + 1;
 	if(NextIndex < ActiveDialogueState->CurrentPrimaryDialogueArray.Num() - 1)
@@ -78,17 +81,23 @@ void USI_DialogueManager::OnNextDialoguePressed()
 
 void USI_DialogueManager::OnRequestInterrogation()
 {
+	if(bActiveInputDelay) {return;}
+	
 	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Interrogation, SITag_Player_State);
 }
 
 void USI_DialogueManager::OnRequestQuitInterrogation()
 {
+	if(bActiveInputDelay) {return;}
+	
 	ExitDialogue();
 	ActiveInterrogationWidget = nullptr;
 }
 
 void USI_DialogueManager::OnNextStatementPressed()
 {
+	if(bActiveInputDelay) {return;}
+
 	if(!bInterrogationWidgetLoaded || !ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
 
 	FLGConversationDialogue* NextDialogue;
@@ -148,6 +157,8 @@ void USI_DialogueManager::OnNextStatementPressed()
 
 void USI_DialogueManager::OnPreviousStatementPressed()
 {
+	if(bActiveInputDelay) {return;}
+	
 	if(!bInterrogationWidgetLoaded) {return;}
 	if(bIsPressing || bIsResponding)
 	{
@@ -173,6 +184,8 @@ void USI_DialogueManager::OnPreviousStatementPressed()
 
 void USI_DialogueManager::OnPressPressed()
 {
+	if(bActiveInputDelay) {return;}
+	
 	if(!bCanPress || bIsPressing || !ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
 	
 	const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
@@ -197,6 +210,13 @@ void USI_DialogueManager::OnPressPressed()
 	bIsPressing = true;
 }
 
+void USI_DialogueManager::OnPresentPressed()
+{
+	if(!bIsPressing || bActiveInputDelay) {return;}
+
+	// Add present UI
+}
+
 void USI_DialogueManager::ExitPressOrResponse()
 {
 	if(!ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
@@ -207,21 +227,6 @@ void USI_DialogueManager::ExitPressOrResponse()
 	UpdateInterrogationDialogue(CurrentPrimaryDialogue);
 	bIsPressing = false;
 	bIsResponding = false;
-}
-
-void USI_DialogueManager::OnTextOptionSelected(FText RelatedText)
-{
-
-}
-
-void USI_DialogueManager::OnItemOptionSelected(UObject* RelatedItem)
-{
-
-}
-
-void USI_DialogueManager::OnInterrogationPressed()
-{
-	//GameInstance->RequestNewPlayerMode(EPlayerMode::PM_InterrogationMode);
 }
 
 FSI_PrimaryDialogue USI_DialogueManager::GetCurrentPrimaryDialogue() const
@@ -256,9 +261,37 @@ ASI_Character* USI_DialogueManager::GetActiveSpeaker()
 	return ActiveSpeaker.Get();
 }
 
+bool USI_DialogueManager::ActiveInputDelay() const
+{
+	return bActiveInputDelay;
+}
+
+void USI_DialogueManager::StartInputDelayTimer(const float& InDelayTime)
+{
+	UWorld* World = GetWorld();
+	if(!IsValid(World)) {return;}
+
+	FTimerHandle InputDelayHandle;
+	FTimerDelegate InputDelayDelegate;
+	InputDelayDelegate.BindUObject(this, &ThisClass::OnInputDelayEnd_Internal);
+
+	FTimerManager& TimerManager = World->GetTimerManager();
+	TimerManager.SetTimer(InputDelayHandle, InputDelayDelegate, InDelayTime, false);
+}
+
+FOnInputDelayEnd& USI_DialogueManager::OnInputDelayEnd()
+{
+	return OnInputDelayEndDelegate;
+}
+
 void USI_DialogueManager::SetupBindings()
 {
 	// Get the HUD, get the dialogue box, bind u objects (need to make functions UFUNCTIONs)
+}
+
+void USI_DialogueManager::SetActiveInputDelay(const bool& bInActiveInputDelay)
+{
+	bActiveInputDelay = bInActiveInputDelay;
 }
 
 void USI_DialogueManager::SetActiveInterrogationWidget(USI_InterrogationWidget* InInterrogationWidget)
@@ -285,37 +318,6 @@ void USI_DialogueManager::InitializeInterrogationWidget()
 	const FSI_PrimaryDialogue& InitialPrimaryDialogue = ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
 
 	UpdateInterrogationDialogue(&InitialPrimaryDialogue);
-}
-
-bool USI_DialogueManager::HasNextOption()
-{
-	return false;
-}
-
-bool USI_DialogueManager::HasPreviousOption()
-{
-	return false;
-}
-
-bool USI_DialogueManager::HasPressOption()
-{
-	return false;
-}
-
-bool USI_DialogueManager::HasTextOptions()
-{
-	return false;
-}
-
-bool USI_DialogueManager::HasItemOptions()
-{
-	return false;
-}
-
-bool USI_DialogueManager::CanEnterInterrogation()
-{
-	//return (GameInstance->GetPlayerMode() == EPlayerMode::PM_InterrogationMode && CurrentDialogue != nullptr && CurrentDialogue->bIsInterrogationDialogue);
-	return false;
 }
 
 void USI_DialogueManager::GetCurrentPressArray(const FSI_PrimaryDialogue* InCurrentPrimaryDialogue, TArray<FSI_PressDialogue*>& OutPressArray) const
@@ -467,6 +469,12 @@ void USI_DialogueManager::OnInterrogationIntroAnimationComplete()
 	bInterrogationWidgetLoaded = true;
 	InitializeInterrogationWidget();
 	
+}
+
+void USI_DialogueManager::OnInputDelayEnd_Internal()
+{
+	bActiveInputDelay = false;
+	OnInputDelayEndDelegate.Broadcast();
 }
 
 FLGConversationDialogue* USI_DialogueManager::GetCurrentDialogueByType(const int32 InCurrentIndex, const FGameplayTag& InTypeTag)

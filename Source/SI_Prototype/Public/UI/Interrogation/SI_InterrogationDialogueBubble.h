@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SI_UserWidget.h"
+#include "../SI_UserWidget.h"
 #include "SI_InterrogationDialogueBubble.generated.h"
 
 
+class USI_InputOption;
 class USI_InterrogationWidget;
 class UBorder;
 class UTextBlock;
@@ -26,16 +27,18 @@ public:
 	
 	void SetCharacterDialogue(const FText& InDialogue);
 	void SetInterrogationWidget(USI_InterrogationWidget* InInterrogationWidget);
-
-protected:
 	
+protected:
+
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UBorder* BG_DialogueBubble;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	UTextBlock* TXT_CharacterDialogue;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	USI_InputOption* PressInputOption;
 
 	UPROPERTY(BlueprintReadOnly)
-	USI_InterrogationWidget* InterrogationWidget;
-	
+	USI_InterrogationWidget* InterrogationWidget;	
 };

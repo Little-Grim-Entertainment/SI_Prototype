@@ -83,7 +83,6 @@ void ASI_PlayerController::SetupInputComponent()
 	
 	// Dialogue
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextDialogue);
-	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Dialogue_Exit, ETriggerEvent::Started, this, &ThisClass::RequestExitDialogue);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Start, ETriggerEvent::Started, this, &ThisClass::RequestInterrogate);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Stop, ETriggerEvent::Started, this, &ThisClass::RequestStopInterrogate);
@@ -331,19 +330,6 @@ void ASI_PlayerController::RequestNextDialogue()
 	if (UIManager && DialogueManager)
 	{
 		UIManager->GetPlayerHUD()->GetDialogueBox()->OnNextClicked();
-	}
-}
-
-void ASI_PlayerController::RequestPreviousDialogue()
-{
-	USI_UIManager* UIManager = GetWorld()->GetGameInstance()->GetSubsystem<USI_UIManager>();
-	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
-	if (UIManager && DialogueManager)
-	{
-		if (DialogueManager->HasPreviousOption())
-		{
-			UIManager->GetPlayerHUD()->GetDialogueBox()->OnPreviousClicked();
-		}
 	}
 }
 

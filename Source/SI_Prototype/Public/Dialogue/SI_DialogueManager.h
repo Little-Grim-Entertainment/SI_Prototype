@@ -15,6 +15,8 @@ class USI_PartData;
 class USI_CharacterData;
 class ASI_DialogueCamera;
 
+DECLARE_MULTICAST_DELEGATE(FOnInputDelayEnd);
+
 UCLASS()
 class SI_PROTOTYPE_API USI_DialogueManager : public USI_WorldSubsystem
 {
@@ -46,13 +48,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	void OnPressPressed();
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
+	void OnPresentPressed();
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	void ExitPressOrResponse();
-	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void OnTextOptionSelected(FText RelatedText);
-	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void OnItemOptionSelected(UObject* RelatedItem = nullptr);
-	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void OnInterrogationPressed();
 
 	UFUNCTION(BlueprintPure, Category = "Dialogue")
 	FSI_PrimaryDialogue GetCurrentPrimaryDialogue() const;
@@ -64,23 +62,20 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Dialogue")
 	ASI_Character* GetActiveSpeaker();
 
+	UFUNCTION(BlueprintPure, Category = "Dialogue")
+	bool ActiveInputDelay() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
+	void StartInputDelayTimer(const float& InDelayTime);
+
 	void SetupBindings();
+
+	void SetActiveInputDelay(const bool& bInActiveInputDelay);
 
 	void SetActiveInterrogationWidget(USI_InterrogationWidget* InInterrogationWidget);
 	void InitializeInterrogationWidget();
 
-
-	// --- Functions to determine which buttons should be available in the UI --- //
-
-	bool HasNextOption();
-	bool HasPreviousOption();
-	bool HasPressOption();
-	bool HasTextOptions();
-	bool HasItemOptions();
-	bool CanEnterInterrogation();
-
-	// Finds the relevant dialogue based on Case and Part
-	// To be called by CharacterManager when it is updating all of the character data
+	FOnInputDelayEnd& OnInputDelayEnd();
 
 private:
 
@@ -95,6 +90,8 @@ private:
 	
 	UPROPERTY()
 	TSoftObjectPtr<ASI_DialogueCamera> DialogueCamera;
+
+	FOnInputDelayEnd OnInputDelayEndDelegate;
 	
 	FSI_DialogueState* ActiveDialogueState;
 	int32 CurrentDialogueIndex;
@@ -107,6 +104,7 @@ private:
 	bool bIsPressing;
 	bool bIsResponding;
 	bool bInterrogationWidgetLoaded;
+	bool bActiveInputDelay;
 
 	void SetNickLocation();
 	void UpdateActiveSpeaker();
@@ -114,6 +112,9 @@ private:
 
 	UFUNCTION()
 	void OnInterrogationIntroAnimationComplete();
+	
+	UFUNCTION()
+	void OnInputDelayEnd_Internal();
 
 	FLGConversationDialogue* GetCurrentDialogueByType(const int32 InCurrentIndex, const FGameplayTag& InTypeTag);
 	
