@@ -17,7 +17,9 @@ void USI_InterrogationWidget::SetNickDialogue(const FText& InDialogue)
 	{
 		NPCDialogueBubble->SetVisibility(ESlateVisibility::Hidden);
 		NickDialogueBubble->SetVisibility(ESlateVisibility::Visible);
-		VisibleDialogueBubble = NickDialogueBubble;
+		
+		if(VisibleDialogueBubble == NickDialogueBubble){return;}
+		SetVisibleDialogueBubble(NickDialogueBubble);
 	}
 }
 
@@ -30,7 +32,9 @@ void USI_InterrogationWidget::SetNPCDialogue(const FText& InDialogue)
 	{
 		NickDialogueBubble->SetVisibility(ESlateVisibility::Hidden);
 		NPCDialogueBubble->SetVisibility(ESlateVisibility::Visible);
-		VisibleDialogueBubble = NPCDialogueBubble;
+
+		if(VisibleDialogueBubble == NPCDialogueBubble) {return;}
+		SetVisibleDialogueBubble(NPCDialogueBubble);
 	}
 }
 
@@ -74,4 +78,11 @@ void USI_InterrogationWidget::OnIntroAnimationComplete_Internal()
 
 	if(!IsValid(DialogueManager.Get())) {return;}
 	DialogueManager->SetActiveInputDelay(false);
+}
+
+void USI_InterrogationWidget::SetVisibleDialogueBubble(USI_InterrogationDialogueBubble* InVisibleDialogueBubble)
+{
+	if(!IsValid(InVisibleDialogueBubble)) {return;}
+
+	VisibleDialogueBubble = InVisibleDialogueBubble;
 }

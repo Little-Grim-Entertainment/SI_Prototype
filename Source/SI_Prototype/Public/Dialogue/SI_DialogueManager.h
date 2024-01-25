@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Characters/SI_CharacterTypes.h"
 #include "Subsystems/SI_WorldSubsystem.h"
+#include "Dialogue/SI_DialogueTypes.h"
 #include "SI_DialogueManager.generated.h"
 
 class USI_InterrogationWidget;
@@ -16,6 +17,7 @@ class USI_CharacterData;
 class ASI_DialogueCamera;
 
 DECLARE_MULTICAST_DELEGATE(FOnInputDelayEnd);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterrogationStateUpdated, const ESI_InterrogationState&);
 
 UCLASS()
 class SI_PROTOTYPE_API USI_DialogueManager : public USI_WorldSubsystem
@@ -75,7 +77,12 @@ public:
 	void SetActiveInterrogationWidget(USI_InterrogationWidget* InInterrogationWidget);
 	void InitializeInterrogationWidget();
 
+	void SetInterrogationState(const ESI_InterrogationState& InInterrogationState);
+
+	FOnInterrogationStateUpdated& OnInterrogationStateUpdated();
+
 	FOnInputDelayEnd& OnInputDelayEnd();
+	const ESI_InterrogationState& GetInterrogationState() const;
 
 private:
 
@@ -92,6 +99,7 @@ private:
 	TSoftObjectPtr<ASI_DialogueCamera> DialogueCamera;
 
 	FOnInputDelayEnd OnInputDelayEndDelegate;
+	FOnInterrogationStateUpdated OnInterrogationStateUpdatedDelegate;
 	
 	FSI_DialogueState* ActiveDialogueState;
 	int32 CurrentDialogueIndex;
@@ -99,10 +107,10 @@ private:
 	// Only used during Interrogation
 	int32 CurrentStatementIndex;
 	int32 CurrentSecondaryDialogueIndex;
+
+	ESI_InterrogationState InterrogationState;
 	
 	bool bCanPress;
-	bool bIsPressing;
-	bool bIsResponding;
 	bool bInterrogationWidgetLoaded;
 	bool bActiveInputDelay;
 

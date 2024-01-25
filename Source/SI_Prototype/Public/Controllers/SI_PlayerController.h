@@ -136,6 +136,7 @@ protected:
 	void RequestNextStatement();
 	void RequestPreviousStatement();
 	void RequestPress();
+	void RequestPresent();
 	void RequestStopInterrogate();
 	void RequestToggleObservation();
 	void RequestObserveObject();

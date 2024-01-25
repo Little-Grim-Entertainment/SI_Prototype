@@ -28,10 +28,9 @@ void USI_DialogueManager::StartDialogue(ASI_NPC* InNPC)
 	CurrentDialogueIndex = 0;
 	CurrentStatementIndex = 0;
 	CurrentSecondaryDialogueIndex = 0;
-	
+
+	SetInterrogationState(IS_NONE);
 	bCanPress = false;
-	bIsPressing = false;
-	bIsResponding = false;
 	bInterrogationWidgetLoaded = false;
 	bActiveInputDelay = false;
 	
@@ -84,11 +83,14 @@ void USI_DialogueManager::OnRequestInterrogation()
 	if(bActiveInputDelay) {return;}
 	
 	SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Interrogation, SITag_Player_State);
+	SetInterrogationState(IS_Conversation);
 }
 
 void USI_DialogueManager::OnRequestQuitInterrogation()
 {
 	if(bActiveInputDelay) {return;}
+
+	SetInterrogationState(IS_NONE);
 	
 	ExitDialogue();
 	ActiveInterrogationWidget = nullptr;
@@ -102,12 +104,12 @@ void USI_DialogueManager::OnNextStatementPressed()
 
 	FLGConversationDialogue* NextDialogue;
 	
-	if(bIsPressing || bIsResponding)
+	if(InterrogationState == IS_Pressing || InterrogationState == IS_Responding)
 	{
 		const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
 		if(!CurrentPrimaryDialogue) {return;}
 		
-		if(bIsPressing)
+		if(InterrogationState == IS_Pressing)
 		{
 			TArray<FSI_PressDialogue*> PressDialogueArray;
 			GetCurrentPressArray(CurrentPrimaryDialogue, PressDialogueArray);
@@ -160,7 +162,7 @@ void USI_DialogueManager::OnPreviousStatementPressed()
 	if(bActiveInputDelay) {return;}
 	
 	if(!bInterrogationWidgetLoaded) {return;}
-	if(bIsPressing || bIsResponding)
+	if(InterrogationState == IS_Pressing || InterrogationState == IS_Responding)
 	{
 		// TODO: @Jeff Should we notify player can't go backwards during press dialogue or response dialogue?
 		return;
@@ -186,7 +188,7 @@ void USI_DialogueManager::OnPressPressed()
 {
 	if(bActiveInputDelay) {return;}
 	
-	if(!bCanPress || bIsPressing || !ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
+	if(!bCanPress || InterrogationState == IS_Pressing || !ActiveDialogueState || ActiveDialogueState->CurrentPrimaryDialogueArray.IsEmpty()) {return;}
 	
 	const FSI_PrimaryDialogue* CurrentPrimaryDialogue = &ActiveDialogueState->CurrentPrimaryDialogueArray[CurrentStatementIndex];
 	if(!CurrentPrimaryDialogue) {return;}
@@ -207,12 +209,13 @@ void USI_DialogueManager::OnPressPressed()
 	if(!CurrentPressDialogue) {return;}
 	
 	UpdateInterrogationDialogue(CurrentPressDialogue);
-	bIsPressing = true;
+	SetInterrogationState(IS_Pressing);
+	
 }
 
 void USI_DialogueManager::OnPresentPressed()
 {
-	if(!bIsPressing || bActiveInputDelay) {return;}
+	if(InterrogationState != IS_Pressing || bActiveInputDelay) {return;}
 
 	// Add present UI
 }
@@ -225,8 +228,7 @@ void USI_DialogueManager::ExitPressOrResponse()
 	if(!CurrentPrimaryDialogue) {return;}
 
 	UpdateInterrogationDialogue(CurrentPrimaryDialogue);
-	bIsPressing = false;
-	bIsResponding = false;
+	SetInterrogationState(IS_Conversation);
 }
 
 FSI_PrimaryDialogue USI_DialogueManager::GetCurrentPrimaryDialogue() const
@@ -284,6 +286,11 @@ FOnInputDelayEnd& USI_DialogueManager::OnInputDelayEnd()
 	return OnInputDelayEndDelegate;
 }
 
+const ESI_InterrogationState& USI_DialogueManager::GetInterrogationState() const
+{
+	return InterrogationState;
+}
+
 void USI_DialogueManager::SetupBindings()
 {
 	// Get the HUD, get the dialogue box, bind u objects (need to make functions UFUNCTIONs)
@@ -320,6 +327,19 @@ void USI_DialogueManager::InitializeInterrogationWidget()
 	UpdateInterrogationDialogue(&InitialPrimaryDialogue);
 }
 
+void USI_DialogueManager::SetInterrogationState(const ESI_InterrogationState& InInterrogationState)
+{
+	if(InInterrogationState == IS_NONE || InterrogationState == InInterrogationState) {return;}
+	
+	InterrogationState = InInterrogationState;
+	OnInterrogationStateUpdatedDelegate.Broadcast(InterrogationState);
+}
+
+FOnInterrogationStateUpdated& USI_DialogueManager::OnInterrogationStateUpdated()
+{
+	return OnInterrogationStateUpdatedDelegate;
+}
+
 void USI_DialogueManager::GetCurrentPressArray(const FSI_PrimaryDialogue* InCurrentPrimaryDialogue, TArray<FSI_PressDialogue*>& OutPressArray) const
 {
 	if(!InCurrentPrimaryDialogue || !IsValid(InCurrentPrimaryDialogue->PressDialogueDataTable)) {return;}
@@ -351,7 +371,7 @@ void USI_DialogueManager::GetCurrentResponseArray(const FSI_PrimaryDialogue* InC
 
 void USI_DialogueManager::DisplayDefaultResponse()
 {
-	if(bIsResponding || !ActiveDialogueState || ActiveDialogueState->CurrentDefaultResponseArray.IsEmpty()) {return;}
+	if(InterrogationState == IS_Responding || !ActiveDialogueState || ActiveDialogueState->CurrentDefaultResponseArray.IsEmpty()) {return;}
 
 	CurrentSecondaryDialogueIndex = 0;
 
@@ -359,7 +379,7 @@ void USI_DialogueManager::DisplayDefaultResponse()
 	if(!CurrentDefaultResponse) {return;}
 	
 	UpdateInterrogationDialogue(CurrentDefaultResponse);
-	bIsResponding = true;
+	SetInterrogationState(IS_Responding);
 }
 
 void USI_DialogueManager::UpdateInterrogationDialogue(const FLGConversationDialogue* InCurrentDialogue)

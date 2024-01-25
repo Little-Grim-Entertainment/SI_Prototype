@@ -50,4 +50,6 @@ private:
 
 	UPROPERTY()
 	TSoftObjectPtr<USI_DialogueManager> DialogueManager;
+
+	void SetVisibleDialogueBubble(USI_InterrogationDialogueBubble* InVisibleDialogueBubble);
 };

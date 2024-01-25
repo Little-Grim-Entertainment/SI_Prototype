@@ -3,87 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SI_UITypes.h"
 #include "SI_UserWidget.h"
 #include "SI_InputOption.generated.h"
 
 class USizeBox;
 class UBorder;
 class UCommonTextBlock;
-class UInputAction;
-class UInputMappingContext;
 class UTextBlock;
 
-USTRUCT(BlueprintType)
-struct FInputOptionStyleSettings
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInterface* InputMaterial;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor InputBackgroundColor = FLinearColor::White;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor InputBorderColor = FLinearColor::Black;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FSlateColor InputTextColorAndOpacity = FSlateColor(FLinearColor::White);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterialInterface* LabelMaterial;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor LabelBackgroundColor = FLinearColor::White;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor LabelBorderColor = FLinearColor::Black;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FSlateColor LabelTextColorAndOpacity = FSlateColor(FLinearColor::Black);
-};
-
-
-USTRUCT(BlueprintType)
-struct FInputOptionSettings
-{
-	GENERATED_BODY()
-
-	// General Widget Settings
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=0, ClampMax=1, UIMin=0, UIMax=1))
-	bool bOptionIsVisible = true;	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=0, ClampMax=1, UIMin=0, UIMax=1))
-	float OptionScalePercentage = 1.0f;	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bShouldShowBackground = true;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float DefaultWidth = 380.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float DefaultHeight = 156.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SelectedDelayTimer = 0.5f;
-
-	// Input Display Settings
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Input")
-	UInputMappingContext* TargetInputMapping;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Input")
-	UInputAction* TargetInputAction;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Input")
-	FSlateFontInfo InputFont;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Input")
-	float InputFontScalePercentage = 0.8f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FMargin InputTextPadding = FMargin(0,0,0,0);
-
-	// Label Display Settings
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Label")
-	FText OptionLabel;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Label")
-	FSlateFontInfo LabelFont;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Label")
-	FMargin LabelTextPadding = FMargin(0,0,0,0);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Style")
-	FInputOptionStyleSettings DefaultStyleSettings;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails | Style")
-	FInputOptionStyleSettings SelectedStyleSettings;
-};
-
-UCLASS()
+UCLASS(editinlinenew, BlueprintType, Blueprintable)
 class SI_PROTOTYPE_API USI_InputOption : public USI_UserWidget
 {
 	GENERATED_BODY()
@@ -91,10 +20,14 @@ class SI_PROTOTYPE_API USI_InputOption : public USI_UserWidget
 public:
 	
 	UFUNCTION(BlueprintPure, Category = "Widget")
-	FInputOptionSettings GetInputOptionSettings() const;
+	const FSI_InputOptionSettings& GetInputOptionSettings() const;
+	
+	FSI_InputOptionSettings& GetInputOptionSettings();
 
 	UFUNCTION(BlueprintCallable, Category = "Widget")
-	void UpdateInputOptionSettings(bool bInIsNativeCall = false);
+	void UpdateInputOptionSettings();
+
+	void SetInputOptionSettings(const FSI_InputOptionSettings& InInputOptionSettings);
 
 protected:
 
@@ -104,7 +37,7 @@ protected:
 #endif
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "OptionDetails")
-	FInputOptionSettings InputOptionSettings;
+	FSI_InputOptionSettings InputOptionSettings;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget), Category = "Widgets")
 	UCommonTextBlock* TXT_Input;
@@ -140,19 +73,18 @@ protected:
 	void SetOptionScale();
 	
 	void InitializeOptionText();
-	void InitializeInputOptionStyle(const FInputOptionStyleSettings& InStyleSettings);
-	void SetFonts(const FInputOptionStyleSettings& InStyleSettings);
+	void InitializeInputOptionStyle(const FSI_InputOptionStyleSettings& InStyleSettings);
+	void SetFonts(const FSI_InputOptionStyleSettings& InStyleSettings);
 	void SetPadding();
-	void SetBackgroundColors(const FInputOptionStyleSettings& InStyleSettings);
+	void SetBackgroundColors(const FSI_InputOptionStyleSettings& InStyleSettings);
 
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 
 private:
 
-	UPROPERTY()
-	FInputOptionSettings CurrentInputOptionSettings;
-
+	FSI_InputOptionSettings CurrentInputOptionSettings;
+	
 	bool bCanBeSelected;
 	bool bIsSelected = false;
 	bool bIsTruncated = false;

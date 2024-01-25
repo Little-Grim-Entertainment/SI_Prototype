@@ -89,7 +89,7 @@ void ASI_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Next, ETriggerEvent::Started, this, &ThisClass::RequestNextStatement);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Previous, ETriggerEvent::Started, this, &ThisClass::RequestPreviousStatement);
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Press, ETriggerEvent::Started, this, &ThisClass::RequestPress);
-
+	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Interrogate_Present, ETriggerEvent::Started, this, &ThisClass::RequestPresent);
 
 	// Media
 	EnhancedInputComponent->BindInputByTag(InputConfig,SITag_Input_Action_Media_Skip, ETriggerEvent::Triggered, this, &ThisClass::RequestSkipCinematic);
@@ -266,6 +266,15 @@ void ASI_PlayerController::RequestPress()
 	if(IsValid(DialogueManager))
 	{
 		DialogueManager->OnPressPressed();
+	}
+}
+
+void ASI_PlayerController::RequestPresent()
+{
+	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
+	if(IsValid(DialogueManager))
+	{
+		DialogueManager->OnPresentPressed();
 	}
 }
 

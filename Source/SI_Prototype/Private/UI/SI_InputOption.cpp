@@ -7,15 +7,28 @@
 #include "InputMappingContext.h"
 #include "Components/Border.h"
 #include "Components/BorderSlot.h"
+#include "Components/OverlaySlot.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "Dialogue/SI_DialogueManager.h"
+#include "UI/Interrogation/SI_InterrogationDialogueBubble.h"
 
 void USI_InputOption::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-
-	UpdateInputOptionSettings(true);
+	
+	const USI_InterrogationDialogueBubble* InterrogationDialogueBubble = Cast<USI_InterrogationDialogueBubble>(GetOutermostWidget());
+	if(IsValid(InterrogationDialogueBubble))
+	{
+		CurrentInputOptionSettings = InterrogationDialogueBubble->RequestInputOptionSettings(this);
+	}
+	
+	if(!CurrentInputOptionSettings.IsValid())
+	{
+		CurrentInputOptionSettings = InputOptionSettings;
+	}
+	
+	UpdateInputOptionSettings();
 }
 
 void USI_InputOption::NativeConstruct()
@@ -32,25 +45,23 @@ void USI_InputOption::NativeConstruct()
 	}
 }
 
-FInputOptionSettings USI_InputOption::GetInputOptionSettings() const
+const FSI_InputOptionSettings& USI_InputOption::GetInputOptionSettings() const
 {
 	return InputOptionSettings;
 }
 
-void USI_InputOption::UpdateInputOptionSettings(bool bInIsNativeCall)
+FSI_InputOptionSettings& USI_InputOption::GetInputOptionSettings()
 {
-	if(!InputOptionSettings.bOptionIsVisible)
-	{
-		SetVisibility(ESlateVisibility::Hidden);
-		return;
-	}
+	return InputOptionSettings;
+}
 
-	CurrentInputOptionSettings = InputOptionSettings;
+void USI_InputOption::UpdateInputOptionSettings()
+{
 	bIsTruncated = false;
 	
 	InitializeOptionText();
 
-	FInputOptionStyleSettings StyleSettingsToUse = bIsSelected ? CurrentInputOptionSettings.SelectedStyleSettings : CurrentInputOptionSettings.DefaultStyleSettings;
+	FSI_InputOptionStyleSettings StyleSettingsToUse = bIsSelected ? CurrentInputOptionSettings.SelectedStyleSettings : CurrentInputOptionSettings.DefaultStyleSettings;
 	
 #if WITH_EDITORONLY_DATA
 	if(bPreviewSelectedState)
@@ -60,11 +71,12 @@ void USI_InputOption::UpdateInputOptionSettings(bool bInIsNativeCall)
 #endif
 
 	InitializeInputOptionStyle(StyleSettingsToUse);
+}
 
-	if(!bInIsNativeCall)
-	{
-		PostEditChange();
-	}
+void USI_InputOption::SetInputOptionSettings(const FSI_InputOptionSettings& InInputOptionSettings)
+{
+	CurrentInputOptionSettings = InInputOptionSettings;
+	PostEditChange();
 }
 
 void USI_InputOption::ScaleFont(UTextBlock* InTextBlock, const float& InScalePercentage)
@@ -118,10 +130,10 @@ void USI_InputOption::OnSelected()
 	if(!IsValid(DialogueManager)) {return;}
 
 	DialogueManager->OnInputDelayEnd().AddUObject(this, &ThisClass::OnReleased);
-	DialogueManager->StartInputDelayTimer(CurrentInputOptionSettings.SelectedDelayTimer);
+	DialogueManager->StartInputDelayTimer(InputOptionSettings.SelectedDelayTimer);
 	
 	bIsSelected = true;
-	UpdateInputOptionSettings();
+	PostEditChange();
 }
 
 void USI_InputOption::OnReleased()
@@ -132,7 +144,7 @@ void USI_InputOption::OnReleased()
 	DialogueManager->OnInputDelayEnd().RemoveAll(this);
 
 	bIsSelected = false;
-	UpdateInputOptionSettings();
+	PostEditChange();
 }
 
 void USI_InputOption::OnReadyForSelection()
@@ -175,7 +187,7 @@ void USI_InputOption::InitializeOptionText()
 	TXT_Input->SetText(InputText);
 }
 
-void USI_InputOption::InitializeInputOptionStyle(const FInputOptionStyleSettings& InStyleSettings)
+void USI_InputOption::InitializeInputOptionStyle(const FSI_InputOptionStyleSettings& InStyleSettings)
 {
 	if(!IsValid(TXT_Label) || !IsValid(TXT_Input)) {return;}
 
@@ -185,13 +197,13 @@ void USI_InputOption::InitializeInputOptionStyle(const FInputOptionStyleSettings
 	SetOptionScale();
 }
 
-void USI_InputOption::SetFonts(const FInputOptionStyleSettings& InStyleSettings)
+void USI_InputOption::SetFonts(const FSI_InputOptionStyleSettings& InStyleSettings)
 {
 	TXT_Label->SetColorAndOpacity(InStyleSettings.LabelTextColorAndOpacity);
-	TXT_Label->SetFont(CurrentInputOptionSettings.LabelFont);
+	TXT_Label->SetFont(InputOptionSettings.LabelFont);
 
 	TXT_Input->SetColorAndOpacity(InStyleSettings.InputTextColorAndOpacity);
-	TXT_Input->SetFont(CurrentInputOptionSettings.InputFont);
+	TXT_Input->SetFont(InputOptionSettings.InputFont);
 	if(bIsTruncated)
 	{
 		ScaleFont(TXT_Input, CurrentInputOptionSettings.InputFontScalePercentage);
@@ -208,7 +220,7 @@ void USI_InputOption::SetPadding()
 	InputBorderSlot->SetPadding(CurrentInputOptionSettings.InputTextPadding);
 }
 
-void USI_InputOption::SetBackgroundColors(const FInputOptionStyleSettings& InStyleSettings)
+void USI_InputOption::SetBackgroundColors(const FSI_InputOptionStyleSettings& InStyleSettings)
 {
 	// Input Colors
 	if(!IsValid(BG_OptionInput)|| !IsValid(InStyleSettings.InputMaterial)) {return;}
@@ -222,7 +234,7 @@ void USI_InputOption::SetBackgroundColors(const FInputOptionStyleSettings& InSty
 	// Label Colors
 	if(!IsValid(BG_OptionLabel) || !IsValid(InStyleSettings.LabelMaterial)) {return;}
 	
-	if(!CurrentInputOptionSettings.bShouldShowBackground)
+	if(!InputOptionSettings.bShouldShowBackground)
 	{
 		const FLinearColor LabelBrushColor = FLinearColor(0,0,0,0);
 		BG_OptionLabel->SetBrushColor(LabelBrushColor);

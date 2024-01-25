@@ -15,12 +15,13 @@ DECLARE_LOG_CATEGORY_EXTERN(LogSI_Dialogue, Log, All);
 class ASI_Evidence;
 
 UENUM()
-enum ESI_MainDialogueTypes : uint8
+enum ESI_InterrogationState : uint8
 {
-	MD_NONE				UMETA(DisplayName = "NONE"),
-	MD_DefaultDialogue	UMETA(DisplayName = "DefaultDialogue"),
-	MD_BubbleDialogue   UMETA(DisplayName = "BubbleDialogue"),
-	MD_CaseDialogue		UMETA(DisplayName = "CaseDialogue"),
+	IS_NONE				UMETA(DisplayName = "NONE"),
+	IS_Conversation		UMETA(DisplayName = "Conversation"),
+	IS_Pressing			UMETA(DisplayName = "Pressing"),
+	IS_Presenting		UMETA(DisplayName = "Presenting"),
+	IS_Responding		UMETA(DisplayName = "Responding"),
 };
 
 USTRUCT(BlueprintType)

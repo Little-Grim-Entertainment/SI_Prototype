@@ -2,11 +2,35 @@
 
 
 #include "UI/SI_UserWidget.h"
+
+#include "Components/PanelWidget.h"
 #include "Controllers/SI_PlayerController.h"
 
 void USI_UserWidget::FadeOutComplete()
 {
 	GetWorld()->GetFirstPlayerController()->SetPause(false);
+}
+
+USI_UserWidget* USI_UserWidget::GetOutermostWidget() const
+{
+	const UPanelWidget* ParentWidget = GetParent();
+	if(!IsValid(ParentWidget)) {return nullptr;}
+	
+	UObject* OuterObject = ParentWidget->GetOuter();
+	USI_UserWidget* OuterWidget = Cast<USI_UserWidget>(OuterObject);
+	if(IsValid(OuterWidget)) {return OuterWidget;}
+	
+	while (IsValid(OuterObject))
+	{
+		OuterWidget = Cast<USI_UserWidget>(OuterObject);
+		if(IsValid(OuterWidget))
+		{
+			return OuterWidget;
+		}
+		OuterObject = OuterObject->GetOuter();
+	}
+
+	return nullptr;
 }
 
 void USI_UserWidget::NativeConstruct()
