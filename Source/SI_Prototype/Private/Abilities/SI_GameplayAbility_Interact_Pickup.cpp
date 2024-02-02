@@ -3,13 +3,20 @@
 
 #include "Abilities/SI_GameplayAbility_Interact_Pickup.h"
 
+#include "Characters/SI_NPC.h"
+
 void USI_GameplayAbility_Interact_Pickup::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	const FGameplayEventData* TriggerEventData)
+                                                          const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                                          const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	LG_LOG_LOG(LogLG_Ability," Ability Activated");
-	//Debug Message
+	LG_LOG_LOG(LogLG_Ability,"Ability Activated");
+
+	ASI_NPC* Actor = Cast<ASI_NPC>(ActorInfo->OwnerActor);
+	if(!IsValid(Actor)) {LG_LOG(LogLG_Ability, Error, "Actor is not valid"); return;}
+	
+	Actor->SetCurrentBehavior(SITag_Behavior_MoveTo);
+	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
 
 void USI_GameplayAbility_Interact_Pickup::EndAbility(const FGameplayAbilitySpecHandle Handle,
