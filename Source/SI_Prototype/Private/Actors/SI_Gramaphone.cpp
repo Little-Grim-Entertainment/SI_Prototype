@@ -14,6 +14,7 @@ ASI_Gramaphone::ASI_Gramaphone()
 {
 	MusicComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("MusicComponent"));
 	MusicComponent->SetupAttachment(RootComponent);
+	
 }
 
 void ASI_Gramaphone::OnGramaphoneMenuConstructed()

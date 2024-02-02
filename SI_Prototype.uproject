@@ -121,6 +121,10 @@
 		{
 			"Name": "CommonUI",
 			"Enabled": true
+		},
+		{
+			"Name": "LGProjectSettings",
+			"Enabled": true
 		}
 	]
 }
