@@ -58,6 +58,7 @@ namespace SI_NativeGameplayTagLibrary
 	
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera, "Camera")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode, "Camera.Mode")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_Dialogue, "Camera.Mode.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_OutDoor, "Camera.Mode.OutDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_InDoor, "Camera.Mode.InDoor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Camera_Mode_Observation, "Camera.Mode.Observation")
@@ -90,11 +91,19 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input, "Input")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action, "Input.Action")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interact, "Input.Action.Interact")
-
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate, "Input.Action.Interrogate")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate_Start, "Input.Action.Interrogate.Start")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate_Stop, "Input.Action.Interrogate.Stop")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate_Next, "Input.Action.Interrogate.Next")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate_Previous, "Input.Action.Interrogate.Previous")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate_Press, "Input.Action.Interrogate.Press")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate_Present, "Input.Action.Interrogate.Present")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Interrogate_Evidence, "Input.Action.Interrogate.Evidence")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_AdaptableAction, "Input.Action.AdaptableAction")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_CancelAbility, "Input.Action.CancelAbility")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_ConfirmAbility, "Input.Action.ConfirmAbility")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_HoldConfirmAbility, "Input.Action.HoldConfirmAbility")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue, "Input.Action.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Exit, "Input.Action.Dialogue.Exit")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Next, "Input.Action.Dialogue.Next")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Input_Action_Dialogue_Previous, "Input.Action.Dialogue.Previous")
@@ -149,9 +158,11 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_Observation, "Player.State.Observation")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_PossessIndicator, "Player.State.PossessIndicator")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_Player_State_PossessMovable, "Player.State.PossessMovable")
-	
+
+	// UI
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI, "UI")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD, "UI.HUD")
+	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_Dialogue, "UI.HUD.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction, "UI.HUD.QuickAction")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_GadgetsOne, "UI.HUD.QuickAction.GadgetsOne")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_HUD_QuickAction_GadgetsTwo, "UI.HUD.QuickAction.GadgetsTwo")
@@ -164,7 +175,6 @@ namespace SI_NativeGameplayTagLibrary
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Game, "UI.Menu.Game")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Vendor, "UI.Menu.Vendor")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Interrogation, "UI.Menu.Interrogation")
-	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Dialogue, "UI.Menu.Dialogue")
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Menu_Validation, "UI.Prompt.Validation")
 
 	UE_DEFINE_GAMEPLAY_TAG(SITag_UI_Screen, "UI.Screen")

@@ -13,8 +13,6 @@
 
 // Case Data
 #include "Cases/Data/SI_CaseData.h"
-#include "Cases/Data/SI_PartData.h"
-#include "Cases/Data/SI_ObjectiveData.h"
 
 // UI
 #include "UI/SI_DialogueBox.h"
@@ -49,7 +47,6 @@ void USI_UIManager::OnGameInstanceInit()
 {
 	Super::OnGameInstanceInit();
 	
-	BindCaseManagerDelegates();
 }
 
 void USI_UIManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -70,11 +67,6 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPay
 		SITagManager->ReplaceTagWithSameParent(SITag_UI_Screen_Loading, SITag_UI);
 	}
 
-	if(InAddedTag == SITag_Player_State_Exploration)
-	{
-		SITagManager->AddNewGameplayTag_Internal(SITag_UI_HUD);
-	}
-
 	if(InAddedTag == SITag_Media_Video)
 	{
 		SITagManager->AddNewGameplayTag_Internal(SITag_UI_Screen_Video);
@@ -93,7 +85,11 @@ void USI_UIManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPay
 		return;
 	}
 
-	AddUIDelegateContainer.Find(InAddedTag)->Execute();
+	const FSimpleDelegate* FoundDelegate = AddUIDelegateContainer.Find(InAddedTag);
+	if(FoundDelegate)
+	{
+		FoundDelegate->Execute();
+	}
 }	
 //Called from listener of GameplayTagManager OnTagRemovedDelegate.Broadcast() in RemoveTag()
 void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITagPayload* InTagPayload)
@@ -105,11 +101,6 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITa
 	if(InRemovedTag == SITag_Game_State_Loading)
 	{
 		SITagManager->RemoveTag_Internal(SITag_UI_Screen_Loading);
-	}
-
-	if(InRemovedTag == SITag_Player_State_Exploration)
-	{
-		SITagManager->RemoveTag_Internal(SITag_UI_HUD);
 	}
 
 	if(InRemovedTag == SITag_Media_Video)
@@ -135,9 +126,21 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITa
 		return;
 	}
 
+	if (InRemovedTag == SITag_UI_Menu_Interrogation)
+	{
+		RemoveInterrogationWidget();
+		return;
+	}
+
 	if (InRemovedTag == SITag_UI_HUD)
 	{
 		ShowPlayerHUD(false);
+		return;
+	}
+
+	if (InRemovedTag == SITag_UI_HUD_Dialogue)
+	{
+		HideDialogueBox();
 		return;
 	}
 
@@ -153,25 +156,6 @@ void USI_UIManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, FSITa
 	}
 	
 	RemoveSIWidget(GetActiveUIWidgetByTag<USI_UserWidget>(InRemovedTag));
-}
-
-void USI_UIManager::BindCaseManagerDelegates()
-{
-	/*USI_CaseManager* CaseManager = GameInstance->GetSubsystem<USI_CaseManager>();
-	if (!IsValid(CaseManager)) {return;}
-
-	// Case Bindings
-	CaseManager->OnCaseAccepted.AddDynamic(this, &ThisClass::OnCaseAccepted);
-	CaseManager->OnCaseActivated.AddDynamic(this, &ThisClass::OnCaseActivated);
-	CaseManager->OnCaseComplete.AddDynamic(this, &ThisClass::OnCaseCompleted);
-
-	// Part Bindings
-	CaseManager->OnPartActivated.AddDynamic(this, &ThisClass::OnPartActivated);
-	CaseManager->OnPartComplete.AddDynamic(this, &ThisClass::OnPartCompleted);
-
-	// Objective Bindings
-	CaseManager->OnObjectiveActivated.AddDynamic(this, &ThisClass::OnObjectiveActivated);
-	CaseManager->OnObjectiveComplete.AddDynamic(this, &ThisClass::OnObjectiveCompleted);*/
 }
 
 void USI_UIManager::DelayWidgetCreation(const FSimpleDelegate& InDelegate)
@@ -206,30 +190,50 @@ void USI_UIManager::ShowMapMenu(bool bShouldShow)
 	}
 }
 
-void USI_UIManager::InitializeDelegates()
-{
-	Super::InitializeDelegates();
-	
-	AddHUDDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
-	AddLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, true, true);
-	AddVideoScreenDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
-	AddSystemMenuDelegate.BindUObject(this, &ThisClass::ToggleSystemMenu);
-	AddMapMenuDelegate.BindUObject(this, &ThisClass::CreateMapMenu);
-	UpdateQuickActionDelegate.BindUObject(this, &ThisClass::UpdateQuickActionWidget);
-}
-
 void USI_UIManager::InitializeDelegateMaps()
 {
 	Super::InitializeDelegateMaps();
-	
+
+	FSimpleDelegate AddGameMenuDelegate;
+	AddGameMenuDelegate.BindUObject(this, &ThisClass::CreateMapMenu);
 	AddUIDelegateContainer.Add(SITag_UI_Menu_Game, AddGameMenuDelegate);
+
+	FSimpleDelegate AddMapMenuDelegate;
+	AddMapMenuDelegate.BindUObject(this, &ThisClass::CreateMapMenu);
 	AddUIDelegateContainer.Add(SITag_UI_Menu_Map, AddMapMenuDelegate);
+
+	FSimpleDelegate AddSystemMenuDelegate;
+	AddSystemMenuDelegate.BindUObject(this, &ThisClass::ToggleSystemMenu);
 	AddUIDelegateContainer.Add(SITag_UI_Menu_System, AddSystemMenuDelegate);
-	AddUIDelegateContainer.Add(SITag_UI_Menu_Vendor, AddVendorMenuDelegate);
+
+	FSimpleDelegate AddHUDDelegate;
+	AddHUDDelegate.BindUObject(this, &ThisClass::CreatePlayerHUD);
 	AddUIDelegateContainer.Add(SITag_UI_HUD, AddHUDDelegate);
+
+	FSimpleDelegate UpdateQuickActionDelegate;
+	UpdateQuickActionDelegate.BindUObject(this, &ThisClass::UpdateQuickActionWidget);
 	AddUIDelegateContainer.Add(SITag_UI_HUD_QuickAction, UpdateQuickActionDelegate);
+
+	FSimpleDelegate AddLoadingScreenDelegate;
+	AddLoadingScreenDelegate.BindUObject(this, &ThisClass::DisplayLoadingScreen, true, true);
 	AddUIDelegateContainer.Add(SITag_UI_Screen_Loading, AddLoadingScreenDelegate);
+
+	FSimpleDelegate AddVideoScreenDelegate;
+	AddVideoScreenDelegate.BindUObject(this, &ThisClass::CreateMoviePlayerWidget);
 	AddUIDelegateContainer.Add(SITag_UI_Screen_Video, AddVideoScreenDelegate);
+
+	FSimpleDelegate AddDialogueBoxDelegate;
+	AddDialogueBoxDelegate.BindUObject(this, &ThisClass::DisplayDialogueBox);
+	AddUIDelegateContainer.Add(SITag_UI_HUD_Dialogue, AddDialogueBoxDelegate);
+
+	FSimpleDelegate AddInterrogationWidgetDelegate;
+	AddInterrogationWidgetDelegate.BindUObject(this, &ThisClass::CreateInterrogationWidget);
+	AddUIDelegateContainer.Add(SITag_UI_Menu_Interrogation, AddInterrogationWidgetDelegate);
+	
+	/*
+	FSimpleDelegate AddVendorMenuDelegate;
+	AddUIDelegateContainer.Add(SITag_UI_Menu_Vendor, AddVendorMenuDelegate);
+	*/
 }
 
 USI_UserWidget* USI_UIManager::CreateSIWidget_Internal(TSubclassOf<UUserWidget> UserWidgetClass, FName WidgetName)
@@ -329,30 +333,6 @@ void USI_UIManager::RemoveCaseTitleCard()
 	CaseManager->OnCaseTitleCardComplete().Broadcast();
 }
 
-/*USI_UserWidget* USI_UIManager::CreateSIWidget(TSubclassOf<USI_UserWidget> InWidgetClass, FGameplayTag InUITag)
-{
-	PlayerController = Cast<ASI_PlayerController>(GetWorld()->GetFirstPlayerController());
-	if(!IsValid(InWidgetClass)) {return nullptr;}
-
-	if (!IsValid(PlayerController))
-	{
-		return nullptr;
-	}
-	
-	USI_UserWidget* NewWidgetPtr = CreateWidget<USI_UserWidget>(PlayerController, InWidgetClass);
-	if (IsValid(NewWidgetPtr))
-	{
-		UIWidgetContainer.Add(InUITag, NewWidgetPtr);
-		
-		if (SITagManager->HasParentTag(InUITag, SITag_UI_Menu))
-		{
-			PlayerController->SetFocusedWidget(NewWidgetPtr);
-		}
-	}
-
-	return NewWidgetPtr;
-}*/
-
 void USI_UIManager::RemoveSIWidget(USI_UserWidget* InWidgetPtr)
 {
 	if (!IsValid(InWidgetPtr)){return;}
@@ -370,19 +350,6 @@ void USI_UIManager::RemoveSIWidget(USI_UserWidget* InWidgetPtr)
 	InWidgetPtr = nullptr;
 }
 
-/*USI_UserWidget* USI_UIManager::GetWidgetByTag(const FGameplayTag InWidgetTag)
-{
-	for (TPair<FGameplayTag, USI_UserWidget*>& CurrentWidgetPair : UIWidgetContainer)
-	{
-		if (CurrentWidgetPair.Key == InWidgetTag)
-		{
-			return CurrentWidgetPair.Value;
-		}
-	}
-	
-	return nullptr;
-}*/
-
 void USI_UIManager::CreateMapMenu()
 {
 	USI_LevelManager* LevelManager = GameInstance->GetSubsystem<USI_LevelManager>();
@@ -399,7 +366,6 @@ void USI_UIManager::CreateMapMenu()
 		DelayWidgetCreation(MapMenuDelayDelegate);
 		return;
 	}
-	
 	MapMenu->AddToViewport();
 }
 
@@ -446,6 +412,30 @@ void USI_UIManager::CreateSkipWidget()
 	}
 	
 	SkipWidget->AddToViewport();
+}
+
+void USI_UIManager::CreateInterrogationWidget()
+{
+	if (!IsValid(GameInstance->GetGameMode())){return;}
+	
+	USI_UserWidget* InterrogationWidget = CreateSIWidget<USI_UserWidget>(SITag_UI_Menu_Interrogation, GameInstance->GetGameMode()->InterrogationWidget);
+	if (!IsValid(InterrogationWidget))
+	{
+		FSimpleDelegate  InterrogationWidgetDelayDelegate;
+		InterrogationWidgetDelayDelegate.BindUObject(this, &ThisClass::CreateInterrogationWidget);
+		DelayWidgetCreation(InterrogationWidgetDelayDelegate);
+		return;
+	}
+	
+	InterrogationWidget->AddToViewport();
+}
+
+void USI_UIManager::RemoveInterrogationWidget()
+{
+	USI_UserWidget* InterrogationWidget = GetActiveUIWidgetByTag<USI_UserWidget>(SITag_UI_Menu_Interrogation);
+	if (!IsValid(InterrogationWidget)){return;}
+	
+	RemoveSIWidget(InterrogationWidget);
 }
 
 USI_UserWidget* USI_UIManager::GetSIWidgetByTag(const FGameplayTag& InWidgetTag)
@@ -539,8 +529,11 @@ void USI_UIManager::DisplayDialogueBox()
 	USI_HUD* PlayerHUD = GetActiveUIWidget<USI_HUD>();
 	if (!IsValid(PlayerHUD) || !IsValid(PlayerHUD->GetDialogueBox())){return;}
 
-	PlayerHUD->GetDialogueBox()->RefreshDialogueBox();
-	PlayerHUD->GetDialogueBox()->SetVisibility(ESlateVisibility::Visible);
+	USI_DialogueBox* DialogueBox = PlayerHUD->GetDialogueBox();
+	if(!IsValid(DialogueBox)) {return;}
+	
+	DialogueBox->RefreshDialogueBox();
+	DialogueBox->SetVisibility(ESlateVisibility::Visible);
 }
 
 void USI_UIManager::HideDialogueBox()

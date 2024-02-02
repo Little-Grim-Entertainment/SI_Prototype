@@ -192,9 +192,33 @@ FSI_CaseDetails* USI_CaseManager::GetCaseDetails(const USI_CaseData* InCaseData)
 	return *AllCases.Find(InCaseData);
 }
 
+FSI_CaseDetails* USI_CaseManager::GetCaseDetails(const USI_CaseData* InCaseData) const
+{
+	if(AllCases.IsEmpty() || !AllCases.Contains(InCaseData))
+	{
+		static FSI_CaseDetails DefaultCaseDetails;
+		return &DefaultCaseDetails;
+	}
+	return *AllCases.Find(InCaseData);
+}
+
 USI_CaseData* USI_CaseManager::GetActiveCase()
 {
 	return ActiveCase;
+}
+
+USI_CaseData* USI_CaseManager::GetActiveCase() const
+{
+	return ActiveCase;
+}
+
+const FGameplayTag& USI_CaseManager::GetActiveCaseTag() const
+{
+	if(IsValid(ActiveCase))
+	{
+		return ActiveCase->CaseTag;
+	}
+	return FGameplayTag::EmptyTag;
 }
 
 USI_CaseData* USI_CaseManager::GetCaseByName(const FString& InCaseName)
@@ -245,6 +269,25 @@ USI_PartData* USI_CaseManager::GetActivePart()
 	}
 
 	return nullptr;
+}
+
+USI_PartData* USI_CaseManager::GetActivePart() const
+{
+	if(IsValid(ActiveCase))
+	{
+		return GetCaseDetails(ActiveCase)->GetActivePart();
+	}
+
+	return nullptr;
+}
+
+
+FName USI_CaseManager::GetActivePartTag() const
+{
+	const USI_PartData* ActivePart = GetActivePart();
+	if(!IsValid(ActivePart)) {return FName();}
+
+	return ActivePart->PartTag;
 }
 
 FSI_ObjectiveDetails* USI_CaseManager::GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData)
@@ -481,9 +524,13 @@ void USI_CaseManager::PlayIntroMedia()
 	{
 		MediaManager->PlayMedia(LoadedMapState->GetLoadedIntroMedia(), LoadedMapState->GetOutroSettings());
 	}
-	else if(LevelManager->GetCurrentMap()->MapType != SITag_Map_Type_Menu)
+	else
 	{
-		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
+		USI_MapData* CurrentMap = LevelManager->GetCurrentMap();
+		if(IsValid(CurrentMap) && CurrentMap->MapType != SITag_Map_Type_Menu)
+		{
+			SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Exploration, SITag_Player_State);
+		}
 	}
 }
 

@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNativePreConstructionComplete);
 
 
 
-UCLASS()
+UCLASS(editinlinenew, BlueprintType, Blueprintable)
 class SI_PROTOTYPE_API USI_UserWidget : public UUserWidget
 {
 	GENERATED_BODY()
@@ -38,6 +38,8 @@ public:
 	void FadeOutWidget();
 
 	void FadeOutComplete();
+
+	USI_UserWidget* GetOutermostWidget() const;
 
 protected:
 

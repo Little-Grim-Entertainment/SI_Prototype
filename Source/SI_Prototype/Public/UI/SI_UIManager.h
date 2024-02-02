@@ -65,6 +65,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CreateSkipWidget();
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void CreateInterrogationWidget();
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void RemoveInterrogationWidget();
+
 	UFUNCTION(BlueprintPure, Category = "UI")
 	USI_UserWidget* GetSIWidgetByTag(const FGameplayTag& InWidgetTag);
 	
@@ -142,12 +147,10 @@ protected:
 
 private:
 
-	void BindCaseManagerDelegates();
 	void DelayWidgetCreation(const FSimpleDelegate& InDelegate);
 
 	void ShowMapMenu(bool bShouldShow);
 	
-	virtual void InitializeDelegates() override;
 	virtual void InitializeDelegateMaps() override;
 
 	USI_UserWidget* CreateSIWidget_Internal(TSubclassOf<UUserWidget> UserWidgetClass, FName WidgetName);
@@ -171,15 +174,6 @@ private:
 	FSimpleDelegate TitleCardDelayDelegate;
 
 	TMap<FGameplayTag, FSimpleDelegate> AddUIDelegateContainer;
-	
-	FSimpleDelegate AddGameMenuDelegate;
-	FSimpleDelegate AddHUDDelegate;
-	FSimpleDelegate AddLoadingScreenDelegate;
-	FSimpleDelegate AddMapMenuDelegate;
-	FSimpleDelegate AddSystemMenuDelegate;
-	FSimpleDelegate UpdateQuickActionDelegate;
-	FSimpleDelegate AddVendorMenuDelegate;
-	FSimpleDelegate AddVideoScreenDelegate;
 };
 
 template <class T>

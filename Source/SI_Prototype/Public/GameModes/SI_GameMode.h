@@ -7,6 +7,7 @@
 #include "GameFramework/GameMode.h"
 #include "SI_GameMode.generated.h"
 
+class ASI_DialogueCamera;
 class USI_CharacterData;
 class USI_GameInstance;
 class USI_GameplayAbility;
@@ -37,6 +38,10 @@ public:
 	TSubclassOf<USI_MoviePlayerWidget> MoviePlayerWidget;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
 	TSubclassOf<USI_SkipWidget> SkipWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= Classes)
+	TSubclassOf<USI_UserWidget> InterrogationWidget;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes)
+	TSubclassOf<ASI_DialogueCamera> DialogueCameraClass;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes)
 	TArray<TSubclassOf<USI_UserWidget>> LoadingScreens;
 
@@ -64,10 +69,11 @@ public:
 	void RestartNickSpawn();
 
 protected:
-
+	
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 private:
 	
 	UPROPERTY()

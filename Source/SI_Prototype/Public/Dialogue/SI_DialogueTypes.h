@@ -15,12 +15,13 @@ DECLARE_LOG_CATEGORY_EXTERN(LogSI_Dialogue, Log, All);
 class ASI_Evidence;
 
 UENUM()
-enum ESI_MainDialogueTypes : uint8
+enum ESI_InterrogationState : uint8
 {
-	MD_NONE				UMETA(DisplayName = "NONE"),
-	MD_DefaultDialogue	UMETA(DisplayName = "DefaultDialogue"),
-	MD_BubbleDialogue   UMETA(DisplayName = "BubbleDialogue"),
-	MD_CaseDialogue		UMETA(DisplayName = "CaseDialogue"),
+	IS_NONE				UMETA(DisplayName = "NONE"),
+	IS_Conversation		UMETA(DisplayName = "Conversation"),
+	IS_Pressing			UMETA(DisplayName = "Pressing"),
+	IS_Presenting		UMETA(DisplayName = "Presenting"),
+	IS_Responding		UMETA(DisplayName = "Responding"),
 };
 
 USTRUCT(BlueprintType)
@@ -92,8 +93,6 @@ struct SI_PROTOTYPE_API FSI_PressDialogue : public FLGConversationDialogue
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dialogue", meta=(EditCondition="CanPresentEvidence", EditConditionHides))
 	TSubclassOf<ASI_Evidence> CorrectEvidence;
-
-	static FGameplayTag GetTypeTag();
 };
 
 
@@ -107,8 +106,6 @@ struct SI_PROTOTYPE_API FSI_ResponseDialogue : public FLGConversationDialogue
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	bool IsEvidenceCorrect;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -125,18 +122,16 @@ struct SI_PROTOTYPE_API FSI_PrimaryDialogue : public FLGConversationDialogue
     bool IsTrueStatement = true;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	TSoftObjectPtr<UDataTable> PressDialogueDataTable;
+	const UDataTable* PressDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	TSoftObjectPtr<UDataTable> ResponseDialogueDataTable;
+	const UDataTable* ResponseDialogueDataTable = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
+	UPROPERTY(meta=(DisplayAfter="EmphasizedColorsString"))
 	FString PressURL;
 
-	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="EmphasizedColorsString"))
+	UPROPERTY(meta=(DisplayAfter="EmphasizedColorsString"))
 	FString ResponseURL;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -149,19 +144,12 @@ struct SI_PROTOTYPE_API FSI_CorrectedDialogue : public FLGConversationDialogue
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue", BlueprintReadOnly)
 	int32 SpeakerLine;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
-struct SI_PROTOTYPE_API FSI_DefaultResponse : public FLGConversationDialogue
+struct SI_PROTOTYPE_API FSI_DefaultResponse : public FSI_ResponseDialogue
 {
 	GENERATED_BODY()
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
-	int32 ResponseLine;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -171,8 +159,6 @@ struct SI_PROTOTYPE_API FSI_BubbleDialogue : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Dialogue")
 	FString BubbleTest;
-
-	static FGameplayTag GetTypeTag();
 };
 
 USTRUCT(BlueprintType)
@@ -181,7 +167,7 @@ struct SI_PROTOTYPE_API FSI_PartDialogueInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USI_PartData* PartReference;
+	const USI_PartData* PartReference;
 
 	UPROPERTY(EditAnywhere, Category = "URLs")
 	TArray<FLGDialogueURL> DialogueURLs;
@@ -198,27 +184,27 @@ struct SI_PROTOTYPE_API FSI_PartDialogueData : public FLGDialogueData
 	FSI_PartDialogueData(const USI_PartData* InPartData);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<USI_PartData> PartReference;
+	const USI_PartData* PartReference = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> RandomBubbleDialogueDataTable;
+	const UDataTable* RandomBubbleDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> SeeNickBubbleDialogueDataTable;
+	const UDataTable* SeeNickBubbleDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> DefaultResponseDataTable;
+	const UDataTable* DefaultResponseDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> CorrectedDialogueDataTable;
+	const UDataTable* CorrectedDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "DialogueTables")
-	TSoftObjectPtr<UDataTable> PrimaryDialogueDataTable;
+	const UDataTable* PrimaryDialogueDataTable = nullptr;
 
-	UDataTable* GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
+	const UDataTable* GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
 	void SetDialogueDataTableByType(const UDataTable* InDataTable, const FGameplayTag& InStructType, const  FSI_DialogueTag& InDialogueTag = FSI_DialogueTag());
 
-	UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
+	const UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
 	void SetEmbeddedDialogueDataTableByTypeTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag, const UDataTable* InDataTable);
 };
 
@@ -228,7 +214,7 @@ struct SI_PROTOTYPE_API FSI_CaseDialogueInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USI_CaseData* CaseReference;
+	const USI_CaseData* CaseReference;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FSI_PartDialogueInfo> PartDialogue;
@@ -245,7 +231,7 @@ struct SI_PROTOTYPE_API FSI_CaseDialogueData : public FLGDialogueData
 	FSI_CaseDialogueData(const USI_CaseData* InCaseReference);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<USI_CaseData> CaseReference;
+	const USI_CaseData* CaseReference;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Parts")
 	TArray<FSI_PartDialogueData> PartDialogueData;
@@ -258,6 +244,7 @@ struct SI_PROTOTYPE_API FSI_CaseDialogueDataTableRow : public FTableRowBase
 
 	FSI_CaseDialogueDataTableRow(){}
 	FSI_CaseDialogueDataTableRow(const FSI_CaseDialogueData& InCaseDialogueData);
+	FSI_CaseDialogueDataTableRow(const USI_CaseData* InCaseData);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FSI_CaseDialogueData CaseDialogueData;
@@ -288,9 +275,20 @@ struct SI_PROTOTYPE_API FSI_DialogueState : public FLGDialogueState
 {
 	GENERATED_BODY()
 
-	/*FSI_DialogueState(){}
-	FSI_DialogueState(FSI_PrimaryDialogueArray* InPrimaryDialogueArray);
-
-	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
-	FSI_PrimaryDialogueArray CasePrimaryDialogueArray;*/
+	FSI_DialogueState(){}
+	FSI_DialogueState(const UDataTable* InActivePartDialogueTable, const UDataTable* InActiveCorrectedDialogueTable, const UDataTable* InActiveDefaultResponseTable);
+	
+	UPROPERTY()
+	const UDataTable* ActivePrimaryDialogueTable  = nullptr;
+	UPROPERTY()
+	const UDataTable* ActiveCorrectedDialogueTable  = nullptr;
+	UPROPERTY()
+	const UDataTable* ActiveDefaultResponseTable  = nullptr;
+	
+	UPROPERTY()
+	TArray<FSI_PrimaryDialogue> CurrentPrimaryDialogueArray;
+	UPROPERTY()
+	TArray<FSI_CorrectedDialogue> CurrentCorrectedDialogueArray;
+	UPROPERTY()
+	TArray<FSI_DefaultResponse> CurrentDefaultResponseArray;
 };

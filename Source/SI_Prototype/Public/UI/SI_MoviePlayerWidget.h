@@ -48,4 +48,9 @@ protected:
 	UMediaPlayer* CurrentMediaPlayer;
 	UPROPERTY(BlueprintReadOnly)
 	UMediaSource* CurrentMediaSource;
+
+private:
+
+	UFUNCTION()
+	void OnMediaOpened(FString OpenedUrl);
 };

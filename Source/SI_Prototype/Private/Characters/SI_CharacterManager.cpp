@@ -3,11 +3,15 @@
 
 #include "Characters/SI_CharacterManager.h"
 #include "Characters/Data/SI_CharacterData.h"
+#include "Characters/SI_Nick.h"
+#include "Characters/SI_Gizbo.h"
 #include "SI_GameInstance.h"
 #include "Cases/SI_CaseManager.h"
 #include "Cases/Data/SI_PartData.h"
 #include "Characters/Data/SI_CharacterList.h"
 #include "GameStates/SI_GameState.h"
+#include "Kismet/GameplayStatics.h"
+#include "SaveData/SI_SaveData_CharacterStates.h"
 
 void USI_CharacterManager::OnWorldBeginPlay(UWorld& InWorld)
 {
@@ -21,6 +25,16 @@ void USI_CharacterManager::OnWorldBeginPlay(UWorld& InWorld)
 	
 	CaseManager->OnPartActivated().AddDynamic(this, &ThisClass::OnPartActivated);
 	CaseManager->OnPartComplete().AddDynamic(this, &ThisClass::OnPartCompleted);
+}
+
+ASI_Nick* USI_CharacterManager::GetNick()
+{
+	return NickRef.Get();
+}
+
+ASI_Gizbo* USI_CharacterManager::GetGizbo()
+{
+	return GizboRef.Get();
 }
 
 USI_CharacterData* USI_CharacterManager::GetActiveCharacterData(const FGameplayTag& CharacterTag)
@@ -38,15 +52,20 @@ USI_CharacterData* USI_CharacterManager::GetCharacterDataByTag(const FGameplayTa
 	return CharacterList->GetCharacterDataByTag(InCharacterTag);
 }
 
-FSI_CharacterState* USI_CharacterManager::GetCharacterStateByTag(const FGameplayTag& InCharacterTag)
+FSI_CharacterState* USI_CharacterManager::GetCharacterStateByTag(const FGameplayTag& InCharacterTag, const ASI_Character* InCharacter)
 {
-	UWorld* World = GetWorld();
-	if(!IsValid(World)){return nullptr;}
-	
-	ASI_GameState* GameState = Cast<ASI_GameState>(World->GetGameState());
-	if(!IsValid(GameState)) {return nullptr;}
+	FSI_CharacterState* CharacterStatePtr = LoadedCharacterStates.Find(InCharacterTag);
+	if(!CharacterStatePtr)
+	{
+		USI_CharacterData* CharacterData = GetCharacterDataByTag(InCharacterTag);
+		if(!IsValid(CharacterData)) {return nullptr;}
 
-	return GameState->GetCharacterStateByTag(InCharacterTag);
+		FSI_CharacterState* NewCharacterState = new FSI_CharacterState(CharacterData, InCharacter);
+		AddNewCharacterState(NewCharacterState);
+		return NewCharacterState;
+	}
+	
+	return CharacterStatePtr;
 }
 
 bool USI_CharacterManager::IsActiveCharacter(USI_CharacterData* InCharacterData)
@@ -67,6 +86,52 @@ bool USI_CharacterManager::IsActiveCharacter(USI_CharacterData* InCharacterData)
 	}
 	
 	return false;
+}
+
+void USI_CharacterManager::AddNewCharacterState(FSI_CharacterState* InCharacterState)
+{
+	const TPair<FGameplayTag, FSI_CharacterState> NewCharacterStatePair = TPair<FGameplayTag, FSI_CharacterState>(InCharacterState->GetCharacterTag(), *InCharacterState);
+	LoadedCharacterStates.Add(NewCharacterStatePair);
+}
+
+bool USI_CharacterManager::CreateCharacterStatesSaveFile()
+{
+	USI_SaveData_CharacterStates* CharacterStatesSave = Cast<USI_SaveData_CharacterStates>(UGameplayStatics::CreateSaveGameObject(USI_SaveData_CharacterStates::StaticClass()));
+	if(!IsValid(CharacterStatesSave)) {return false;}
+
+	LoadedCharacterStates = CharacterStatesSave->CharacterStates;
+	return UGameplayStatics::SaveGameToSlot(CharacterStatesSave, "CharacterStates", 0);
+}
+
+bool USI_CharacterManager::SaveCharacterStates() const
+{
+	USI_SaveData_CharacterStates* CharacterStatesSave = Cast<USI_SaveData_CharacterStates>(UGameplayStatics::LoadGameFromSlot("CharacterStates", 0));
+	if(!IsValid(CharacterStatesSave)) {return false;}
+
+	CharacterStatesSave->CharacterStates = LoadedCharacterStates;
+	return UGameplayStatics::SaveGameToSlot(CharacterStatesSave, "CharacterStates", 0);
+}
+
+bool USI_CharacterManager::LoadCharacterStates()
+{
+	const USI_SaveData_CharacterStates* CharacterStatesSave = Cast<USI_SaveData_CharacterStates>(UGameplayStatics::LoadGameFromSlot("CharacterStates", 0));
+	if(!IsValid(CharacterStatesSave))
+	{
+		return CreateCharacterStatesSaveFile();
+	}
+
+	LoadedCharacterStates = CharacterStatesSave->CharacterStates;
+	return true;
+}
+
+void USI_CharacterManager::SetNickRef(ASI_Nick* InNick)
+{
+	NickRef = InNick;
+}
+
+void USI_CharacterManager::SetGizboRef(ASI_Gizbo* InGizbo)
+{
+	GizboRef = InGizbo;
 }
 
 void USI_CharacterManager::OnPartActivated(USI_PartData* ActivatedPart)

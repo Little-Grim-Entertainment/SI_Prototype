@@ -9,6 +9,7 @@
 #include "Levels/SI_LevelManager.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
+#include "Dialogue/SI_DialogueManager.h"
 
 void USI_PlayerManager::RequestNewPlayerState(const FGameplayTag& InPlayerState)
 {
@@ -93,13 +94,13 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 		if(InAddedTag == SITag_UI_Menu_System)
 		{
 			SecondaryMenuTag = InAddedTag;
-		}	
-		SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Menu,SITag_Player_State);
-		if (!IsValid(PlayerController))
+			SITagManager->ReplaceTagWithSameParent(SITag_Player_State_Menu,SITag_Player_State);
+			if (!IsValid(PlayerController))
 			{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to set menu mode!")); return; }
 
-		PlayerController->SetMenuMode(true);
-		return;
+			PlayerController->SetMenuMode(true);
+			return;
+		}
 	}
 	if(SITagManager->HasParentTag(InAddedTag, SITag_UI_Screen))
 	{
@@ -119,6 +120,11 @@ void USI_PlayerManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITa
 	if(SITagManager->HasParentTag(InAddedTag, SITag_Player_State))
 	{
 		CurrentPlayerState = InAddedTag;
+	}
+
+	if(InAddedTag != SITag_Player_State_Exploration && InAddedTag != SITag_Player_State_Dialogue)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD);
 	}
 
 	if(InAddedTag == SITag_Player_State_Media)
@@ -187,12 +193,21 @@ void USI_PlayerManager::OnGameplayTagRemoved(const FGameplayTag& InRemovedTag, F
 	
 	if(!SITagManager->HasParentTag(InRemovedTag, SITag_Player))
 		{UE_LOG(LogLG_PlayerManager, VeryVerbose, TEXT("%s does not have a parenttag of SITag_Player!"),*InRemovedTag.ToString()); return;}
-	
+
+	if(InRemovedTag == SITag_Player_State_Dialogue)
+	{
+		SITagManager->RemoveTag(SITag_UI_HUD_Dialogue);
+	}
+	else if(InRemovedTag == SITag_Player_State_Interrogation)
+	{
+		SITagManager->RemoveTag(SITag_UI_Menu_Interrogation);
+	}
+
 	if(SITagManager->HasParentTag(InRemovedTag, SITag_Player_State))
 	{
 		PreviousPlayerState = InRemovedTag;
 	}
-
+	
 	if(!IsValid(PlayerController))
 		{UE_LOG(LogLG_PlayerManager, Error, TEXT("PlayerController is null unable to remove input!")); return;}
 
@@ -252,6 +267,8 @@ void USI_PlayerManager::InitializeDelegateMaps()
 
 void USI_PlayerManager::SetupDialogueState()
 {
+	SITagManager->AddNewGameplayTag(SITag_UI_HUD_Dialogue);
+	SITagManager->ReplaceTagWithSameParent(SITag_Camera_Mode_Dialogue, SITag_Camera_Mode);
 }
 
 void USI_PlayerManager::SetupExplorationState()
@@ -263,6 +280,11 @@ void USI_PlayerManager::SetupExplorationState()
 	TObjectPtr<USI_LevelManager> SILevelManager = TempGameInstance->GetSubsystem<USI_LevelManager>();
 	if (!IsValid(SILevelManager) || !IsValid(SILevelManager->GetCurrentMap()))
 		{UE_LOG(LogLG_PlayerManager, Error, TEXT("SILevelManager or SILevelManager->GetCurrentMap() is null unable to set exploration mode!")); return;}
+
+	if(!SITagManager->HasGameplayTag(SITag_UI_HUD))
+	{
+		SITagManager->AddNewGameplayTag_Internal(SITag_UI_HUD);
+	}
 	
 	if (SILevelManager->GetCurrentMap()->MapType == SITag_Map_Type_Interior)
 	{
@@ -278,6 +300,7 @@ void USI_PlayerManager::SetupInactiveState()
 
 void USI_PlayerManager::SetupInterrogationState()
 {
+	SITagManager->ReplaceTagWithSameParent(SITag_UI_Menu_Interrogation, SITag_UI_Menu);
 }
 
 void USI_PlayerManager::SetupMenuState()

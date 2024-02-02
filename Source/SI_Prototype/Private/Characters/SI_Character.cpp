@@ -4,6 +4,10 @@
 #include "Characters/SI_Character.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 
+
+#include "Characters/SI_CharacterManager.h"
+
+
 // Sets default values
 ASI_Character::ASI_Character()
 {
@@ -14,11 +18,10 @@ ASI_Character::ASI_Character()
 }
 	
 
-USI_CharacterData* ASI_Character::GetCharacterData()
+USI_CharacterData* ASI_Character::GetCharacterData() const
 {
 	return CharacterData;
 }
-
 // Called when the game starts or when spawned
 void ASI_Character::BeginPlay()
 {

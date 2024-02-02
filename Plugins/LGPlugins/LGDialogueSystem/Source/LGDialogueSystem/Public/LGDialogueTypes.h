@@ -52,6 +52,9 @@ struct LGDIALOGUESYSTEM_API FLGConversationDialogue : public FLGDialogue
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue", meta=(DisplayAfter="SpeakerTag"))
 	FString EmphasizedColorsString;
+
+	
+	FText GetSpeakerNameFromTag() const;
 };
 
 USTRUCT(BlueprintType)

@@ -55,8 +55,14 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	USI_CaseData* GetActiveCase();
+	USI_CaseData* GetActiveCase() const;
+	UFUNCTION(BlueprintPure)
+	const FGameplayTag& GetActiveCaseTag() const;
 	UFUNCTION(BlueprintPure)
 	USI_PartData* GetActivePart();
+	USI_PartData* GetActivePart() const;
+	UFUNCTION(BlueprintPure)
+	FName GetActivePartTag() const;
 	UFUNCTION(BlueprintPure)
 	TArray<USI_ObjectiveData*> GetActiveObjectives();
 	
@@ -68,6 +74,8 @@ public:
 	TArray<USI_CaseData*> GetCompletedCases();
 
 	FSI_CaseDetails* GetCaseDetails(const USI_CaseData* InCaseData);
+	FSI_CaseDetails* GetCaseDetails(const USI_CaseData* InCaseData) const;
+
 	
 	FSI_PartDetails* GetPartDetails(const USI_PartData* InPartData);
 	FSI_ObjectiveDetails* GetObjectiveDetails(const USI_ObjectiveData* InObjectiveData);

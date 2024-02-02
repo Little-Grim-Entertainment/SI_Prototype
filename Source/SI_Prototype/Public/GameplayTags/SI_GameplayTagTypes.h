@@ -41,5 +41,10 @@ struct FSITagPayload
 
 	bool operator == (const FSITagPayload& Other) const;
 	bool operator != (const FSITagPayload& Other) const;
-};
 
+	template<typename PayloadType>
+	FORCEINLINE PayloadType* GetPayloadByType()
+	{
+		return static_cast<PayloadType*>(this);
+	}
+};

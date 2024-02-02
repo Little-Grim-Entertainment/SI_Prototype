@@ -6,7 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
-
+#include "Characters/SI_CharacterManager.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
@@ -35,6 +35,11 @@ USI_AbilitySystemComponent* ASI_Gizbo::GetSIAbilitySystemComponent() const
 void ASI_Gizbo::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if(IsValid(CharacterManager.Get()))
+	{
+		CharacterManager->SetGizboRef(this);
+	}
 
 	GiveAbilities();
 	CurrentBehaviorTag = SITag_Behavior_Following;

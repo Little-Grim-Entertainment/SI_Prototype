@@ -47,6 +47,7 @@ protected:
 	bool IsEmbeddedStructType(const FGameplayTag& InStructType);
 
 	USI_CaseDialogueDataTable* GenerateNewCaseDataTable(const FString& InPackagePath, const FString& InFileName);
+	void AddNewCaseToTable(UDataTable* InCaseDataTable, const USI_CaseData* InCaseData);
 	
 	bool IsCaseInTable(const FGameplayTag& InCaseTag, const UDataTable* InCaseDialogueDataTable) const;
 	

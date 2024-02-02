@@ -30,29 +30,30 @@ public:
 	TArray<FSI_CaseDialogueInfo> CaseDialogue;
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue | DialogueTables")
-	TSoftObjectPtr<UDataTable> DefaultPrimaryDialogueDataTable;
+	const UDataTable* DefaultPrimaryDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue | DialogueTables")
-	TSoftObjectPtr<UDataTable> DefaultCorrectedDialogueDataTable;
+	const UDataTable* DefaultCorrectedDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue | DialogueTables")
-	TSoftObjectPtr<UDataTable> DefaultResponseDialogueDataTable;
+	const UDataTable* DefaultResponseDialogueDataTable = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue | DialogueTables")
-	TSoftObjectPtr<UDataTable> DefaultRandomBubbleDialogueDataTable;
+	const UDataTable* DefaultRandomBubbleDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue | DialogueTables")
-	TSoftObjectPtr<UDataTable> DefaultSeeNickBubbleDialogueDataTable;
+	const UDataTable* DefaultSeeNickBubbleDialogueDataTable = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Dialogue | DialogueTables")
-	TSoftObjectPtr<USI_CaseDialogueDataTable> CaseDialogueDataTable = nullptr;
+	USI_CaseDialogueDataTable* CaseDialogueDataTable = nullptr;
 
 	void SetDataTableByTypeAndTag(const UDataTable* InDataTable, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag);
 	void SetEmbeddedDialogueDataTableByTypeTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag, const UDataTable* InDataTable);
 
+	const UDataTable* GetDefaultDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
+	const UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
 
-	UDataTable* GetDialogueDataTableByType(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
-	UDataTable* GetEmbeddedDialogueDataTableByTag(const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag) const;
+	const UDataTable* GetCaseDialogueDataTableByType(const FGameplayTag& InCaseTag, const FGameplayTag& InStructType, const FSI_DialogueTag& InDialogueTag = FSI_DialogueTag()) const;
 
 	template <class DialogueStruct>
 	DialogueStruct* GetTableDialogueByTag(const UDataTable* InDataTable, const FSI_DialogueTag& InDialogueTag);
@@ -87,7 +88,7 @@ DialogueStructType* USI_DialogueDataAsset::GetDialogueByTypeAndTag(const FSI_Dia
 		
 	if(InDialogueTag.IsCaseDialogueTag())
 	{
-		const USI_CaseDialogueDataTable* CaseDataTable = CaseDialogueDataTable.Get();
+		const USI_CaseDialogueDataTable* CaseDataTable = CaseDialogueDataTable;
 		if(!IsValid(CaseDataTable)){return nullptr;}
 		
 		TArray<FSI_CaseDialogueDataTableRow*> CaseDialogueDataTableRows;
@@ -113,7 +114,7 @@ DialogueStructType* USI_DialogueDataAsset::GetDialogueByTypeAndTag(const FSI_Dia
 		return nullptr;
 	}
 
-	const UDataTable* DialogueDataTable = GetDialogueDataTableByType(DialogueStructType::GetGetTypeTag());
+	const UDataTable* DialogueDataTable = GetDefaultDialogueDataTableByType(DialogueStructType::GetGetTypeTag());
 	if(!IsValid(DialogueDataTable)) {return nullptr;}
 
 	return GetTableDialogueByTag<DialogueStructType>(DialogueDataTable, InDialogueTag);

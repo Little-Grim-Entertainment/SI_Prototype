@@ -18,7 +18,6 @@ class SI_PROTOTYPE_API USI_GameplayTagManager : public USI_GameInstanceSubsystem
 
 public:
 
-
 	// Used to register the tag manager with the gameplay tag manager which then broadcasts
 	// the OnTagAdded and OnTagRemoved delegates when tags are added or removed.
 	// Use AddNewGameplayTag_Internal() for C++ code.
@@ -60,16 +59,6 @@ protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 private:
-
-	FSI_GameplayTagContainer CameraTags;
-	FSI_GameplayTagContainer DebugTags;
-	FSI_GameplayTagContainer GadgetTags;
-	FSI_GameplayTagContainer GameStateTags;
-	FSI_GameplayTagContainer LevelTags;
-	FSI_GameplayTagContainer MediaTags;
-	FSI_GameplayTagContainer MusicTags;
-	FSI_GameplayTagContainer PlayerStateTags;
-	FSI_GameplayTagContainer UITags;
 
 	FOnTagAdded OnTagAddedDelegate;
 	FOnTagRemoved OnTagRemovedDelegate;

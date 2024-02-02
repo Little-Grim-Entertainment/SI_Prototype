@@ -13,9 +13,8 @@ USI_CaseDialogueDataTable::USI_CaseDialogueDataTable()
 
 void USI_CaseDialogueDataTable::AddNewCaseToTable(const USI_CaseData* InCaseData)
 {
+	if(!IsValid(InCaseData)) {return;}
 	const FName RowName = FName(InCaseData->CaseTag.ToString());
-	const FSI_CaseDialogueData CaseDialogueData = FSI_CaseDialogueData(InCaseData);
-	const FSI_CaseDialogueDataTableRow CaseDialogueDataTableRow = FSI_CaseDialogueDataTableRow(CaseDialogueData);
 
-	AddRow(RowName, CaseDialogueDataTableRow);
+	AddRow(RowName, FSI_CaseDialogueDataTableRow(InCaseData));
 }
