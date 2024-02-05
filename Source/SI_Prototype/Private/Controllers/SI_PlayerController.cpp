@@ -227,10 +227,17 @@ void ASI_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {LG_LOG(LogLG_PlayerController, Error, "Pawn is null cannot interact") return;}
 
-	if(Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false))
+	Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
+
+	if (InteractableActor)
 	{
-		OnInteractPressed.Broadcast(InteractableActor, Nick);
+		if (const ISI_InteractInterface* InterfaceActor = Cast<ISI_InteractInterface>(InteractableActor))
+		{
+			InterfaceActor->Execute_OnInteract(InteractableActor, InteractableActor);
+		}
 	}
+	
+	OnInteractPressed.Broadcast(InteractableActor, Nick);
 }
 
 void ASI_PlayerController::RequestInterrogate()
