@@ -92,6 +92,8 @@ protected:
 	float AdaptableActionMaximumRadius = 2000.0f;
 	UPROPERTY()
 	TObjectPtr<ASI_PlayerCameraManager> SICameraManger;
+	UPROPERTY()
+	TObjectPtr<AActor> OverlappedActor = nullptr;
 
 private:
 	float UpdateIndicatorDelay = 0.001f;

@@ -7,6 +7,8 @@
 #include "SI_GameInstance.h"
 #include "Abilities/SI_AbilityGameplayTagLibrary.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
+#include "Characters/SI_NPC.h"
+#include "Controllers/SI_NPCController.h"
 #include "Levels/SI_MapGameplayTagLibrary.h"
 #include "SI_Prototype/SI_Prototype.h"
 
@@ -15,27 +17,61 @@ void USI_GameplayTagManager::AddNewGameplayTag(const FGameplayTag& InGameplayTag
 	AddNewGameplayTag_Internal(InGameplayTag);
 }
 
-void USI_GameplayTagManager::AddNewGameplayTag_Internal(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload)
+void USI_GameplayTagManager::AddNewGameplayTag_Internal(const FGameplayTag& InGameplayTag, AActor* InCaller, AActor* InTarget)
 {
 	FSI_GameplayTagContainer& ContainerToAddTo = GetContainerTypeByTag(InGameplayTag);
 	if (!InGameplayTag.IsValid()) return;
 
-	if(HasParentTag(InGameplayTag, SI_NativeGameplayTagLibrary::SITag_Ability))
+	FSITagPayload* Payload = new FSITagPayload(InCaller, InTarget);
+	
+	if(HasParentTag(InGameplayTag, SITag_Ability_Nick))
 	{
 		LG_LOG(LogLG_GameplayTagManager, Log, "Ability Tag Added: %s", *InGameplayTag.ToString());
-		OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
+
+		OnTagAddedDelegate.Broadcast(InGameplayTag, Payload);
+		return;
+	}
+
+	if(HasParentTag(InGameplayTag, SITag_Ability_AI))
+	{
+		LG_LOG(LogLG_GameplayTagManager, Log, "Ability Tag Added: %s", *InGameplayTag.ToString());
+
+		OnTagAddedDelegate.Broadcast(InGameplayTag, Payload);
 		return;
 	}
 	
-	if(HasParentTag(InGameplayTag, SI_NativeGameplayTagLibrary::SITag_Behavior))
+	if(HasParentTag(InGameplayTag, SITag_Ability_Adaptable))
+	{
+		LG_LOG(LogLG_GameplayTagManager, Log, "Ability Tag Added: %s", *InGameplayTag.ToString());
+		ASI_NPC* NPC = Cast<ASI_NPC>(InTarget);
+		if(IsValid(NPC))
+		{
+			ASI_NPCController* Controller = Cast<ASI_NPCController>(NPC->GetController());
+			if(!IsValid(Controller)) {LG_LOG(LogLG_PlayerController, Error, "Controller Is Null cannot retrieve tag") return;}
+			FSI_NPCMemory* NPCMemory = Controller->GetNPCMemory();
+			if(!NPCMemory) {LG_LOG(LogLG_PlayerController, Error, "NPCMemory Is Null cannot retrieve tag") return;}
+
+			const FGameplayTag NextActionTag = GetAbilityTagFromAdaptableTag(InGameplayTag);
+			if(NextActionTag == InGameplayTag) {LG_LOG(LogLG_GameplayTagManager, Error, "NextActionTag is the same as InGameplayTag did not find AbilityTag it needs to be added to InitializeAdapatableActionTagPairs() ") return;}
+			
+			NPCMemory->SetNextActionTag(NextActionTag);
+			NPCMemory->SetAbilityCaller(InCaller);
+			NPCMemory->SetAbilityInstigator(InTarget);
+		}
+		OnTagAddedDelegate.Broadcast(InGameplayTag, Payload);
+		return;
+	}
+	
+	if(HasParentTag(InGameplayTag, SITag_Behavior))
 	{
 		LG_LOG(LogLG_GameplayTagManager, Log, "Behavior Tag Added: %s", *InGameplayTag.ToString());
-		OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
+
+		OnTagAddedDelegate.Broadcast(InGameplayTag, Payload);
 		return;
 	}
 	
 	ContainerToAddTo.AddTag(InGameplayTag);
-	OnTagAddedDelegate.Broadcast(InGameplayTag, InTagPayload);
+	OnTagAddedDelegate.Broadcast(InGameplayTag, Payload);
 }
 
 void USI_GameplayTagManager::RemoveTag(const FGameplayTag& InGameplayTag)
@@ -157,6 +193,7 @@ FOnTagAdded& USI_GameplayTagManager::OnTagRemoved()
 void USI_GameplayTagManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	InitializeTagContainers();
+	InitializeAdapatableActionTagPairs();
 
 	Super::Initialize(Collection);
 
@@ -215,4 +252,23 @@ void USI_GameplayTagManager::InitializeTagContainers()
 	{
 		CurrentContainerPair.Value.SetParentTag(CurrentContainerPair.Key);
 	}
+}
+
+void USI_GameplayTagManager::InitializeAdapatableActionTagPairs()
+{
+	AdaptableActionPairs.Add(SITag_Ability_Adaptable_AI_Interact, SITag_Ability_AI_Interact);
+	AdaptableActionPairs.Add(SITag_Ability_Adaptable_AI_Interact_Pickup, SITag_Ability_AI_Interact_Pickup);
+	AdaptableActionPairs.Add(SITag_Ability_Adaptable_AI_Interact_Drop, SITag_Ability_AI_Interact_Drop);
+	AdaptableActionPairs.Add(SITag_Ability_Adaptable_AI_Interact_Push, SITag_Ability_AI_Interact_Push);
+	AdaptableActionPairs.Add(SITag_Ability_Adaptable_AI_Interact_Pull, SITag_Ability_AI_Interact_Pull);
+}
+
+const FGameplayTag& USI_GameplayTagManager::GetAbilityTagFromAdaptableTag(const FGameplayTag& InAdaptableActionTag)
+{
+	if(AdaptableActionPairs.Find(InAdaptableActionTag))
+	{
+		return *AdaptableActionPairs.Find(InAdaptableActionTag);
+	}
+	
+	return InAdaptableActionTag;
 }

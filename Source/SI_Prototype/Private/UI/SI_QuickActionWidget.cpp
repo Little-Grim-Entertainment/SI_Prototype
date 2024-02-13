@@ -5,34 +5,36 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
+#include "Abilities/SI_AbilityGameplayTagLibrary.h"
 #include "SI_Types.h"
 #include "Components/TextBlock.h"
 #include "UI/SI_OptionWidget.h"
 
 using namespace SI_NativeGameplayTagLibrary;
+using namespace SI_AbilityGameplayTagLibrary;
 
 void USI_QuickActionWidget::RefreshQuickActionWidget(const FGameplayTag& InUITag)
 {
 	if (InUITag == SITag_UI_HUD_QuickAction_GadgetsOne)
 	{
-		UpdateQuickActionUp(SITag_Ability_AI_Follow);
-		UpdateQuickActionDown(SITag_Ability_AI_Wait);
-		UpdateQuickActionLeft(SITag_None);
-		UpdateQuickActionRight(SITag_None);
+		UpdateQuickActionUp(SITag_Ability_Nick_Interact_Drop);
+		UpdateQuickActionDown(SITag_Ability_Nick_Interact_Pickup);
+		UpdateQuickActionLeft(SITag_Ability_Nick_Gadget_UsePrimary);
+		UpdateQuickActionRight(SITag_Ability_Nick_Gadget_UseSecondary);
 	}
 	else if (InUITag == SITag_UI_HUD_QuickAction_Movable)
 	{
-		UpdateQuickActionUp(SITag_Ability_Interact_Drop);
-		UpdateQuickActionDown(SITag_Ability_Interact_Pickup);
-		UpdateQuickActionLeft(SITag_Ability_Interact_Pull);
-		UpdateQuickActionRight(SITag_Ability_Interact_Push);
+		UpdateQuickActionUp(SITag_Ability_Adaptable_AI_Interact_Drop);
+		UpdateQuickActionDown(SITag_Ability_Adaptable_AI_Interact_Pickup);
+		UpdateQuickActionLeft(SITag_Ability_Adaptable_AI_Interact_Pull);
+		UpdateQuickActionRight(SITag_Ability_Adaptable_AI_Interact_Push);
 	}
 	else if (InUITag == SITag_UI_HUD_QuickAction_Gizbo)
 	{
 		UpdateQuickActionUp(SITag_Ability_AI_Follow);
 		UpdateQuickActionDown(SITag_Ability_AI_Wait);
-		UpdateQuickActionLeft(SITag_Ability_AI_MoveTo);
-		UpdateQuickActionRight(SITag_None);
+		UpdateQuickActionLeft(SITag_Ability_AI_Gadget_UsePrimary);
+		UpdateQuickActionRight(SITag_Ability_AI_Gadget_UseSecondary);
 	}
 }
 

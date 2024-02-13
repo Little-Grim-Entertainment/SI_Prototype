@@ -23,7 +23,7 @@ public:
 	// Use AddNewGameplayTag_Internal() for C++ code.
 	UFUNCTION(BlueprintCallable)
 	void AddNewGameplayTag(const FGameplayTag& InGameplayTag);
-	void AddNewGameplayTag_Internal(const FGameplayTag& InGameplayTag, FSITagPayload* InTagPayload = nullptr);
+	void AddNewGameplayTag_Internal(const FGameplayTag& InGameplayTag, AActor* InCaller = nullptr, AActor* InTarget = nullptr);
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveTag(const FGameplayTag& InGameplayTag);
@@ -64,8 +64,11 @@ private:
 	FOnTagRemoved OnTagRemovedDelegate;
 
 	void InitializeTagContainers();
-	
+	void InitializeAdapatableActionTagPairs();
+	const FGameplayTag& GetAbilityTagFromAdaptableTag(const FGameplayTag& InAdaptableActionTag);
+
 	bool CheckContainerForParentTag(const FGameplayTag& InParentTag, const FSI_GameplayTagContainer& InContainerToCheck) const;
 
 	TMap<FGameplayTag, FSI_GameplayTagContainer> AllTagContainers;
+	TMap<FGameplayTag, FGameplayTag> AdaptableActionPairs;
 };

@@ -113,8 +113,7 @@ void USI_GameplayAbility_AdaptableAction::UpdateMoveToIndicatorPosition()
 			}
 			else if (!HitInteractableActor->bIsPickupable)
 			{
-				PC->GetSITagManager()->RemoveTag_Internal(SITag_UI_HUD_QuickAction_Movable);
-//				PC->GetSITagManager()->AddNewGameplayTag(SITag_UI_HUD_QuickAction_Pickupable);
+				PC->GetSITagManager()->AddNewGameplayTag(SITag_UI_HUD_QuickAction_Movable);
 				bHitActorIsPickupable = true;
 			}
 			else
@@ -129,6 +128,7 @@ void USI_GameplayAbility_AdaptableAction::UpdateMoveToIndicatorPosition()
 		}
 		MoveToIndicator->SetActorLocation(HitLocation);
 		MoveToIndicator->SetActorRotation(Nick->GetActorRotation());
+		OverlappedActor = HitResult.GetActor();
 	}
 }
 
@@ -196,23 +196,23 @@ void USI_GameplayAbility_AdaptableAction::CancelTagReceived()
 
 void USI_GameplayAbility_AdaptableAction::ConfirmTagReceived()
 {	
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-
 	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
 	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }
-
+	ASI_NPC* NPC = Cast<ASI_NPC>(Gizbo);
+	if(!IsValid(NPC)) {LG_LOG(LogLG_Ability, Error, "NPC is not valid"); return; }
+	FSI_NPCMemory* NPCMemory = AIController->GetNPCMemory();
+	NPCMemory->TargetObject = OverlappedActor;
+	
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	AIController->GetNPCMemory()->SetMoveToLocation(NewMoveToLocation);
 	
-	PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_Ability_AI_MoveTo, Payload);
+	PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_Ability_AI_MoveTo, Nick, Gizbo);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }
 
 void USI_GameplayAbility_AdaptableAction::HoldConfirmTagReceived()
 {
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-
 	ASI_NPCController* AIController = Cast<ASI_NPCController>(Gizbo->GetController());
 	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }	
 	FSI_NPCMemory* NPCMemory = AIController->GetNPCMemory();
@@ -221,7 +221,7 @@ void USI_GameplayAbility_AdaptableAction::HoldConfirmTagReceived()
 	FVector NewMoveToLocation = MoveToIndicator->GetActorLocation();
 	NPCMemory->SetMoveToLocation(NewMoveToLocation);
 	
-	PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_Ability_AI_MoveTo, Payload);
+	PC->GetSITagManager()->AddNewGameplayTag_Internal(SITag_Ability_AI_MoveTo);
 	
 	EndAbility(ActiveSpecHandle, GetCurrentActorInfo(), CurrentActivationInfo, true, true);
 }

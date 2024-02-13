@@ -24,13 +24,16 @@
 #include "Input/Data/SI_InputConfig.h"
 #include "GameplayTags/SI_GameplayTagManager.h"
 #include "SI_PlayerManager.h"
+#include "Abilities/SI_AbilityGameplayTagLibrary.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Characters/SI_Nick.h"
 #include "Components/Actor/SI_AbilitySystemComponent.h"
 #include "Characters/SI_Gizbo.h"
+#include "Controllers/SI_NPCController.h"
 #include "SI_Prototype/SI_Prototype.h"
 
 using namespace SI_NativeGameplayTagLibrary;
+using namespace SI_AbilityGameplayTagLibrary;
 
 //DEFINE_LG_LOG_CATEGORY();
 
@@ -148,6 +151,9 @@ void ASI_PlayerController::BeginPlay()
 	{
 		Gizbo = GizboManager->GetGizbo();
 	}
+
+	//Sets Gizbo as the active NPC Companion
+	ActiveNPCCompanion = Cast<ASI_NPC>(Gizbo);
 }
 
 void ASI_PlayerController::Tick(float DeltaSeconds)
@@ -227,7 +233,7 @@ void ASI_PlayerController::RequestInteract()
 {
 	if (!GetPawn()) {LG_LOG(LogLG_PlayerController, Error, "Pawn is null cannot interact") return;}
 
-	Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
+	Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_Interact.GetTag().GetSingleTagContainer(), false);
 
 	if (InteractableActor)
 	{
@@ -320,7 +326,7 @@ void ASI_PlayerController::RequestObserveObject()
 		Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_ObserveObject.GetTag().GetSingleTagContainer(), false);
 		if (Nick->GetCurrentInteractableActor() != nullptr)
 		{
-			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Interact.GetTag().GetSingleTagContainer(), false);
+			Nick->GetSIAbilitySystemComponent()->TryActivateAbilitiesByTag(SITag_Ability_Nick_Interact.GetTag().GetSingleTagContainer(), false);
 		}
 	}
 }
@@ -383,27 +389,21 @@ void ASI_PlayerController::RequestUseGadgetPrimary()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager or Nick is null cannot add tag") return;}
 
-	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-
-	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UsePrimary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Nick_Gadget_UsePrimary, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestUseGadgetSecondary()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager or Nick is null cannot add tag") return;}
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
 	
-	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UseSecondary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Nick_Gadget_UseSecondary, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestToggleGizboFollow()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick) || !IsValid(Gizbo)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager, Nick, or Gizbo is null cannot add tag") return;}
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);	
 	
-	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_AI_Follow, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_AI_Follow, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestToggleGizboCommands()
@@ -423,9 +423,8 @@ void ASI_PlayerController::RequestToggleGizboCommands()
 void ASI_PlayerController::RequestToggleAdaptableAction()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager or Nick is null cannot add tag") return;}
-	
-	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Nick_AdaptableAction, Payload);
+
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Nick_AdaptableAction, Nick, Nick);
 	
 	bInAdaptableActionMode = true;
 }
@@ -445,7 +444,7 @@ void ASI_PlayerController::RequestConfirmAbility()
 	
 	if(!IsValid(SITagManager)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager Is Null cannot add tag") return;}
 	
- 	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Confirm);
+ 	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Confirm, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestHoldConfirmAbility()
@@ -460,19 +459,15 @@ void ASI_PlayerController::RequestHoldConfirmAbility()
 void ASI_PlayerController::RequestGizboUseGadgetPrimary()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick) || !IsValid(Gizbo)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager, Nick, or Gizbo is null cannot add tag") return;}
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
 	
-	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UsePrimary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_AI_Gadget_UsePrimary, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestGizboUseGadgetSecondary()
 {
 	if(!IsValid(SITagManager) || !IsValid(Nick) || !IsValid(Gizbo)) {LG_LOG(LogLG_PlayerController, Error, "SITagManager, Nick, or Gizbo is null cannot add tag") return;}
 	
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	
-	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_Gadget_UseSecondary, Payload);
+	SITagManager->AddNewGameplayTag_Internal(SITag_Ability_AI_Gadget_UseSecondary, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestGadget(AActor* InActor, FGameplayTag InGadgetTag)
@@ -495,8 +490,7 @@ void ASI_PlayerController::RequestMultiOptionUp()
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
 
-	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestMutliOptionDown()
@@ -510,9 +504,8 @@ void ASI_PlayerController::RequestMutliOptionDown()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestMultiOptionLeft()
@@ -526,9 +519,8 @@ void ASI_PlayerController::RequestMultiOptionLeft()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestMultiOptionRight()
@@ -543,8 +535,7 @@ void ASI_PlayerController::RequestMultiOptionRight()
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
 
-	FSITagPayload* Payload = new FSITagPayload(Nick, Nick);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestGizboMultiOptionUp()
@@ -553,9 +544,8 @@ void ASI_PlayerController::RequestGizboMultiOptionUp()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Up);
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestGizboMutliOptionDown()
@@ -564,9 +554,8 @@ void ASI_PlayerController::RequestGizboMutliOptionDown()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Down);
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestGizboMultiOptionLeft()
@@ -575,9 +564,8 @@ void ASI_PlayerController::RequestGizboMultiOptionLeft()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Left);
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::RequestGizboMultiOptionRight()
@@ -586,9 +574,8 @@ void ASI_PlayerController::RequestGizboMultiOptionRight()
 	if(!IsValid(UIManager)) {LG_LOG(LogLG_PlayerController, Error, "UIManager Is Null cannot retrieve tag") return;}
 	
 	FGameplayTag AbilityTag = UIManager->GetQuickActionAbilityTag(SITag_Input_Action_MultiOption_Right);
-
-	FSITagPayload* Payload = new FSITagPayload(Nick, Gizbo);
-	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Payload);
+	
+	SITagManager->AddNewGameplayTag_Internal(AbilityTag, Nick, ActiveNPCCompanion);
 }
 
 void ASI_PlayerController::SetInteractableActor(AActor* InInteractableActor)

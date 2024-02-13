@@ -10,6 +10,7 @@
 #include "LG_DebugMacros.h"
 #include "SI_PlayerController.generated.h"
 
+class ASI_NPC;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableActorAdded, TArray<AActor*>, Actors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableActorRemoved);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractPressed, AActor*, ActorToInteractWith, AActor*, Caller);
@@ -43,6 +44,8 @@ class SI_PROTOTYPE_API ASI_PlayerController : public APlayerController
 	USI_HUD* PlayerHUD;
 	UPROPERTY()
 	ASI_Nick* Nick;
+	UPROPERTY()
+	ASI_NPC* ActiveNPCCompanion;
 	
 	UPROPERTY()
 	USI_GizboManager* GizboManager;

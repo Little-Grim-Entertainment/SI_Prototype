@@ -13,6 +13,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "GameplayTags/SI_GameplayTagManager.h"
 
 using namespace SI_NativeGameplayTagLibrary;
 
@@ -32,6 +33,8 @@ void ASI_NPCController::BeginPlay()
 	ConfigurePerception();
 	BuildMemory();
 	NPCMovementHelper = new FSI_NPCMovementHelper();
+	
+	SITagManager =  GetWorld()->GetGameInstance()->GetSubsystem<USI_GameplayTagManager>();
 	
 	if (PerceptionComp)
 	{

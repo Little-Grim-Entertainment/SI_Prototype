@@ -3,29 +3,52 @@
 
 #include "SI_AITypes.h"
 
-FSI_NPCMemory::FSI_NPCMemory(FVector& InLocation, FRotator& InRotation)
+#include "GameplayTagContainer.h"
+
+FSI_NPCMemory::FSI_NPCMemory(FVector& InLocation, FRotator& InRotation, FGameplayTag& InNextActionTag)
 	:	MoveToLocation (InLocation),
-		MoveToRotation (InRotation)
+		MoveToRotation (InRotation),
+		NextActionTag (InNextActionTag)
 {
 }
 
-void FSI_NPCMemory::SetMoveToLocation(FVector& InLocation)
+void FSI_NPCMemory::SetMoveToLocation(const FVector& InLocation)
 {
 	MoveToLocation = InLocation;
 
 	OnMoveToLocationUpdated.Broadcast(MoveToLocation);
 }
 
-void FSI_NPCMemory::SetMoveToRotation(FRotator& InRotation)
+void FSI_NPCMemory::SetMoveToRotation(const FRotator& InRotation)
 {
 	MoveToRotation = InRotation;
 	
 	OnMoveToRotationUpdated.Broadcast(MoveToRotation);
 }
 
+void FSI_NPCMemory::SetNextActionTag(const FGameplayTag& InNextActionTag)
+{
+	NextActionTag = InNextActionTag;
+}
+
 void FSI_NPCMemory::SetNick(TObjectPtr<ASI_Nick> InNick)
 {
 	Nick = InNick;
+}
+
+void FSI_NPCMemory::SetTargetObject(TObjectPtr<AActor> InTargetObject)
+{
+	TargetObject = InTargetObject;
+}
+
+void FSI_NPCMemory::SetAbilityCaller(TObjectPtr<AActor> InAbilityCaller)
+{
+	AbilityCaller = InAbilityCaller;
+}
+
+void FSI_NPCMemory::SetAbilityInstigator(TObjectPtr<AActor> InAbilityInstigator)
+{
+	AbilityInstigator = InAbilityInstigator;
 }
 
 bool FSI_NPCMemory::operator==(const FSI_NPCMemory& Other) const
