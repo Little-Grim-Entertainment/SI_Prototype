@@ -268,24 +268,30 @@ void ASI_Flashlight::SpawnSegmentPathfinder()
 	LG_PRINT(2.0f, White, "Segment Pathfinder spawned");
 	
 	// todo: iterate through tarray of placed segments
-	
+	// todo: (Anu) Continue work on spawning pathfinder
 	// Iterate through Tarray of placed segments
 	for (ASI_FlashlightSegment* CurrentSegment : PlacedSegmentsArray)
 	{
 		if (CurrentSegment)
 		{
-			// Spawn SegmentPathfinder				
+			// Initialize SpawnActor variables
 			FTransform const SegmentTransform = CurrentSegment->GetActorTransform();
-			ASI_SegmentPathfinder* CurrentSegmentPathfinder = GetWorld()->SpawnActor<ASI_SegmentPathfinder>(SegmentPathfinderClass, SegmentTransform);
-
+			FActorSpawnParameters SpawnParameters;
+			SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			
+			// Spawn SegmentPathfinder
+			ASI_SegmentPathfinder* CurrentSegmentPathfinder = GetWorld()->SpawnActor<ASI_SegmentPathfinder>(SegmentPathfinderClass, SegmentTransform, SpawnParameters);
+			
 			// Initialize and run pathfinder
 			if (CurrentSegmentPathfinder)
 			{
 				// TODO : Send flashlight data in function that starts the AI
-			}
-			
+				CurrentSegmentPathfinder->InitializePathfinder(this->GetActorLocation());
+			}			
 		}
 	}
+
+	
 		// For each element in array
 		// Initialize pathfinder
 		// Create Fvectors for current segment location and current flashlight location

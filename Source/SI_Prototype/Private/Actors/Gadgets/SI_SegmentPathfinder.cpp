@@ -9,6 +9,20 @@ ASI_SegmentPathfinder::ASI_SegmentPathfinder()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Construct Defaults and attach to root
+	CapsuleHitbox = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	CapsuleHitbox->SetupAttachment(RootComponent);
+	TestStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	TestStaticMesh->SetupAttachment(CapsuleHitbox);	
+}
+
+void ASI_SegmentPathfinder::InitializePathfinder(FVector InFlashlightActor)
+{
+	// todo: Set target location as nick
+	
+	// todo: Then simple move to
+	
+	//his->GetController()
 }
 
 // Called when the game starts or when spawned
@@ -25,7 +39,7 @@ void ASI_SegmentPathfinder::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
+// Called to bind functionality to input todo: check if needed
 void ASI_SegmentPathfinder::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

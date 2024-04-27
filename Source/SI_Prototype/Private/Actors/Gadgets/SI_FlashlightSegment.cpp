@@ -47,7 +47,7 @@ void ASI_FlashlightSegment::OnInteract_Implementation(AActor* Caller)
 
 
 void ASI_FlashlightSegment::RemoveSegment()
-{		
+{	
 	SegmentPickUpDelegate.Execute(SegmentNumber);
 	Destroy();
 }

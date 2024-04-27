@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Pawn.h"
 #include "SI_SegmentPathfinder.generated.h"
 
@@ -12,9 +13,16 @@ class SI_PROTOTYPE_API ASI_SegmentPathfinder : public APawn
 	GENERATED_BODY()
 
 public:
+	// Default Variables
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCapsuleComponent* CapsuleHitbox;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* TestStaticMesh;
+		
 	// Sets default values for this pawn's properties
 	ASI_SegmentPathfinder();
-	InitializePathfinder(FVector3d* inFlashlightLocation);
+	
+	void InitializePathfinder(FVector InFlashlightActor);
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,5 +34,4 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

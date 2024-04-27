@@ -6,7 +6,6 @@
 #include "SI_FlashlightSegment.generated.h"
 
 DECLARE_DELEGATE_OneParam(FSegmentPickedUp, int);
-
 class UPointLightComponent;
 class ASI_Nick;
 
