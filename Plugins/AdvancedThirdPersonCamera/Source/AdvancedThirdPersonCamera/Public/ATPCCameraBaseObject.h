@@ -1,4 +1,4 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #pragma once
 
@@ -40,7 +40,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "OnEnterCameraMode"))
 	void K2_OnEnterCameraMode(bool bWithInterpolation);
 
-	virtual void SwitchToCineCamera();
 
 	void SetCamera(UATPCCameraComponent* Camera);
 	UATPCCameraComponent& GetCamera();

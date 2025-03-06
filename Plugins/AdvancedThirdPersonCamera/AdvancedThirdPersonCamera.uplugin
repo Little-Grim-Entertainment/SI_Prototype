@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 5,
-	"VersionName": "1.2.10",
+	"VersionName": "1.2.11",
 	"FriendlyName": "Advanced Third Person Camera",
 	"Description": "Implementation of the 3rd person camera with support for various behaviors and many settings.",
 	"Category": "Code Plugin",
@@ -9,8 +9,8 @@
 	"CreatedByURL": "https://www.linkedin.com/in/forrgit/",
 	"DocsURL": "https://forrgit.gitbook.io/advanced-third-person-camera/",
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/f51f489a722e422a9d3190e2b07bb493",
-	"SupportURL": "https://discord.com/invite/vMCTHFz",
-	"EngineVersion": "5.3.0",
+	"SupportURL": "https://discord.gg/HCKR2mxbVU",
+	"EngineVersion": "5.4.0",
 	"CanContainContent": true,
 	"Installed": true,
 	"Modules": [

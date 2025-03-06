@@ -1,13 +1,13 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #include "ATPCCameraFadingObject.h"
 
 #include "ATPCCameraComponent.h"
 #include "ATPCCameraModeDataAsset.h"
-#include "Algo/ForEach.h"
 #include "Components/MeshComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Engine/CollisionProfile.h"
+#include "Engine/OverlapResult.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"

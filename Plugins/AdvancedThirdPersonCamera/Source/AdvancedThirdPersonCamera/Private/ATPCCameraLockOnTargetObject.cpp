@@ -1,4 +1,4 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #include "ATPCCameraLockOnTargetObject.h"
 
@@ -7,7 +7,7 @@
 #include "ATPCCameraLocationObject.h"
 #include "ATPCCameraModeDataAsset.h"
 #include "ATPCFunctionLibrary.h"
-#include "AdvancedThirdPersonCamera/Public/ATPCLockOnTargetLocationComponent.h"
+#include "ATPCLockOnTargetLocationComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/Engine.h"
 #include "GameFramework/Actor.h"

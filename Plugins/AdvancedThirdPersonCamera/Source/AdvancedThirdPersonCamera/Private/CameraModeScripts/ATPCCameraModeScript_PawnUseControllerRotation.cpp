@@ -1,6 +1,6 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
-#include "AdvancedThirdPersonCamera/Public/CameraModeScripts/ATPCCameraModeScript_PawnUseControllerRotation.h"
+#include "CameraModeScripts/ATPCCameraModeScript_PawnUseControllerRotation.h"
 
 #include "ATPCCameraComponent.h"
 #include "GameFramework/Character.h"

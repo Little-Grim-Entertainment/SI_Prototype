@@ -1,4 +1,4 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #include "ATPCCameraModeScript.h"
 

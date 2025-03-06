@@ -1,4 +1,4 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #include "ATPCCameraComponent.h"
 
@@ -13,8 +13,8 @@
 #include "ATPCCameraVolume.h"
 #include "AdvancedThirdPersonCamera.h"
 #include "Algo/AnyOf.h"
+#include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
-#include "CineCameraComponent.h"
 #include "Engine/DataTable.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
@@ -83,23 +83,6 @@ void UATPCCameraComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 		return;	
 	}
 	
-	if (IsCineCameraActive())
-	{
-		if (!bHandledCineCamera)
-		{
-			bHandledCineCamera = true;
-
-			for (auto& objPtr : CameraObjList)
-			{
-				objPtr->SwitchToCineCamera();
-			}
-		}
-	}
-	else
-	{
-		bHandledCineCamera = false;
-	}
-
 	auto cameraMode = GetCurrentCameraMode();
 
 	for (auto& cameraModeScript : cameraMode->CameraModeScripts)
@@ -340,22 +323,6 @@ FVector UATPCCameraComponent::GetCameraLocation() const
 FRotator UATPCCameraComponent::GetCameraRotation() const
 {
 	return GetSocketTransform(NAME_None).Rotator();
-}
-
-bool UATPCCameraComponent::IsCineCameraActive() const
-{
-	auto viewTarget = GetOwner();
-	if (auto playerController = GetPlayerController())
-	{
-		viewTarget = playerController->GetViewTarget();
-	}
-
-	TArray<UCineCameraComponent*> cineCameraComponents;
-	viewTarget->GetComponents(cineCameraComponents);
-
-	return cineCameraComponents.ContainsByPredicate([](UCineCameraComponent* CineCamera) {
-		return CineCamera->IsActive();
-	});
 }
 
 bool UATPCCameraComponent::IsSettingInitialCameraMode() const

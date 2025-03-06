@@ -1,4 +1,4 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #include "ATPCCameraBaseObject.h"
 
@@ -33,10 +33,6 @@ void UATPCCameraBaseObject::OnExitCameraMode()
 void UATPCCameraBaseObject::OnEnterCameraMode(bool bWithInterpolation)
 {
 	K2_OnEnterCameraMode(bWithInterpolation);
-}
-
-void UATPCCameraBaseObject::SwitchToCineCamera()
-{
 }
 
 void UATPCCameraBaseObject::SetCamera(UATPCCameraComponent* Camera)

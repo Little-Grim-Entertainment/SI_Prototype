@@ -1,4 +1,4 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #pragma once
 
@@ -136,9 +136,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ATPC")
 	UATPCCameraLockOnTargetObject* GetCameraLockOnTargetObject() const { return LockOnTargetObject; }
 
-	UFUNCTION(BlueprintPure, Category = "ATPC")
-	virtual bool IsCineCameraActive() const;
-
 	/** Return true if initial camera mode is sets now(need for correct initialization some camera objects)*/
 	bool IsSettingInitialCameraMode() const;
 
@@ -196,10 +193,10 @@ protected:
 	TArray<UATPCCameraModeDataAsset*> CameraModesAssets;
 
 	/** Storage for instanced camera modes sorted by FGameplayTag */
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TMap<FGameplayTag, UATPCCameraModeDataAsset*> SortedCameraModes;
 
-	UPROPERTY()
+	UPROPERTY(Transient)
 	UATPCCameraModeDataAsset* CustomCameraMode;
 
 	FGameplayTag CurrentCameraModeTag;
@@ -233,11 +230,8 @@ protected:
 	UPROPERTY(Transient)
 	TArray<UATPCCameraBaseObject*> CameraObjList;
 
-	//Handled cine camera after switch target view?
-	bool bHandledCineCamera = false;
-
 private:
-	UPROPERTY()
+	UPROPERTY(Transient)
 	UATPCCameraModeDataAsset* EmptyCameraMode;
 	/* For correct view FATPCCameraMode in Blueprints Details panel */
 	UPROPERTY()

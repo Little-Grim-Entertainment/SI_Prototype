@@ -1,4 +1,4 @@
-// Copyright 2023 Alexander Shumeyko. All Rights Reserved.
+// Copyright 2024 Alexander Shumeyko. All Rights Reserved.
 
 #pragma once
 
@@ -15,8 +15,6 @@ public:
 
 	virtual void Validate(bool bWithInterpolation) override;
 	virtual void OnEnterCameraMode(bool bWithInterpolation) override;
-
-	virtual void SwitchToCineCamera() override;
 
 	UFUNCTION(BlueprintPure, Category = "ATPC")
 	float GetCurrentFOV() const;
