@@ -13,7 +13,7 @@ FString USI_BlueprintFunctionLibrary::GetCharacterNameFromTag(const FGameplayTag
 	for (int32 CurrentIndex = 0; CurrentIndex < TagString.Len(); CurrentIndex++)
 	{
 		const char CurrentChar = TagString[CurrentIndex];
-		if(CurrentIndex > 0 && std::isupper(CurrentChar))
+		if(CurrentIndex > 0 && isupper(CurrentChar))
 		{
 			TagString.InsertAt(CurrentIndex, " ");
 			return TagString;

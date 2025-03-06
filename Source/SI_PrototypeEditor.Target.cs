@@ -8,7 +8,7 @@ public class SI_PrototypeEditorTarget : TargetRules
 	public SI_PrototypeEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
+		DefaultBuildSettings = BuildSettingsVersion.V5;
 		
 		ExtraModuleNames.Add("SI_Prototype");
 		ExtraModuleNames.Add("SI_Editor");

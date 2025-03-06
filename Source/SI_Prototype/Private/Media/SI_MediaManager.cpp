@@ -12,8 +12,8 @@
 #include "Controllers/SI_PlayerController.h"
 #include "Media/Data/SI_CinematicDataAsset.h"
 #include "Levels/SI_LevelManager.h"
-#include "MediaAssets/Public/MediaPlayer.h"
-#include "MediaAssets/Public/MediaSoundComponent.h"
+#include "MediaPlayer.h"
+#include "MediaSoundComponent.h"
 #include "Media/Data/SI_VideoDataAsset.h"
 
 void USI_MediaManager::OnGameplayTagAdded(const FGameplayTag& InAddedTag, FSITagPayload* InTagPayload)

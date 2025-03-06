@@ -8,7 +8,7 @@
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
 #include "Components/Actor/SI_EnhancedInputComponent.h"
 #include "Interfaces/SI_InteractInterface.h"
-#include "MediaAssets/Public/MediaSoundComponent.h"
+#include "MediaSoundComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "InputAction.h"
@@ -346,7 +346,13 @@ void ASI_PlayerController::RequestNextDialogue()
 	USI_DialogueManager* DialogueManager = GetWorld()->GetSubsystem<USI_DialogueManager>();
 	if (UIManager && DialogueManager)
 	{
-		UIManager->GetPlayerHUD()->GetDialogueBox()->OnNextClicked();
+		USI_HUD* HUD = UIManager->GetPlayerHUD();
+		if (!IsValid(HUD)) {return;}
+
+		USI_DialogueBox* DialogueBox = HUD->GetDialogueBox();
+		if (!IsValid(DialogueBox)) {return;}
+		
+		DialogueBox->OnNextClicked();
 	}
 }
 
