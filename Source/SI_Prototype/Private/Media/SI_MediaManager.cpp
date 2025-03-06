@@ -357,8 +357,9 @@ bool USI_MediaManager::ShouldDisableMedia() const
 	const FSI_DebugBool* DebugBool = DebugManager->GetDebugBoolByTag(SITag_Debug_DisableAllMedia);
 	
 	return bCVarBool || DebugBool->GetDebugBool();
-#endif
+#else
 	return false;
+#endif
 }
 
 void USI_MediaManager::DelayedCinematicPlay(USI_MapData* LoadedLevel, bool bShouldFade)
