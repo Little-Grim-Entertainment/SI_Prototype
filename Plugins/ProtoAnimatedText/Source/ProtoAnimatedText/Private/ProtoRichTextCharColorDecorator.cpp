@@ -4,6 +4,7 @@
 #include "Framework/Text/DefaultLayoutBlock.h"
 #include "Framework/Text/ShapedTextCache.h"
 #include "Fonts/FontCache.h"
+#include "Styling/ISlateStyle.h"
 
 
 // FProtoCharColorTextRun
