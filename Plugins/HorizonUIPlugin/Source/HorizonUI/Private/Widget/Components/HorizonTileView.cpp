@@ -2,6 +2,7 @@
 
 
 #include "Widget/Components/HorizonTileView.h"
+#include "HorizonUIPrivate.h"
 #include "Widget/Blueprint/HorizonListViewItemWidget.h"
 
 
@@ -290,10 +291,18 @@ void UHorizonTileView::CalculateItemSize()
 
 void UHorizonTileView::OnRefreshDesignerItems()
 {
+#if UE_VERSION_OLDER_THAN(5,4,0)
 	RefreshDesignerItems<UObject*>(ListItems, [this]() {
 		UObject* pObj = NewObject<UHorizonListViewItemObject>(this);
 		return pObj;
 	});
+#else
+	RefreshDesignerItems<TObjectPtr<UObject>>(ListItems, [this]() {
+		UObject* pObj = NewObject<UHorizonListViewItemObject>(this);
+		return pObj;
+	});
+#endif
+
 
 }
 

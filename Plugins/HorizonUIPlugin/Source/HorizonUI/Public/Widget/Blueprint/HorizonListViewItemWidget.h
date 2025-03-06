@@ -87,7 +87,7 @@ protected:
 public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidgetOptional), Category = "Content")
-	UButton* Button_ClickArea = nullptr;
+	TObjectPtr<UButton> Button_ClickArea = nullptr;
 
 
 };

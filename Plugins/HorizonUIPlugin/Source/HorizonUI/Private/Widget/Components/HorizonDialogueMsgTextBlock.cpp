@@ -439,7 +439,8 @@ void UHorizonDialogueMsgTextBlock::Tick(float DeltaTime) {
 
 
 
-	if (CurrentPageIndex < DialoguePageInfoList.Num() && DialoguePageInfoList.Num() > 0)
+	if (CurrentPageIndex >= 0 &&
+		CurrentPageIndex < DialoguePageInfoList.Num())
 	{
 
 		auto currentPageInfo = DialoguePageInfoList[CurrentPageIndex];
@@ -944,11 +945,14 @@ void UHorizonDialogueMsgTextBlock::StopDialogue()
 void UHorizonDialogueMsgTextBlock::SkipDialogue()
 {
 	DECLARE_HORIZONUI_QUICK_SCOPE_CYCLE_COUNTER(UHorizonDialogueMsgTextBlock, SkipDialogue)
-	if (GetCurrentPageIndex() != DialoguePageInfoList.Num() - 1)
+	if (DialoguePageInfoList.Num() > 0)
 	{
-		SetDialogueMsgPage(DialoguePageInfoList.Num() - 1);
+		if (GetCurrentPageIndex() != DialoguePageInfoList.Num() - 1)
+		{
+			SetDialogueMsgPage(DialoguePageInfoList.Num() - 1);
+		}
+		SkipCurrentDialoguePage();
 	}
-	SkipCurrentDialoguePage();
 }
 
 
@@ -1159,7 +1163,7 @@ TOptional<float> UHorizonDialogueMsgTextBlock::GetMinimalPaddingMarginTopOffset(
 void UHorizonDialogueMsgTextBlock::SetDialogueMsgPage(int32 InPageIndex, bool bShouldStartTick)
 {
 	DECLARE_HORIZONUI_QUICK_SCOPE_CYCLE_COUNTER(UHorizonDialogueMsgTextBlock, SetDialogueMsgPage)
-	if (InPageIndex < DialoguePageInfoList.Num())
+	if (InPageIndex >= 0 && InPageIndex < DialoguePageInfoList.Num())
 	{
 		AutoNextDialogueMsgPageDeltaTime = 0.0f;
 		for (auto& it : DialoguePageInfoList)
@@ -1258,7 +1262,7 @@ void UHorizonDialogueMsgTextBlock::SetAutoNextDialogueMsgPageIntervalRate(float 
 int32 UHorizonDialogueMsgTextBlock::GetCurrentPageTextLength() const
 {
 	int32 result = 0;
-	if (CurrentPageIndex < DialoguePageInfoList.Num())
+	if (CurrentPageIndex >= 0 && CurrentPageIndex < DialoguePageInfoList.Num())
 	{
 		auto& currentPageInfo = DialoguePageInfoList[CurrentPageIndex];
 
@@ -1321,7 +1325,7 @@ void UHorizonDialogueMsgTextBlock::SkipCurrentDialogueMsgPageTick()
 void UHorizonDialogueMsgTextBlock::SkipCurrentDialoguePage()
 {
 	DECLARE_HORIZONUI_QUICK_SCOPE_CYCLE_COUNTER(UHorizonDialogueMsgTextBlock, SkipCurrentDialoguePage)
-	if (CurrentPageIndex < DialoguePageInfoList.Num())
+	if (CurrentPageIndex >= 0 && CurrentPageIndex < DialoguePageInfoList.Num())
 	{
 		auto currentPageInfo = DialoguePageInfoList[CurrentPageIndex];
 		for (int32 i = CurrentDialogueLineIndex; i < currentPageInfo.EndLineIndex; ++i)
@@ -1383,7 +1387,7 @@ bool UHorizonDialogueMsgTextBlock::IsDialogueMsgPageEnd() const
 {
 	if (IsDialogueMsgText())
 	{
-		if (CurrentPageIndex < DialoguePageInfoList.Num())
+		if (CurrentPageIndex >= 0 && CurrentPageIndex < DialoguePageInfoList.Num())
 		{
 			auto currentPageInfo = DialoguePageInfoList[CurrentPageIndex];
 			return CurrentDialogueLineIndex == currentPageInfo.EndLineIndex;
@@ -1578,7 +1582,11 @@ void UHorizonDialogueMsgTextBlock::RebuildLineInfoList()
 				widgetWidth = Text.ToString().Len() * Font.Size;
 			}
 			auto pSizeBox = Cast<USizeBox>(GetParent());
+#if UE_VERSION_OLDER_THAN(5,4,0)
 			if (pSizeBox && pSizeBox->bOverride_WidthOverride)
+#else
+			if (pSizeBox && pSizeBox->IsWidthOverride())
+#endif
 			{
 				widgetWidth = pSizeBox->GetWidthOverride();
 			}
@@ -1605,7 +1613,7 @@ void UHorizonDialogueMsgTextBlock::RebuildLineInfoList()
 	//for (const auto& it : DialogueSegmentInfoList) {
 	for (int32 currentSegInfoIndex = 0; currentSegInfoIndex < DialogueSegmentInfoList.Num(); ++currentSegInfoIndex) {
 		auto& segInfo = DialogueSegmentInfoList[currentSegInfoIndex];
-		BuildSegmeentDecoration(currentSegInfoIndex);
+		BuildSegmentDecoration(currentSegInfoIndex);
 		switch (segInfo.TypeEnum) 
 		{
 		case EHorizonDialogueSegmentType::Text:
@@ -1787,7 +1795,12 @@ void UHorizonDialogueMsgTextBlock::RebuildPageInfoList()
 	}
 
 	auto pSizeBox = Cast<USizeBox>(GetParent());
+
+#if UE_VERSION_OLDER_THAN(5,4,0)
 	if (pSizeBox && pSizeBox->bOverride_HeightOverride)
+#else
+	if (pSizeBox && pSizeBox->IsHeightOverride())
+#endif
 	{
 		widgetHeight = pSizeBox->GetHeightOverride();
 	}
@@ -1966,7 +1979,7 @@ FHorizonDialogueBlockInfo& InBlockInfo, const FHorizonDialogueSegmentInfo& InSeg
 	}
 }
 
-void UHorizonDialogueMsgTextBlock::BuildSegmeentDecoration(int32 InCurrentSegInfoIndex)
+void UHorizonDialogueMsgTextBlock::BuildSegmentDecoration(int32 InCurrentSegInfoIndex)
 {
 
 	if(InCurrentSegInfoIndex < DialogueSegmentInfoList.Num())
@@ -2057,38 +2070,44 @@ void UHorizonDialogueMsgTextBlock::RebuildSegmentInfoListImplement(const FHorizo
 
 	if (pCurrentNode) 
 	{
-		FHorizonDialogueSegmentInfo currentSegParam = CreateSegmentInfo(parentSegParam, pCurrentNode);
 
+		FHorizonDialogueSegmentInfo currentSegParam = CreateSegmentInfo(parentSegParam, pCurrentNode);
+		bool bSkipSegment = false;
 		//if (pCurrentNode->GetChildrenNodes().Num() == 0) {
 		if (currentSegParam.TypeEnum == EHorizonDialogueSegmentType::Text)
 		{
 			//currentSegParam.
 			currentSegParam.Text = pCurrentNode->GetContent();
-			//Value.ReplaceInline(TEXT("&quot;"), TEXT("\""), ESearchCase::CaseSensitive);
-			//Value.ReplaceInline(TEXT("&amp;"), TEXT("&"), ESearchCase::CaseSensitive);
-			//Value.ReplaceInline(TEXT("&apos;"), TEXT("'"), ESearchCase::CaseSensitive);
-			//Value.ReplaceInline(TEXT("&lt;"), TEXT("<"), ESearchCase::CaseSensitive);
-			//Value.ReplaceInline(TEXT("&gt;"), TEXT(">"), ESearchCase::CaseSensitive);
-
-			//handle special character
-			currentSegParam.Text.ReplaceInline(TEXT("&nbsp;"), TEXT(" "));
-			currentSegParam.Text.ReplaceInline(TEXT("&quot;"), TEXT("\""));
-			currentSegParam.Text.ReplaceInline(TEXT("&amp;"), TEXT("&"));
-			currentSegParam.Text.ReplaceInline(TEXT("&apos;"), TEXT("'"));
-			currentSegParam.Text.ReplaceInline(TEXT("&lt;"), TEXT("<"));
-			currentSegParam.Text.ReplaceInline(TEXT("&gt;"), TEXT(">"));
-			//padding spcae
-			if (currentSegParam.PaddingMargin.Left > 0) 
+			if(currentSegParam.Text.StartsWith("\n"))
 			{
-				currentSegParam.Text = currentSegParam.Text.LeftPad(currentSegParam.Text.Len() + (int32)currentSegParam.PaddingMargin.Left);
+				bSkipSegment = true;
 			}
-			if ((int32)currentSegParam.PaddingMargin.Right > 0) 
+
+			if(!bSkipSegment)
 			{
-				currentSegParam.Text = currentSegParam.Text.RightPad(currentSegParam.Text.Len() + (int32)currentSegParam.PaddingMargin.Right);
+				//handle special character
+				currentSegParam.Text.ReplaceInline(TEXT("&nbsp;"), TEXT(" "));
+				currentSegParam.Text.ReplaceInline(TEXT("&quot;"), TEXT("\""));
+				currentSegParam.Text.ReplaceInline(TEXT("&amp;"), TEXT("&"));
+				currentSegParam.Text.ReplaceInline(TEXT("&apos;"), TEXT("'"));
+				currentSegParam.Text.ReplaceInline(TEXT("&lt;"), TEXT("<"));
+				currentSegParam.Text.ReplaceInline(TEXT("&gt;"), TEXT(">"));
+				//padding spcae
+				if (currentSegParam.PaddingMargin.Left > 0)
+				{
+					currentSegParam.Text = currentSegParam.Text.LeftPad(currentSegParam.Text.Len() + (int32)currentSegParam.PaddingMargin.Left);
+				}
+				if ((int32)currentSegParam.PaddingMargin.Right > 0)
+				{
+					currentSegParam.Text = currentSegParam.Text.RightPad(currentSegParam.Text.Len() + (int32)currentSegParam.PaddingMargin.Right);
+				}
 			}
 		}
-		DialogueSegmentInfoList.Emplace(MoveTemp(currentSegParam));
-		//}
+		if(!bSkipSegment)
+		{
+			DialogueSegmentInfoList.Emplace(MoveTemp(currentSegParam));
+		}
+
 		RebuildSegmentInfoListImplement(parentSegParam, pCurrentNode->GetNextNode());
 	}
 
@@ -2660,7 +2679,7 @@ FHorizonDialogueBlockInfo UHorizonDialogueMsgTextBlock::CreateDialogueImageBlock
 		int32 width = 32;
 		int32 height = 32;
 		UTexture2D* pTexture = nullptr;
-		UMaterial* pMaterial = nullptr;
+		UMaterialInterface* pMaterial = nullptr;
 		UPaperSprite* pSprite = nullptr;
 		
 		if (segInfo.FilePath.IsSet()) 

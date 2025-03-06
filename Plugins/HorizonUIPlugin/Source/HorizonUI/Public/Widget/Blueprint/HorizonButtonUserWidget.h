@@ -100,13 +100,13 @@ public:
 
 public:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget), Category = "UI")
-	UButton* Button_Main = nullptr;
+	TObjectPtr<UButton> Button_Main = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional), Category = "UI")
-	UTextBlock* TextBlock_Main = nullptr;
+	TObjectPtr<UTextBlock> TextBlock_Main = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional), Category = "UI")
-	UImage* Image_Main = nullptr;
+	TObjectPtr<UImage> Image_Main = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content", meta = (MultiLine = true))
 	FText Text_Main;
@@ -114,9 +114,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content")
 	FSlateBrush SlateBrush_ImageMain;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content", meta = (AllowPrivateAccess = "true", DisplayThumbnail = "true", DisplayName = "Image", AllowedClasses = "Texture,MaterialInterface,SlateTextureAtlasInterface", DisallowedClasses = "MediaTexture"))
-	//FSoftObjectPath* Image_SoftResourceObjectMain;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Appearance")
 	bool bFocusOnHovered = true;

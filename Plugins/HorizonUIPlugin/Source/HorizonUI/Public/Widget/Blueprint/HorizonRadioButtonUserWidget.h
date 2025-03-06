@@ -62,10 +62,10 @@ public:
 	FOnHorizonRadioButtonEventNative OnUnCheckedDelegateNative;
 public:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget), Category = "UI")
-	UCheckBox* CheckBox_Main = nullptr;
+	TObjectPtr<UCheckBox> CheckBox_Main = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional), Category = "UI")
-	UTextBlock* TextBlock_Main = nullptr;
+	TObjectPtr<UTextBlock> TextBlock_Main = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content", meta = (MultiLine = true))
 	FText Text_Main;

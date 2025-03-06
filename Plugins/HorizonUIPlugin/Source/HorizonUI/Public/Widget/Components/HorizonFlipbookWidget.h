@@ -85,7 +85,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HorizonPlugin|UI|Flipbook|Behavior")
 	bool bAnimationFinished = false;
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorizonPlugin|UI|Flipbook|Brush", meta = (DisplayThumbnail = "true", DisplayName = "PaperFlipbook", AllowedClasses = "PaperFlipbook"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HorizonPlugin|UI|Flipbook|Brush", meta = (DisplayThumbnail = "true", DisplayName = "PaperFlipbook"))
 	UPaperFlipbook* PaperFlipbook = nullptr;
 
 

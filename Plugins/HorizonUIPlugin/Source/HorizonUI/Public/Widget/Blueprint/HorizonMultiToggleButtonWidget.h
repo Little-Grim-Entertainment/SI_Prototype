@@ -90,15 +90,15 @@ public:
 public:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional), Category = "UI")
-	UButton* Button_ToggleState_Prev = nullptr;
+	TObjectPtr<UButton> Button_ToggleState_Prev = nullptr;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional), Category = "UI")
-	UButton* Button_ToggleState_Next = nullptr;
+	TObjectPtr<UButton> Button_ToggleState_Next = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional), Category = "UI")
-	UTextBlock* TextBlock_CurrentState = nullptr;
+	TObjectPtr<UTextBlock> TextBlock_CurrentState = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional), Category = "UI")
-	UImage* Image_CurrentState = nullptr;
+	TObjectPtr<UImage> Image_CurrentState = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content")
 	TArray<FHorizonMultiToggleButtonState> StateList;

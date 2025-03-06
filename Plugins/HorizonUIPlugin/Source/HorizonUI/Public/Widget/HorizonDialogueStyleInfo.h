@@ -98,11 +98,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HyperText")
 		TArray<TSubclassOf<UHorizonButton>> BackgroundButtonClass;
 public: //for tag <img>, ignore case
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image", meta = (DisplayThumbnail = "true", AllowedClasses = "Texture2D"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image", meta = (DisplayThumbnail = "true"))
 		TSoftObjectPtr<UTexture2D> Texture2D = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image", meta = (DisplayThumbnail = "true", AllowedClasses = "Material"))
-		TSoftObjectPtr<UMaterial> Material = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image", meta = (DisplayThumbnail = "true"))
+		TSoftObjectPtr<UMaterialInterface> Material = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image", meta = (DisplayThumbnail = "true"))
 		TSoftObjectPtr<UPaperSprite> PaperSprite = nullptr;
@@ -121,7 +121,7 @@ public: //for tag <img>, ignore case
 		TArray<float> DialogueSoundStartTime;
 
 public: //for tag <pfb> or <PaperFlipBook>, ignore case
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flipbook", meta = (DisplayThumbnail = "true", DisplayName = "PaperFlipbook", AllowedClasses = "PaperFlipbook"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flipbook", meta = (DisplayThumbnail = "true", DisplayName = "PaperFlipbook"))
 		TSoftObjectPtr<UPaperFlipbook> PaperFlipbook = nullptr;
 
 public:

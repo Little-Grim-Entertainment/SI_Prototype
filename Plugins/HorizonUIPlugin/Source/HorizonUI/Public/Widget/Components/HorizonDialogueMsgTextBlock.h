@@ -172,7 +172,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Content")
 	float DialogueSoundStartTime = 0.0f;
 	UPROPERTY(BlueprintReadOnly, Category = "Content")
-	USoundBase* DialogueSound = nullptr;
+	TObjectPtr<USoundBase> DialogueSound = nullptr;
 
 
 	EHorizonDialogueSegmentType TypeEnum = EHorizonDialogueSegmentType::Invalidated;
@@ -221,7 +221,7 @@ struct FHorizonDialogueHypertextResult
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content")
-	UHorizonDialogueMsgTextBlock* DialogueMsgTextBlock = nullptr;
+	TObjectPtr<UHorizonDialogueMsgTextBlock> DialogueMsgTextBlock = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Content")
 	int32 SegmentIndex = -1;
@@ -256,8 +256,7 @@ struct FHorizonDialogueBlinkingCursorInfo
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content",
-		meta = (DisplayThumbnail = "true", AllowedClasses = "PaperFlipbook"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Content", meta = (DisplayThumbnail = "true"))
 	TSoftObjectPtr<UPaperFlipbook> Flipbook = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Content")
@@ -588,7 +587,7 @@ protected:
 
 	virtual void SetupRubyTextPosition(const FVector2D& InCurrentPosition, FHorizonDialogueBlockInfo& InBlockInfo, const FHorizonDialogueSegmentInfo& InSegInfo);
 protected:
-	virtual void BuildSegmeentDecoration(int32 InCurrentSegmentInfoIndex);
+	virtual void BuildSegmentDecoration(int32 InCurrentSegmentInfoIndex);
 	virtual void PreBuildBlockDecoration(FHorizonDialogueBlockInfo& InBlockInfo);
 	virtual void BuildBlockDecoration(FHorizonDialogueBlockInfo& InBlockInfo);
 
