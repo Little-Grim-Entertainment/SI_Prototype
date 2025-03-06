@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Abilities/SI_AbilityGameplayTagLibrary.h"
 #include "GameplayTags/SI_GameplayTagTypes.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayTags/SI_NativeGameplayTagLibrary.h"
@@ -17,6 +18,7 @@ class USI_GameplayTagManager;
 class USI_GizboManager;
 
 using namespace SI_NativeGameplayTagLibrary;
+using namespace SI_AbilityGameplayTagLibrary;
 using namespace SI_MapGameplayTagLibrary;
 
 UCLASS()

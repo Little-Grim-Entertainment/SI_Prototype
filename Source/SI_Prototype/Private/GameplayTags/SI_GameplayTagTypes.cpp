@@ -13,9 +13,10 @@ const FGameplayTag& FSI_GameplayTagContainer::GetParentTag() const
 	return ParentTag;
 }
 
-FSITagPayload::FSITagPayload(AActor* InCaller, AActor* InTarget):
+FSITagPayload::FSITagPayload(AActor* InCaller, AActor* InTarget, const FGameplayTag& InNextActionTag):
 	Instigator(InCaller),
-	Target(InTarget)
+	Target(InTarget),
+ 	NextActionTag(InNextActionTag)
 {
 }
 

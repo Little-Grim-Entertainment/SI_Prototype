@@ -60,7 +60,7 @@ void FSI_StateTreeTask_UpdateMoveTo::ExitState(FStateTreeExecutionContext& Conte
 	ASI_NPC* NPC = Cast<ASI_NPC>(InstanceData.NPCController->GetPawn());
 	if(!IsValid(NPC)) {LG_LOG(LogLG_StateTree, Error, "NPC is invalid cannot change behavior") return;}
 
-	NPC->SetCurrentBehavior(SITag_Behavior_Waiting);
+	NPC->SetCurrentBehavior(SITag_Behavior_TryNextAction);
 	
 	LG_LOG(LogLG_StateTree, VeryVerbose, "FSI_StateTreeTask_UpdateMoveTo::ExitState") 
 }

@@ -14,6 +14,7 @@ class UBehaviorTreeComponent;
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
+class USI_GameplayTagManager;
 
 /**
  * Base NPC Controller for SI Prototype
@@ -32,7 +33,8 @@ public:
 	FSI_NPCMemory* NPCMemory = nullptr;
 	
 	FSI_NPCMovementHelper* NPCMovementHelper = nullptr;
-
+	USI_GameplayTagManager* GetSITagManager() const {return SITagManager;}
+	
 	void UpdateMovementSpeed(const FVector& InMoveToLocation, float InTargetSpeed = 0.0f);
 	
 protected:
@@ -55,4 +57,8 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, NoClear, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<ASI_NPC> PossessedNPC = nullptr;
+
+private:
+	UPROPERTY()
+	USI_GameplayTagManager* SITagManager;
 };

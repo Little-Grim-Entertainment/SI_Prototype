@@ -3,7 +3,9 @@
 
 #include "Abilities/SI_GameplayAbility_Interact_Pickup.h"
 
+#include "SI_AITypes.h"
 #include "Characters/SI_NPC.h"
+#include "Controllers/SI_NPCController.h"
 
 void USI_GameplayAbility_Interact_Pickup::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -12,10 +14,21 @@ void USI_GameplayAbility_Interact_Pickup::ActivateAbility(const FGameplayAbility
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	LG_LOG_LOG(LogLG_Ability,"Ability Activated");
 
-	ASI_NPC* Actor = Cast<ASI_NPC>(ActorInfo->OwnerActor);
-	if(!IsValid(Actor)) {LG_LOG(LogLG_Ability, Error, "Actor is not valid"); return;}
+	ASI_NPC* NPC = Cast<ASI_NPC>(ActorInfo->OwnerActor);
+	if(!IsValid(NPC)) {LG_LOG(LogLG_Ability, Error, "Actor is not valid"); return;}
+	ASI_NPCController* AIController = Cast<ASI_NPCController>(NPC->GetController());
+	if(!IsValid(AIController)) {LG_LOG(LogLG_Ability, Error, "AIController is not valid"); return; }
+	FSI_NPCMemory* NPCMemory = AIController->GetNPCMemory();
+	if(*NPCMemory == FSI_NPCMemory()) {LG_LOG(LogLG_Ability, Error, "NPCMemory is Empty"); return; }
 	
-	Actor->SetCurrentBehavior(SITag_Behavior_MoveTo);
+	TObjectPtr<AActor> TargetPickup = NPCMemory->GetTargetObject();
+	if(!IsValid(TargetPickup)) {LG_LOG(LogLG_Ability, Error, "TargetPickup is not valid"); return; }
+	
+	USkeletalMeshComponent* NPCMesh = NPC->GetMesh();
+	FAttachmentTransformRules AttachRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
+	TargetPickup->SetActorEnableCollision(false);
+	TargetPickup->AttachToComponent(NPCMesh, AttachRules, "Socket_Chest");
+	
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
 
@@ -25,12 +38,3 @@ void USI_GameplayAbility_Interact_Pickup::EndAbility(const FGameplayAbilitySpecH
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
-
-/*void USI_GameplayAbility_Interact::PickupObject(AActor* InHitActor)
-{
-	HeldActor = InHitActor;
-	USkeletalMeshComponent* GizboMesh = GetMesh();
-	FAttachmentTransformRules AttachRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
-	HeldActor->AttachToComponent(GizboMesh, AttachRules, PickupSocket);
-	bIsHoldingItem = true;
-}*/

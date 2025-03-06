@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
+
 #include "Abilities/GameplayAbility.h"
 #include "LG_DebugMacros.h"
 #include "SI_Prototype/SI_Prototype.h"
+#include "GameplayTags/SI_NativeGameplayTagLibrary.h"
+#include "Abilities//SI_AbilityGameplayTagLibrary.h"
 #include "SI_GameplayAbility.generated.h"
 
 class USI_GameplayTagManager;
@@ -15,6 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActiveSpecHandleDelegate, const FGa
  * 
  */
 using namespace SI_NativeGameplayTagLibrary;
+using namespace SI_AbilityGameplayTagLibrary;
 
 UCLASS()
 class SI_PROTOTYPE_API USI_GameplayAbility : public UGameplayAbility

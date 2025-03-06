@@ -32,12 +32,14 @@ struct FSITagPayload
 	GENERATED_BODY()
 
 	FSITagPayload() {}
-	FSITagPayload(AActor* InCaller, AActor* InTarget);
+	FSITagPayload(AActor* InCaller, AActor* InTarget, const FGameplayTag& InNextActionTag = FGameplayTag());
 	
 	UPROPERTY()
 	TObjectPtr<AActor> Instigator = nullptr;
 	UPROPERTY()
 	TObjectPtr<AActor> Target = nullptr;
+	UPROPERTY()
+	FGameplayTag NextActionTag = FGameplayTag();
 
 	bool operator == (const FSITagPayload& Other) const;
 	bool operator != (const FSITagPayload& Other) const;
